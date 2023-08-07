@@ -1,0 +1,106 @@
+
+{% extends 'layout.html' %}
+{% from 'helpers/_forms.html' import render_field %}
+{% block estilos %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
+{% endblock%}
+{% block container %}
+<style>
+    table.dataTable thead th, .table.dataTable tfoot th {
+  background-color: transparent;
+  color: black;
+
+}
+
+#example_length > label{
+    margin-top: 20px;
+    margin-left: 5px;
+}
+
+td a:hover{
+ transform: translateY(-5px);
+
+}
+
+tr.celda:hover{
+    transform: translateY(-5px);
+    background-color: #ddd;
+
+
+}
+
+</style>
+
+
+<div class="container mt-4 table-responsive" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); padding: 20px 20px 20px 20px; border-radius: 7px;">  
+    <table id="example" class="display cell-border" style="width:100%">
+        <thead>
+            <tr>
+                <th>RIF</th>
+                <th>Usuario</th>
+                <th>Correo Electronico</th>
+                <th>Zona</th>
+                <th>Nivel</th>
+                <th>Codigo</th>
+                <th>Detalles</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+           
+            <tr class="celda text-center" onclick="location.href='{{ url_for('.usuario', rif=user.rif)}}'"; style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Click para mas detalles">
+                
+                <td>{{user.rif}}</td>
+                <td>{{user.username}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.zona }}</td>
+                <td>{{user.nivel}}</td>
+                <td>{{user.codigo}}</td>
+                <td class="td-container">
+                    <a href="{{ url_for('.usuario', rif=user.rif)}}" class="btn detalles" style="border:2px solid rgb(10, 10, 10);">
+                        Detalles
+                    </a>                   
+                </td>
+            </tr>
+        
+            {% endfor %}
+        </tbody>
+
+        <tfoot>
+            <tr>
+                <th>RIF</th>
+                <th>Usuario</th>
+                <th>Correo Electronico</th>
+                <th>Zona</th>
+                <th>Nivel</th>
+                <th>Codigo</th>
+                <th>Detalles</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+{% endblock %}
+
+{% block js%}
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>  
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script> 
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>  
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>  
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bulma.min.js"></script> 
+<script>  
+  $(document).ready(function () {
+    $('#example').DataTable();
+});
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+
+{% endblock %}

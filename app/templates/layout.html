@@ -1,0 +1,326 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}
+{{titulo}}
+{% endblock %}
+
+{% block metas %}
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename = 'css/estilos.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<link rel='icon' type='image/png' href="{{ url_for('static', filename = 'img/figura_corimonn.png') }}">
+{% block estilos %}
+
+{% endblock%}
+
+
+
+{% endblock %}
+{% block body %}
+{% block navbar %}
+<header>
+  <nav>
+      
+      <div class="logo">
+          <a href=""><img src="{{ url_for('static', filename = 'img/CRP.png') }}" alt="#"></a>
+      </div>
+      
+      <div class="contenedor_elementos d-none d-xl-block">
+
+          <ul>
+            {% if current_user.is_authenticated %}
+            <li class="mx-4"><a href="{{ url_for('.panel')}}">Dashboard</a></li>
+            <li class="mx-4"><a href="{{ url_for('.cobranza')}}">Registrar Pago</a></li>
+            <li class="mx-4"><a href="{{ url_for('.lista_cobranza')}}">Pagos</a></li>
+            <li class="mx-4"><a href="">Pedidos</a></li>
+            {% else %}
+            <li class="mx-4"><a href="{{ url_for('.index')}}">Inicio</a></li>
+            <li class="mx-4"><a href="{{ url_for('.nosotros')}}">¿Quienes Somos?</a></li>
+            <li class="mx-4"><a href="">Productos</a></li>
+            <li class="mx-4"><a href="">Contactanos</a></li>
+            <li class="mx-4"><a href="{{ url_for('.login')}}">Iniciar sesión</a></li>
+            {% endif %}           
+          </ul>
+        </div>
+        
+      <div class="elementos_interac d-flex align-items-center">
+          <!--
+          <ul class="">
+              <li class="active mx-1"><a href="#" class="boton"> Inicio de Sesión </a></li> 
+          </ul>
+          -->
+          {% if current_user.is_authenticated %}
+          <div class="user d-flex justify-content-center d-none d-xl-block align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+              <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+            </svg>
+          
+          </div>
+          <button class="activador_de_nav d-xl-none d-md-block">
+              <i class="bi bi-list"></i>
+          </button>
+
+      </div>
+      <div class="sub-menu-wrap">
+          <div class="sub-menu ">
+              <div class="user-info " >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="mx-3 mb-2" width="30" height="30" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                      <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                      <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                    </svg>
+                    
+                  <h3>{{current_user.username}}</h3>
+              </div>
+              <hr>
+
+              <a href="{{ url_for('.registroUsuario')}}" class="sub-menu-link">
+                  <i class="bi bi-pencil-square"></i>
+                  <p>Registrar usuario</p>
+                  <span>></span>
+              </a>
+              <a href="" class="sub-menu-link">
+                  <i class="bi bi-gear"></i>
+                  <p>Configuraciones</p>
+                  <span>></span>
+              </a>
+              <a href="" class="sub-menu-link">
+                  <i class="bi bi-question-circle"></i>
+                  <p>Ayuda</p>
+                  <span>></span>
+              </a>
+              <a href="{{ url_for('.logout')}}" class="sub-menu-link">
+                  <i class="bi bi-door-open"></i>
+                  <p>Cerrar sesión</p>
+                  <span>></span>
+              </a>
+          </div>
+          {% endif %}  
+      </div>
+  </nav>
+
+</header>
+
+<div class="responsive_nav w-100 d-xl-none">
+  <div class="cabezera_resp d-flex justify-content-center py-4 " >
+  <div class="logo d-flex justify-content-center px-3">
+      <a href="" class="" ><img src="/static/img/CRP.png" alt="#"></a>
+  </div>
+  <button class="desactivador_de_nav d-xl-none d-md-block ">
+      <i class="bi bi-list"></i>
+  </button>
+  </div>
+  <hr class="mt-0 mb-0" >
+  <div class="contenedor_elementos_responsive d-flex justify-content-center ">
+      <ul class="ul_responsive w-100">
+          <li class="button "><a href="" class="">Inicio</a></li>
+          <li class="button "><a href="" class="">Productos</a></li> 
+          <li class="button "><a href="" class="">Pagos</a></li>
+          <li class="button "><a href="" class="">Pedidos</a></li>
+
+          <li class="li_drpdwn">
+              <a href="#" class="subtitulo text-decoration-none d-block mt-2"> <svg xmlns="http://www.w3.org/2000/svg" class="mx-1 mb-2" width="30" height="30" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                  <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                </svg>
+                
+              Nombre de usuario
+                  <i class="bi bi-arrow-down-circle  abajo"></i> <i class="bi bi-arrow-up-circle arriba"></i> <hr class="w-100 mt-1 mb-1">
+              </a>
+                  <div class="dropdown  d-flex justify-content-center ">
+                    <div class="list-unstyled elementos w-100  ">
+                      <a href="#" class="text-decoration-none "><i class="bi bi-pencil-square mx-4"></i>
+                          <p style="padding-top: 3%;">Editar perfil</p>
+                      </a>
+
+          
+
+                      <a href="#" class="text-decoration-none "><i class="bi bi-gear mx-4"></i>
+                          <p style="padding-top: 3%;">Configuraciones</p>
+                      </a>
+                          
+                      <a href="#" class="text-decoration-none "><i class="bi bi-question-circle mx-4"></i>
+                          <p style="padding-top: 3%;">Ayuda</p>
+                      </a>
+                              
+                      <a href="#" class="text-decoration-none "><i class="bi bi-door-open mx-4"></i>
+                          <p style="padding-top: 3%;">Cerrar sesión</p>
+                      </a>                            
+                  
+                    </div>
+                  </div>
+          </li>
+      </ul>
+
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row">
+  
+      <div class="col-md-12 col-md-offset-1">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+  
+        {% if messages %}
+  
+          {% for category, message in messages %}
+            {% if category == 'error' %}
+              <div class="alert alert-danger" role="alert">
+                {{ message }}
+              </div>
+            {% else %}
+              <div class="alert alert-success" role="alert">
+                {{ message }}
+              </div>
+            {% endif %}
+          {% endfor %}
+  
+        {% endif %}
+  
+        {% endwith %}
+      </div>
+      {% block container %}
+      
+      {% endblock %}
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+<script>
+
+   var header = document.querySelector('header');
+    var alturaHeader = parseFloat(getComputedStyle(header).height);
+
+    window.addEventListener('scroll', e => {
+        var color;
+        if (window.scrollY == 0) {
+            color = 'rgba(255, 255, 255, 0.63)';
+        } else if (window.scrollY >= alturaHeader && window.scrollY < 2 * alturaHeader) {
+            color = 'white';
+        }
+        header.style.setProperty('background', color);
+    });
+
+
+    $(document).ready(function() {
+        $('.user').on('click', function() {
+            $('.sub-menu-wrap').toggleClass('active');
+        });
+
+        $('.activador_de_nav').on('click', function() {
+            $('.responsive_nav').addClass('active');
+        });
+
+        $('.desactivador_de_nav').on('click', function() {
+            $('.responsive_nav').removeClass('active');
+        });
+    });
+
+      
+
+
+
+</script>
+
+<script type="text/javascript">
+  function showContent() {
+    var check1 = document.getElementById("check1");
+    var check2 = document.getElementById("check2");
+    var check3 = document.getElementById("check3");
+    var check4 = document.getElementById("check4");
+    var inputContainer = document.getElementById("banco_nacional");
+    var inputContainer2= document.getElementById("banco_internacional");
+    var inputContainer3 = document.getElementById("banco_nacional_ppv");
+    var inputContainer4= document.getElementById("banco_internacional_ppv");
+    var render_bs = document.getElementById("banco_receptor")
+    var render_crp_dolar = document.getElementById("banco_receptor_dolar")
+    var render_bs_ppv = document.getElementById("banco_receptor_ppv")
+    var render_ppv_dlrs = document.getElementById("banco_receptor_dolar_ppv")
+
+    if (check1.checked) {
+      inputContainer.style.display = "block";
+      render_bs.required = true;
+      check2.disabled = true;
+    } else {
+      inputContainer.style.display = "none";
+      render_bs.required = false;
+      check2.disabled = false;
+    }
+
+    if (check2.checked){
+      inputContainer2.style.display = "block";
+      render_crp_dolar.required = true;
+      check1.disabled = true;
+    } else {
+      inputContainer2.style.display = "none";
+      render_crp_dolar.required = false;
+      check1.disabled = false;
+    }
+
+    if (check3.checked) {
+      inputContainer3.style.display = "block";
+      render_bs_ppv.required = true;
+      check4.disabled = true;
+    } else {
+      inputContainer3.style.display = "none";
+      render_bs_ppv.required = false;
+      check4.disabled = false;
+    }
+
+    if (check4.checked) {
+      inputContainer4.style.display = "block";
+      render_ppv_dlrs.required = true;
+      check3.disabled = true;
+    } else {
+      inputContainer4.style.display = "none";
+      render_ppv_dlrs.required = false;
+      check3.disabled = false;
+    }
+  }
+
+
+  function seleccionar_empresa() {
+
+  var valorSeleccionado = document.getElementById("empresa_beneficiaria").value;
+
+  var divCRP = document.getElementById("crp");
+  var divPPV = document.getElementById("ppv");
+
+  if (valorSeleccionado == "CRP") {
+    divCRP.style.display = "block";
+  } else {
+    divCRP.style.display = "none";
+  }
+
+  if (valorSeleccionado == "PPV"){
+    divPPV.style.display = "block";
+  } else {
+    divPPV.style.display = "none";
+  }
+}
+</script>
+
+
+{% block js%}
+
+{% endblock %}
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,1067 @@
+@import url('https://fonts.googleapis.com/css2?family=Play&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Play&family=Sora:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Play&family=Sora:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Play&family=Sora:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat&family=Play&family=Sora:wght@300&display=swap');
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body{
+    max-width: 100%;
+    overflow-x: hidden;
+
+}
+h3{
+  font-family: 'Bebas Neue', sans-serif;
+  text-align: center;
+  font-size: 35px;
+}
+header{
+    font-family: 'Play', sans-serif;
+    position: fixed;
+    top: 0;
+    right: 5;
+    left: 5;
+    width: 100%;
+    background: white;
+    border-bottom: solid 3px #D50000;
+    z-index: 2;
+    transition: background ease-in-out 0.2s;
+
+}
+
+nav{
+    display: flex;
+    justify-content: space-between;
+}
+.contenedor_elementos{
+  margin-right: -70px;
+    padding: 10px 10px 10px 60px;
+}
+.contenedor_elementos ul {
+    list-style: none; 
+    padding: 0; 
+
+  }
+
+.contenedor_elementos li{
+    display: inline-block;
+    margin-top: 15px;
+}
+.logo img{
+    height: 50px;
+    margin-left: 10px;
+}
+.contenedor_elementos a{
+  font-size: 17px;
+  border: none;
+  background: none;
+  text-decoration: none;
+  color: black;
+  position: relative;
+}
+
+.contenedor_elementos a::before {
+  margin-left: auto;
+}
+
+.contenedor_elementos a::after, .contenedor_elementos a::before {
+  content: '';
+  width: 0%;
+  height: 2px;
+  background: #D50000;
+  display: block;
+  transition: 0.5s;
+  
+}
+
+.contenedor_elementos a:hover::after, .contenedor_elementos a:hover::before {
+  width: 100%;
+}
+
+.elementos_interac ul {
+    list-style: none; 
+    padding: 0; 
+}
+.elementos_interac li{
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.boton:link,
+.boton:visited {
+ text-transform: uppercase;
+ text-decoration: none;
+ color: white;
+ padding: 10px 30px;
+ border-radius: 1000px;
+ display: inline-block;
+ transition: all .2s;
+ position: relative;
+ background-color: #D50000;
+}
+
+.boton:hover {
+ transform: translateY(-5px);
+ box-shadow: 0 10px 20px rgba(27, 27, 27, .5);
+}
+
+
+.boton:active {
+ transform: translateY(-3px);
+}
+
+.boton::after {
+ content: "";
+ display: inline-block;
+ height: 100%;
+ width: 100%;
+ border-radius: 100px;
+ top: 0;
+ left: 0;
+ position: absolute;
+ z-index: -1;
+ transition: all .3s;
+}
+
+.boton:hover::after {
+ background-color: rgb(22, 22, 22);
+ transform: scaleX(1.4) scaleY(1.5);
+ opacity: 0;
+}
+
+.elementos_interac a{
+    text-decoration: none;
+    color: black;
+    margin: 0px 20px 0px 20px;
+}
+.elementos_interac{
+    font-family: 'Sora', sans-serif;
+    padding: 10px 60px 10px 60px; 
+}
+
+.responsive_nav {
+  background-color: #E0E0E0;
+  position: fixed; 
+  z-index: 3; 
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 80%; 
+  text-align: center;
+  transform: translateX(100%); 
+  transition: transform 0.3s ease-in-out;
+}
+
+
+.responsive_nav.active {
+  transform: translateX(0); 
+}
+
+.activador_de_nav, .desactivador_de_nav{
+  border-radius: 5px;
+  font-size: 25px;
+  border: none;
+  background: none;
+  margin-right:  0 !important;
+}
+
+.responsive_nav .contenedor_elementos_responsive ul{
+  list-style: none;
+  padding: 0 !important;
+  
+
+}
+.contenedor_elementos_responsive a{
+  font-size: 17px;
+  border: none;
+  background: none;
+  text-decoration: none;
+  color: black;
+  position: relative;
+
+}
+.contenedor_elementos_responsive li{
+  margin-bottom: 30px;
+  margin-top: 50px;
+  height: 50px;
+  
+}
+.button {
+  border: none;
+  outline: none;
+  background-color: rgb(255, 255, 255);
+  padding: 10px 20px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  border-radius: 5px;
+  transition: all ease 0.1s;
+  box-shadow: 0px 5px 0px 0px #9e0202b9;
+}
+
+.button:active {
+  transform: translateY(5px);
+  box-shadow: 0px 5px 0px 0px #d50000b9;
+}
+
+.logo{
+  padding: 0 0 0 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media(max-width:665px){
+  .boton{
+      font-size: 10px;
+      text-align: center;
+      width: auto;
+  }
+  nav{
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+  }
+  .logo img{
+    height: 37px;
+    margin-left: -10px;
+  }
+
+  .logo{
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .elementos_interac{
+    margin: 0;
+    padding: 0;
+  }
+  .activador_de_nav{
+    margin-left: -10px;
+  }
+
+}
+/*------------------Hasta aqui el Nav--------------------*/
+.container.video{
+  height: 370px;
+  width: 100%;
+
+}
+section.primer_carr {
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+}
+
+.carrousel_contain {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
+.carousel-item img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  margin: 0;
+  padding: 0;
+}
+
+/*←------------------hasta aqui llega el css del carroussel-------------------------→*/
+main{
+  padding: 40px
+}
+.imagen{
+  height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex;
+  justify-content: center;
+}
+.imagen img{
+    height: 100%;
+    width: 90%;
+    border-radius: 16px;
+    margin: 0 !important;
+    margin-right: 0 !important;
+
+}
+
+
+
+@media(max-width:990px){
+  main{
+    padding: 0px !important;
+  }
+  .contenedor_us{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+  }
+
+
+
+}/*------------------------------Hasta aqui la de la descripción----------------------*/
+
+.tarjetas_marcas{/*←-----Marcas----------------------------------→*/
+    margin: 5px 30px 0px 30px;
+    cursor: pointer;
+    border-radius: 0.75rem;
+    position: relative;
+}
+
+.tarjetas_marcas .imagen_marc:hover{
+  box-shadow: 0px 0px 6px 3px #00000027;
+}
+.imagen_marc{
+    height: 180px;
+    width: 200px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0px 40px 0px 40px;
+    background: white;
+    transition: box-shadow ease-in-out 0.3s;
+}
+.imagen_marc img{
+    height: 100px;
+}
+
+.tarjetas_marcas h2{
+    color: black;
+    text-align: center;
+}
+.marcas .titulo h2{
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+}/*←------------------hasta aqui llega el css de las marcas-------------------------→*/
+
+
+.contenedor_2 h2{/*--------------Aqui empieza los carrousel del mercado que abarcamos*/
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    margin-top: 10px;
+}
+
+.contenedor_2{
+    font-family: 'Sora', sans-serif;
+}
+
+
+  
+  .header {
+    position: relative;
+    background-clip: border-box;
+    margin-top: 1.5rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    border-radius: 0.75rem;
+    background-color: #b10505;
+    color: aliceblue;
+    box-shadow: 0 10px 15px -3px rgba(33,150,243,.4),0 4px 6px -4px rgba(33,150,243,.4);
+    height: 50px;
+  }
+  
+  .info {
+    border: none;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  
+  .footer {
+    padding: 0.75rem;
+    border: 1px solid rgb(236 239 241);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 140, 255, 0.082);
+  }
+  
+  .tag {
+    font-weight: 300;
+    font-size: .75rem;
+    display: block;
+  }
+  
+  .action {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    border: none;
+    outline: none;
+    box-shadow: 0 4px 6px -1px rgba(33,150,243,.4),0 2px 4px -2px rgba(33,150,243,.4);
+    color: rgb(255 255 255);
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: .75rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #b10505;
+    border-radius: 0.5rem;
+  }
+
+  article {
+    --img-scale: 1.001;
+    --title-color: black;
+    --link-icon-translate: -20px;
+    --link-icon-opacity: 0;
+    position: relative;
+    border-radius: 16px;
+    box-shadow: none;
+    background: #fff;
+    transform-origin: center;
+    transition: all 0.4s ease-in-out;
+    overflow: hidden;
+    min-width: 300px;
+    
+
+  }
+  
+  article a::after {
+    position: absolute;
+    inset-block: 0;
+    inset-inline: 0;
+    cursor: pointer;
+    content: "";
+  }
+  
+
+  article h2 {
+    margin: 0 0 18px 0;
+    font-family: "Bebas Neue", cursive;
+    font-size: 1.9rem;
+    letter-spacing: 0.06em;
+    color: var(--title-color);
+    transition: color 0.3s ease-out;
+  }
+  
+  figure {
+    margin: 0;
+    padding: 0;
+    aspect-ratio: 12 / 10;
+    overflow: hidden;
+  }
+  
+
+  
+  .article-body {
+    padding: 24px;
+  }
+  
+  article a {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: #28666e;
+  }
+  
+  article a:focus {
+    outline: 1px dotted #28666e;
+  }
+  
+  article a .icon {
+    min-width: 24px;
+    width: 24px;
+    height: 24px;
+    margin-left: 5px;
+    transform: translateX(var(--link-icon-translate));
+    opacity: var(--link-icon-opacity);
+    transition: all 0.3s;
+  }
+  
+  article:has(:hover, :focus) {
+    --img-scale: 1.1;
+    --title-color: #28666e;
+    --link-icon-translate: 0;
+    --link-icon-opacity: 1;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  .carousel-inner{
+    margin-top: 13px;
+    border-radius: 16px;
+  }
+
+  .carrousel_containn .carousel{
+    border-radius: 16px;
+  }
+ 
+  .articles {
+
+    display: flex;
+  max-width: 100%;
+  margin-inline: auto;
+  padding-inline: 24px;
+  gap: 24px;
+  }/*-----------------Hasta aqui los articles del mercado que abarcamos-----------------------*/
+
+
+  .la_corporacion{/*-------------A partir de aqui los botones de la corporacion--------------*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 10px 20px 10px;
+
+  }
+  
+  .social-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    width: 150px;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin: 0 10px;
+    background-color: #fff;
+    box-shadow: 0px 0px 4px #00000027;
+    transition: 0.3s;
+    margin: 0 20px 0 20px;
+  }
+  
+  .la_corporacion img {
+    transition: 0.3s;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .corimon {
+    background-color: transparent;
+  }
+
+  .corimon img{
+    height: 40px;
+  }
+  
+  .corimon:hover{
+    box-shadow: 0px 0px 6px 3px #00000027;
+    background: #ffffff;
+  }
+  
+  .Montana {
+    background-color: transparent;
+  }
+  .Montana:hover{
+    box-shadow: 0px 0px 6px 3px #00000027;
+    background: #ffffff;
+  }
+  
+  .Montana img{
+    height: 70px;
+  }
+
+  .cerdex {
+    background-color: transparent;
+  }
+  .cerdex img{
+    height: 60px;
+  }
+  .cerdex:hover{
+    box-shadow: 0px 0px 6px 3px #00000027;
+    background: #ffffff;
+  }
+  .envaca {
+    background-color: transparent;
+  }
+  .envaca img{
+    height: 60px;
+    width: auto;
+  }
+  .envaca:hover{
+    box-shadow: 0px 0px 6px 3px #00000027;
+    background: #ffffff;
+  }
+  .resimon {
+    background-color: transparent;
+  }
+  .resimon img{
+    height: 60px;
+  }
+  .resimon:hover{
+    box-shadow: 0px 0px 6px 3px #00000027;
+    background: #ffffff;
+  }/*--------------Hasta aqui logos de la corporación-----------------*/
+  
+
+/*↓↓↓↓↓ -----Landing Mision aquii----↓↓↓↓↓*/
+
+
+section#section1_landing_QuienesSomos {/*---------------Aqui empieza la section 1 de "¿Quienes somos? de la pagina de landing_mision"-------------------*/
+    top:0;
+    right: 0;
+    left: 0;
+
+
+}
+
+.contain {
+    height: 450px;
+    width: 100%;
+    overflow: hidden;
+    
+  }
+  
+  .contain img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    
+  }
+
+/*-------------------------------Cierre del section 1 de "¿Quienes somos?"-----------------------*/
+
+/*-------------------------------Inicio del section 2 de "¿Quienes somos?"-----------------------*/
+#section2_landing_QuienesSomos{
+  padding: 0 !important;
+
+}
+
+.imagen_vision img{
+    height: 500px;
+    width: 420px;
+    border-radius: 10px;
+
+
+}
+
+.card {
+    height: auto;
+    background: #fff;
+    border: none;
+    padding: 0 !important;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+
+}
+
+
+.card .contenido p{
+padding: 10px 50px 10px 70px;
+font-family: 'Montserrat', sans-serif;
+text-align: justify;
+
+}
+
+.contenido{
+  margin-top: 3%;
+}
+
+.contenedor_mision-vision{
+  padding: 30px 24px 0px 24px;
+}
+.mision{
+    background-color: #3b3b3b;
+    text-align: center;
+    border-right: solid 5px #D50000;
+    padding: 10px;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+}
+
+.vision{
+  background-color: #d1d1d6;
+  text-align: center;
+  border-left: solid 5px #d1d1d6;
+  color: rgb(0, 0, 0);
+  padding: 10px;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.mision h3{
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 27px;
+}
+.mision p{
+text-align: justify;
+font-size: 14px;
+
+}
+
+ .vision h3{
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 27px;
+}
+ .vision p{
+ text-align: center;
+ font-size: 14px;
+}
+
+
+@media (max-width:1115px){
+  #section2_landing_QuienesSomos .row{
+      display: flex;
+      justify-content: center;
+  }
+  .imagen_vision{
+      display: flex;
+      justify-content: center;
+      height: 370px;
+      width: 370px;
+  }
+  .imagen_vision img{
+      height: 100%;
+      width: 100%;
+  }
+  .mision{
+      border-radius: 16px;
+      margin-bottom: 12px;
+      border: none;
+
+  }
+  .vision{
+      border-radius: 16px;
+  }
+}
+
+/*--------------Hasta aqui el section 2 del landing de "¿Quienes somos?"----------------------*/
+
+/*---------Aqui empieza la section 3 del landing de ¿Quienes somos?----------------*/
+.contenedor_s3{
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  margin-top: 30px;
+  padding: 0 !important;
+  border-radius: 16px;
+  background-color: white;
+  
+}
+
+.calidad{
+    padding: 1rem;
+    border-radius: 16px;
+    background: #fdfdff;
+    box-shadow: 2px 4px 42px 0px #cfcece;
+    -webkit-box-shadow: 2px 4px 42px 0px #cfcece;
+    -moz-box-shadow: 2px 4px 42px 0px #cfcece;
+    padding-bottom: 3px !important;
+}
+
+.calidad.mas{
+    background: #3b3b3b;
+    color:#cacdd2;
+    padding-bottom: 1px !important;
+
+}
+
+.contenedor_s3 .imagen_calidad {
+    height: 614px
+
+    
+}
+.contenedor_s3 .imagen_calidad img {
+    height: 100%;
+    width: 100%;
+    border-radius: 16px;
+}
+@media(max-width: 1115px){
+    .imagen_calidad img{
+        max-width: 340px;
+        max-height: 450px;
+        margin: 20px !important;
+    }
+
+    .imagen_calidad{
+        display: flex;
+        justify-content: center;
+        margin-top: 0 !important;
+        padding:  0 !important;
+    }
+}/*---------------------Aqui termina el section 3 del landing de ¿Quienes somos?------------------------*/
+
+.logo_Pmontana{/*----------Comienzo del section 4-------------------------------------------------*/
+    background: transparent;
+    height: 300px;
+    width: 300px;
+    display: flex;
+    justify-content: center;
+    padding: 0 !important;
+    
+}
+
+.logo_Pmontana_2{/*----------Comienzo del section 4-------------------------------------------------*/
+    background: transparent;
+    height: 250px;
+    width: 200px;
+    display: flex;
+    justify-content: center;
+
+    
+}
+.logo_Pmontana_2 img{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+
+
+}
+
+
+.logo_Pmontana img{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+
+}
+
+.contenido_section4 {
+
+text-align: justify;
+padding: 1rem;
+margin:  0 !important;
+}
+
+.contenedor_valores{
+    margin: 0;
+    padding: 0 !important;
+
+}
+
+.caja{
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex;
+    justify-content: center;
+}
+
+
+.logo_ppv img{
+    height: 110px;
+    width:270px;
+    display: flex;
+    align-items: center;
+}
+
+
+.logo_pinco{
+    height: 300px;
+    width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.contenido p{
+    text-align: justify;
+    color: #000;
+}
+
+.valor .valori p {
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #666;
+}
+
+.valori p.small {
+  font-size: 12px;
+}
+
+.go-corner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  top: 0;
+  right: 0;
+  background-color: #D50000;
+  border-radius: 0 4px 0 32px;
+}
+
+.go-arrow {
+  margin-top: -4px;
+  margin-right: -4px;
+  color: white;
+  font-family: courier, sans;
+}
+
+.valori {
+  display: block;
+  position: relative;
+  background-color: #f2f8f9;
+  border-radius: 4px;
+  padding: 32px 24px;
+  margin: 12px;
+  text-decoration: none;
+  z-index: 0;
+  overflow: hidden;
+  height: 72PX;
+  transition: all 0.25s ease-out;
+  padding-bottom: 0 !important;
+    max-width: 200px;
+    margin-top: 0;
+}
+
+.contenedor_pinco{
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+
+
+
+}
+
+
+.desc_pinco .valori {
+    display: block;
+    position: relative;
+    background-color: #f2f8f9;
+    border-radius: 4px;
+    padding: 32px 24px;
+    margin: 12px;
+    text-decoration: none;
+    z-index: 0;
+    overflow: hidden;
+    height: 70PX;
+    transition: all 0.25s ease-out;
+    padding-bottom: 0 !important;
+
+    margin-top: 0;
+  }
+
+  .valores{
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+@media(max-width: 1115px){
+    .logo_Pmontana{
+     display: flex;
+     justify-content: center;
+     margin-left: 20px;
+    }
+    .logo_Pmontana_2{
+        display: flex;
+        justify-content: center;
+        
+    }
+    .contenedor_valores{
+        display: flex;
+        justify-content: center;
+    }
+    .valori{
+        max-width: 140px;
+    }
+    .valor .valori p {
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 20px;
+        color: #666;
+      }
+      
+      .valori p.small {
+        font-size: 12px;
+      }
+      .desc_pinco .valori {
+        max-width: 110px;
+      }
+ }
+.valori:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -16px;
+  right: -16px;
+  background: #3b3b3b;
+  height: 32px;
+  width: 48px;
+  border-radius: 32px;
+  transform: scale(1);
+  transform-origin: 50% 50%;
+  transition: transform 0.25s ease-out;
+
+}
+.valori:hover{
+    height: auto;
+}
+.valori:hover:before {
+  transform: scale(21);
+
+}
+
+.valori:hover p {
+  transition: all 0.3s ease-out;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.valori:hover h3 {
+  transition: all 0.3s ease-out;
+  color: #fff;
+  
+}
+
+
+
+
+/*hasta aqui la section 4*/
+
+  footer{/*----------------Aqui empieza el footer---------------------*/
+    position: relative;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #111;
+    height: auto;
+    width: 100%;
+    padding-top: 10px;
+    color: #fff;
+    margin-top: 0 !important;
+    border-top: #D50000 solid 3px;
+}
+
+
+.footer-content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+.footer-content ul li a{
+color: #b10505;
+}
+
+.footer-content ul li a:hover{
+    color: cadetblue
+    }
+.footer-content h3{
+    font-size: 2.1rem;
+    font-weight: 500;
+    text-transform: capitalize;
+    line-height: 3rem;
+}
+
+.footer-content p{
+    max-width: 500px;
+    margin: 10px auto;
+    line-height: 28px;
+    font-size: 14px;
+    color: #cacdd2;
+}
+
+
+ @media (max-width:500px) {
+    .footer-menu ul{
+      display: flex;
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+}/*-----------------Aqui cierra el footer------------------------*/
+

@@ -1,0 +1,99 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_forms.html' import render_field %}
+{% block container %}
+
+
+<main class="d-flex justify-content-center">
+<div class="contenedor_descripcion container col-xl-8 col-sm-12">
+    <div class="titulo d-flex justify-content-center">
+        <h3 class="fs-1">Depósito N°: {{ datos.n_deposito }}</h2>
+    </div>
+    <hr>
+   
+    <div class="celdas">
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Rif:</strong> {{ datos.rif }} </p>
+        </div>
+        <div class="cuadro"><i class="bi bi-person-vcard icono"></i></div>
+      </div>
+
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Empresa:</strong> {{ datos.empresa }} </p>
+        </div>
+        <div class="cuadro"><i class="bi bi-buildings icono"></i></div>
+      </div>
+
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Banco emisor:</strong> {{ datos.rif }} </p>
+        </div>
+        <div class="cuadro"><i class="bi bi-bank icono"></i></div>
+      </div>
+      
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Banco receptor:</strong> {{datos.banco_receptor}} </p>
+        </div>
+        <div class="cuadro"><i class="bi bi-bank icono"></i></div>
+      </div>
+
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Fecha:</strong> {{ datos.fecha_deposito }} </p>
+        </div>
+        <div class="cuadro"><i class="bi bi-calendar icono"></i></div>
+      </div>
+
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Monto:</strong> {{ datos.monto }} {{ datos.divisa}} </p>
+        </div>
+        <div class="cuadro"><i class="bi bi-cash-coin icono"></i></div>
+      </div>
+
+
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Comprobante:</strong> {{ datos.comprobante }} </p>
+        </div>
+        <div class="cuadro"><i class="bi bi-book icono"></i></div>
+      </div>
+      
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Observación:</strong> {{ datos.observacion }} </p>
+        </div>
+        <div class="cuadro"><i class="bi bi-chat-dots-fill icono"></i></div>
+      </div>
+      {% if datos.imagen %}
+      <div class = "cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Adjunto pago:</strong> <a href="/static/Adjunto/{{ datos.imagen }}" download="{{ datos.imagen }}">{{ datos.imagen }}</a></p>
+        </div>
+        <div class="cuadro"><i class="bi bi-file-earmark-arrow-down icono"></i></div>
+      </div>
+      {% endif %}
+      <hr>
+
+      {% if current_user.nivel == "corimon" or current_user.nivel=="administrador" %}
+                <div class="mt-4 row d-flex justify-content-center ">
+                <a href="{{ url_for('.editar', n=datos.n_deposito)}}" class="boton col-4 mx-3" style="background-color: #71afe5; color: #1C1D21; font-weight: 500; text-align: center;">Editar <i class="bi bi-pencil-square"></i></a>   
+                <a href="{{ url_for('.eliminar', n=datos.n_deposito)}}" class="boton col-4 mx-3" style="text-align: center; font-weight: 500;">Eliminar <i class="bi bi-trash3"></i> </a>
+                <a href="{{ url_for('.aprobar', estado='aprobado',n=datos.n_deposito)}}" class="boton col-4 mx-3 my-3" style="background-color: #018E42; color: #fff; font-weight: 500; text-align: center;">Confirmar Pago <i class="bi bi-patch-check-fill"></i></a>   
+                <a href="{{ url_for('.aprobar', estado='negado', n=datos.n_deposito)}}" class="boton col-4 mx-3 my-3" style="text-align: center; font-weight: 500;">Rechazar <i class="bi bi-x-octagon-fill"></i></a>
+                </div>
+                {% endif %}
+                <!---<a href="/static/Adjunto/{{ datos.imagen }}" download="{{ datos.imagen }}">-->
+               <!--- <img   {% if datos.imagen %} src="/static/Adjunto/{{ datos.imagen }}" {% else %}  {% endif %} alt="">-->
+    </div>
+    
+  </div>
+</main>
+
+
+
+
+
+{% endblock %}

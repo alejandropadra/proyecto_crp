@@ -1,0 +1,183 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}
+{{titulo}}
+{% endblock %}
+
+{% block metas %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
+
+{% block styles %}
+<!--Bootstrap-->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+<!--Css-->
+<link rel="stylesheet" href="{{ url_for('static', filename = 'css/estilos_landings.css') }}">
+<!--Fontawesome-->
+<script src="https://kit.fontawesome.com/8a2f042b38.js" crossorigin="anonymous"></script>
+<!--Iconos Bootstrap-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!--Bootstrap-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<link rel='icon' type='image/png' href="{{ url_for('static', filename = 'img/figura_corimonn.png') }}">
+{% block estilos %}
+
+{% endblock%}
+
+
+
+{% endblock %}
+
+
+
+{% block body %}
+{% block navbar %}
+<header>
+    <nav>
+        
+        <div class="logo">
+            <a href=""><img src="/static/img/CRP.png" alt="#"></a>
+        </div>
+        
+        <div class="contenedor_elementos d-none d-xl-block">
+
+            <ul>
+              <li class="mx-4"><a href="/">Inicio</a></li>
+              <li class="mx-4"><a href="/nosotros">¿Quienes Somos?</a></li>
+              <li class="mx-4"><a href="">Productos</a></li>
+              <li class="mx-4"><a href="">Contactanos</a></li>
+            </ul>
+          </div>
+          
+        <div class="elementos_interac d-flex">
+            <ul class="">
+                <li class="active mx-1"><a href="/login" class="boton"> Inicio de Sesión </a></li> 
+            </ul>
+            <button class="activador_de_nav d-xl-none d-md-block">
+                <i class="bi bi-list"></i>
+            </button>
+
+
+        </div>
+    </nav>
+
+</header>
+
+<div class="responsive_nav w-100 ">
+    <div class="cabezera_resp d-flex justify-content-center py-2">
+    <div class="logo d-flex justify-content-center ">
+        <a href="" class="mx-5"><img src="/static/img/CRP.png" alt="#"></a>
+    </div>
+    <button class="desactivador_de_nav d-xl-none d-md-block ">
+        <i class="bi bi-list"></i>
+    </button>
+    </div>
+    <hr class="mt-0" >
+    <div class="contenedor_elementos_responsive">
+        <ul>
+            <li class="mx-4 button"><a href="/">Inicio</a></li>
+            <li class="mx-4 button"><a href="/nosotros">¿Quienes Somos?</a></li> 
+            <li class="mx-4 button"><a href="">Productos</a></li>
+            <li class="mx-4 button"><a href="">Contactanos</a></li>
+        </ul>
+    </div>
+</div>
+
+
+{% endblock %}
+{% block content %}
+
+
+<div class="container">
+    <div class="row">
+  
+      <div class="col-md-12 col-md-offset-1">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+  
+        {% if messages %}
+  
+          {% for category, message in messages %}
+            {% if category == 'error' %}
+              <div class="alert alert-danger" role="alert">
+                {{ message }}
+              </div>
+            {% else %}
+              <div class="alert alert-success" role="alert">
+                {{ message }}
+              </div>
+            {% endif %}
+          {% endfor %}
+  
+        {% endif %}
+  
+        {% endwith %}
+      </div>
+  
+  
+      {% block container %}
+      
+      {% endblock %}
+    </div>
+  </div>
+
+  {% endblock %}
+
+  
+<footer>
+    <div class="footer-content" >
+        <h3 class="text-center">Corimon Pinturas, C.A.</h3>
+        <ul class="socials list-unstyled d-flex">
+            <li><a href="#"><i class="bi bi-instagram mx-2"></i></a></li>
+            <li><a href="#"><i class="bi bi-facebook mx-2"></i></a></li>
+            <li><a href="#"><i class="bi bi-reddit mx-2"></i></a></li>
+         </ul>
+        
+    </div>
+    <div class= " footer-bottom mx-2" >
+        <p>copyright &copy;2023 Realizado por el departamento de Digitalizacion industrial  </p>
+     </div>
+</footer>
+
+
+
+
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+<script>
+ var header = document.querySelector('header');
+    var alturaHeader = parseFloat(getComputedStyle(header).height);
+
+    window.addEventListener('scroll', e => {
+        var color;
+        if (window.scrollY == 0) {
+            color = 'rgba(255, 255, 255, 0.63)';
+        } else if (window.scrollY >= alturaHeader && window.scrollY < 2 * alturaHeader) {
+            color = 'white';
+        }
+        header.style.setProperty('background', color);
+    });
+
+
+    $(document).ready(function() {
+    $('.activador_de_nav').on('click', function() {
+      $('.responsive_nav').addClass('active');
+    });
+
+    $('.desactivador_de_nav').on('click', function() {
+      $('.responsive_nav').removeClass('active');
+    });
+  });
+</script>
+
+{% endblock %}
+
+{% endblock %}
