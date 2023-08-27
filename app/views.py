@@ -13,8 +13,8 @@ import requests
 from bs4 import BeautifulSoup
 
 import os
-local_adj = 'app\\static\\adjunto\\{}'
-server_adj = 'app/static/Adjunto/{}'
+local_adj = 'app\\static\\adj\\{}'
+server_adj = 'app/static/adj/{}'
 #sdfsdf
 page = Blueprint('page', __name__)
 
