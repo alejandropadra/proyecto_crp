@@ -13,6 +13,8 @@ import requests
 from bs4 import BeautifulSoup
 
 import os
+local_adj = 'app\\static\\adjunto\\{}'
+server_adj = 'app/static/Adjunto/{}'
 #sdfsdf
 page = Blueprint('page', __name__)
 
@@ -155,7 +157,7 @@ def cobranza():
         if  request.files['archivo']:
             imagen = request.files['archivo']
             nombre_imagen = secure_filename(current_user.username + '_' + str(n_deposito)+'_'+imagen.filename)
-            ruta_imagen = os.path.abspath('app\\static\\adjunto\\{}'.format(nombre_imagen))
+            ruta_imagen = os.path.abspath(server_adj.format(nombre_imagen))
             ruta_html = '{}'.format(nombre_imagen)
             imagen.save(ruta_imagen)
             if imagen.filename != '':

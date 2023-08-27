@@ -1,11 +1,12 @@
-
+local= 'mysql://root:Di.IoT4.0@localhost/cobranza'
+server = 'mysql://apadra:Di.2824@localhost/app_crp'
 
 class Config:
     SECRET_KEY = 'codigofacilito'
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:Di.IoT4.0@localhost/cobranza'
+    SQLALCHEMY_DATABASE_URI = server
 
     MAIL_SERVER = 'smtp.office365.com'
     MAIL_PORT = 587
