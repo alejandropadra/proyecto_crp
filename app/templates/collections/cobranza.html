@@ -2,12 +2,12 @@
 {% from 'helpers/_forms.html' import render_field %}
 {% block container %}
 
-<main>
-    <section class="d-flex justify-content-center my-4">
+<main >
+    <section class="d-flex justify-content-center my-4 p-2">
 
-      <div class="contenedor_form">
+      <div class="contenedor_form ">
           <form class="form" method = "POST" enctype="multipart/form-data">
-            <div class="titulo">Formulario de Cobranzas</div>
+            <div class="titulo">Registrar Pago</div>
 
            <!--↓↓ iNPUT DE RIF ↓↓-->
             <div class="input-container">
@@ -87,7 +87,7 @@
 
 
 
-          <div class="" id="ppv" style="display: none;">
+          <div class="" id="ppv" style="display: block;">
             <div class="contenedor_cheks row d-flex mt-3 d-flex justify-content-center pt-2">
               <p class="col-5" style="font-size: 20px; color: #333; font-weight: 500;">Tipo de moneda</p>
           
@@ -150,7 +150,7 @@
             <!--↓↓ iNPUT DEl NUMERO DEL MONTO ↓↓-->
             <div class="input-container">
               {{ render_field(form.n_deposito, class ="entrada", id="ref", required="", label_attr={"class": "label", "for": "ref"}) }}
-              <label for="ref" class="label">Ingrese referencia del deposito</label>
+              <label for="ref" class="label">Ingrese referencia del depósito</label>
               <div class="underline"></div>
             </div>
 
@@ -162,10 +162,10 @@
             </div>
 
             <!--INPUT archivo-->
-            <div class="input-container" style="margin-top: 50px">
+            <div class="input-container" style="margin-top: 50px; max-width: 100%;" >
               <!--<input type="file" name="archivo">-->
               
-              <input type="file" name="archivo">
+              <input type="file" name="archivo" style="max-width: 100%;">
               <!--<label for="archivo" class="label label_archivo" style="top: -25px; color: #333;">Adjunte el archivo</label>-->
               <div class="underline"></div>
             </div>

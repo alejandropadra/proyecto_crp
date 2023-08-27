@@ -35,7 +35,14 @@ tr.celda:hover{
 }
 
 </style>
-
+<main>
+{% if current_user.nivel == "corimon" or current_user.nivel=="administrador" %}
+<section class="mt-4 row d-flex justify-content-center">
+<div class="mt-4 row d-flex justify-content-center ">
+<a href="{{ url_for('.registroUsuario')}}" class="boton col-4 mx-3" style="text-align: center; font-weight: 500;">Registrar usuario <i class="bi bi-person-bounding-box"></i></i> </a>
+</div>
+</section>
+{% endif %}
 
 <div class="container mt-4 table-responsive" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); padding: 20px 20px 20px 20px; border-radius: 7px;">  
     <table id="example" class="display cell-border" style="width:100%">
@@ -84,7 +91,7 @@ tr.celda:hover{
         </tfoot>
     </table>
 </div>
-
+</main>
 
 {% endblock %}
 

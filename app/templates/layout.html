@@ -20,7 +20,6 @@
 {% endblock%}
 
 
-
 {% endblock %}
 {% block body %}
 {% block navbar %}
@@ -28,22 +27,22 @@
   <nav>
       
       <div class="logo">
-          <a href=""><img src="{{ url_for('static', filename = 'img/CRP.png') }}" alt="#"></a>
+          <a href="/"><img src="{{ url_for('static', filename = 'img/CRP.png') }}" alt="#"></a>
       </div>
       
       <div class="contenedor_elementos d-none d-xl-block">
 
           <ul>
             {% if current_user.is_authenticated %}
-            <li class="mx-4"><a href="{{ url_for('.panel')}}">Dashboard</a></li>
-            <li class="mx-4"><a href="{{ url_for('.cobranza')}}">Registrar Pago</a></li>
-            <li class="mx-4"><a href="{{ url_for('.lista_cobranza')}}">Pagos</a></li>
-            <li class="mx-4"><a href="">Pedidos</a></li>
+            <li class="mx-4"><a class="{% if titulo == 'Dashboard' %} active {% endif %}"  href="{{ url_for('.dashboard')}}">Dashboard</a></li>
+            <li class="mx-4"><a class="{% if titulo == 'reporte pago' %} active {% endif %}"  href="{{ url_for('.cobranza')}}">Registrar Pago</a></li>
+            <li class="mx-4"><a class="{% if titulo == 'Lista Cobranzas' %} active {% endif %}"  href="{{ url_for('.lista_cobranza')}}">Pagos</a></li>
+            <li class="mx-4"><a href="/soon" class="{% if titulo == 'Pedidos' %} active {% endif %}" >Pedidos</a></li>
             {% else %}
-            <li class="mx-4"><a href="{{ url_for('.index')}}">Inicio</a></li>
-            <li class="mx-4"><a href="{{ url_for('.nosotros')}}">¿Quienes Somos?</a></li>
-            <li class="mx-4"><a href="">Productos</a></li>
-            <li class="mx-4"><a href="">Contactanos</a></li>
+            <li class="mx-4"><a class="{% if titulo == 'Inicio' %} active {% endif %}" href="{{ url_for('.index')}}">Inicio</a></li>
+            <li class="mx-4"><a class="{% if titulo == 'Nosotros' %} active {% endif %}" href="{{ url_for('.nosotros')}}">¿Quienes Somos?</a></li>
+            <li class="mx-4"><a class="{% if titulo == 'En construccion' %} active {% endif %}" href="">Productos</a></li>
+            <li class="mx-4"><a class="{% if titulo == 'Contactanos' %} active {% endif %} " href="/contacto">Contáctanos</a></li>
             <li class="mx-4"><a href="{{ url_for('.login')}}">Iniciar sesión</a></li>
             {% endif %}           
           </ul>
@@ -63,12 +62,18 @@
             </svg>
           
           </div>
-          <button class="activador_de_nav d-xl-none d-md-block">
-              <i class="bi bi-list"></i>
-          </button>
+          <div class="d-xl-none d-sm-block">
+            <label class="burger" for="burger">
+              <input type="checkbox" id="burger" >
+              <span></span>
+              <span></span>
+              <span></span>
+            </label>
+
+          </div>
 
       </div>
-      <div class="sub-menu-wrap">
+      <div class="sub-menu-wrap d-none d-xl-block">
           <div class="sub-menu ">
               <div class="user-info " >
                   <svg xmlns="http://www.w3.org/2000/svg" class="mx-3 mb-2" width="30" height="30" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -76,18 +81,19 @@
                       <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
                     </svg>
                     
-                  <h3>{{current_user.username}}</h3>
+                  <h3 class="fs-5">{{current_user.username}}</h3>
               </div>
               <hr>
-
-              <a href="{{ url_for('.registroUsuario')}}" class="sub-menu-link">
+              {% if current_user.nivel != "cliente"%}
+              <a href="{{ url_for('.usuarios')}}" class="sub-menu-link">
                   <i class="bi bi-pencil-square"></i>
-                  <p>Registrar usuario</p>
+                  <p>Gestión de usuario</p>
                   <span>></span>
               </a>
-              <a href="" class="sub-menu-link">
+              {% endif %}
+              <a href="{{ url_for('.perfil')}}" class="sub-menu-link">
                   <i class="bi bi-gear"></i>
-                  <p>Configuraciones</p>
+                  <p>Perfil</p>
                   <span>></span>
               </a>
               <a href="" class="sub-menu-link">
@@ -106,6 +112,38 @@
   </nav>
 
 </header>
+
+<div class="responsive_nav 	d-xl-none ">
+  <div class="contenedor_elementos_responsive">
+      <ul>
+          <li class="mx-4 boton_menu_resp"><i class="bi bi-clipboard-data mx-3"></i><a href="{{ url_for('.dashboard')}}" class="mt-2">Dashboard</a></li>
+          <li class="mx-4 boton_menu_resp"><i class="bi bi-credit-card mx-3"></i> <a href="{{ url_for('.cobranza')}}" class="mt-1">Registrar pago</a></li> 
+          <li class="mx-4 boton_menu_resp"><i class="bi bi-card-checklist mx-3"></i><a href="{{ url_for('.lista_cobranza')}}" class="mt-1">Pagos</a></li>
+          <li class="mx-4 boton_menu_resp"><i class="bi bi-basket2 mx-3"></i><a href="/soon" class="mt-1">Pedidos </a></li>
+          <li class="mx-4 boton_menu_resp usuario_resp"> <div > <i class="bi bi-person-circle mx-3"></i> {{current_user.username}}<i class="bi bi-caret-down flecha mx-3"></i></div>
+          <div class="drpdwn_usuario_responsive w-100 py-3 px-2">
+            <ul>
+              {% if current_user.nivel != "Cliente"%}<li class="drpdwn_item"><i class="bi bi-card-checklist mx-3"></i><a href="{{ url_for('.usuarios')}}" class="mt-1">Gestión de usuario</a></li>{% endif %}
+              <li class="drpdwn_item" ><i class="bi bi-gear mx-3"></i><a href="{{ url_for('.perfil')}}" class="mt-1">Perfil</a></li>
+              <li class="drpdwn_item"><i class="bi bi-door-open mx-3"></i><a href="{{ url_for('.logout')}}" class="mt-1">Cerrar Cesión</a></li>
+            
+            </ul>
+
+          </div>
+          
+          
+          </li>
+      </ul>
+  </div>
+
+  <div class="footer_resp">
+    <ul>
+      <li class="item_resp "><i class="bi bi-question-circle algo"></i><a href=""> Ayuda</a></li>
+      <li class="item_resp "><i class="bi bi-building algo"></i><a href=""> Filiales</a></li>
+      <li class="item_resp "><i class="bi bi-linkedin algo"></i><a href=""> Linkedin</a></li>
+  </ul>
+  </div>
+</div>
 
 <div class="responsive_nav w-100 d-xl-none">
   <div class="cabezera_resp d-flex justify-content-center py-4 " >
@@ -220,6 +258,7 @@
     });
 
 
+
     $(document).ready(function() {
         $('.user').on('click', function() {
             $('.sub-menu-wrap').toggleClass('active');
@@ -235,7 +274,18 @@
     });
 
       
+    document.addEventListener("DOMContentLoaded", function() {
+  const checkbox = document.getElementById("burger");
+  const responsiveNav = document.querySelector(".responsive_nav");
 
+  checkbox.addEventListener("change", function() {
+    if (checkbox.checked) {
+      responsiveNav.classList.add("active");
+    } else {
+      responsiveNav.classList.remove("active");
+    }
+  });
+});
 
 
 </script>

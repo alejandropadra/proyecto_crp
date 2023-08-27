@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Tektur:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat&family=Play&family=Sora:wght@300&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.contenedor_email{
+    margin-top: 5%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 16px;
+    padding: 0 !important;
+    background-color: #fff;
+    border-bottom: #D50000 solid 3´x;
+  }
+  .logo_encabezado{
+    padding: 20px 20px 20xp 20px;
+    width: 100%;
+  
+    border-radius: 16px;
+    padding: 10px;
+    margin: 0 !important;
+  
+  }
+  .contenedor_texto_email h4{
+    font-size: 35px;
+    font-weight: 900;
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  .subtitulo_pie_pagina{
+    font-size: 35px;
+    font-weight: 900;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+  }
+  
+  .contenedor_texto_email p{
+    padding: 0 20px;
+    text-align: justify;
+    font-family: 'Montserrat', sans-serif;
+  }
+  .contenedor_texto_email{
+    padding: 0 40px 0 40px;
+  }
+  .logo_encabezado img{
+   max-width: 300px;
+   max-height: 350px;
+  }
+  
+  .pie-pagina{
+    background-color: black;
+    width: 100%;
+    text-align: center;
+    border-top: #D50000 solid 3px;
+    margin-top: auto;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    padding-top: 20px;
+
+  }
+  .contexto p{
+    font-size: 13px;
+    color: #7e7f80;
+  
+    
+  }
+  
+  .contexto{
+    background-color: #cacdd2;
+  padding: 20px 30px 0 30px
+  
+  }
+
+  .pie-pagina ul{
+    display: flex;
+    justify-content: center;
+    }
+  .pie-pagina ul li a{
+    color: #b10505;
+    }
+    
+  .pie-pagina ul li a:hover{
+    color: cadetblue
+    }

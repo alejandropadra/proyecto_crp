@@ -1,0 +1,85 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_forms.html' import render_field %}
+
+{% block container %}
+<main>
+
+  <div class="container mt-3">
+    <div class="row"> 
+      <div class="card col-sm-3">
+        <div class="card-body">
+          <h4 class="card-title">{{current_user.username}}</h4>
+          <p class="card-text">Rif: {{current_user.rif}}</p>
+          <p class="card-text">Email: {{current_user.email}}</p>
+          <p class="card-text">Zona: {{current_user.zona}}</p>
+          <p class="card-text">Vendedor: {{current_user.seller}}</p>
+          <p class="card-text">Registrado: {{current_user.created_at}}</p>
+        </div>
+      </div>
+      
+      <div id="accordion" class="col-sm-8">
+        <form method="POST">
+        <div class="card">
+          <div class="card-header">
+            <a class="collapsed btn" data-bs-toggle="collapse" href="#collapseOne">
+              Cambiar contraseña:
+            </a>
+          </div>
+          <div id="collapseOne" class="collapse" data-bs-parent="#accordion">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-5">
+                  Nueva contraseña:{{ render_field(form.password, id="password" ,class="form-control") }}
+                </div>
+                <div class="col-sm-5">
+                  Verificar contraeña:{{ render_field(form.confirm_password , class="form-control", id="confirmar" ) }}
+                </div>
+                <div class="col mt-4">
+                  <button type="submit" class="btn btn-success" onclick="location.reload();" > <span>Enviar</span></button>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+  
+        <div class="card">
+          <div class="card-header">
+            <a class="collapsed btn" data-bs-toggle="collapse" href="#collapseTwo">
+              Cambiar Email
+            </a>
+          </div>
+          <div id="collapseTwo" class="collapse" data-bs-parent="#accordion">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-5">
+                  Nuevo email:{{ render_field(form.email, id="email" ,class="form-control") }}
+                </div>
+                <div class="col-sm-5">
+                  Verificar email:{{ render_field(form.verify_email , class="form-control", id="confirmar" ) }}
+                </div>
+                <div class="col mt-4">
+                  <input type ="hidden" name = "csrf_token" value ="{{csrf_token()}}"/>
+                  <button type="submit" class="btn btn-success" onclick="location.reload();" > <span>Enviar</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      </div>
+    
+    </div>
+  </div>
+</main>
+
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>
+{% endblock %}

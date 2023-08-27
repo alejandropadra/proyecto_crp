@@ -1,0 +1,211 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_forms.html' import render_field %}
+{% block estilos %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
+
+{% endblock%}
+
+
+
+
+{% block container %}
+<!--
+<div class="contenedor_tarjetas1 container  ">
+  <div class="tarjeta_inicio col-xl-3 col-sm-12   ">
+    <div class="header-tarjeta p-3 pt-3 d-flex">
+      <div class="icono verde text-white col">
+        <i class="bi bi-person-circle"></i>
+      </div>
+      <div class="texto_tarjeta col" style="text-align: right;">
+        <p class="text-sm mb-0 text-capitalize"> <strong>Eliezer Chirino</strong></p>
+        <h4>eliezergach1508@gmail.com</h4>
+        <h4>C.i: 30094787</h4>
+        <h4>0424-4966405</h4>
+      </div>
+    </div>
+  </div>
+  
+  <div class="tarjeta_inicio col-xl col-sm-12  mx-4">
+    <div class="header-tarjeta p-3 pt-3 d-flex">
+      <div class="icono verde_dolar text-white col">
+        <i class="bi bi-currency-dollar"></i>
+      </div>
+      <div class="texto_tarjeta col" style="text-align: right;">
+        <p class="text-sm mb-0 text-capitalize"> <strong>Saldo ($)</strong></p>
+          <h2 class="mt-5"><span class="text-primary">+</span>2500$</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="tarjeta_inicio col-xl col-sm-12  mx-4">
+    <div class="header-tarjeta p-3 pt-3 d-flex">
+      <div class="icono rojo_mmg text-white col">
+        <i class="bi bi-wallet2"></i>
+      </div>
+      <div class="texto_tarjeta col" style="text-align: right;">
+        <p class="text-sm mb-0 text-capitalize"> <strong>Saldo (Bs)</strong></p>
+          <h2 class="mt-5"><span class="text-primary">+</span>3x10^∞</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="tarjeta_inicio col-xl col-sm-12  mx-4">
+    <div class="header-tarjeta p-3 pt-3 d-flex">
+      <div class="icono rojo_mmg text-white col">
+        <img src="/app/static/img/bcv.png" alt="" style="height: 30px;">
+      </div>
+      <div class="texto_tarjeta col" style="text-align: right;">
+        <p class="text-sm mb-0 text-capitalize"> <strong>Saldo (Bs)</strong></p>
+          <h2 class="mt-5"><span class="text-primary">+</span>3x10^∞</h2>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+-->
+
+<!--
+<div class="contenedor_tarj1 row ">
+
+  <div class="tarjeta_user  ">
+    <div class="titulo_saldo">
+        <div class="icono_tarjeta verde text-white" >
+          <i class="bi bi-person-circle"></i>
+          
+        </div>
+        <p class="titulo_saldo-text ">
+            Eliezer Chirino
+        </p>
+    </div>
+    <div class="data user text-right">
+      <p class="user w-100 ">eliezergach1508@gmail.com</p>
+      <p class="user w-100">J-455521425-0</p>
+      <p class="user w-100">0424-4966405</p>
+    </div>
+  </div>
+
+  <div class="tarjeta_saldo">
+    <div class="titulo_saldo ">
+        <div class="icono_tarjeta verde_dolar text-white">
+          <i class="bi bi-currency-dollar"></i>
+        </div>
+        <p class="titulo_saldo-text text-center">
+            Saldo ($)
+        </p>
+    </div>
+    <div class="data d-flex justify-content-center">
+      <p style="color: cornflowerblue;">+</p>
+        <p>39,500000$</p>
+    </div>
+  </div>
+
+  <div class="tarjeta_saldo  mx-3">
+    <div class="titulo_saldo">
+        <div class="icono_tarjeta rojo_mmg text-white">
+          <i class="bi bi-wallet2"></i>
+        </div>
+        <p class="titulo_saldo-text text-center">
+            Saldo (Bs)
+        </p>
+    </div>
+    <div class="data d-flex justify-content-center">
+      <p style="color: cornflowerblue;">+</p>
+        <p>3x10^∞ Bs</p>
+    </div>
+  </div>
+
+  
+</div>
+-->
+
+<div class="courses-container" style="margin-top: 100px;">
+  <div class="row">
+    <div class="col-xl col-lg-12 col-sm-12 col-md-12" >
+      <div class="row" >
+        <div class="tarjeta_saldo mb-4 w-100 col-xl-12 col-lg-6 col-md-6 col-sm" >
+          <div class="titulo_saldo ">
+              <div class="icono_tarjeta verde_dolar text-white mr-2">
+                <i class="bi bi-currency-dollar"></i>
+              </div>
+              <p class="titulo_saldo-text text-center">
+                  Saldo ($)
+              </p>
+          </div>
+          <div class="data d-flex justify-content-center">
+            <p style="color: cornflowerblue;">+</p>
+              <p>0,00$</p>
+          </div>
+        </div>
+      
+        <div class="tarjeta_saldo w-100 mb-3 col-xl-12 col-lg col-md col-sm" >
+          <div class="titulo_saldo">
+              <div class="icono_tarjeta rojo_mmg text-white mr-2 ">
+                <i class="bi bi-wallet2"></i>
+              </div>
+              <p class="titulo_saldo-text text-center">
+                  Tasa bcv
+              </p>
+          </div>
+          <div class="data d-flex justify-content-center">
+              <p>{{rate}} Bs</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  
+      <div class="row d-flex justify-content-center col-xl-9 col-lg-12 col-md-12 col-sm-12 " style="margin: 0px !important;">
+        
+          {% for pago in pago_t %}
+              
+              
+                  <a href="{{ url_for('.deposito', n=pago.n_deposito)}}"class="course {% if pago.estado == 1 %} listo {% elif pago.estado == 2 %} nega {% elif pago.estado == 0 %} progreso {% endif %} col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
+                      <div class="course-info">
+                          <div class="progress-container">
+                              <div class="progress  {% if pago.estado == 1 %} listo {% elif pago.estado == 2 %} nega {% elif pago.estado == 0 %} progreso {% endif %} "></div>
+                          </div>
+                  
+                          <h5>{% if pago.estado == 1 %} listo  <i class="bi bi-check-square"></i>{% elif pago.estado == 2 %} Error <i class="bi bi-exclamation-circle"></i>{% elif pago.estado == 0 %} Verificado <i class="bi bi-three-dots"></i> {% endif %}</h5>
+                          <h6 class="mx-1">Datos:</h6>
+                          <p> <strong>N° de depósito: </strong> {{pago.n_deposito}}</p>
+                          <p> <strong> Fecha: </strong> {{pago.fecha_deposito}}</p> 
+                          <p> <strong> Monto: </strong> {{pago.monto}} {{pago.divisa}}</p>
+                          <h6 class="masinfo w-100">Ver Detalles <i class="bi bi-arrow-right"></i></h6>
+                      </div>
+                  </a>
+              
+                  {% endfor%}
+  </div>
+
+
+
+
+</div>
+  
+</div>
+
+
+
+
+
+    
+{% endblock %}
+
+{% block js%}
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>  
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>  
+<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bulma.min.js"></script>
+<script>  
+  $(document).ready(function () {
+    $('#example').DataTable();
+});
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+{% endblock %}

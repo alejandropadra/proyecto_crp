@@ -11,12 +11,20 @@ def length_honeypot(form, field):
     
 class LoginForm(Form):
     rif = SelectField("", choices=[("J","J"),("G","G"),("V","V")])
-    n_rif = StringField("",[ validators.length(min=5,max=8),
+    n_rif = StringField("",[ validators.length(min=4,max=10),
                             validators.DataRequired()])
-    clave = PasswordField("",[validators.length(min=5,max=8),
+    clave = PasswordField("",[validators.length(min=4,max=20),
                             validators.DataRequired()])
     honeypot = HiddenField("", [ length_honeypot])
 
+class ContactForm(Form):
+    nombre= StringField("",[validators.DataRequired()])
+    telefono_contacto= StringField("",[validators.DataRequired()])
+     
+    motivo =SelectField("", [validators.DataRequired()], choices=[("",""), 
+                                                   ("comprar productos", "compra de nuestros productos"),
+                                                ("proveedor de materia prima", "proveedor de materia prima"),
+                                                ("empleo", "Busqueda de empleo")])
 
 class RegisterForm(Form):
     rif = SelectField("", choices=[("J","J"),("G","G"),("V","V")])
@@ -37,7 +45,7 @@ class RegisterForm(Form):
     '''accept = BooleanField('', [
         validators.DataRequired()
     ])'''
-    zona = SelectField("",[validators.DataRequired()], choices = [("",""),("Occidente","Occidente"),("Oriente","Oriente"),("Centro","Centro"),("all","all")])
+    zona = SelectField("",[validators.DataRequired()], choices = [("",""),("Occidente","Occidente"),("Oriente","Oriente"),("Centro","Centro"),("all","all"),("Capital","Capital")])
     nivel = SelectField("", choices=[("cliente","Cliente"),("corimon","Corimon"),("administrador","Administrador")])
     
     def validate_username(self, username):
@@ -68,11 +76,24 @@ class EditForm(Form):
         validators.DataRequired(message='El email es requerido.'),
         validators.Email(message='Ingre un email valido.')
     ])
-    zona = SelectField("",[validators.DataRequired()], choices = [("",""),("Occidente","Occidente"),("Oriente","Oriente"),("Centro","Centro"),("all","all")])
+    zona = SelectField("",[validators.DataRequired()], choices = [("",""),("Occidente","Occidente"),("Oriente","Oriente"),("Centro","Centro"),("all","all"),("Capital","Capital")])
     nivel = SelectField("", choices=[("cliente","Cliente"),("corimon","Corimon"),("administrador","Administrador")])
-    codigo = IntegerField("")
+    codigo = StringField("")
 
-    
+class PerfilForm(Form):
+    password = PasswordField('', [
+        validators.EqualTo('confirm_password', message='La contraseña no coincide.')
+    ])
+    confirm_password = PasswordField('')
+    email = EmailField('', [
+        validators.length(min=6, max=100),
+        validators.Email(message='Ingre un email valido.')
+    ])
+    verify_email = EmailField('', [
+        validators.length(min=6, max=100),
+        validators.Email(message='Ingre un email valido.')
+    ])
+
 class RegistroPagoForm(Form):
     rif = StringField("")
     empresa = StringField("")
@@ -104,7 +125,7 @@ class RegistroPagoForm(Form):
                                             ("Banco Nacional de Crédito (BNC)","Banco Nacional de Crédito (BNC)")])
     
     
-    banco_receptor = SelectField("",choices = [("",""),("BANCO PROVINCIAL, 0108-0071-41-0100251970","BANCO PROVINCIAL, 0108-0071-41-0100251970"),
+    banco_receptor = SelectField("",[validators.DataRequired()], choices = [("",""),("BANCO PROVINCIAL, 0108-0071-41-0100251970","BANCO PROVINCIAL, 0108-0071-41-0100251970"),
                                                ("BANCO DE VENEZUELA, 0102-0234-52-0000049359","BANCO DE VENEZUELA, 0102-0234-52-0000049359"),
                                                ("BANCO DE VENEZUELA , 0102-0310-48-0000027559", "BANCO DE VENEZUELA , 0102-0310-48-0000027559"),
                                                ("BANCARIBE, 0114-0172-41-1720022687 ","BANCARIBE, 0114-0172-41-1720022687 "),
@@ -115,7 +136,7 @@ class RegistroPagoForm(Form):
                                                ("BANCO MERCANTIL, 0105 0699 94 1699217564", "BANCO MERCANTIL, 0105 0699 94 1699217564"),
                                                ("BANCAMIGA, 0172-01-1079-1108934926", "BANCAMIGA, 0172-01-1079-1108934926")
                                                ])
-    banco_receptor_dolar =SelectField("", choices=[("",""), ("BANCARIBE, 0114-0165-12-1654046669 ", "BANCARIBE, 0114-0165-12-1654046669 "),
+    banco_receptor_dolar =SelectField("", [validators.DataRequired()], choices=[("",""), ("BANCARIBE, 0114-0165-12-1654046669 ", "BANCARIBE, 0114-0165-12-1654046669 "),
                                                 ("BANCO NACIONAL DE CRÈDITO, 0191-0050-25-2350502330", "BANCO NACIONAL DE CRÈDITO, 0191-0050-25-2350502330"),
                                                 ("BANCO MERCANTIL, 0105 0699 90 5699053794", "BANCO MERCANTIL, 0105 0699 90 5699053794"),
                                                 ("BANCO PROVINCIAL, 0108 0956 83 0100020368", "BANCO PROVINCIAL, 0108 0956 83 0100020368"),
@@ -126,7 +147,7 @@ class RegistroPagoForm(Form):
                                                 ("BANESCO PANAMA","BANESCO PANAMA"),
                                                 ("FACEBANK","FACEBANK"),
                                                 ("MERCANTIL PANAMA","MERCANTIL PANAMA")])
-    banco_receptor_ppv = SelectField("",choices = [("",""),("BANCO PROVINCIAL, 0108-0071-41-0100251970","BANCO PROVINCIAL, 0108-0071-41-0100251970"),
+    banco_receptor_ppv = SelectField("",[validators.DataRequired()], choices = [("",""),("BANCO PROVINCIAL, 0108-0071-41-0100251970","BANCO PROVINCIAL, 0108-0071-41-0100251970"),
                                                ("BANCO DE VENEZUELA, 0102-0234-52-0000049359","BANCO DE VENEZUELA, 0102-0234-52-0000049359"),
                                                ("BANCO DE VENEZUELA , 0102-0310-48-0000027559", "BANCO DE VENEZUELA , 0102-0310-48-0000027559"),
                                                ("BANCARIBE, 0114-0172-41-1720022687 ","BANCARIBE, 0114-0172-41-1720022687 "),
@@ -156,8 +177,8 @@ class RegistroPagoForm(Form):
                                                    ("CRP", "Corimon Pinturas"),
                                                 ("PPV", "Puras Pinturas Venezolanas")])
    
-    divisa = RadioField("", choices=[(" $"," $"),("Bs","Bs")])
-    comprobante = SelectField("", [validators.DataRequired()], choices = [("Con Comprobante de Retención","Con Comprobante de Retención"),("Sin Comprobante de Retención","Sin Comprobante de Retención")])
+    divisa = RadioField("", [validators.DataRequired()],  choices=[(" $"," $"),("Bs","Bs")])
+    comprobante = SelectField("", [validators.DataRequired()], choices = [("",""),("Con Comprobante de Retención","Con Comprobante de Retención"),("Sin Comprobante de Retención","Sin Comprobante de Retención")])
     monto = FloatField("", [validators.DataRequired()])
     estado = BooleanField("")
     observaciones = TextAreaField("", [validators.DataRequired()])

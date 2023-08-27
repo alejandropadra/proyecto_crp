@@ -10,7 +10,7 @@ def send_async_mail(message):
         mail.send(message)
 
 def welcome_mail(user):
-    message = Message('Bienvendio al Proyecto E-Bussines Corimon Pinturas',
+    message = Message('Bienvendio al aplicativo web de Corimon Pinturas',
                     sender=current_app.config['MAIL_USERNAME'],
                     recipients=[user.email])
 

@@ -9,14 +9,15 @@ class User(db.Model, UserMixin):
 
     rif = db.Column(db.String(10), primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)#empresa
-    encrypted_password = db.Column(db.String(120), nullable=False)#clve
-    email = db.Column(db.String(100), unique=True, nullable=False)#correo
+    encrypted_password = db.Column(db.String(120))#clve
+    email = db.Column(db.String(100), nullable=False)#correo
     created_at = db.Column(db.DateTime, default=datetime.datetime.now())#fecha registro
     pago = db.relationship('Cobranza', backref ='user')
     zona = db.Column(db.String(30),nullable = False)#zona
     nivel = db.Column(db.String(30))#niveles.. clientes... corimon.. administrador.
-    codigo = db.Column(db.Integer)
-    seller = db.Column(db.String(10))
+    codigo = db.Column(db.String(20))
+    seller = db.Column(db.String(300))
+    tipo = db.Column(db.String(15))
 
     def verify_password(self, password):
         return check_password_hash(self.encrypted_password, password)
@@ -54,6 +55,34 @@ class User(db.Model, UserMixin):
         user.zona = zona
         user.nivel = nivel
         user.codigo = codigo
+
+        db.session.add(user)
+        db.session.commit()
+
+        return user
+    
+    @classmethod
+    def update_password(cls,rif,password):
+        user = User.get_by_rif(rif)
+
+        if user is None:
+            return False
+        
+        user.password = password
+
+        db.session.add(user)
+        db.session.commit()
+
+        return user
+
+    @classmethod
+    def update_email(cls,rif,email):
+        user = User.get_by_rif(rif)
+
+        if user is None:
+            return False
+        
+        user.email = email
 
         db.session.add(user)
         db.session.commit()
@@ -193,6 +222,11 @@ class Cobranza(db.Model):
 
         return pagos
     
+    @classmethod
+    def get_deposito_by_seller(cls,seller):
+        pagos = db.session.query(Cobranza).outerjoin(User).filter(User.seller==seller)
+        return pagos
+
     @classmethod
     def get_pagos_order(cls, rif):
         return Cobranza.query.filter_by(rif=rif).order_by(Cobranza.create_at.desc())

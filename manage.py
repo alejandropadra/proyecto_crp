@@ -1,7 +1,6 @@
 from app import create_app
 from app import db, Cobranza, User
 
-
 from flask_script import Manager, Server, Shell
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate, MigrateCommand
@@ -9,7 +8,7 @@ from flask_migrate import Migrate, MigrateCommand
 
 from config import config
 
-config_class = config['development']
+config_class = config['production']
 app = create_app(config_class)
 migrate = Migrate(app,db)
 

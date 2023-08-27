@@ -23,6 +23,9 @@
 <!--Bootstrap-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 <link rel='icon' type='image/png' href="{{ url_for('static', filename = 'img/figura_corimonn.png') }}">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+
 {% block estilos %}
 
 {% endblock%}
@@ -38,51 +41,64 @@
 <header>
     <nav>
         
-        <div class="logo">
-            <a href=""><img src="/static/img/CRP.png" alt="#"></a>
+        <div class="logo d-flex align-items-center">
+            <a href="/"><img src="/static/img/CRP.png" alt="#"></a>
         </div>
         
         <div class="contenedor_elementos d-none d-xl-block">
 
             <ul>
-              <li class="mx-4"><a href="/">Inicio</a></li>
-              <li class="mx-4"><a href="/nosotros">¿Quienes Somos?</a></li>
-              <li class="mx-4"><a href="">Productos</a></li>
-              <li class="mx-4"><a href="">Contactanos</a></li>
+              <li class="mx-4"><a class="{% if titulo == 'Inicio' %} active {% endif %}"  href="/">Inicio</a></li>
+              <li class="mx-4"><a class="{% if titulo == 'Nosotros' %} active {% endif %}" href="/nosotros">¿Quiénes Somos?</a></li>
+              <li class="mx-4"><a class="{% if titulo == 'En construccion' %} active {% endif %}" href="/soon">Productos</a></li>
+              <li class="mx-4"><a class="{% if titulo == 'Contactanos' %} active {% endif %}" href="/contacto">Contáctanos</a></li>
             </ul>
           </div>
           
-        <div class="elementos_interac d-flex">
+        <div class="elementos_interac d-flex " style="align-items: center;">
             <ul class="">
                 <li class="active mx-1"><a href="/login" class="boton"> Inicio de Sesión </a></li> 
             </ul>
+
+            <div class="d-xl-none d-sm-block">
+              <label class="burger" for="burger">
+                <input type="checkbox" id="burger" >
+                <span></span>
+                <span></span>
+                <span></span>
+              </label>
+
+            </div>
+            
+
+
+            <!--
             <button class="activador_de_nav d-xl-none d-md-block">
                 <i class="bi bi-list"></i>
             </button>
-
+            -->
 
         </div>
     </nav>
 
 </header>
 
-<div class="responsive_nav w-100 ">
-    <div class="cabezera_resp d-flex justify-content-center py-2">
-    <div class="logo d-flex justify-content-center ">
-        <a href="" class="mx-5"><img src="/static/img/CRP.png" alt="#"></a>
-    </div>
-    <button class="desactivador_de_nav d-xl-none d-md-block ">
-        <i class="bi bi-list"></i>
-    </button>
-    </div>
-    <hr class="mt-0" >
+<div class="responsive_nav  ">
     <div class="contenedor_elementos_responsive">
         <ul>
-            <li class="mx-4 button"><a href="/">Inicio</a></li>
-            <li class="mx-4 button"><a href="/nosotros">¿Quienes Somos?</a></li> 
-            <li class="mx-4 button"><a href="">Productos</a></li>
-            <li class="mx-4 button"><a href="">Contactanos</a></li>
+            <li class="mx-4 boton_menu_resp"><i class="bi bi-house mx-3"></i><a href="/" class="mt-2">Inicio</a></li>
+            <li class="mx-4 boton_menu_resp"><i class="bi bi-buildings mx-3"></i> <a href="/nosotros" class="mt-2">¿Quiénes Somos?</a></li> 
+            <li class="mx-4 boton_menu_resp"><i class="bi bi-bucket mx-3"></i><a href="/soon" class="mt-2">Productos</a></li>
+            <li class="mx-4 boton_menu_resp"><i class="bi bi-telephone mx-3"></i><a href="/contacto" class="mt-2">Contáctanos</a></li>
         </ul>
+    </div>
+
+    <div class="footer_resp">
+      <ul>
+        <li class="item_resp "><i class="bi bi-question-circle algo"></i><a href=""> Ayuda</a></li>
+        <li class="item_resp "><i class="bi bi-building algo"></i><a href=""> filiales</a></li>
+        <li class="item_resp "><i class="bi bi-linkedin algo"></i><a href=""> Linkedin</a></li>
+    </ul>
     </div>
 </div>
 
@@ -128,17 +144,43 @@
   
 <footer>
     <div class="footer-content" >
-        <h3 class="text-center">Corimon Pinturas, C.A.</h3>
-        <ul class="socials list-unstyled d-flex">
-            <li><a href="#"><i class="bi bi-instagram mx-2"></i></a></li>
-            <li><a href="#"><i class="bi bi-facebook mx-2"></i></a></li>
-            <li><a href="#"><i class="bi bi-reddit mx-2"></i></a></li>
-         </ul>
+      <div class="row d-flex justify-content-center w-100">
+
+        <div class="footer_nav contenedor_elementos col-xl col-lg col-sm-12" >
+          <h3 class="fs-4 mb-1" >Navegación</h3>
+          <ul class="" style="padding: 0 !important;">
+            <li class= ><a href="/" class="text-white" >Inicio</a></li>
+            <li class=><a href="/nosotros" class="text-white">¿Quiénes Somos?</a></li>
+            <li class=><a href="/soon" class="text-white">Productos</a></li>
+            <li class=><a href="/contacto" class="text-white">Contáctanos</a></li>
+          </ul>
+        </div>
+
+        <hr class="	d-none d-sm-block d-md-block d-lg-none w-50">
+        <div class="col-xl-4 col-lg-4  col-sm-12 " >
+          <h3 class="text-center" >Corimon Pinturas, C.A.</h3>
+          <ul class="socials list-unstyled d-flex justify-content-center">
+              <li><a href="#"><i class="bi bi-linkedin"></i></a></li>
+
+          </ul>
+        </div>
+
+        <hr class="	d-none d-sm-block d-md-block d-lg-none w-50">
         
+          <div class="contacto col-xl col-lg col-sm-12 " style="margin-top: -10px; ">
+            <h3 class="fs-4 mb-1" >Contáctanos</h3>
+            <div class="row mt-0" style="display: flex; flex-direction: column;">
+              <p class="col">Correo: info@corimon.com</p>
+              <p class="col"> Telefono de contacto: +58(241)613-16.97</p>
+            </div>
+          </div>
+      </div>
     </div>
-    <div class= " footer-bottom mx-2" >
-        <p>copyright &copy;2023 Realizado por el departamento de Digitalizacion industrial  </p>
-     </div>
+    <hr style="margin-top: 0 !important; ">
+    <div class="d-flex justify-content-center w-100 footer-bottom mx-2 w-100">
+      <p>copyright &copy;2023 Corimon Pinturas, C.A. RIF. J-00029572-7 | Powered by Digitalización Industrial</p>
+  </div>
+  
 </footer>
 
 
@@ -146,6 +188,7 @@
 
 
 {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -167,16 +210,82 @@
     });
 
 
-    $(document).ready(function() {
-    $('.activador_de_nav').on('click', function() {
-      $('.responsive_nav').addClass('active');
-    });
+    document.addEventListener("DOMContentLoaded", function() {
+  const checkbox = document.getElementById("burger");
+  const responsiveNav = document.querySelector(".responsive_nav");
 
-    $('.desactivador_de_nav').on('click', function() {
-      $('.responsive_nav').removeClass('active');
-    });
+  checkbox.addEventListener("change", function() {
+    if (checkbox.checked) {
+      responsiveNav.classList.add("active");
+    } else {
+      responsiveNav.classList.remove("active");
+    }
   });
+});
+
+setTimeout(function() {
+    document.querySelectorAll('.alert').forEach(function(alert) {
+      alert.remove();
+    });
+  }, 5000);
+
 </script>
+
+<script>
+  window.addEventListener('scroll', function() {
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    var div = document.getElementById('subtitulo');
+    var subtituloOffsetTop = div.offsetTop;
+    var windowHeight = window.innerHeight;
+    var width = 0;
+    var opacity = 0;
+
+    if (scrollTop + windowHeight >= subtituloOffsetTop + div.offsetHeight && scrollTop < subtituloOffsetTop) {
+      width = 100;
+      opacity = 1;
+    } else {
+      width = 0;
+      opacity = 0;
+    }
+
+    div.style.width = width + '%';
+    div.style.opacity = opacity;
+  });
+
+  var swiper = new Swiper(".swiper", {
+  effect: "coverflow",
+  centeredSlides: true,
+  slideShadows: true,
+  slidesPerView: 2,
+  coverflowEffect: {
+    rotate: 0,
+    stretch: 0,
+    depth: 100,
+    modifier: 3,
+  },
+  loop: true,
+  navigation: {
+    nextEl: ".swiper-button-next",
+    prevEl: ".swiper-button-prev",
+  },
+  pagination: {
+    el: ".swiper-pagination",
+    clickable: false,
+  },
+});
+
+
+  function redirectToURL(url) {
+    window.location.href = url;
+}
+
+  
+
+</script>
+
+
+
+
 
 {% endblock %}
 

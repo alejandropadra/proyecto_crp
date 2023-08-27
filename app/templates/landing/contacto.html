@@ -1,0 +1,87 @@
+{% extends 'layout_landings.html' %}
+{% from 'helpers/_forms.html' import render_field %}
+{% block content %}
+
+
+<main class="main_contacto p-5">
+
+
+
+
+
+<div class="row d-flex  super">
+
+    <div class="contenedor_informacion_contacto d-flex justify-content-center col-xl col-lg-12 col-sm-12 ">
+        <div class="row col-12">
+            <div class="" style="display: flex; flex-direction: column; justify-content: center;">
+                <h3 class="fs-2">Ventas:</h3>
+                <h3 class="fs-4 text-start">Capital</h3>
+                <p class="text-start">Email: angel_palencia@corimon.com</p>
+                <p class="text-start">Telefono:+58(412)487-2104</p>
+                <h3 class="fs-4 text-start">Centro</h3>
+                <p class="text-start">Email: dennis_sanchez@corimon.com</p>
+                <p class="text-start">Telefono:+58(412)444-5531</p>
+                <h3 class="fs-4 text-start">Oriente</h3>
+                <p class="text-start">Email: santos_ravago@corimon.com</p>
+                <p class="text-start">Telefono:+58(412)487-20 11</p>
+                <h3 class="fs-4 text-start">Occidente</h3>
+                <p class="text-start">Email: amira_portillo@corimon.com</p>
+                <p class="text-start">Telefono:+58(412)487-20 54</p>
+            </div>
+
+            <div>
+              <br>
+              <h3 class="fs-2">Compras:</h3>
+                <p class="text-start">Email: reinaldo_jose_perez@corimon.com</p>
+                <p class="text-start">Telefono:+58(412)487-20 69</p>
+            </div>
+        </div>
+        
+    
+    </div>
+    
+    <div class="formulario_contacto  col-xl-7 col-lg- col-sm-12 ">
+        <form method="POST" >
+          <div class="titulo"> <h3 class="text-white"> Contactanos </h3></div>
+          
+          <div class="input-container contacto">
+            {{ render_field(form.nombre, class ="entrada contacto", id="nombre" ) }}
+            <label for="nombre" class="label contacto">Ingrese su nombre</label>
+            <div class="underline"></div>
+          </div>
+    
+          <div class="input-container contacto">
+            {{ render_field(form.telefono_contacto, class ="entrada contacto", id="tlf" ) }}
+            <label for="tlf" class="label contacto">Ingrese su numero de telefono</label>
+            <div class="underline"></div>
+          </div>
+    
+          <div class="input-container contacto select-container">
+            {{ render_field(form.motivo, class="entrada contacto", id="motivo", onchange="updateDropdownDirection(this)") }}
+            <label for="motivo" class="label contacto">¿Cuál es el motivo de su contacto?</label>
+            <div class="underline"></div>
+          </div>
+        
+        
+    
+          
+    
+    
+          <div class="elboton d-flex justify-content-center" >
+            {{ form.honeypot }}
+            <input type ="hidden" name = "csrf_token" value ="{{csrf_token()}}"/>
+            <button class="submit " > <span>Enviar</span></button >
+          </div>
+    
+         
+        </form>
+      </div>
+    
+
+
+
+
+</div>
+</main>
+
+{% endblock %}

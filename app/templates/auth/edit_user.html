@@ -7,7 +7,7 @@
 
       <div class="contenedor_form">
           <form class="form" method = "POST">
-            <div class="titulo">Registro de usuario</div>
+            <div class="titulo">Editar usuario</div>
            
            <!--↓↓ iNPUT DE RIF ↓↓-->
 
@@ -54,11 +54,13 @@
           </div>
 
             <!--↓↓ iNPUT DE EMPRESA ↓↓-->
+            {% if form.nivel.data !="administrador" %}
             <div class=" mb-2 w-100 d-flex justify-content-center" style="margin-top: 25px;">
               <input type ="hidden" name = "csrf_token" value ="{{csrf_token()}}"/>
-              <button class="submit" onclick="location.reload();" > <span>Enviar</span>
+              <button class="submit" > <span>Editar</span>
               </button>
             </div>
+            {% endif %}
           </form>
       </div>
       
