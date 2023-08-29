@@ -747,6 +747,8 @@ section#section1_landing_QuienesSomos {/*---------------Aqui empieza la section 
     
   }
 
+
+
 /*-------------------------------Cierre del section 1 de "¿Quienes somos?"-----------------------*/
 
 /*-------------------------------Inicio del section 2 de "¿Quienes somos?"-----------------------*/
@@ -1637,7 +1639,7 @@ section.carrusel_marcas {
 .flash{
   border-radius: 16px;
   position: absolute;
-  top: 93px !important;
+  top: 95px !important;
   z-index: 2;
   width: 450px;
   display: flex;
