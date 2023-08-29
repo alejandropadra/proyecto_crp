@@ -43,23 +43,23 @@
             <li class="mx-4"><a class="{% if titulo == 'Nosotros' %} active {% endif %}" href="{{ url_for('.nosotros')}}">¿Quienes Somos?</a></li>
             <li class="mx-4"><a class="{% if titulo == 'En construccion' %} active {% endif %}" href="">Productos</a></li>
             <li class="mx-4"><a class="{% if titulo == 'Contactanos' %} active {% endif %} " href="/contacto">Contáctanos</a></li>
-            <li class="mx-4"><a href="{{ url_for('.login')}}">Iniciar sesión</a></li>
+
             {% endif %}           
           </ul>
         </div>
         
       <div class="elementos_interac d-flex align-items-center">
-          <!--
-          <ul class="">
-              <li class="active mx-1"><a href="#" class="boton"> Inicio de Sesión </a></li> 
-          </ul>
-          -->
+
+
+
+      
           {% if current_user.is_authenticated %}
-          <div class="user d-flex justify-content-center d-none d-xl-block align-items-center">
+          <div class="user d-flex justify-content-center d-none d-xl-block mt-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
               <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
               <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
             </svg>
+            <i class="bi bi-caret-down-fill"></i>
           
           </div>
           <div class="d-xl-none d-sm-block">
@@ -72,6 +72,11 @@
 
           </div>
 
+          {% else %}
+          <ul class="">
+            <li class="active mx-1"><a href="/login" class="boton"> Inicio de Sesión </a></li> 
+        </ul>
+        {% endif %}  
       </div>
       <div class="sub-menu-wrap d-none d-xl-block">
           <div class="sub-menu ">
@@ -107,7 +112,7 @@
                   <span>></span>
               </a>
           </div>
-          {% endif %}  
+          
       </div>
   </nav>
 
@@ -206,25 +211,25 @@
 <div class="container">
     <div class="row">
   
-      <div class="col-md-12 col-md-offset-1">
+      <div class="col-md-12 col-md-offset-1 flash">
         {% with messages = get_flashed_messages(with_categories=True) %}
-  
-        {% if messages %}
-  
-          {% for category, message in messages %}
-            {% if category == 'error' %}
-              <div class="alert alert-danger" role="alert">
-                {{ message }}
-              </div>
-            {% else %}
-              <div class="alert alert-success" role="alert">
-                {{ message }}
-              </div>
-            {% endif %}
-          {% endfor %}
-  
-        {% endif %}
-  
+          {% if messages %}
+            <div class="alert-container">
+              {% for category, message in messages %}
+                {% if category == 'error' %}
+                  <div class="alert alert-danger alert-dismissible" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% else %}
+                  <div class="alert alert-success alert-dismissible" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
         {% endwith %}
       </div>
       {% block container %}
@@ -286,6 +291,13 @@
     }
   });
 });
+
+setTimeout(function() {
+    document.querySelectorAll('.alert').forEach(function(alert) {
+      alert.remove();
+    });
+  }, 5000);
+
 
 
 </script>

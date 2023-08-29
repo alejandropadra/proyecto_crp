@@ -1,23 +1,34 @@
-var swiper = new Swiper(".swiper", {
-    effect: "coverflow",
-    centeredSlides: true,
-    slidesPerView: 2,
-    coverflowEffect: {
-      rotate: 0,
-      stretch: 0,
-      depth: 100,
-      modifier: 3,
+var header = document.querySelector('header');
+    var alturaHeader = parseFloat(getComputedStyle(header).height);
 
-    },
-    loop: true,
-    navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev",
-    },
-    pagination: {
-      el: ".swiper-pagination",
-      clickable: false,
-    },
+    window.addEventListener('scroll', e => {
+        var color;
+        if (window.scrollY == 0) {
+            color = 'rgba(255, 255, 255, 0.63)';
+        } else if (window.scrollY >= alturaHeader && window.scrollY < 2 * alturaHeader) {
+            color = 'white';
+        }
+        header.style.setProperty('background', color);
+    });
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+  const checkbox = document.getElementById("burger");
+  const responsiveNav = document.querySelector(".responsive_nav");
+
+  checkbox.addEventListener("change", function() {
+    if (checkbox.checked) {
+      responsiveNav.classList.add("active");
+    } else {
+      responsiveNav.classList.remove("active");
+    }
   });
-  
-  
+});
+
+setTimeout(function() {
+    document.querySelectorAll('.alert').forEach(function(alert) {
+      alert.remove();
+    });
+  }, 5000);
+
+

@@ -1,9 +1,9 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Play&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Play&family=Sora:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Play&family=Sora:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Play&family=Sora:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat&family=Play&family=Sora:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tektur:wght@500&display=swap');
 *{
     padding: 0;
     margin: 0;
@@ -49,8 +49,7 @@ nav{
     justify-content: space-between;
 }
 .contenedor_elementos{
-  margin-right: -70px;
-  padding: 10px 10px 10px 60px;
+padding: 20PX 10PX;
 }
 .contenedor_elementos ul {
     list-style: none; 
@@ -100,65 +99,64 @@ nav{
   width: 100%;
 }
 .elementos_interac ul {
-    list-style: none; 
-    padding: 0; 
+  list-style: none; 
+  padding: 0; 
 }
 .elementos_interac li{
-    display: inline-block;
-    margin-top: 10px;
+  display: inline-block;
+  margin-top: 10px;
 }
 
 .boton:link,
 .boton:visited {
- text-transform: uppercase;
- text-decoration: none;
- color: white;
- padding: 10px 30px;
- border-radius: 1000px;
- display: inline-block;
- transition: all .2s;
- position: relative;
- background-color: #D50000;
+text-transform: uppercase;
+text-decoration: none;
+color: white;
+padding: 10px 30px;
+border-radius: 1000px;
+display: inline-block;
+transition: all .2s;
+position: relative;
+background-color: #D50000;
 }
 
 .boton:hover {
- transform: translateY(-5px);
- box-shadow: 0 10px 20px rgba(27, 27, 27, .5);
+transform: translateY(-5px);
+box-shadow: 0 10px 20px rgba(27, 27, 27, .5);
 }
 
 
 .boton:active {
- transform: translateY(-3px);
+transform: translateY(-3px);
 }
 
 .boton::after {
- content: "";
- display: inline-block;
- height: 100%;
- width: 100%;
- border-radius: 100px;
- top: 0;
- left: 0;
- position: absolute;
- z-index: -1;
- transition: all .3s;
+content: "";
+display: inline-block;
+height: 100%;
+width: 100%;
+border-radius: 100px;
+top: 0;
+left: 0;
+position: absolute;
+z-index: -1;
+transition: all .3s;
 }
 
 .boton:hover::after {
- background-color: rgb(22, 22, 22);
- transform: scaleX(1.4) scaleY(1.5);
- opacity: 0;
+background-color: rgb(22, 22, 22);
+transform: scaleX(1.4) scaleY(1.5);
+opacity: 0;
 }
 
 .elementos_interac a{
-    text-decoration: none;
-    color: black;
-    margin: 0px 20px 0px 20px;
+  text-decoration: none;
+  color: black;
+
 }
 .elementos_interac{
-    font-family: 'Sora', sans-serif;
-    padding: 10px 60px 10px 60px;
-    margin: 0px 150px;
+  font-family: 'Sora', sans-serif;
+  padding: 10px 160px 10px 70px; 
 }
 
 .responsive_nav.active {
@@ -190,7 +188,7 @@ nav{
 
 .responsive_nav .contenedor_elementos_responsive ul{
   list-style: none;
-  padding: 0 !important;
+  
   
 
 }
@@ -405,9 +403,11 @@ height: 60px;
 }
 
 .user{
-    width: 40px;
+    width: 50px;
     border-radius: 50%;
     cursor: pointer;
+    display: flex;
+
 
 }
 
@@ -1070,7 +1070,7 @@ tr.celda:hover{
 }
 
 .courses-container{
-    padding-top: 50px;
+
     display: flex;
     justify-content: center;
 
@@ -1408,4 +1408,61 @@ hr.divisor_tarjeta{
   padding-top: 40px;
   display: flex;
   justify-content: center;
+}
+
+
+.flash {
+  border-radius: 16px;
+  position: relative;
+  top: 90px;
+  width: 450px;
+  display: flex;
+  justify-content: center;
+
+}
+
+.texto_error h2.prox{
+  font-family: 'Tektur', cursive;
+  font-size: 50px;
+  margin-left: 0 !important;
+  
+  }
+  .texto_error h6{ 
+    font-size: 50Px;
+  }
+  
+  .texto_error{
+  font-family: 'Montserrat', sans-serif;
+  text-align: end;
+  margin-top: -20px;
+  
+  }
+  
+
+.contenedor_genericos{
+  background-color: #fefefe;
+  border-radius: 16px;
+  margin-top: 85px;
+  margin-bottom: 50px;
+  padding-left: 50px;
+
+}
+
+.imagen_construccion{
+  margin-top: 0px !important;
+}
+
+@media (max-width:900px) {
+  .footer-menu ul{
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  .imagen_error{
+    margin-top: 50px;
+  }
+
+  .imagen_construccion{
+    margin-top: 0px !important;
+  }
 }

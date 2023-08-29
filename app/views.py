@@ -56,8 +56,8 @@ def login():
 @page.route("/registro", methods = ["GET", "POST"])
 #@login_required
 def registroUsuario():
-    #if current_user.nivel == "cliente":
-     #  return redirect(url_for(".panel"))
+    if current_user.nivel == "cliente":
+        return redirect(url_for(".panel"))
     registro_form = RegisterForm(request.form)
     if request.method == "POST" and registro_form.validate():
         rif = registro_form.rif.data

@@ -17,23 +17,23 @@
                 <h3 class="fs-2">Ventas:</h3>
                 <h3 class="fs-4 text-start">Capital</h3>
                 <p class="text-start">Email: angel_palencia@corimon.com</p>
-                <p class="text-start">Telefono:+58(412)487-2104</p>
+                <p class="text-start">Teléfono:+58(412)487-2104</p>
                 <h3 class="fs-4 text-start">Centro</h3>
                 <p class="text-start">Email: dennis_sanchez@corimon.com</p>
-                <p class="text-start">Telefono:+58(412)444-5531</p>
+                <p class="text-start">Teléfono:+58(412)444-5531</p>
                 <h3 class="fs-4 text-start">Oriente</h3>
                 <p class="text-start">Email: santos_ravago@corimon.com</p>
-                <p class="text-start">Telefono:+58(412)487-20 11</p>
+                <p class="text-start">Teléfono:+58(412)487-20 11</p>
                 <h3 class="fs-4 text-start">Occidente</h3>
                 <p class="text-start">Email: amira_portillo@corimon.com</p>
-                <p class="text-start">Telefono:+58(412)487-20 54</p>
+                <p class="text-start">Teléfono:+58(412)487-20 54</p>
             </div>
 
             <div>
               <br>
               <h3 class="fs-2">Compras:</h3>
                 <p class="text-start">Email: reinaldo_jose_perez@corimon.com</p>
-                <p class="text-start">Telefono:+58(412)487-20 69</p>
+                <p class="text-start">Teléfono:+58(412)487-20 69</p>
             </div>
         </div>
         
@@ -42,7 +42,7 @@
     
     <div class="formulario_contacto  col-xl-7 col-lg- col-sm-12 ">
         <form method="POST" >
-          <div class="titulo"> <h3 class="text-white"> Contactanos </h3></div>
+          <div class="titulo"> <h3 class="text-white"> Contáctanos </h3></div>
           
           <div class="input-container contacto">
             {{ render_field(form.nombre, class ="entrada contacto", id="nombre" ) }}
@@ -52,7 +52,13 @@
     
           <div class="input-container contacto">
             {{ render_field(form.telefono_contacto, class ="entrada contacto", id="tlf" ) }}
-            <label for="tlf" class="label contacto">Ingrese su numero de telefono</label>
+            <label for="tlf" class="label contacto">Ingrese su número de teléfono</label>
+            <div class="underline"></div>
+          </div>
+
+          <div class="input-container contacto">
+            {{ render_field(form.email, class ="entrada contacto", id="tlf" ) }}
+            <label for="tlf" class="label contacto">Ingrese su correo electrónico</label>
             <div class="underline"></div>
           </div>
     

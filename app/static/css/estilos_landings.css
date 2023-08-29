@@ -17,6 +17,11 @@ body{
     grid-template-rows: auto 1fr auto;
 
 }
+
+main{
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
 h3{
   font-family: 'Bebas Neue', sans-serif;
   text-align: center;
@@ -33,6 +38,7 @@ header{
     border-bottom: solid 3px #D50000;
     z-index: 4;
     transition: background ease-in-out 0.2s;
+  
 
 }
 
@@ -41,8 +47,7 @@ nav{
     justify-content: space-between;
 }
 .contenedor_elementos{
-  margin-right: -70px;
-    padding: 10px 10px 10px 60px;
+  padding: 15px 10px;
 }
 .contenedor_elementos ul {
     list-style: none; 
@@ -151,7 +156,7 @@ nav{
 }
 .elementos_interac{
     font-family: 'Sora', sans-serif;
-    padding: 10px 60px 10px 60px; 
+    padding: 15px 15px;
 }
 
 .responsive_nav.active {
@@ -202,7 +207,7 @@ nav{
 transition: all .2s ease-in-out;
 text-align: left;
 display: flex;
-padding: 1em;
+
 align-items: center;
 height: 60px;
 }
@@ -1317,41 +1322,9 @@ margin-top: -20px;
   margin-top: 12%;
   margin-bottom: 50px;
   padding-left: 50px;
-  -webkit-box-shadow: 2px 0px 28px -8px rgba(0,0,0,0.75);
-  -moz-box-shadow: 2px 0px 28px -8px rgba(0,0,0,0.75);
-  box-shadow: 2px 0px 28px -8px rgba(0,0,0,0.75);
+
 }
 
-.tools {
-  display: flex;
-  align-items: center;
-  padding: 9px;
- }
- 
- .circle {
-  padding: 0 4px;
- }
- 
- .box {
-  display: inline-block;
-  align-items: center;
-  width: 10px;
-  height: 10px;
-  padding: 1px;
-  border-radius: 50%;
- }
- 
- .red {
-  background-color: #ff605c;
- }
- 
- .yellow {
-  background-color: #ffbd44;
- }
- 
- .green {
-  background-color: #00ca4e;
- }
 
 
 

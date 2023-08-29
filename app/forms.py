@@ -20,11 +20,14 @@ class LoginForm(Form):
 class ContactForm(Form):
     nombre= StringField("",[validators.DataRequired()])
     telefono_contacto= StringField("",[validators.DataRequired()])
-     
+    email = EmailField("", [validators.DataRequired(message='El email es requerido.'),
+        validators.Email(message='Ingre un email valido.')
+    ])
     motivo =SelectField("", [validators.DataRequired()], choices=[("",""), 
-                                                   ("comprar productos", "compra de nuestros productos"),
-                                                ("proveedor de materia prima", "proveedor de materia prima"),
-                                                ("empleo", "Busqueda de empleo")])
+                                                ("Ventas", "Quiero vender sus productos"),
+                                                ("Particular", "Quiero comprar pinturas"),
+                                                ("Compras", "Quiero ofrecer mis productos o servicios"),
+                                                ("Empleo", "Quiero unirme a su equipo de trabajo")])
 
 class RegisterForm(Form):
     rif = SelectField("", choices=[("J","J"),("G","G"),("V","V")])
