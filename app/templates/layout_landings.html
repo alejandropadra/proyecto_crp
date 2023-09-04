@@ -45,7 +45,7 @@
             <a href="/"><img src="/static/img/CRP.png" alt="#"></a>
         </div>
         
-        <div class="contenedor_elementos d-none d-xl-block">
+        <div class="contenedor_elementos d-none d-xl-block d-md-block d-lg-block">
 
             <ul>
               <li class="mx-4"><a class="{% if titulo == 'Inicio' %} active {% endif %}"  href="/">Inicio</a></li>
@@ -60,7 +60,7 @@
                 <li class=" "><a href="/login" class="boton"> Inicio de Sesión </a></li> 
             </ul>
 
-            <div class="d-xl-none d-sm-block" style="margin-top: 15px;">
+            <div class="d-xl-none d-lg-none d-sm-block d-md-none  d-flex align-items-center activador" style="margin-top: 16px;">
               <label class="burger" for="burger">
                 <input type="checkbox" id="burger" >
                 <span></span>
@@ -69,22 +69,12 @@
               </label>
 
             </div>
-            
-            
-
-
-            <!--
-            <button class="activador_de_nav d-xl-none d-md-block">
-                <i class="bi bi-list"></i>
-            </button>
-            -->
-
         </div>
     </nav>
 
 </header>
 
-<div class="responsive_nav d-xl-none ">
+<div class="responsive_nav d-xl-none d-lg-none d-sm-block d-md-none">
     <div class="contenedor_elementos_responsive">
         <ul>
             <li class="mx-4 boton_menu_resp"><i class="bi bi-house mx-3"></i><a href="/" class="mt-2">Inicio</a></li>

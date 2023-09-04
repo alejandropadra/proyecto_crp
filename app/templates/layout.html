@@ -54,8 +54,8 @@
 
       
           {% if current_user.is_authenticated %}
-          <div class="user d-flex justify-content-center d-none d-xl-block mt-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+          <div class="user d-flex d-none d-xl-block mt-2">
+            {{current_user.username}} <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
               <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
               <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
             </svg>
@@ -150,59 +150,6 @@
   </div>
 </div>
 
-<div class="responsive_nav w-100 d-xl-none">
-  <div class="cabezera_resp d-flex justify-content-center py-4 " >
-  <div class="logo d-flex justify-content-center px-3">
-      <a href="" class="" ><img src="/static/img/CRP.png" alt="#"></a>
-  </div>
-  <button class="desactivador_de_nav d-xl-none d-md-block ">
-      <i class="bi bi-list"></i>
-  </button>
-  </div>
-  <hr class="mt-0 mb-0" >
-  <div class="contenedor_elementos_responsive d-flex justify-content-center ">
-      <ul class="ul_responsive w-100">
-          <li class="button "><a href="" class="">Inicio</a></li>
-          <li class="button "><a href="" class="">Productos</a></li> 
-          <li class="button "><a href="" class="">Pagos</a></li>
-          <li class="button "><a href="" class="">Pedidos</a></li>
-
-          <li class="li_drpdwn">
-              <a href="#" class="subtitulo text-decoration-none d-block mt-2"> <svg xmlns="http://www.w3.org/2000/svg" class="mx-1 mb-2" width="30" height="30" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                  <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                </svg>
-                
-              Nombre de usuario
-                  <i class="bi bi-arrow-down-circle  abajo"></i> <i class="bi bi-arrow-up-circle arriba"></i> <hr class="w-100 mt-1 mb-1">
-              </a>
-                  <div class="dropdown  d-flex justify-content-center ">
-                    <div class="list-unstyled elementos w-100  ">
-                      <a href="#" class="text-decoration-none "><i class="bi bi-pencil-square mx-4"></i>
-                          <p style="padding-top: 3%;">Editar perfil</p>
-                      </a>
-
-          
-
-                      <a href="#" class="text-decoration-none "><i class="bi bi-gear mx-4"></i>
-                          <p style="padding-top: 3%;">Configuraciones</p>
-                      </a>
-                          
-                      <a href="#" class="text-decoration-none "><i class="bi bi-question-circle mx-4"></i>
-                          <p style="padding-top: 3%;">Ayuda</p>
-                      </a>
-                              
-                      <a href="#" class="text-decoration-none "><i class="bi bi-door-open mx-4"></i>
-                          <p style="padding-top: 3%;">Cerrar sesión</p>
-                      </a>                            
-                  
-                    </div>
-                  </div>
-          </li>
-      </ul>
-
-  </div>
-</div>
 
 {% endblock %}
 

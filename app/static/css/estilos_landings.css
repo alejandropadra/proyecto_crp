@@ -4,13 +4,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Play&family=Sora:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat&family=Play&family=Sora:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Tektur:wght@500&display=swap');
+
+:root{
+  --rojo: #D50000;
+  --gris: rgba(255, 255, 255, 0.63);
+  --gris_claro: #d1d1d6;
+  --gris_oscuro: #3b3b3b;
+  --gris_hover: #b4b3b3;
+  --rojo_hover: #b10505;
+  --pading:1em;
+  --bebas: 'Bebas Neue', sans-serif;
+  --montserrat:'Montserrat', sans-serif; 
+  --blanco: #ffffff;
+}
+
 *{
     padding: 0;
     margin: 0;
     box-sizing: border-box;
 }
+
 body{
-    max-width: 100%;
+    width: 100%;
     overflow-x: hidden;
     display: grid;
     min-height: 100vh;
@@ -19,41 +34,44 @@ body{
 }
 
 main{
-  margin-top: 40px;
-  margin-bottom: 40px;
+  margin: 40px 0px;
+  width: 100%;
 }
+
+
 h3{
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: var(--bebas);
   text-align: center;
   font-size: 35px;
 }
-header{
-    font-family: 'Play', sans-serif;
-    position: fixed;
-    top: 0;
-    right: 5;
-    left: 5;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.63);
-    border-bottom: solid 3px #D50000;
-    z-index: 4;
-    transition: background ease-in-out 0.2s;
-  
 
+/*↓↓ Estilos para el navbar ↓↓*/
+header{
+  font-family: 'Play', sans-serif;
+  position: fixed;
+  top: 0;
+  right: 5;
+  left: 5;
+  width: 100%;
+  background: var(--gris);
+  border-bottom: solid 3px var(--rojo);
+  z-index: 99;
+  transition: background ease-in-out 0.2s;
 }
 
 nav{
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
+
 .contenedor_elementos{
   padding: 15px 10px;
 }
+
 .contenedor_elementos ul {
     list-style: none; 
     padding: 0; 
-
-  }
+}
 
 .contenedor_elementos li{
     display: inline-block;
@@ -81,14 +99,14 @@ nav{
   content: '';
   width: 0%;
   height: 2px;
-  background: #D50000;
+  background: var(--rojo);
   display: block;
   transition: 0.5s;
 }
 
 .contenedor_elementos a.active {
-  border-top: 2px solid #D50000;
-  border-bottom: 2px solid #D50000;
+  border-top: 2px solid var(--rojo);
+  border-bottom: 2px solid var(--rojo);
   padding-top: 2px;
   padding-bottom: 3px;
 }
@@ -99,72 +117,77 @@ nav{
 }
 
 .elementos_interac ul {
-    list-style: none; 
-    padding: 0; 
+  list-style: none; 
+  padding: 0; 
 }
 .elementos_interac li{
-    display: inline-block;
-    margin-top: 10px;
-}
-
-.boton:link,
-.boton:visited {
- text-transform: uppercase;
- text-decoration: none;
- color: white;
- padding: 10px 30px;
- border-radius: 1000px;
- display: inline-block;
- transition: all .2s;
- position: relative;
- background-color: #D50000;
-}
-
-.boton:hover {
- transform: translateY(-5px);
- box-shadow: 0 10px 20px rgba(27, 27, 27, .5);
-}
-
-
-.boton:active {
- transform: translateY(-3px);
-}
-
-.boton::after {
- content: "";
- display: inline-block;
- height: 100%;
- width: 100%;
- border-radius: 100px;
- top: 0;
- left: 0;
- position: absolute;
- z-index: -1;
- transition: all .3s;
-}
-
-.boton:hover::after {
- background-color: rgb(22, 22, 22);
- transform: scaleX(1.4) scaleY(1.5);
- opacity: 0;
+  display: inline-block;
+  margin-top: 10px;
 }
 
 .elementos_interac a{
-    text-decoration: none;
-    color: black;
-    margin: 0px 20px 0px 20px;
+  text-decoration: none;
+  color: black;
+  margin: 0px 20px 0px 20px;
 }
 .elementos_interac{
-    font-family: 'Sora', sans-serif;
-    padding: 15px 15px;
+  font-family: 'Sora', sans-serif;
+  padding: 15px 15px;
 }
 
+/*↑↑ Estilos para el navbar ↑↑*/
+
+/*↓↓ Boton de inicio de sesion y todo su efecto de hover ↓↓*/
+.boton:link,
+.boton:visited {
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--blanco);
+  padding: 10px 30px;
+  border-radius: 1000px;
+  display: inline-block;
+  transition: all .2s;
+  position: relative;
+  background-color: var(--rojo);
+}
+
+.boton:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(27, 27, 27, .5);
+}
+
+.boton:active {
+  transform: translateY(-3px);
+}
+
+.boton::after {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  border-radius: 100px;
+  top: 0;
+  left: 0;
+  position: absolute;
+  z-index: -1;
+  transition: all .3s;
+}
+
+.boton:hover::after {
+  background-color: rgb(22, 22, 22);
+  transform: scaleX(1.4) scaleY(1.5);
+  opacity: 0;
+}
+/*↑↑ Boton de inicio de sesion y todo su efecto de hover ↑↑*/
+
+
+/*↓↓ Estilos del navbar responsivo ↓↓*/
 .responsive_nav.active {
   transform: translateX(0); 
 }
 
 .responsive_nav {
-  background-color: #fafafa;
+  background-color: var(--blanco);
   position: fixed; 
   z-index: 9; 
   margin-top: 64px;
@@ -182,11 +205,9 @@ nav{
   display: grid;
   min-height: 100vh;
   max-height: 80vh;
-  margin-top: 10%;
-  
-
-
+  margin-top: 20%;
 }
+
 
 .responsive_nav .contenedor_elementos_responsive ul{
   list-style: none;
@@ -196,25 +217,22 @@ nav{
 }
 .contenedor_elementos_responsive a{
   font-size: 17px;
-
   text-decoration: none;
   color: black;
   position: relative;
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--montserrat);
 
 }
 .contenedor_elementos_responsive li{
-transition: all .2s ease-in-out;
-text-align: left;
-display: flex;
-
-align-items: center;
-height: 60px;
+  transition: all .2s ease-in-out;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  height: 60px;
 }
 
-
 .contenedor_elementos_responsive li:hover{
-  background-color: #b4b3b3;
+  background-color: var(--gris_hover);
   border-radius: 16px;
   }
 
@@ -229,6 +247,7 @@ height: 60px;
 -webkit-box-shadow: -3px -6px 10px -1px rgba(160, 159, 159, 0.75);
 -moz-box-shadow: -3px -6px 10px -1px rgba(160, 159, 159, 0.75);
 }
+
 .footer_resp ul {
   list-style: none;
   display: flex;
@@ -238,31 +257,26 @@ height: 60px;
   gap: 50px;
   }
 
-  .footer_resp ul li a{
-    text-decoration: none;
-    color: #000;
+.footer_resp ul li a{
+  text-decoration: none;
+  color: #000;
+  }
 
-    }
+  .footer_resp ul li i.algo{
+  color: #000;
+  }
 
 
-
-    .footer_resp ul li i.algo{
-      color: #000;
+.footer_resp ul li:hover a{
+  color: var(--rojo_hover);
+  }
   
-      }
+.footer_resp ul li:hover i.algo{
+  color: var(--rojo_hover);
+  }
+/*↑↑ Estilos del navbar responsivo ↑↑*/
 
-
-    .footer_resp ul li:hover a{
-      color: #b10505;
-  
-      }
-    
-      .footer_resp ul li:hover i.algo{
-        color: #b10505;
-    
-        }
-
-
+/*↓↓ Estilos para el boton activador del menu responsivo ↓↓*/
 .burger {
   position: relative;
   width: 40px;
@@ -322,59 +336,10 @@ height: 60px;
   top: 28px;
   left: 5px;
 }
-
-
-
-@media(max-width:665px){
-  .boton{
-      font-size: 10px;
-      text-align: center;
-      width: auto;
-  }
-  nav{
-    display: flex;
-    justify-content: center;
-    max-width: 100%;
-  }
-  .logo img{
-    height: 37px;
-    margin-left: -10px;
-  }
-
-  .logo{
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  .elementos_interac{
-    margin: 0;
-    padding: 0;
-  }
-  .activador_de_nav{
-    margin-left: -10px;
-  }
-
-  .responsive_nav{
-    margin-top: 65px !important;
-  }
-
-
-}
+/*↑↑ Estilos para el boton activador del menu responsivo ↑↑*/
 /*------------------Hasta aqui el Nav--------------------*/
-.container.video {
-  height: 340px;
-  padding-left: 28px;
 
-}
-
-section.primer_carr {
-  width: 100%;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  max-width: 100%;
-  border-radius: 0px !important;
-}
-
+/*↓↓Carrusel↓↓*/
 .carrousel_contain {
   width: 102% !important; 
   margin: 0; 
@@ -382,7 +347,6 @@ section.primer_carr {
   overflow: hidden; 
   border-radius: 0px !important;
 }
-
 
 .carousel-item img {
   width: 100%;
@@ -393,573 +357,283 @@ section.primer_carr {
   padding: 0;
   border-radius: 0px !important;
 }
+/*↑↑Carrusel↑↑*/
 
-/*←------------------hasta aqui llega el css del carroussel-------------------------→*/
-main{
- padding: 0px !important;
+/*↓↓ spans ↓↓*/
+span.iso{
+  font-size: 20px;
+  font-weight: 700;
+  color: #4b4949;
 }
+
+#vermas{
+  text-decoration: none;
+  color: #000;
+  margin: 10px;
+  transition: all .5s ease-in-out;
+
+}
+
+#vermas:hover{
+  color: #b10505;
+  transform: translateY(-5px);
+
+}
+/*↑↑ spans ↑↑*/
+
+
+/*↓↓ Para imagenes y sus contenedores ↓↓*/
 .imagen{
   height: 100%;
   margin: 0 !important;
   padding: 0 !important;
   display: flex;
   justify-content: center;
+  
 }
+
 .imagen img{
-    height: 100%;
-    width: 90%;
-    border-radius: 16px;
-    margin: 0 !important;
-    margin-right: 0 !important;
+  height: 100%;
+  border-radius: 16px;
+  margin: 0 !important;
+  margin-right: 0 !important;
+  max-width: 100%; 
+  height: 100%; 
+  border-radius: 16px; 
+  object-fit: cover;
 
 }
+/*↑↑ Para imagenes y sus contenedores ↑↑*/
 
 
 
-@media(max-width:990px){
-  main{
-    padding: 0px !important;
-  }
-  .contenedor_us{
-    display: flex;
-    justify-content: center;
-    align-items: center;
 
+/*↓↓ Video ↓↓*/
+.container.video {
+  height: 340px;
+  padding-left: 28px;  
   }
 
-  .video{
-    padding-left: 16px !important;
-    margin: 0px !important;
+iframe {
+  height: 100%;
+  border-radius: 16px;
+  width: 100%;
+  padding: 0px !important;
+  margin: 0px !important;
+}
+/*↑↑ Video ↑↑*/  
+
+
+
+
+/*↓↓ Articles ↓↓*/
+article {
+  --img-scale: 1.001;
+  --title-color: black;
+  --link-icon-translate: -20px;
+  --link-icon-opacity: 0;
+  position: relative;
+  border-radius: 16px;
+  box-shadow: none;
+  background: var(--blanco);
+  transform-origin: center;
+  transition: all 0.4s ease-in-out;
+  overflow: hidden;
+  min-width: 300px;
   }
 
+article a::after {
+  position: absolute;
+  inset-block: 0;
+  inset-inline: 0;
+  cursor: pointer;
+  content: "";
+  }
 
-
-}/*------------------------------Hasta aqui la de la descripción----------------------*/
-
-.tarjetas_marcas{/*←-----Marcas----------------------------------→*/
-    margin: 5px 30px 0px 30px;
-    cursor: pointer;
-    border-radius: 0.75rem;
-    position: relative;
+article h2 {
+  margin: 0 0 18px 0;
+  font-family: var(--bebas);
+  font-size: 1.9rem;
+  letter-spacing: 0.06em;
+  color: var(--title-color);
+  transition: color 0.3s ease-out;
 }
 
-.tarjetas_marcas .imagen_marc:hover{
-  box-shadow: 0px 0px 6px 3px #00000027;
-}
-.imagen_marc{
-    height: 180px;
-    width: 200px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0px 40px 0px 40px;
-    background: white;
-    transition: box-shadow ease-in-out 0.3s;
-}
-.imagen_marc img{
-    height: 100px;
+figure {
+  margin: 0;
+  padding: 0;
+  aspect-ratio: 12 / 10;
+  overflow: hidden;
 }
 
-.tarjetas_marcas h2{
-    color: black;
-    text-align: center;
+.article-body {
+  padding: 24px;
 }
-.marcas .titulo h2{
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 3rem;
-}/*←------------------hasta aqui llega el css de las marcas-------------------------→*/
-
-
-.contenedor_2 h2{/*--------------Aqui empieza los carrousel del mercado que abarcamos*/
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.5rem;
-    margin-top: 10px;
-}
-
-.contenedor_2{
-    font-family: 'Sora', sans-serif;
-}
-
-
   
-  .header {
-    position: relative;
-    background-clip: border-box;
-    margin-top: 1.5rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    border-radius: 0.75rem;
-    background-color: #b10505;
-    color: aliceblue;
-    box-shadow: 0 10px 15px -3px rgba(33,150,243,.4),0 4px 6px -4px rgba(33,150,243,.4);
-    height: 50px;
+article a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: #28666e;
   }
   
-  .info {
-    border: none;
-    padding: 1.5rem;
-    text-align: center;
-  }
-  
-  .footer {
-    padding: 0.75rem;
-    border: 1px solid rgb(236 239 241);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 140, 255, 0.082);
-  }
-  
-  .tag {
-    font-weight: 300;
-    font-size: .75rem;
-    display: block;
-  }
-  
-  .action {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
-    border: none;
-    outline: none;
-    box-shadow: 0 4px 6px -1px rgba(33,150,243,.4),0 2px 4px -2px rgba(33,150,243,.4);
-    color: rgb(255 255 255);
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: .75rem;
-    padding: 0.75rem 1.5rem;
-    background-color: #b10505;
-    border-radius: 0.5rem;
+article a:focus {
+  outline: 1px dotted #28666e;
   }
 
-  article {
-    --img-scale: 1.001;
-    --title-color: black;
-    --link-icon-translate: -20px;
-    --link-icon-opacity: 0;
-    position: relative;
-    border-radius: 16px;
-    box-shadow: none;
-    background: #fff;
-    transform-origin: center;
-    transition: all 0.4s ease-in-out;
-    overflow: hidden;
-    min-width: 300px;
-    
+article a .icon {
+  min-width: 24px;
+  width: 24px;
+  height: 24px;
+  margin-left: 5px;
+  transform: translateX(var(--link-icon-translate));
+  opacity: var(--link-icon-opacity);
+  transition: all 0.3s;
+  }
 
+article:has(:hover, :focus) {
+  --img-scale: 1.1;
+  --title-color: #28666e;
+  --link-icon-translate: 0;
+  --link-icon-opacity: 1;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
   }
-  
-  article a::after {
-    position: absolute;
-    inset-block: 0;
-    inset-inline: 0;
-    cursor: pointer;
-    content: "";
-  }
-  
 
-  article h2 {
-    margin: 0 0 18px 0;
-    font-family: "Bebas Neue", cursive;
-    font-size: 1.9rem;
-    letter-spacing: 0.06em;
-    color: var(--title-color);
-    transition: color 0.3s ease-out;
-  }
-  
-  figure {
-    margin: 0;
-    padding: 0;
-    aspect-ratio: 12 / 10;
-    overflow: hidden;
-  }
-  
-
-  
-  .article-body {
-    padding: 24px;
-  }
-  
-  article a {
-    display: inline-flex;
-    align-items: center;
-    text-decoration: none;
-    color: #28666e;
-  }
-  
-  article a:focus {
-    outline: 1px dotted #28666e;
-  }
-  
-  article a .icon {
-    min-width: 24px;
-    width: 24px;
-    height: 24px;
-    margin-left: 5px;
-    transform: translateX(var(--link-icon-translate));
-    opacity: var(--link-icon-opacity);
-    transition: all 0.3s;
-  }
-  
-  article:has(:hover, :focus) {
-    --img-scale: 1.1;
-    --title-color: #28666e;
-    --link-icon-translate: 0;
-    --link-icon-opacity: 1;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
-  }
-  
   *,
   *::before,
   *::after {
     box-sizing: border-box;
   }
 
-  .carousel-inner{
-    margin-top: 13px;
-    border-radius: 16px;
+.carousel-inner {
+  margin-top: 13px;
+  border-radius: 16px;
   }
 
-  .carrousel_containn .carousel{
-    border-radius: 16px;
+.carrousel_containn .carousel{
+  border-radius: 16px;
   }
- 
-  .articles {
 
-    display: flex;
+.articles {
+  display: flex;
   max-width: 100%;
   margin-inline: auto;
   padding-inline: 24px;
   gap: 24px;
-  }/*-----------------Hasta aqui los articles del mercado que abarcamos-----------------------*/
+  }
+/*↑↑ Articles ↑↑*/
 
 
-  .la_corporacion{/*-------------A partir de aqui los botones de la corporacion--------------*/
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px 10px 20px 10px;
-
-  }
-  
-  .social-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 60px;
-    width: 150px;
-    padding: 10px;
-    margin-bottom: 10px;
-    margin: 0 10px;
-    background-color: #fff;
-    box-shadow: 0px 0px 4px #00000027;
-    transition: 0.3s;
-    margin: 0 20px 0 20px;
-  }
-  
-  .la_corporacion img {
-    transition: 0.3s;
-    width: 100%;
-    height: 100%;
-  }
-  
-  .corimon {
-    background-color: transparent;
-  }
-
-  .corimon img{
-    height: 40px;
-  }
-  
-  .corimon:hover{
-    box-shadow: 0px 0px 6px 3px #00000027;
-    background: #ffffff;
-  }
-  
-  .Montana {
-    background-color: transparent;
-  }
-  .Montana:hover{
-    box-shadow: 0px 0px 6px 3px #00000027;
-    background: #ffffff;
-  }
-  
-  .Montana img{
-    height: 70px;
-  }
-
-  .cerdex {
-    background-color: transparent;
-  }
-  .cerdex img{
-    height: 60px;
-  }
-  .cerdex:hover{
-    box-shadow: 0px 0px 6px 3px #00000027;
-    background: #ffffff;
-  }
-  .envaca {
-    background-color: transparent;
-  }
-  .envaca img{
-    height: 60px;
-    width: auto;
-  }
-  .envaca:hover{
-    box-shadow: 0px 0px 6px 3px #00000027;
-    background: #ffffff;
-  }
-  .resimon {
-    background-color: transparent;
-  }
-  .resimon img{
-    height: 60px;
-  }
-  .resimon:hover{
-    box-shadow: 0px 0px 6px 3px #00000027;
-    background: #ffffff;
-  }/*--------------Hasta aqui logos de la corporación-----------------*/
-  
-
-/*↓↓↓↓↓ -----Landing Mision aquii----↓↓↓↓↓*/
 
 
-section#section1_landing_QuienesSomos {/*---------------Aqui empieza la section 1 de "¿Quienes somos? de la pagina de landing_mision"-------------------*/
-    top:0;
-    right: 0;
-    left: 0;
-
-
-}
-
+/*↓↓Primera imagen del landing de "¿Quienes somos?"↓↓*/
 .contain {
-    height: 450px;
-    width: 100%;
-    overflow: hidden;
-    
+  height: 450px;
+  width: 100%;
+  overflow: hidden;
+  }  
+.contain img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   }
-  
-  .contain img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    
-  }
+/*↑↑Primera imagen del landing de "¿Quienes somos?"↑↑*/
 
 
 
-/*-------------------------------Cierre del section 1 de "¿Quienes somos?"-----------------------*/
 
-/*-------------------------------Inicio del section 2 de "¿Quienes somos?"-----------------------*/
-#section2_landing_QuienesSomos{
-  padding: 0 !important;
+/*↓↓ tarjeta condisposición imagen-texto ↓↓*/
+.card_imagen-texto {
+  height: auto;
+  background: var(--blanco);
+  border: none;
+  padding-left: 10px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 
 }
+/*↑↑ tarjeta condisposición imagen-texto ↑↑*/
 
+
+
+/*↓↓ Mision-vision ↓↓*/
 .imagen_vision img{
-    height: 500px;
-    width: 420px;
-    border-radius: 10px;
-
-
+  height: 500px;
+  width: 420px;
+  border-radius: 10px;
 }
 
-.card {
-    height: auto;
-    background: #fff;
-    border: none;
-    padding: 0 !important;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-
-
-}
-
-
-.card .contenido p{
-padding: 10px 50px 10px 50px;
-font-family: 'Montserrat', sans-serif;
-text-align: justify;
-
-}
-
-.contenido{
-  margin-top: 3%;
+.card_imagen-texto .contenido p{
+  padding: 10px 50px ;
+  font-family: var(--montserrat);
+  text-align: justify;
 }
 
 .contenedor_mision-vision{
-  padding: 30px 22px 0px 22px;
+  padding: 30px 10px 0px 13px;
 }
-.mision{
-    background-color: #3b3b3b;
-    text-align: center;
-    border-right: solid 5px #D50000;
-    padding: 10px;
-    border-top-left-radius: 16px;
-    border-bottom-left-radius: 16px;
 
+.mision{
+  background-color: #3b3b3b;
+  text-align: center;
+  border-right: solid 5px var(--rojo);
+  padding: 10px;
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+  margin-bottom: 0px !important;
 }
 
 .vision{
-  background-color: #d1d1d6;
+  background-color: var(--gris_claro);
   text-align: center;
-  border-left: solid 5px #d1d1d6;
+  border-left: solid 5px var(--gris_claro);
   color: rgb(0, 0, 0);
   padding: 10px;
   border-top-right-radius: 16px;
   border-bottom-right-radius: 16px;
 }
 
-.mision h3{
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 27px;
+h3.valor{
+  font-family: var(--bebas);
+  font-size: 27px;
 }
-.mision p{
+p.valor{
 text-align: justify;
 font-size: 14px;
-
 }
+/*↑↑ Mision-vision ↑↑*/
 
- .vision h3{
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 27px;
-}
- .vision p{
- text-align: center;
- font-size: 14px;
-}
-
-
-@media (max-width:1115px){
-  #section2_landing_QuienesSomos .row{
-      display: flex;
-      justify-content: center;
-  }
-
-  #section2_landing_QuienesSomos {
-   margin-top: 40px;
-}
-  .imagen_vision{
-      display: flex;
-      justify-content: center;
-      height: 370px;
-      width: 370px;
-  }
-  .imagen_vision img{
-      height: 100%;
-      width: 100%;
-  }
-  .mision{
-      border-radius: 16px;
-      margin-bottom: 12px;
-      border: none;
-
-  }
-  .vision{
-      border-radius: 16px;
-  }
-
-  .valor.row{
-    display: flex;
-    justify-content: center;
-  }
-}
-
-/*--------------Hasta aqui el section 2 del landing de "¿Quienes somos?"----------------------*/
-
-/*---------Aqui empieza la section 3 del landing de ¿Quienes somos?----------------*/
-.contenedor_s3{
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  margin-top: 30px;
-  padding: 0 !important;
-  border-radius: 16px;
-  background-color: white;
-  
-}
-
+/*↓↓ parte de calidad de la empresa ↓↓*/
 .calidad{
-    padding: 1rem;
-    
-    background: #fdfdff;
-    box-shadow: 2px 4px 42px 0px #cfcece;
-    -webkit-box-shadow: 2px 4px 42px 0px #cfcece;
-    -moz-box-shadow: 2px 4px 42px 0px #cfcece;
-    padding-bottom: 3px !important;
+  padding: 1rem;
+  background: #fdfdff;
+  box-shadow: 2px 4px 42px 0px #cfcece;
+  -webkit-box-shadow: 2px 4px 42px 0px #cfcece;
+  -moz-box-shadow: 2px 4px 42px 0px #cfcece;
+  padding-bottom: 3px !important;
 }
 
 .calidad.mas{
-    background: #3b3b3b;
-    color:#cacdd2;
-    padding-bottom: 1px !important;
-
+  background: #3b3b3b;
+  color:#cacdd2;
+  padding-bottom: 1px !important;
 }
 
-.contenedor_s3 .imagen_calidad {
-    height: 604px
-
-    
-}
-.contenedor_s3 .imagen_calidad img {
+.imagen_calidad img {
     height: 100%;
     width: 100%;
     border-radius: 16px;
 }
-@media(max-width: 1115px){
-    .imagen_calidad img{
-        max-width: 340px;
-        max-height: 450px;
-        margin: 20px !important;
-    }
-
-    .imagen_calidad{
-        display: flex;
-        justify-content: center;
-        margin-top: 0 !important;
-        padding:  0 !important;
-    }
-}/*---------------------Aqui termina el section 3 del landing de ¿Quienes somos?------------------------*/
-
-.logo_Pmontana{/*----------Comienzo del section 4-------------------------------------------------*/
-    background: transparent;
-    height: 300px;
-    width: 300px;
-    display: flex;
-    justify-content: center;
-    padding: 0 !important;
-    
-}
-
-.logo_Pmontana_2{/*----------Comienzo del section 4-------------------------------------------------*/
-    background: transparent;
-    height: 250px;
-    width: 200px;
-    display: flex;
-    justify-content: center;
-
-    
-}
-.logo_Pmontana_2 img{
-    height: 100%;
-    width: 100%;
-    margin: 0;
+/*↑↑ parte de calidad de la empresa ↑↑*/
 
 
-}
 
 
-.logo_Pmontana img{
-    height: 100%;
-    width: 100%;
-    margin: 0;
-
-}
-
+/*↓↓ Contenido de las marcas ↓↓*/
 .contenido_section4 {
-
 text-align: justify;
-padding: 1rem;
-margin:  0 !important;
+padding: 20px 10px 0px 10px;
+margin-left: 10px;
 }
 
 .contenedor_valores{
@@ -975,22 +649,6 @@ margin:  0 !important;
     justify-content: center;
 }
 
-
-.logo_ppv img{
-    height: 110px;
-    width:270px;
-    display: flex;
-    align-items: center;
-}
-
-
-.logo_pinco{
-    height: 300px;
-    width: 300px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 .contenido p{
     text-align: justify;
     color: #000;
@@ -1017,14 +675,14 @@ margin:  0 !important;
   overflow: hidden;
   top: 0;
   right: 0;
-  background-color: #D50000;
+  background-color: var(--rojo);
   border-radius: 0 4px 0 32px;
 }
 
 .go-arrow {
   margin-top: -4px;
   margin-right: -4px;
-  color: white;
+  color: var(--blanco);
   font-family: courier, sans;
 }
 
@@ -1045,73 +703,30 @@ margin:  0 !important;
     margin-top: 0;
 }
 
-.contenedor_pinco{
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-
-
-
-}
-
-
 .desc_pinco .valori {
-    display: block;
-    position: relative;
-    background-color: #f2f8f9;
-    border-radius: 4px;
-    padding: 32px 24px;
-    margin: 12px;
-    text-decoration: none;
-    z-index: 0;
-    overflow: hidden;
-    height: 70PX;
-    transition: all 0.25s ease-out;
-    padding-bottom: 0 !important;
-
-    margin-top: 0;
+  display: block;
+  position: relative;
+  background-color: #f2f8f9;
+  border-radius: 4px;
+  padding: 32px 24px;
+  margin: 12px;
+  text-decoration: none;
+  z-index: 0;
+  overflow: hidden;
+  height: 70PX;
+  transition: all 0.25s ease-out;
+  padding-bottom: 0 !important;
+  margin-top: 0;
   }
 
   .valores{
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: center;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
   }
 
-@media(max-width: 1115px){
-    .logo_Pmontana{
-     display: flex;
-     justify-content: center;
-     margin-left: 20px;
-    }
-    .logo_Pmontana_2{
-        display: flex;
-        justify-content: center;
-        
-    }
-    .contenedor_valores{
-        display: flex;
-        justify-content: center;
-    }
-    .valori{
-        max-width: 140px;
-    }
-    .valor .valori p {
-        font-size: 15px;
-        font-weight: 400;
-        line-height: 20px;
-        color: #666;
-      }
-      
-      .valori p.small {
-        font-size: 12px;
-      }
-      .desc_pinco .valori {
-        max-width: 110px;
-      }
- }
+
 .valori:before {
   content: "";
   position: absolute;
@@ -1128,7 +743,7 @@ margin:  0 !important;
 
 }
 .valori:hover{
-    height: auto;
+  height: auto;
 }
 .valori:hover:before {
   transform: scale(21);
@@ -1145,21 +760,23 @@ margin:  0 !important;
   color: #fff;
   
 }
+/*↑↑ contenido de las marcas ↑↑*/
 
 
 
 
-/*hasta aqui la section 4*/
 
-  footer{/*----------------Aqui empieza el footer---------------------*/
+
+/*↓↓ Footer ↓↓*/
+footer{/*----------------Aqui empieza el footer---------------------*/
 
     background: #111;
     height: auto;
     width: 100%;
     padding-top: 10px;
-    color: #fff;
+    color: var(--blanco);
     margin-top: 0 !important;
-    border-top: #D50000 solid 3px;
+    border-top: var(--rojo) solid 3px;
 }
 
 
@@ -1171,20 +788,21 @@ margin:  0 !important;
     text-align: center;
 }
 .footer-content ul li a{
-color: #b10505;
+  color: var(--rojo_hover);
 }
 
 .footer-content ul li a:hover{
-    color: white;
-    }
+  color: var(--blanco);
+  }
 
 .footer_nav{
-display: flex;
-flex-direction: column;
-text-align: center;
-padding: 0 !important;
-margin: 0 !important;
-}
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 0 !important;
+  margin: 0 !important;
+  }
+
 .footer_nav ul{
   list-style: none;
   display: flex;
@@ -1200,21 +818,13 @@ margin: 0 !important;
   padding: 20px 150px 20px 150px;
 }
 
-
-
-@media (max-width: 1190px) {
-  .footer-content {
-    padding: 0px !important;
-  }
-}
-
 .footer_nav a{
   text-decoration: none;
 
 }
 
 .footer_nav ul li a:hover{
-  color: #b10505;
+  color: var(--rojo_hover);
 
 }
 
@@ -1253,125 +863,9 @@ margin: 0 !important;
   text-align: right;
   margin-right: 20px;
 }
+/*↑↑ Footer ↑↑*/
 
-@media (max-width: 1190px) {
-  .footer-bottom {
-      flex-direction: column;
-      text-align: center;
-  }
-
-  .right-paragraph {
-      margin-top: 0;
-      margin-right: 0px;
-      text-align: center;
-  }
-}
-
-
- @media (max-width:900px) {
-    .footer-menu ul{
-      display: flex;
-      margin-top: 10px;
-      margin-bottom: 20px;
-    }
-    .imagen_error{
-      margin-top: 50px;
-    }
-
-    .imagen_construccion{
-      margin-top: 0px !important;
-    }
-}/*-----------------Aqui cierra el footer------------------------*/
-
-/*Errores*/
-.texto_error h2{
-  font-family: 'Tektur', cursive;
-  font-size: 200px;
-  margin-left: 0 !important;
-
-}
-
-.imagen_construccion{
-  margin-top: -40px;
-}
-
-.imagen_error img{
-height: 350px;
-margin-top: -50px;
-}
-
-.texto_error h2.prox{
-font-family: 'Tektur', cursive;
-font-size: 50px;
-margin-left: 0 !important;
-
-}
-.texto_error h6{ 
-  font-size: 50Px;
-}
-
-.texto_error{
-font-family: 'Montserrat', sans-serif;
-text-align: end;
-margin-top: -20px;
-
-}
-
-
-.contenedor_genericos{
-  background-color: #fefefe;
-  border-radius: 16px;
-  margin-top: 12%;
-  margin-bottom: 50px;
-  padding-left: 50px;
-
-}
-
-
-
-
-
-.main_contacto{
-  display: flex;
-  justify-content: center;
-  margin-top: 8%;
-}
-
-
- .contenedor_informacion_contacto {
-  background-color: #ffffff;
-  flex-grow: 1;
-  padding: 2em;
-  border-top-left-radius: 16px;
-  border-bottom-left-radius: 16px;
-  display: flex;
-  border-right: 4px solid #D50000;
-  
-}
-
-@media (max-width:1100px) {
-  .contenedor_informacion_contacto{
-    border: none;
-    border-radius: 16px;
-  }
-}
-
-.super{
-
-  border-radius: 16px;
-  box-shadow: 0 10px 20px rgba(27, 27, 27, .5);
-}
-
-.formulario_contacto {
-  background-color: #3b3b3b;
-  border-top-right-radius: 16px;
-  border-bottom-right-radius: 16px;
-  margin: 0px !important;
-  padding: 2em;
-
-}
-
-
+/*↓↓ Boton de submit ↓↓*/
 button.submit {
   outline: none;
   cursor: pointer;
@@ -1437,9 +931,89 @@ button.submit {
  button.submit:hover::before {
   transform: translate3d(100%, 0, 0);
  }
+/*↑↑ boton de submit ↑↑*/
 
 
- .input-container.contacto {
+/*↓↓ Errores↓↓ */
+.texto_error h2{
+  font-family: 'Tektur', cursive;
+  font-size: 200px;
+  margin-left: 0 !important;
+
+}
+
+.imagen_construccion{
+  margin-top: -40px;
+}
+
+.imagen_error img{
+height: 350px;
+margin-top: -50px;
+}
+
+.texto_error h2.prox{
+font-family: 'Tektur', cursive;
+font-size: 50px;
+margin-left: 0 !important;
+
+}
+.texto_error h6{ 
+  font-size: 50Px;
+}
+
+.texto_error{
+font-family: var(--montserrat);
+text-align: end;
+margin-top: -20px;
+
+}
+
+.contenedor_genericos{
+  background-color: #fefefe;
+  border-radius: 16px;
+  margin-top: 12%;
+  margin-bottom: 50px;
+  padding-left: 50px;
+
+}
+
+.main_contacto{
+  display: flex;
+  justify-content: center;
+  margin-top: 8%;
+}
+
+
+.contenedor_informacion_contacto {
+  background-color: #ffffff;
+  flex-grow: 1;
+  padding: 2em;
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+  display: flex;
+  border-right: 4px solid #D50000;
+  
+}
+
+
+.super{
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(27, 27, 27, .5);
+}
+
+.formulario_contacto {
+  background-color: #3b3b3b;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+  margin: 0px !important;
+  padding: 2em;
+
+}
+
+
+
+/*↓↓ inputs ↓↓*/
+.input-container.contacto {
   position: relative;
   margin: 50px auto;
   width: 100%;
@@ -1465,28 +1039,11 @@ button.submit {
   pointer-events: none;
 }
 
-
 .input-container .entrada:focus ~ .label.contacto,
 .input-container .entrada:valid ~ .label.contacto {
   top: 0px;
   font-size: 16px;
 }
-
-#vermas{
-  text-decoration: none;
-  color: #000;
-  margin: 10px;
-  transition: all .5s ease-in-out;
-
-}
-
-#vermas:hover{
-  color: #b10505;
-  transform: translateY(-5px);
-
-}
-
-
 
 .input-container .underline {
   position: absolute;
@@ -1507,32 +1064,9 @@ button.submit {
 select.entrada.contacto option{
   color: black;
 }
+/*↑↑ inputs ↑↑*/
 
-
-
- iframe {
-  height: 100%;
-  border-radius: 16px;
-  width: 100%;
-  padding: 0px !important;
-  margin: 0px !important;
-}
-
-@media (max-width:900px) {
-  iframe{
-    height: 350px;
-  }
-}
-
-
-span.iso{
-  font-size: 20px;
-  font-weight: 700;
-  color: #4b4949;
-}
-
-
-
+/*↓↓ Carrusel de marcas ↓↓*/
 section.carrusel_marcas {
   position: relative;
   display: flex;
@@ -1542,12 +1076,7 @@ section.carrusel_marcas {
   height: 200px;
   max-width: 80vw;
   margin: 0 auto;
-
-
-
-
 }
-
 
 .swiper {
   width: 100%;
@@ -1581,12 +1110,9 @@ section.carrusel_marcas {
   
 }
 
-
 .swiper-slide-active {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Cambia los valores según desees */
 }
-
-
 
 .swiper-slide div {
   transition: 0.25s;
@@ -1596,7 +1122,6 @@ section.carrusel_marcas {
 .swiper-slide-active div {
   opacity: 1;
 }
-
 
 .swiper-slide--one {
   background:
@@ -1635,7 +1160,9 @@ section.carrusel_marcas {
 .swiper-3d .swiper-slide-shadow-right {
   background-image: none !important; 
 }
+/*↑↑ Carrusel de marcas ↑↑*/
 
+/*↓↓ Mensajes Flash ↓↓*/
 .flash{
   border-radius: 16px;
   position: absolute;
@@ -1645,4 +1172,150 @@ section.carrusel_marcas {
   display: flex;
   justify-content: center;
   
+}
+/*↑↑ Mensajes Flash ↑↑*/
+
+
+/*|--------------------------------------------------------------------------------------------------------------------------------------------|*/
+/*|--------------------------------------------------------------------------------------------------------------------------------------------|*/
+/*|--------------------------------------------------------------------------------------------------------------------------------------------|*/
+/*|--------------------------------------------------------------------------------------------------------------------------------------------|*/
+/*|--------------------------------------------------------------------------------------------------------------------------------------------|*/
+/*|--------------------------------------------------------------------------------------------------------------------------------------------|*/
+/*|--------------------------------------------------------------------------------------------------------------------------------------------|*/
+/*|--------------------------------------------------------------------------------------------------------------------------------------------|*/
+/*|--------------------------------------------------------------------------------------------------------------------------------------------|*/
+/*|--------------------------------------------------------------------------------------------------------------------------------------------|*/
+/*|--------------------------------------------------------------------------------------------------------------------------------------------|*/
+
+
+/*↓↓↓ Responsividad ↓↓↓*/
+
+@media(max-width:1100px){
+  .boton{
+    font-size: 10px;
+    padding: 9px !important;
+    text-align: center;
+    }
+  nav{
+    padding: 10px;
+    }
+  .logo img{
+    height: 37px;
+    }
+
+  .elementos_interac{
+  margin: 0;
+  padding: 0;
+  }
+
+  .imagen_vision{
+  display: flex;
+  justify-content: center;
+  height: 370px;
+  width: 370px;
+}
+  .imagen_vision img{
+    height: 100%;
+    width: 100%;
+  }
+  .mision{
+    border-radius: 16px;
+    margin-bottom: 12px;
+    border: none;
+
+  }
+  .vision{
+    border-radius: 16px;
+  }
+
+  .valor.row{
+    display: flex;
+    justify-content: center;
+  }
+
+  .imagen_calidad img{
+    max-width: 340px;
+    max-height: 450px;
+    margin: 20px !important;
+  }
+
+  .imagen_calidad{
+    display: flex;
+    justify-content: center;
+    margin-top: 0 !important;
+    padding:  0 !important;
+  }
+
+  .logo_Pmontana{
+    display: flex;
+    justify-content: center;
+    margin-left: 20px;
+  }
+  .logo_Pmontana_2{
+    display: flex;
+    justify-content: center;
+  }
+  .contenedor_valores{
+    display: flex;
+    justify-content: center;
+  }
+  .valori{
+    max-width: 140px;
+    }
+  .valor .valori p {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #666;
+    }
+  .valori p.small {
+    font-size: 12px;
+    }
+  .desc_pinco .valori {
+    max-width: 110px;
+    }
+
+  .footer-content {
+    padding: 0px !important;
+    }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .right-paragraph {
+    margin-top: 0;
+    margin-right: 0px;
+    text-align: center;
+  }
+  .contenedor_informacion_contacto{
+    border: none;
+    border-radius: 16px;
+  }
+}
+
+@media(max-width:500px){
+  .activador{
+    margin: 0px !important;
+  }
+}
+
+
+@media (max-width:900px) {
+    .footer-menu ul{
+      display: flex;
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+    .imagen_error{
+      margin-top: 50px;
+    }
+
+    .imagen_construccion{
+      margin-top: 0px !important;
+    }
+    iframe{
+      height: 350px;
+    }
 }

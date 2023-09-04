@@ -1,53 +1,52 @@
 {% extends 'layout_landings.html' %}
 
 {% block content %}
-<section id="section1_landing_QuienesSomos ">
   <div class="contain" >
     <img src="{{ url_for('static', filename = 'img/logo_planta.jpg') }}" alt="" >
   </div>
-</section>
+
 <main>
 
-<section id="section2_landing_QuienesSomos">
-  <div class="card container">
-    <div class="row " >
-        <div class="imagen_vision col-xl-4 col-md-10 col-lg-10 col-sm-10 ">
+
+  <div class="card_imagen-texto container">
+    <div class="row justify-content-center" >
+        <div class="imagen_vision d-flex justify-content-center col-xl-4 col-md-10 col-lg-10 col-sm-10 ">
             <img src="/static/img/planta_tanques.jpg" alt="">
         </div>
 
-        <div class="contenido col-xl  col-sm-12 " >
+        <div class="contenido col-xl col-sm-12 mt-5" >
             <h3 class=" mt-1">Descripción General</h3>
             <p>
-                Corimon Pinturas C.A. es una empresa subsidiaria del Grupo CORIMON, especializada en la fabricación de pinturas. Con una destacada trayectoria, la compañía se ha convertido en un proveedor confiable para las marcas más reconocidas del país, como Pinturas Montana y Pinturas Pinco. Su experiencia abarca una amplia gama de aplicaciones, incluyendo pinturas arquitectónicas, pinturas para madera, pinturas de tráfico, pinturas para mantenimiento industrial, pinturas marinas, pinturas para equipos originales (OEM) y pinturas para el reacabado automotriz.
-               <br> <br> Corimon Pinturas C.A. se enorgullece de contar con las certificaciones ISO 9000 y QSS 9000, lo que demuestra su compromiso con los estándares de calidad y su enfoque en la excelencia operativa. Estas certificaciones respaldan la capacidad de la empresa para ofrecer productos y servicios de alta calidad que cumplen con las exigencias del mercado.
+              Corimon Pinturas C.A. es una empresa subsidiaria del Grupo CORIMON, especializada en la fabricación de pinturas. Con una destacada trayectoria, la compañía se ha convertido en un proveedor confiable para las marcas más reconocidas del país, como Pinturas Montana y Pinturas Pinco. Su experiencia abarca una amplia gama de aplicaciones, incluyendo pinturas arquitectónicas, pinturas para madera, pinturas de tráfico, pinturas para mantenimiento industrial, pinturas marinas, pinturas para equipos originales (OEM) y pinturas para el reacabado automotriz.
+              <br> <br> Corimon Pinturas C.A. se enorgullece de contar con las certificaciones ISO 9000 y QSS 9000, lo que demuestra su compromiso con los estándares de calidad y su enfoque en la excelencia operativa. Estas certificaciones respaldan la capacidad de la empresa para ofrecer productos y servicios de alta calidad que cumplen con las exigencias del mercado.
             </p>
         </div>
-        <div class="contenedor_mision-vision">
-          <div class="row">
-              <div class="mision col-xl-6 col-lg-5 col-md-5 col-sm-12">
-              <h3 class="text-white mt-3 mb-0">Misión </h3>
-              <p class="text-white ">
+        <div class="contenedor_mision-vision p-0 mt-3 d-flex justify-content-center">
+          <div class="row w-100 d-flex justify-content-center">
+              <div class="mision col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                <h3 class="text-white valor mt-3 mb-0">Misión </h3>
+                <p class="text-white valor ">
                   Diseñar, fabricar y distribuir en forma segura y cuidando el medio ambiente, productos con calidad para satisfacer las necesidades de los clientes. Utilizando las mejores prácticas en nuestros procesos, tecnología de punta, potenciando la formación, crecimiento y motivación del talento humano, generando valor para los accionistas.
-              </p>
+                </p>
               </div>
-              <div class="vision col-xl-6 col-lg-5 col-md-5 col-sm-12">
-              <h3 class="mt-3 mb-0">Visión </h3>
-              <p class="">
+              <div class="vision col-xl col-lg col-md col-sm-12">
+                <h3 class="mt-3 mb-0 valor">Visión </h3>
+                <p class=" valor text-center">
                   Ser el fabricante de pinturas más competitivo del Continente Americano.
-              </p>
+                </p>
               </div>
           </div>
       </div>
     </div>
 </div>
 
-</section>
 
 
 
-  <div class="contenedor_s3 container">
-      <div class="row d-flex " >
-          <div class="col-xl-8 col-md-8 col-lg-8 col-sm-12">
+
+  <div class="container mt-4 w-100">
+      <div class="row d-flex justify-content-between" >
+          <div class="col-xl-8 col-md-8 col-lg-8 col-sm-12 p-0">
               <div class="calidad" style="border-top-left-radius: 16px; border-top-right-radius: 16px;">
               <h2>Politica de calidad</h2>
 
@@ -73,26 +72,31 @@
                   </p>
               </div>
           </div>
-          <div class="imagen_calidad col-xl-4 col-md-3 col-lg-3 col-sm-12 ">
+          <div class="imagen_calidad col-xl col-md col-lg col-sm-12 ">
               <img src="/static/img/distribucion.jpg" alt="">
           </div>
       </div>
   </div>
 
-  <div class="d-flex justify-content-center  mt-3" id="section" style="padding: 10px 55px;">
-    <h3 class="fs-2 mb-3 py-2" id="subtitulo" style="text-align: center; border-bottom: solid 2px #D50000; border-top: solid 2px #D50000; width: 0; opacity: 0; transition: all ease-in-out 0.5s;">¿Quienes somos?</h3>
-</div> 
-<section id="section4 " class="container" >
 
-    <div class="row caja ">
-      
-      <div class="logo_montanito col-xl col-sm-12 col-md-12 d-flex align-items-center">
+
+
+
+  <div class="d-flex justify-content-center container  mt-3" id="section" >
+    <h3 class="fs-2 mb-3 py-2" id="subtitulo" style="text-align: center; border-bottom: solid 2px #D50000; border-top: solid 2px #D50000; width: 0; opacity: 0; transition: all ease-in-out 0.5s;">¿Quienes somos?</h3>
+  </div> 
+
+
+
+  <section id="section4 " class="container" >
+    <div class="row caja">
+      <div class="imagen h-auto col-xl col-sm-12 col-md-12 d-flex align-items-center">
         <img src="/static/img/montana_pinturas.jpg" style="max-width: 100%; height: 100%; border-radius: 16px; object-fit: cover;" alt="">
       </div>
   
-          <div class="contenido_section4  col-xl-8 col-sm-12"  >
+          <div class="contenido_section4 ms-1 col-xl-8 col-sm-12"  >
               <h3 class="text-dark fs-2" style="text-align: left;">Pinturas Montana</h3>
-              <p>Una marca de pinturas con más de 60 años en el mercado venezolano. Ofrecen una variedad de productos para diferentes usos, como arquitectura, madera, industria y automóviles, con un enfoque en la innovación y la alta calidad. Su objetivo principal es permitir a los venezolanos dar vida a sus sueños a través de la pintura.</p>
+              <p class="">Una marca de pinturas con más de 60 años en el mercado venezolano. Ofrecen una variedad de productos para diferentes usos, como arquitectura, madera, industria y automóviles, con un enfoque en la innovación y la alta calidad. Su objetivo principal es permitir a los venezolanos dar vida a sus sueños a través de la pintura.</p>
               <div class="row">
                 <div class="col-xl-6 col-sm-12 mis-val mision">
                   <h3 class="text-center text-white mt-2 mb-0">misión</h3>
@@ -189,7 +193,7 @@
           </div>
          </div>
     </div>
-    <div class="logo_Pmontana_2 col-xl col-sm-12 d-flex justify-content-center" id="ancla_pinco">
+    <div class="imagen col-xl col-sm-12 d-flex justify-content-center" id="ancla_pinco">
       <img src="/static/img/montanito.png" alt="">
     </div>
   </div>
@@ -199,8 +203,8 @@
 
   <div class="row caja mb-0" >
       
-    <div class="logo_pinco col-xl-6 col-sm-12 d-flex justify-content-center mb-0">
-      <img src="/static/img/pinco_nostros.png"  alt="">
+    <div class="imagen col-xl-4 col-sm-12 h-auto d-flex justify-content-center align-items-center mb-0">
+      <img src="/static/img/pinco_nostros.png" style="object-fit: contain; height: 50%; width: 50%;" alt="">
     </div>
 
     <div class="contenido_section4  col-xl col-sm-12 mb-0">
@@ -284,17 +288,17 @@
    </div>
 </div>
 
-<div class="logo_Pinco2 col-xl-2 mx-5 col-sm-12 d-flex justify-content-center" id="ancla_ppv">
-<img src="/static/img/publi_pinco.png" style="height: 270px;"  alt="">
+<div class="imagen h-auto col-xl-2 mx-5 col-sm-12 d-flex justify-content-center" id="ancla_ppv">
+<img src="/static/img/publi_pinco.png"  alt="">
 </div>
 </div>
 
 <hr>
 
-<div class="row  caja mt-3 ">
+<div class="row  caja mt-3 justify-content-between ">
 <h3 class="mx-4 col-12">También maquilamos:</h3>
-<div class="logo_ppv col-xl-3 col-sm-12 px-2 d-flex justify-content-center align-items-center " >
-  <img src="/static/img/ppv_marca.png"   alt="">
+<div class="imagen h-auto col-xl-4 col-sm-12 px-2 d-flex justify-content-center align-items-center " >
+  <img src="/static/img/ppv_marca.png" style="object-fit: contain;"  alt="">
 </div>
 <div class="contenido text-white col-xl col-sm-12 ">
   <h3 class="text-dark fs-2 mt-3" style="text-align: left;">PPV</h3>
