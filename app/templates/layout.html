@@ -33,26 +33,15 @@
       <div class="contenedor_elementos d-none d-xl-block">
 
           <ul>
-            {% if current_user.is_authenticated %}
-            <li class="mx-4"><a class="{% if titulo == 'Dashboard' %} active {% endif %}"  href="{{ url_for('.dashboard')}}">Dashboard</a></li>
-            <li class="mx-4"><a class="{% if titulo == 'reporte pago' %} active {% endif %}"  href="{{ url_for('.cobranza')}}">Registrar Pago</a></li>
-            <li class="mx-4"><a class="{% if titulo == 'Lista Cobranzas' %} active {% endif %}"  href="{{ url_for('.lista_cobranza')}}">Pagos</a></li>
-            <li class="mx-4"><a href="/soon" class="{% if titulo == 'Pedidos' %} active {% endif %}" >Pedidos</a></li>
-            {% else %}
-            <li class="mx-4"><a class="{% if titulo == 'Inicio' %} active {% endif %}" href="{{ url_for('.index')}}">Inicio</a></li>
-            <li class="mx-4"><a class="{% if titulo == 'Nosotros' %} active {% endif %}" href="{{ url_for('.nosotros')}}">¿Quienes Somos?</a></li>
-            <li class="mx-4"><a class="{% if titulo == 'En construccion' %} active {% endif %}" href="">Productos</a></li>
-            <li class="mx-4"><a class="{% if titulo == 'Contactanos' %} active {% endif %} " href="/contacto">Contáctanos</a></li>
-
-            {% endif %}           
+            <li class=""><a class="{% if titulo == 'Dashboard' %} active {% endif %}"  href="{{ url_for('.dashboard')}}">Dashboard</a></li>
+            <li class=""><a class="{% if titulo == 'reporte pago' %} active {% endif %}"  href="{{ url_for('.cobranza')}}">Registrar Pago</a></li>
+            <li class=""><a class="{% if titulo == 'Lista Cobranzas' %} active {% endif %}"  href="{{ url_for('.lista_cobranza')}}">Pagos</a></li>
+            <li class=""><a href="/soon" class="{% if titulo == 'Pedidos' %} active {% endif %}" >Pedidos</a></li>
           </ul>
         </div>
         
-      <div class="elementos_interac d-flex align-items-center">
+      <div class="elementos_interac ">
 
-
-
-      
           {% if current_user.is_authenticated %}
           <div class="user d-flex d-none d-xl-block mt-2">
             {{current_user.username}} <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -153,8 +142,17 @@
 
 {% endblock %}
 
+<div class="indice mb-5">
+  <div class="mr-3 p-3" style="background-color: #D50000;">
+    <h5 style="font-weight: 800; " class="text-white"> {{current_user.username}} </h5>
+  </div>
 
+  <div class=" p-3">
+    <h5><strong>{{titulo}}</strong></h5>
+  </div>
+</div>
 {% block content %}
+
 <div class="container">
     <div class="row">
   

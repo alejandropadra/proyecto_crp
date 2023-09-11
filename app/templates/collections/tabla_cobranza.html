@@ -9,15 +9,13 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
 {% endblock%}
 {% block container %}
+<main style="margin-top: -90px !important;">
 {% if current_user.nivel =="cliente" %}
 
 
 
-<main>
-    
 
-
-<div class=" mt-3 mb-5 container is-fullhd table-responsive" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); padding: 20px 20px 20px 20px; border-radius: 7px;">  
+    <div class="mb-5 container is-fullhd table-responsive" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); padding: 20px 20px 20px 20px; border-radius: 7px;">  
     <table id="example" class=" dataTable  table display my-3 cell-border" style="width:100%;">
         <thead>
             <tr>
@@ -59,7 +57,7 @@
 
 
 {% else%}
-  <div class="tab-content" id="myTabContent" style="margin-top: 100px;">
+<div class="tab-content" id="myTabContent" style="margin-top: 100px;">
         <div class="container mt-4 table-responsive mb-5" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); padding: 20px 20px 20px 20px; border-radius: 7px;">  
             <table id="example" class="display cell-border" style="width:100%">
                 <thead>
@@ -75,7 +73,6 @@
                 </thead>
                 <tbody>
                     {% for pago in pagos %}
-                   
                     <tr class="celda text-center" onclick="location.href='{{ url_for('.deposito', n=pago.n_deposito)}}'"; style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Click para mas detalles">
                         
                         <td>{{pago.rif}}</td>
@@ -106,10 +103,10 @@
             </table>
         </div>
     </div>
-  </div>
+</div>
 
 
-  {% endif %}
+{% endif %}
 
 {% endblock %}
 </main>

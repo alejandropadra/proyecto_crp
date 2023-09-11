@@ -35,7 +35,7 @@ body{
 }
 
 main{
-  padding-top: 100px;
+  padding-top: 140px;
 }
 
 h3{
@@ -55,29 +55,16 @@ header{
   border-bottom: solid 3px var(--rojo);
   transition: background ease-in-out 0.2s;
   z-index: 99;
+  height: 90px;
 }
 
 nav{
   display: flex;
   justify-content: space-between;
+  padding: 20px 30px;
 }
 
-.logo{
-  padding: 0 0 0 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
-.fecha{
-  color: transparent;
-  
-}
-
-.fecha:focus,
-.fecha:valid {
-  color: #000;
-}
 
 .contenedor_elementos{
   padding: 15px 10px;
@@ -90,7 +77,8 @@ nav{
 
 .contenedor_elementos li{
   display: inline-block;
-  margin-top: 15px;
+  margin: -10px 15px;
+
 }
 
 .logo img{
@@ -148,17 +136,20 @@ nav{
 }
 .elementos_interac{
   font-family: 'Sora', sans-serif;
-  padding: 15px 15px;
+  padding: 10px 0px 0px 50px;
+  margin: 0px !important;
+
 }
 
 /*↓↓ dropdown de usuario ↓↓*/
 
 .user{
   width: 100%;
-  border-radius: 50%;
   cursor: pointer;
   display: flex;
-  margin-right: 100px;
+  margin-right: 75px !important;
+  color: var(--clr-text);
+
 }
 
 .sub-menu-wrap{
@@ -627,6 +618,11 @@ opacity: 0;
   transform: rotate(45deg);
 }
 /*↑↑ Formulario ↑↑*/
+
+
+
+
+/*Boton submit↓↓*/
 button.submit {
   outline: none;
   cursor: pointer;
@@ -645,49 +641,52 @@ button.submit {
   background: #D50000;
   width: 300px;
   color: ghostwhite;
- }
- 
- button.submit span {
+}
+
+button.submit span {
   position: relative;
   z-index: 10;
   transition: color 0.4s;
- }
- 
- button.submit:hover span {
+}
+
+button.submit:hover span {
   color: wheat;
- }
- 
- button.submit::before,
- button.submit::after {
+}
+
+button.submit::before,
+button.submit::after {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: 0;
- }
+}
 
- button.submit:hover {
+button.submit:hover {
   transform: translateY(-5px);
   box-shadow: 2px 13px 17px 5px rgba(0,0,0,0.75);
--webkit-box-shadow: 2px 13px 17px 5px rgba(0,0,0,0.75);
--moz-box-shadow: 2px 13px 17px 5px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 2px 13px 17px 5px rgba(0,0,0,0.75);
+  -moz-box-shadow: 2px 13px 17px 5px rgba(0,0,0,0.75);
 }
- 
- button.submit::before {
+
+button.submit::before {
   content: "";
   background: #000;
   width: 120%;
   left: -10%;
   transform: skew(30deg);
   transition: transform 0.4s cubic-bezier(0.3, 1, 0.8, 1);
- }
- 
- button.submit:hover::before {
-  transform: translate3d(100%, 0, 0);
- }
+}
 
- .contenedor_descripcion {
+button.submit:hover::before {
+  transform: translate3d(100%, 0, 0);
+  }
+/*↑↑ Boton submit ↑↑*/
+
+
+/*↓↓ Estilos para el archivo info_pago.html ↓↓*/
+.contenedor_descripcion {
 
   --clr: #FDFFFC;
   --clr-text: #1C1D21;
@@ -700,11 +699,10 @@ button.submit {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
   outline: 2px solid var(--clr);
   outline-offset: 3px;
   border: #1C1D21 solid 2px;
@@ -717,8 +715,8 @@ button.submit {
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
   gap: .5rem;
 }
 
@@ -728,16 +726,16 @@ button.submit {
   display: flex;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
   height: 4em;
   padding-inline: 1em;
   -webkit-transform: rotate(180deg);
-      -ms-transform: rotate(180deg);
-          transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
   -webkit-box-pack: right;
-      -ms-flex-pack: right;
-          justify-content: right;
+  -ms-flex-pack: right;
+  justify-content: right;
   border-radius: 10px;
   -webkit-transition: .4s ease-in-out;
   transition: .4s ease-in-out;
@@ -749,7 +747,6 @@ button.submit {
 }
 
 .cont:hover {
-
   background-color: var(--clr1);
   color: #1C1D21;
 }
@@ -759,12 +756,10 @@ button.submit {
   height: 33px;
   background-color: limegreen;
   -webkit-animation: 1s move6 infinite;
-          animation: 1s move6 infinite;
+  animation: 1s move6 infinite;
   border-radius: 5px;
   margin: 0.1em;
 }
-
-
 
 .play {
   position: relative;
@@ -772,13 +767,13 @@ button.submit {
   height: 1.6em;
   width: 1.6em;
   -webkit-clip-path: polygon(50% 50%, 100% 50%, 75% 6.6%);
-          clip-path: polygon(50% 50%, 100% 50%, 75% 6.6%);
+  clip-path: polygon(50% 50%, 100% 50%, 75% 6.6%);
   background-color: var(--clr-text);
   -webkit-transform: rotate(-90deg);
-      -ms-transform: rotate(-90deg);
-          transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  transform: rotate(-90deg);
   -ms-flex-item-align: center;
-      align-self: center;
+  align-self: center;
   margin-top: 0.7em;
   justify-self: center;
   -webkit-transition: .4s ease-in-out;
@@ -792,7 +787,7 @@ button.submit {
   width: 40px;
   background-color: rgb(233, 232, 232);
   -ms-flex-item-align: center;
-      align-self: center;
+  align-self: center;
   border-radius: 5px;
   display: flex;
   align-items: center;
@@ -801,19 +796,19 @@ button.submit {
 }
 
 .icono{
-    font-size: 1.5em;
-    transform: rotate(180deg);
+  font-size: 1.5em;
+  transform: rotate(180deg);
 }
 
 .datos {
   position: relative;
   -webkit-transform: rotate(180deg);
-      -ms-transform: rotate(180deg);
-          transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
   margin-right: 1em;
   color: var(--clr-text);
   -ms-flex-item-align: center;
-      align-self: center;
+  align-self: center;
 }
 
 .artist {
@@ -822,22 +817,24 @@ button.submit {
 }
 
 .cont .titulo{
-    font-size: 1em;
-    color: var(--clr-text);
-    margin-top: 10px;
+  font-size: 1em;
+  color: var(--clr-text);
+  margin-top: 10px;
 }
 
 .datos{
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
+
+/*↑↑ Estilos para el archivo info_pago.html ↑↑*/
 hr{
     border: solid 4px ;
     border-radius: 5px;
     margin-top: 0 !important;
 }
 
-
+/*↓↓ Estilos para el archivo tabla_cobranza.html ↓↓*/
 
 table.dataTable thead th, .table.dataTable tfoot th {
   background-color: transparent;
@@ -893,18 +890,17 @@ tr.celda:hover{
     transform: translateY(-5px);
     background-color: #ddd;
 }
+/*↑↑ Estilos para el archivo tabla_cobranza.html ↑↑*/
 
+/* ↓↓ Estilos para el Dashboard.html ↓↓*/
 .courses-container{
-
-    display: flex;
-    justify-content: center;
-
-   
+  display: flex;
+  justify-content: center;
 }
 
 .preview {
-    border-radius: 10px;
-    margin-left: -20px;
+  border-radius: 10px;
+  margin-left: -20px;
 }
 
 
@@ -1043,8 +1039,6 @@ h6.masinfo{
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   border-radius: 16px;
   width: 100%;
-  
-
 }
 
 .tarjeta_user{
@@ -1158,84 +1152,7 @@ box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   background-color: #D50000;
 }
 
-.tarjeta_inicio{
-  margin-top: 300px;
-  border-radius: 16px;
-  margin-top: 25px;
-  margin-bottom: 20px;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-  border: solid 1px rgb(241, 241, 241);
-}
-
-.tarjeta_inicio:hover{
-  transform: translateY(-5px);
-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-.header-tarjeta .icono{
-  width: 80px;
-  max-width: 80px;
-  max-height: 60px;
-  min-height: 60px;
-  text-align: center;
-  padding: 0.5rem;
-  border-radius: 16px;
-  margin-top: -25px;
-  box-shadow: 0px 11px 11px -2px rgba(0,0,0,0.3);
--webkit-box-shadow: 0px 11px 11px -2px rgba(0,0,0,0.3);
--moz-box-shadow: 0px 11px 11px -2px rgba(0,0,0,0.3);
-}
-
-
-
-
-.header-tarjeta{
-  display: flex;
-  justify-content: space-between;
-}
-
-.header-tarjeta .texto_tarjeta h4{
-  font-weight: 600;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 10px;
-  margin-top: 10px;
-
-}
-
-.header-tarjeta .texto_tarjeta p{
-  font-size: 20px;
-  font-family: 'Montserrat', sans-serif;
-
-}
-
-.texto_tarjeta h2{
-  font-size: 30px;
-  font-weight: 200;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.header-tarjeta .icono {
-display: inline-block; 
-transform: none !important; 
-}
-
-.tarjeta_footer p{
-text-align: justify;
-font-size: 10px;
-color: #3d3d3d
-}
-
-hr.divisor_tarjeta{
-  border: 1px solid #cacaca;
-}
-
-.contenedor_tarjetas1{
-  margin-top: 70px;
-  padding-top: 40px;
-  display: flex;
-  justify-content: center;
-}
-
-
+/*↓↓ Mensaje Flash ↓↓*/
 .flash {
   border-radius: 16px;
   position: relative;
@@ -1245,37 +1162,8 @@ hr.divisor_tarjeta{
   justify-content: center;
 
 }
+/*↑↑ Mensaje Flash ↑↑*/
 
-.texto_error h2.prox{
-  font-family: 'Tektur', cursive;
-  font-size: 50px;
-  margin-left: 0 !important;
-  
-  }
-  .texto_error h6{ 
-    font-size: 50Px;
-  }
-  
-  .texto_error{
-  font-family: 'Montserrat', sans-serif;
-  text-align: end;
-  margin-top: -20px;
-  
-  }
-  
-
-.contenedor_genericos{
-  background-color: #fefefe;
-  border-radius: 16px;
-  margin-top: 85px;
-  margin-bottom: 50px;
-  padding-left: 50px;
-
-}
-
-.imagen_construccion{
-  margin-top: 0px !important;
-}
 
 @media (max-width:900px) {
   .footer-menu ul{
@@ -1330,4 +1218,51 @@ hr.divisor_tarjeta{
       width: 100%;
       margin: 5px 10px;
   }
+}
+
+.indice{
+  border-radius: 6px;
+  display: flex;
+  padding: 0px !important;
+  width: 300px;
+  border: solid 1px rgb(241, 241, 241);
+  transform: translateY(-5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  left: 30px;
+  margin-top: 100px;
+  max-height: 45px !important;
+
+}
+
+.indice div h5{
+  font-family: var(--montserrat);
+  font-size: 14px;
+}
+
+.indice .mr-3 {
+  position: relative;
+  background-color: #D50000;
+}
+
+.indice .mr-3::after {
+  content: "";
+  position: absolute;
+  right: -20px;
+  top: 0;
+  width: 0;
+  height: 0;
+
+  border-bottom: 42px solid transparent; /* Ajusta estos valores según tus necesidades */
+  border-left: 20px solid #D50000; /* Ajusta estos valores según tus necesidades */
+}
+
+.fecha{
+  color: transparent;
+  
+}
+
+.fecha:focus,
+.fecha:valid {
+  color: #000;
 }
