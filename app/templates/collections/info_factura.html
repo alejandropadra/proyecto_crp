@@ -1,0 +1,90 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_forms.html' import render_field %}
+{% block container %}
+
+
+<main class="d-flex justify-content-center">
+<div class="contenedor container col-xl-8 col-sm-12">
+    <div class="titulo d-flex justify-content-center">
+        <h3 class="fs-1">{% if datos['blart']== 'DZ'%} Abono N°:  {%elif datos['blart']== 'RV'%} Factura N°:  {%endif%} {{ datos['vbeln'] }} </h2>
+    </div>
+    <hr class= "w-100 mx-2">
+
+    <div class="celdas w-100 ">
+    
+      <div class="cont d-flex justify-content-center">
+        <div class="datos ">  
+          <p class="titulo"> <strong>Rif:</strong> {{ datos['kunnr'] }} </p>
+        </div>
+      </div>
+
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Fecha documento:</strong> {{ datos['fkdat'] }} </p>
+        </div>
+      </div>
+
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Monto Base $:</strong> {%if datos['netwr'] <0 %}{{ "{:,.2f}".format(datos['dmbtr'] * (-1)|abs) }} {%elif datos['dmbtr'] >0 %}{{ "{:,.2f}".format(datos['netwr']|abs) }}{%endif%} </p>
+        </div>
+      </div>
+
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Monto Iva $:</strong> {%if datos['mwsbk'] <0 %}{{ "{:,.2f}".format(datos['dmbtr'] * (-1)|abs) }} {%elif datos['dmbtr'] >0 %}{{ "{:,.2f}".format(datos['mwsbk']|abs) }}{%endif%} </p>
+        </div>
+      </div>
+
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Monto Total $:</strong> {%if datos['dmbtr'] <0 %}{{ "{:,.2f}".format((datos['dmbtr'] * (-1))|abs) }} {%elif datos['dmbtr'] >0 %}{{ "{:,.2f}".format(datos['dmbtr']|abs) }}{%endif%} </p>
+        </div>
+      </div>
+      
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Monto Base Bs:</strong> {{ "{:,.2f}".format(datos['basebs']|abs) }} </p>
+        </div>
+      </div>
+
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Monto Iva Bs:</strong> {{ "{:,.2f}".format(datos['ivabs']|abs) }} </p>
+        </div>
+      </div>
+
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Monto Total Bs:</strong> {%if datos['totfactbs'] <0 %}{{ "{:,.2f}".format((datos['totfactbs'] * (-1))|abs) }}{%elif datos['totfactbs'] >0 %}{{ "{:,.2f}".format(datos['totfactbs']|abs) }}{%endif%} </p>
+        </div>
+        
+      </div>
+
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Retención Bs:</strong> {{ "{:,.2f}".format(datos['retbs']|abs) }} </p>
+        </div>
+        
+      </div>
+
+      <div class="cont">
+        <div class="datos">
+          <p class="titulo"> <strong>Observación:</strong>  {{ datos['sgtxt'] }}</p>
+        </div>
+        
+      </div>
+
+
+                <!---<a href="/static/Adjunto/{{ datos.imagen }}" download="{{ datos.imagen }}">-->
+               <!--- <img   {% if datos.imagen %} src="/static/Adjunto/{{ datos.imagen }}" {% else %}  {% endif %} alt="">-->
+    </div>
+    <hr class= "w-100 mx-2">
+  </div>
+</main>
+
+
+
+
+
+{% endblock %}

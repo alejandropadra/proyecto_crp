@@ -1,330 +1,284 @@
 {% extends 'layout_landings.html' %}
 
 {% block content %}
-  <div class="contain" >
-    <img src="{{ url_for('static', filename = 'img/logo_planta.jpg') }}" alt="" >
+
+<div class="position-relative">
+
+  <div class="parallax"></div>
+  <div class="flecha-down top-50 bottom-50 end-50 d-sm-block d-none" style="margin-top: 160px; cursor: auto;">
+    <i class="bi bi-chevron-compact-down "></i>
   </div>
+</div>
 
-<main>
+
+  <main class="px-3 pt-0 pb-4" >
 
 
-  <div class="card_imagen-texto container">
-    <div class="row justify-content-center" >
-        <div class="imagen_vision d-flex justify-content-center col-xl-4 col-md-10 col-lg-10 col-sm-10 ">
-            <img src="/static/img/planta_tanques.jpg" alt="">
-        </div>
+    
+<div class="EfectoDiv container "  >
+        
+  <div class="circle"></div>
+  <div class="circle"></div>
 
-        <div class="contenido col-xl col-sm-12 mt-5" >
-            <h3 class=" mt-1">Descripción General</h3>
-            <p>
-              Corimon Pinturas C.A. es una empresa subsidiaria del Grupo CORIMON, especializada en la fabricación de pinturas. Con una destacada trayectoria, la compañía se ha convertido en un proveedor confiable para las marcas más reconocidas del país, como Pinturas Montana y Pinturas Pinco. Su experiencia abarca una amplia gama de aplicaciones, incluyendo pinturas arquitectónicas, pinturas para madera, pinturas de tráfico, pinturas para mantenimiento industrial, pinturas marinas, pinturas para equipos originales (OEM) y pinturas para el reacabado automotriz.
-              <br> <br> Corimon Pinturas C.A. se enorgullece de contar con las certificaciones ISO 9000 y QSS 9000, lo que demuestra su compromiso con los estándares de calidad y su enfoque en la excelencia operativa. Estas certificaciones respaldan la capacidad de la empresa para ofrecer productos y servicios de alta calidad que cumplen con las exigencias del mercado.
-            </p>
-        </div>
-        <div class="contenedor_mision-vision p-0 mt-3 d-flex justify-content-center">
-          <div class="row w-100 d-flex justify-content-center">
-              <div class="mision col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                <h3 class="text-white valor mt-3 mb-0">Misión </h3>
-                <p class="text-white valor ">
-                  Diseñar, fabricar y distribuir en forma segura y cuidando el medio ambiente, productos con calidad para satisfacer las necesidades de los clientes. Utilizando las mejores prácticas en nuestros procesos, tecnología de punta, potenciando la formación, crecimiento y motivación del talento humano, generando valor para los accionistas.
-                </p>
-              </div>
-              <div class="vision col-xl col-lg col-md col-sm-12">
-                <h3 class="mt-3 mb-0 valor">Visión </h3>
-                <p class=" valor text-center">
-                  Ser el fabricante de pinturas más competitivo del Continente Americano.
-                </p>
-              </div>
+  <div class="row d-flex justify-content-between  mt-3 inner " >
+    <div class="imagen planta col-sm-12 col-xl col-lg-12 col-md">
+      <img src="/static/img/planta_tanques.jpg" alt="" >
+    </div>
+
+      <div class="texto col-md-12 col-lg-12 col-sm-12 mt-3 col-xl-6" >
+              <div class="w-100 px-2">
+                  <h3 class="text-center pb-1 sub-titulo">Descripción General</h3>
+                  <p style="text-align: justify;" class="descripcion mt-4">Corimon Pinturas C.A. es una empresa subsidiaria del Grupo CORIMON, especializada en la fabricación de pinturas. Con una destacada trayectoria, la compañía se ha convertido en un proveedor confiable para las marcas más reconocidas del país, como Pinturas Montana y Pinturas Pinco. Su experiencia abarca una amplia gama de aplicaciones, incluyendo pinturas arquitectónicas, pinturas para madera, pinturas de tráfico, pinturas para mantenimiento industrial, pinturas marinas, pinturas para equipos originales (OEM) y pinturas para el reacabado automotriz.
+                    <br> <br> Corimon Pinturas C.A. se enorgullece de contar con las certificaciones ISO 9000 y QSS 9000, lo que demuestra su compromiso con los estándares de calidad y su enfoque en la excelencia operativa. Estas certificaciones respaldan la capacidad de la empresa para ofrecer productos y servicios de alta calidad que cumplen con las exigencias del mercado.</p>
           </div>
       </div>
+  </div>
+</div>
+
+<div class="container position-relative mt-3 mb-5">
+  <div class="row d-flex justify-content-xl-around justify-content-sm-center  flex-sm-colum gap-3">
+
+    <div class="valors col-xl-5 col-lg-5 col-md-5 col-sm-12  z-1 moveIzq" >
+      <div class="valors-inner p-3 h-100 ">
+        <div class="sub-titulo text-center">
+          <h3 class="">Misión</h3>
+        </div>
+        <p class="descripcion d-flex justify-content-center align-items-center p-1 mt-2">
+          Diseñar, fabricar y distribuir en forma segura y cuidando el medio ambiente, productos con calidad para satisfacer las necesidades de los clientes. Utilizando las mejores prácticas en nuestros procesos, tecnología de punta, potenciando la formación, crecimiento y motivación del talento humano, generando valor para los accionistas.
+        </p>
+      </div>
     </div>
+
+    <div class="valors col-sm-12 col-md-5 col-lg-5 col-xl-5  z-1  moveDer" >
+      <div class="valors-inner w-100 h-100">
+        <div class="sub-titulo text-center h-auto">
+          <h3 class="py-4">Visión</h3>
+        </div>
+        <p class=" descripcion px-4 pt-2">
+          Ser el fabricante de pinturas más competitivo del Continente Americano.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container position-relative w-100 p-0" style="margin-top: 70px;">
+  <svg id="sw-js-blob-svg" class="svg2 z-0 animaSVG " viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">                    <defs>                         <linearGradient id="sw-gradient" x1="0" x2="1" y1="1" y2="0">                            <stop id="stop1" stop-color="rgba(213, 0, 0, 1)" offset="0%"></stop>                            <stop id="stop2" stop-color="rgba(152, 25, 20, 1)" offset="100%"></stop>                        </linearGradient>                    </defs>                <path fill="url(#sw-gradient)" d="M22.1,-25.5C30,-19.7,38.9,-14,41.7,-6.1C44.6,1.8,41.5,12,34.6,16.3C27.7,20.5,17,18.9,8.1,21.9C-0.7,24.9,-7.7,32.6,-15.2,33.5C-22.8,34.4,-31,28.5,-34.3,20.8C-37.6,13,-36.1,3.5,-34.6,-6.3C-33.2,-16.1,-31.8,-26.2,-26,-32.4C-20.3,-38.6,-10.1,-41.1,-1.5,-39.2C7.1,-37.4,14.2,-31.4,22.1,-25.5Z" width="100%" height="100%" transform="translate(50 50)" stroke-width="0" style="transition: all 0.3s ease 0s;"></path>              </svg>
+  <svg id="sw-js-blob-svg" class="svg2 z-0 animaSVG " viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">                    <defs>                         <linearGradient id="sw-gradient" x1="0" x2="1" y1="1" y2="0">                            <stop id="stop1" stop-color="rgba(213, 0, 0, 1)" offset="0%"></stop>                            <stop id="stop2" stop-color="rgba(152, 25, 20, 1)" offset="100%"></stop>                        </linearGradient>                    </defs>                <path fill="url(#sw-gradient)" d="M22.1,-25.5C30,-19.7,38.9,-14,41.7,-6.1C44.6,1.8,41.5,12,34.6,16.3C27.7,20.5,17,18.9,8.1,21.9C-0.7,24.9,-7.7,32.6,-15.2,33.5C-22.8,34.4,-31,28.5,-34.3,20.8C-37.6,13,-36.1,3.5,-34.6,-6.3C-33.2,-16.1,-31.8,-26.2,-26,-32.4C-20.3,-38.6,-10.1,-41.1,-1.5,-39.2C7.1,-37.4,14.2,-31.4,22.1,-25.5Z" width="100%" height="100%" transform="translate(50 50)" stroke-width="0" style="transition: all 0.3s ease 0s;"></path>              </svg>
+  <svg id="sw-js-blob-svg" class="svg2 z-0 animaSVG " viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">                    <defs>                         <linearGradient id="sw-gradient" x1="0" x2="1" y1="1" y2="0">                            <stop id="stop1" stop-color="rgba(213, 0, 0, 1)" offset="0%"></stop>                            <stop id="stop2" stop-color="rgba(152, 25, 20, 1)" offset="100%"></stop>                        </linearGradient>                    </defs>                <path fill="url(#sw-gradient)" d="M22.1,-25.5C30,-19.7,38.9,-14,41.7,-6.1C44.6,1.8,41.5,12,34.6,16.3C27.7,20.5,17,18.9,8.1,21.9C-0.7,24.9,-7.7,32.6,-15.2,33.5C-22.8,34.4,-31,28.5,-34.3,20.8C-37.6,13,-36.1,3.5,-34.6,-6.3C-33.2,-16.1,-31.8,-26.2,-26,-32.4C-20.3,-38.6,-10.1,-41.1,-1.5,-39.2C7.1,-37.4,14.2,-31.4,22.1,-25.5Z" width="100%" height="100%" transform="translate(50 50)" stroke-width="0" style="transition: all 0.3s ease 0s;"></path>              </svg>
+  
+  <div class="row w-100 gap-4 m-0 p-0">
+    
+    <div class="col-xl col-lg col-md col-sm-12 p-0 moveIzq">
+      
+      <div class="valors-inner p-4 ">
+        <div class="sub-titulo text-center">
+          <h3 class="py-4">Politica de calidad</h3>
+        </div>
+        <div class="calidad w-100">
+          <div class="d-flex gap-2">
+            <i class="bi bi-paint-bucket"></i> <p class="punto  w-100" >Diseñar productos atractivos, útiles y de alta calidad que cumplan las necesidades del cliente.</p>
+          </div>
+          <div class="d-flex gap-2">
+            <i class="bi bi-paint-bucket"></i> <p class="punto   w-100" >Garantizar la disponibilidad de productos conforme satisfagan las necesidades del cliente.</p>
+          </div>
+
+
+          <div class="d-flex gap-2">
+            <i class="bi bi-paint-bucket"></i> <p class="punto  w-100" >Garantizar el cumplimiento del estimado de ventas.</p>
+          </div>
+
+
+          <div class="d-flex gap-2">
+            <i class="bi bi-paint-bucket"></i> <p class="punto   w-100" >Potenciar la presencia de Corimon Pinturas en los puntos de venta.</p>
+          </div>
+
+          <div class="d-flex gap-2">
+            <i class="bi bi-paint-bucket"></i> <p class="punto   w-100" >Garantizar que nuestra gestión sea percibida satisfactoriamente por los clientes.</p>
+          </div>
+
+          <div class="d-flex gap-2">
+            <i class="bi bi-paint-bucket"></i> <p class="punto   w-100" >Garantizar la eficiencia y eficacia del sistema de gestión de calidad.</p>
+          </div>
+
+          <div class="d-flex gap-2">
+            <i class="bi bi-paint-bucket"></i> <p class="punto  " >Contribuir con el entorno promoviendo el trabajo en temas sociales y ambientales, a través de la unión de Empresa-Comunidad, con el interés de favorecer el bienestar social de los individuos y el cuidado del ambiente.</p>
+          </div>
+
+          <div class="d-flex gap-2">
+            <i class="bi bi-paint-bucket"></i> <p class="punto  " >Asegurar recurso humano altamente calificado y comprometido.</p>
+          </div>
+
+          <div class="d-flex gap-2">
+            <i class="bi bi-paint-bucket"></i> <p class="punto  " >Optimizar el uso de los recursos financieros.</p>
+          </div>
+
+          <div class="d-flex gap-2">
+            <i class="bi bi-paint-bucket"></i> <p class="punto  " >Promover el mejoramiento continuo.</p>
+          </div>
+
+          <div class="d-flex gap-2">
+            <i class="bi bi-paint-bucket"></i> <p class="punto  " >Fortalecimiento de la marca.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl col-lg col-md col-sm-12 imagen h-auto z-3 moveDer">
+      <img src="/static/img/distribucion.jpg" class="rounded" alt="">
+    </div>
+    
+  </div>
 </div>
 
 
 
-
-
-  <div class="container mt-4 w-100">
-      <div class="row d-flex justify-content-between" >
-          <div class="col-xl-8 col-md-8 col-lg-8 col-sm-12 p-0">
-              <div class="calidad" style="border-top-left-radius: 16px; border-top-right-radius: 16px;">
-              <h2>Politica de calidad</h2>
-
-              <p>
-                  Corimon Pinturas está comprometida en diseñar, desarrollar, fabricar y comercializar pinturas, recubrimientos y productos relacionados hacia el mercado doméstico y de uso industrial, para satisfacer los requerimientos de los clientes, cumpliendo el principio de gestión de la calidad en cada proceso y teniendo el compromiso con el mejoramiento continuo, para garantizar un crecimiento rentable y sostenible.
-              </p>
-              </div>
-              <div class="calidad mas " style="border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">
-                  <h4>Objetivos de la calidad</h4>
-
-                  <p class="px-3 text-white">
-                      <i class="bi bi-check-circle"></i>  Diseñar productos atractivos, útiles y de alta calidad que cumplan las necesidades del cliente.
-                      <br> <i class="bi bi-check-circle"></i>  Garantizar la disponibilidad de productos conforme satisfagan las necesidades del cliente.
-                      <br> <i class="bi bi-check-circle"></i>  Garantizar el cumplimiento del estimado de ventas.
-                      <br> <i class="bi bi-check-circle"></i>  Potenciar la presencia de Corimon Pinturas en los puntos de venta.
-                      <br> <i class="bi bi-check-circle"></i>  Garantizar que nuestra gestión sea percibida satisfactoriamente por los clientes.
-                      <br> <i class="bi bi-check-circle"></i>  Garantizar la eficiencia y eficacia del sistema de gestión de calidad.
-                      <br> <i class="bi bi-check-circle"></i>  Contribuir con el entorno promoviendo el trabajo en temas sociales y ambientales, a través de la unión de Empresa-Comunidad, con el interés de favorecer el bienestar social de los individuos y el cuidado del ambiente.
-                      <br> <i class="bi bi-check-circle"></i>  Asegurar recurso humano altamente calificado y comprometido.
-                      <br> <i class="bi bi-check-circle"></i>  Optimizar el uso de los recursos financieros.
-                      <br> <i class="bi bi-check-circle"></i>  Promover el mejoramiento continuo.
-                      <br> <i class="bi bi-check-circle"></i>  Fortalecimiento de la marca.
-                  </p>
-              </div>
-          </div>
-          <div class="imagen_calidad col-xl col-md col-lg col-sm-12 ">
-              <img src="/static/img/distribucion.jpg" alt="">
-          </div>
-      </div>
-  </div>
-
-
-
-
-
-  <div class="d-flex justify-content-center container  mt-3" id="section" >
-    <h3 class="fs-2 mb-3 py-2" id="subtitulo" style="text-align: center; border-bottom: solid 2px #D50000; border-top: solid 2px #D50000; width: 0; opacity: 0; transition: all ease-in-out 0.5s;">¿Quienes somos?</h3>
+  <div class="d-flex justify-content-center container  mt-3" id="PM" >
+    <h3 class="fs-2 mb-3 py-2 sub-titulo subtitulo"  style="text-align: center; border-bottom: solid 2px #006EB7; border-top: solid 2px #006EB7; width: 0; opacity: 0; transition: all ease-in-out 0.5s; margin: 75px 0;">Pinturas Montana</h3>
+  
   </div> 
 
 
-
-  <section id="section4 " class="container" >
-    <div class="row caja">
-      <div class="imagen h-auto col-xl col-sm-12 col-md-12 d-flex align-items-center">
-        <img src="/static/img/montana_pinturas.jpg" style="max-width: 100%; height: 100%; border-radius: 16px; object-fit: cover;" alt="">
-      </div>
-  
-          <div class="contenido_section4 ms-1 col-xl-8 col-sm-12"  >
-              <h3 class="text-dark fs-2" style="text-align: left;">Pinturas Montana</h3>
-              <p class="">Una marca de pinturas con más de 60 años en el mercado venezolano. Ofrecen una variedad de productos para diferentes usos, como arquitectura, madera, industria y automóviles, con un enfoque en la innovación y la alta calidad. Su objetivo principal es permitir a los venezolanos dar vida a sus sueños a través de la pintura.</p>
-              <div class="row">
-                <div class="col-xl-6 col-sm-12 mis-val mision">
-                  <h3 class="text-center text-white mt-2 mb-0">misión</h3>
-                  <p class="text-white" style="font-size: 14px; padding: 0.7rem; " >ofrecer productos y servicios innovadores de alta calidad y rentabilidad, que llenen de color los sueños de nuestros clientes llevando como ingredientes fundamentales la formación el cuidado del medio ambiente y desarrollando nuestro talento humano usando tecnología de vanguardia.</p>
-                </div>
-            
-                <div class="col-xl-6  col-sm-12 mis-val text-center vision">
-                  <h3 class="text-center mt-2 mb-0">visión</h3>
-                  <p style="font-size: 14px; padding: 0.7rem; " >Pintar y proteger los sueños de todos en el Continente Americano.</p>
-                </div>
-              </div>
-          </div>
-    </div>
-    <div class="row contenedor_valores d-flex justify-content-center align-items-center" >
-            
-      <div class=" row col-xl-10 col-sm-12 text-white mb-5 " style="padding: 0 !important; margin: 0 !important;" >
-        <h3 class="col-12 text-dark mt-4">¿En que creemos?</h3>
-        <div class="valor row d-flex justify-content-center" style="padding: 0 !important; margin: 0 !important;">
-            <div class="valori col-xl-3 col-sm-4" href="#">
-             <p>Sueños</p>
-             <p class="small">En los sueños como motivadores de las acciones</p>
-             <div class="go-corner" href="#">
-               <div class="go-arrow">
-                 →
-               </div>
-             </div>
-            </div>
-           <div class="valori col-xl-3 col-sm-4" href="#">
-            <p>constancia</p>
-            <p class="small">En la constancia y la perseverancia para alcanzarlos</p>
-            <div class="go-corner" href="#">
-              <div class="go-arrow">
-                →
-              </div>
-            </div>
-          </div>
-          <div class="valori col-xl-3 col-sm-4" href="#">
-            <p>Equipo</p>
-            <p class="small">En el trabajo en equipo</p>
-            <div class="go-corner" href="#">
-              <div class="go-arrow">
-                →
-              </div>
-            </div>
-          </div>
-
-          <div class="valori col-xl-3 col-sm-4" href="#">
-            <p>satisfacción al cliente</p>
-            <p class="small">En el enfoque hacia la satisfacción del cliente</p>
-            <div class="go-corner" href="#">
-              <div class="go-arrow">
-                →
-              </div>
-            </div>
-          </div>
-
-          <div class="valori col-xl-3 col-sm-4" href="#">
-            <p>Buen Servicio</p>
-            <p class="small">En el buen servicio en nuestra cadena de valor.</p>
-            <div class="go-corner" href="#">
-              <div class="go-arrow">
-                →
-              </div>
-            </div>
-          </div>
-          <div class="valori col-xl-3 col-sm-4" href="#">
-            <p>Calidad</p>
-            <p class="small">En la calidad de nuestros productos</p>
-            <div class="go-corner" href="#">
-              <div class="go-arrow">
-                →
-              </div>
-            </div>
-          </div>
-
-          <div class="valori col-xl-3 col-sm-4" href="#">
-            <p>innovación</p>
-            <p class="small">En la innovación constante</p>
-            <div class="go-corner" href="#">
-              <div class="go-arrow">
-                →
-              </div>
-            </div>
-          </div>
-
-          <div class="valori col-xl-3 col-sm-4" href="#">
-            <p>Respeto</p>
-            <p class="small">En el respeto a nuestros colaboradores</p>
-            <div class="go-corner" href="#">
-              <div class="go-arrow">
-                →
-              </div>
-            </div>
-          </div>
-         </div>
-    </div>
-    <div class="imagen col-xl col-sm-12 d-flex justify-content-center" id="ancla_pinco">
-      <img src="/static/img/montanito.png" alt="">
-    </div>
-  </div>
-
-  <!--------------------------------------------------------Pinco-->
-  <hr >
-
-  <div class="row caja mb-0" >
-      
-    <div class="imagen col-xl-4 col-sm-12 h-auto d-flex justify-content-center align-items-center mb-0">
-      <img src="/static/img/pinco_nostros.png" style="object-fit: contain; height: 50%; width: 50%;" alt="">
-    </div>
-
-    <div class="contenido_section4  col-xl col-sm-12 mb-0">
-        <h3 class="text-dark fs-2  " style="text-align: left;">Pinco</h3>
-        <p>Es la marca de pintura venezolana, que por muchos años ha permitido llenar de color y alegría espacios a un precio justo para que nadie se quede sin pintar, haciendo uso de nuestra variedad de productos; Pinco 60 (Acabados Mate, Satinado, Brillante), económica Max (CubreMax, DuraMax, y TexturiMax), Acondicionadores de superficie (Fondos y Pastas), entre otros.</p>
-        <div class="row">
-          <div class="col-xl-6 col-sm-12 mis-val mision">
-            <h3  class="text-center text-white mt-2 mb-0">misión</h3>
-            <p class="text-white" style="font-size: 14px; padding: 0.7rem; "> Ofrecer productos con calidad y economía, potenciando la formación y crecimiento de nuestro talento humano, para llevar alegría, a través del color, a cada rincón de Latinoamerica.</p>
-          </div>
-      
-          <div class="col-xl-6 col-sm-12 mis-val text-center vision">
-            <h3 class="text-center mt-2 mb-0">visión</h3>
-            <p style="font-size: 14px; padding: 0.7rem; ">Color, Alegría y Economía, para que nadie se quede sin pintar.</p>
-          </div>
+  <div class=" container  Efecto2  w-100" >
+    <svg id="sw-js-blob-svg" class="svg z-1 animaSVG azul" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+          <linearGradient id="sw-gradient" x1="0" x2="1" y1="1" y2="0">
+              <stop id="stop1" stop-color="#006EB7" offset="0%"></stop>
+              <stop id="stop2" stop-color="#981914" offset="100%"></stop>
+          </linearGradient>
+      </defs>
+      <path fill="#006EB7" d="M24.6,-33.3C28.8,-25.9,26.7,-15.1,28.8,-4.9C30.8,5.4,36.9,15.1,34.8,21.3C32.6,27.4,22.2,29.9,13.3,30.6C4.4,31.2,-3,29.9,-10.3,27.6C-17.5,25.2,-24.6,21.8,-30.8,15.6C-37,9.4,-42.3,0.5,-40,-6.1C-37.7,-12.7,-27.8,-17,-19.8,-23.6C-11.9,-30.3,-5.9,-39.4,2.2,-42C10.3,-44.5,20.5,-40.6,24.6,-33.3Z" transform="translate(50 50)" stroke-width="0" style="transition: all 0.3s ease 0s;"></path>
+  </svg>
+    <div class="row d-flex d-flex justify-content-around" >
+        <div class="col-xl-4 col-sm-12 col-lg-12 col-md-12 mx-3 px-5  z-2 max azul mt-4 animaSVG ">
+            <h3 class="sub-titulo text-center text-white mb-2 fs-sm-1"> Pinturas Montana</h3>
+            <p class="descripcion text-white px-5">Una marca de pinturas con más de 60 años en el mercado venezolano. Ofrecemos una variedad de productos para diferentes usos, como arquitectura, madera, industria y automóviles, con un enfoque en la innovación y la alta calidad. Nuestro objetivo principal es permitir a los venezolanos dar vida a sus sueños a través de la pintura.</p>
+        </div>
+        
+        <div class="col-xl-6 col-sm-12 col-lg-12 col-md-12 rounded p-2 EfectoDiv imagen montana h-auto z-3" style="margin-top: -100px;">
+          
+          <img src="/static/img/montana_pinturas.jpg"  alt="" >
         </div>
     </div>
-</div>
-<div class="row contenedor_valores d-flex justify-content-center" >
-            
-<div class=" row col-xl-8 col-sm-12 d-flex justify-content-cente text-white mb-5 " style="padding: 0 !important; margin: 0 !important;" >
-  <h3 class="col-12 text-dark mt-4">Valores de la marca</h3>
-  <div class="valor row " style="padding: 0 !important;" >
-    <div class="valori col-xl-5 col-sm-12" href="#">
-      <p>Integridad</p>
-      <p class="small">ser percibidos como una marca en la que se puede confiar, comunicando de manera abierta y transparente.</p>
-      <div class="go-corner" href="#">
-        <div class="go-arrow">
-          →
+
+
+    
+<div class="container position-relative mt-3 mb-5">
+  <svg id="sw-js-blob-svg" class="svg2 z-0 animaSVG " style="top: -20px; left: -50px; height: 150px;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#006EB7" d="M22.1,-25.5C30,-19.7,38.9,-14,41.7,-6.1C44.6,1.8,41.5,12,34.6,16.3C27.7,20.5,17,18.9,8.1,21.9C-0.7,24.9,-7.7,32.6,-15.2,33.5C-22.8,34.4,-31,28.5,-34.3,20.8C-37.6,13,-36.1,3.5,-34.6,-6.3C-33.2,-16.1,-31.8,-26.2,-26,-32.4C-20.3,-38.6,-10.1,-41.1,-1.5,-39.2C7.1,-37.4,14.2,-31.4,22.1,-25.5Z" width="100%" height="100%" transform="translate(50 50)" stroke-width="0" style="transition: all 0.3s ease 0s;"></path>
+</svg>
+<svg id="sw-js-blob-svg" class="svg3 z-0 animaSVG" style="bottom: -70px; right: -70px; height: 150px;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <path fill="#006EB7" d="M22.1,-25.5C30,-19.7,38.9,-14,41.7,-6.1C44.6,1.8,41.5,12,34.6,16.3C27.7,20.5,17,18.9,8.1,21.9C-0.7,24.9,-7.7,32.6,-15.2,33.5C-22.8,34.4,-31,28.5,-34.3,20.8C-37.6,13,-36.1,3.5,-34.6,-6.3C-33.2,-16.1,-31.8,-26.2,-26,-32.4C-20.3,-38.6,-10.1,-41.1,-1.5,-39.2C7.1,-37.4,14.2,-31.4,22.1,-25.5Z" width="100%" height="100%" transform="translate(50 50)" stroke-width="0" style="transition: all 0.3s ease 0s;"></path>
+</svg>
+
+
+  <div class="row d-flex justify-content-xl-around justify-content-sm-center  flex-sm-colum gap-3">
+
+    <div class="valors col-xl-5 col-lg-5 col-md-5 col-sm-12  z-1 " >
+      <div class="valors-inner py-2 px-4 moveIzq">
+        <div class="sub-titulo text-center ">
+          <h3 class="py-4">Misión</h3>
         </div>
+        <p class="descripcion ">
+          Ofrecer productos y servicios innovadores de alta calidad y rentabilidad, que llenen de color los sueños de nuestros clientes. Llevamos como ingredientes fundamentales la formación, el cuidado del medio ambiente y el desarrollo de nuestro talento humano, utilizando tecnología de vanguardia
+        </p>
       </div>
-     </div>
-    <div class="valori col-xl-5 col-sm-12" href="#">
-     <p>Competitividad</p>
-     <p class="small"> generar valor agregado a lo largo de nuestra cadena de producción.
-       Servicio, a nuestra cadena de valor.</p>
-     <div class="go-corner" href="#">
-       <div class="go-arrow">
-         →
-       </div>
-     </div>
-   </div>
+    </div>
 
-   <div class="valori col-xl-5 col-sm-12" href="#">
-     <p>Servicio</p>
-     <p class="small">  a nuestra cadena de valor.</p>
-     <div class="go-corner" href="#">
-       <div class="go-arrow">
-         →
-       </div>
-     </div>
-   </div>
-   <div class="valori col-xl-5 col-sm-12" href="#">
-     <p>Dinamismo</p>
-     <p class="small">mejoras constantes e innovadoras en nuestra marca.</p>
-     <div class="go-corner" href="#">
-       <div class="go-arrow">
-         →
-       </div>
-     </div>
-   </div>
-
-   <div class="valori col-xl-5 col-sm-12" href="#">
-     <p>Crecimiento</p>
-     <p class="small">con acciones necesarias, rentables y sustentables.</p>
-     <div class="go-corner" href="#">
-       <div class="go-arrow">
-         →
-       </div>
-     </div>
-   </div>
-   <div class="valori col-xl-5 col-sm-12" href="#">
-    <p>Crecimiento</p>
-    <p class="small">con acciones necesarias, rentables y sustentables.</p>
-    <div class="go-corner" href="#">
-      <div class="go-arrow">
-        →
+    <div class="valors col-sm-12 col-md-5 col-lg-5 col-xl-5  z-1 moveDer  " >
+      <div class="valors-inner w-100 h-100">
+        <div class="sub-titulo text-center">
+          <h3 class="py-4">Visión</h3>
+        </div>
+        <p class=" descripcion px-4 pt-2">
+          Pintar y proteger los sueños de todos en el Continente Americano.
+        </p>
       </div>
     </div>
   </div>
-   </div>
-</div>
-
-<div class="imagen h-auto col-xl-2 mx-5 col-sm-12 d-flex justify-content-center" id="ancla_ppv">
-<img src="/static/img/publi_pinco.png"  alt="">
 </div>
 </div>
 
-<hr>
+<div class="d-flex justify-content-center container  mt-3" id="PINCO" >
+  <h3 class="fs-2 mb-3 py-2 sub-titulo subtitulo"  style="text-align: center; border-bottom: solid 2px #D50000; border-top: solid 2px #D50000; width: 0; opacity: 0; transition: all ease-in-out 0.5s; margin: 75px 0;">PINCO</h3>
+</div> 
 
-<div class="row  caja mt-3 justify-content-between ">
-<h3 class="mx-4 col-12">También maquilamos:</h3>
-<div class="imagen h-auto col-xl-4 col-sm-12 px-2 d-flex justify-content-center align-items-center " >
-  <img src="/static/img/ppv_marca.png" style="object-fit: contain;"  alt="">
-</div>
-<div class="contenido text-white col-xl col-sm-12 ">
-  <h3 class="text-dark fs-2 mt-3" style="text-align: left;">PPV</h3>
-  <p style="padding: 1px 15px 5px 0px;">PPV Puras Pinturas Venezolanas C.A. es una empresa fundada en 2008 bajo la licencia de Sherwin-Williams, con un equipo multidisciplinario que ha generado empleo en todo el territorio nacional. Ofrecen un portafolio de más de 300 productos que se adaptan a las necesidades y presupuestos de los consumidores más exigentes del mercado venezolano. Además, han creado la franquicia de Tiendas de Pintura Pintatodo en todo el país para llevar sus productos a cada rincón de Venezuela. Su compromiso es mantenerse fieles a sus valores y a su compromiso con el país y sus habitantes.</p>
-</div>
-<div class="row mt-3 caja " style="padding: 0 !important;" >
-  
-  <div class="contenido text-white col-xl-8 col-sm-12" >
-    <div class="row mt-3 " style="padding: 0 !important;">
-      <div class="col-xl-6 col-sm-12 mision ">
-        <h3  class="text-center mt-2 mb-0">misión</h3>
-        <p class="text-white" style="font-size: 14px; padding: 0.7rem; "> Ofrecer productos con calidad y economía, potenciando la formación y crecimiento de nuestro talento humano, para llevar alegría, a través del color, a cada rincón de Latinoamerica.</p>
+
+<div class="EfectoDiv  container "  >
+        
+  <div class="circle animaSVG"></div>
+  <div class="circle animaSVG"></div>
+
+  <div class="row d-flex justify-content-between  mt-3 inner " >
+      <div class="imagen col-sm-12 col-xl-6 d-flex align-items-center">
+          <img src="/static/img/pinco_nostros.png" alt="" style="border-radius: 8px; object-fit: contain; height: 150px;" >
       </div>
-  
-      <div class="col-xl-6 col-sm-12 text-center vision">
-        <h3 class="text-center mt-2 mb-0">visión</h3>
-        <p style="font-size: 14px; padding: 0.7rem; ">Color, Alegría y Economía, para que nadie se quede sin pintar.</p>
+
+      <div class="texto col-md-12 col-lg-12 col-sm-12 mt-3 col-xl-6" >
+          <div class="row" style="margin-left: 0px;">
+              <div class="col-12 col-sm-12">
+                  <h3 class="text-center pb-1 sub-titulo mt-3">Pinco</h3>
+                  <p style="text-align: justify;" class="descripcion">Es la marca de pintura venezolana que, por muchos años, ha permitido llenar de color y alegría espacios a un precio justo para que nadie se quede sin pintar. Hacemos uso de nuestra variedad de productos, como Pinco 60 (Acabados Mate, Satinado, Brillante), Económica Max (CubreMax, DuraMax y TexturiMax), Acondicionadores de superficie (Fondos y Pastas), entre otros.</p>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<div class="container pt-4">
+  <div class="row d-flex justify-content-xl-around justify-content-sm-center  flex-sm-colum gap-3">
+    <div class="valors col-xl-5 col-lg-5 col-md-5 col-sm-12  z-1 h-100 moveIzq" >
+      <div class="valors-inner py-2 px-4 h-100 ">
+        <div class="sub-titulo text-center">
+          <h3 class="py-4">Misión</h3>
+        </div>
+        <p class="descripcion ">
+          Ofrecer productos con calidad y economía, potenciando la formación y crecimiento de nuestro talento humano, para llevar alegría, a través del color, a cada rincón de Latinoamerica.
+        </p>
       </div>
     </div>
-</div>
-<div class="col-xl col-sm-12  d-flex justify-content-center" style="width: 420px;height: 190px; margin-top: 0px !important;">
-  <img src="/static/img/sherwinW_marca.png" style="width: 100%; height: 100%; margin-top:  4px !important;"   alt="">
-</div>
-</div>
+
+    <div class="valors col-sm-12 col-md-5 col-lg-5 col-xl-5  z-1 h-auto moveDer " >
+      <div class="valors-inner w-100 h-100 ">
+        <div class="sub-titulo text-center">
+          <h3 class="py-3">Visión</h3>
+        </div>
+        <p class=" descripcion px-4 pt-2">
+          Color, Alegría y Economía, para que nadie se quede sin pintar.
+        </p>
+      </div>
+    </div>
   </div>
-  
-</section>
+</div>
+
+<div class="d-flex justify-content-center container  mt-3" id="section"  >
+  <h3 class="fs-2 mb-3 py-2 sub-titulo subtitulo" id="PPV" style="text-align: center; border-bottom: solid 2px #006EB7; border-top: solid 2px #006EB7; width: 0; opacity: 0; transition: all ease-in-out 0.5s; margin: 75px 0;">También Maquilamos</h3>
+
+</div> 
+
+<div class="EfectoDiv  container "  >
+        
+  <div class="circle blue animaSVG"></div>
+  <div class="circle blue animaSVG"></div>
+
+  <div class="row d-flex justify-content-between  mt-3 inner" >
+      
+
+      <div class="texto col-md-12 col-lg-12 col-sm-12 mt-3 col-xl-6"  >
+          <div class="row" style="margin-left: 0px;">
+              <div class="col-12 col-sm-12">
+                  <h3 class="text-center pb-1 sub-titulo">PPV y Sherwin-Williams</h3>
+                  <p style="text-align: justify;" class="descripcion">PPV Puras Pinturas Venezolanas C.A. es una empresa fundada en 2008 bajo la licencia de Sherwin-Williams, con un equipo multidisciplinario que ha generado empleo en todo el territorio nacional. Ofrecen un portafolio de más de 300 productos que se adaptan a las necesidades y presupuestos de los consumidores más exigentes del mercado venezolano. Además, han creado la franquicia de Tiendas de Pintura Pintatodo en todo el país para llevar sus productos a cada rincón de Venezuela. Su compromiso es mantenerse fieles a sus valores y a su compromiso con el país y sus habitantes.</p>
+              </div>
+          </div>
+      </div>
+
+      <div class="imagen col-sm-12 col-xl-6 d-flex align-items-center flex-column">
+        <img src="/static/img/ppv_marca.png" alt="" style="border-radius: 8px; object-fit: contain; height: 100px;">
+        <img src="/static/img/sherwinW_marca.png" alt="" style="border-radius: 8px; object-fit: contain; height: 150px;">
+    </div>
+  </div>
+</div>
+
 </main>
+
 {% endblock %}

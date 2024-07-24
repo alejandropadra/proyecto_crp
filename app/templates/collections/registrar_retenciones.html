@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_forms.html' import render_field %}
+{% block container %}
+
+
+<main class="d-flex justify-content-center ">
+
+  <div class="container d-flex justify-content-center pt-3">
+    <form class="form_main mt-3 " method = "POST" enctype="multipart/form-data" >
+      <div class="row d-flex gap-5">
+
+        <div class="contenedor col-xl-12 col-md-12 col-lg-12 col-sm-12 ">
+          
+          <h5 class="etiqueta">Número de Comprobante</h5>
+          <div class="inputContainer">
+              <i class="fa-solid fa-circle-user inputIcon"></i>
+              {{ render_field(form.n_comprobante, class="inputField", id="n_comprobante", placeholder="Ingrese el número de comprobante de retención", maxlength="10", oninput="validateLength(this)") }}
+          </div>
+
+
+          <h5 class="etiqueta">Cargue el Comprobante de Retención</h5>
+          <div class="inputContainer">
+            <i class="bi bi-file-earmark-fill inputIcon"></i>
+            <input type="file" name="archivo" class="inputField" style="max-width: 100%;">
+          </div>
+
+        </div>
+
+      </div>
+      <div class="  mt-4 mb-2 w-100 d-flex justify-content-center" style="margin-top: 25px; padding-bottom: 100px;">
+        <input type ="hidden" name = "csrf_token" value ="{{csrf_token()}}"/>
+        <button class="submit" > <span>Enviar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+
+
+</main>
+
+
+
+
+{% endblock %}

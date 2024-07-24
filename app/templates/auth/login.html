@@ -3,25 +3,49 @@
 {% block content %}
 {% block stilos%}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos_login.css') }}">
+
 {% endblock%}
 
 
-<div class="container d-flex justify-content-center w-100">
-  <div class="col-md-12 col-md-offset-1 flash">
+
+<main class="position-relative">
+
+  
+<div class="container d-flex justify-content-center w-100 position-absolute" style="top: 20%; left: 35%;" >
+  <div class="col-md-12 col-md-offset-1 " >
     {% with messages = get_flashed_messages(with_categories=True) %}
       {% if messages %}
-        <div class="alert-container">
+        <div class="alert-container" >
           {% for category, message in messages %}
             {% if category == 'error' %}
-              <div class="alert alert-danger alert-dismissible" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              <div class="alert mensaje_flash  alert-dismissible " role="alert">
+                <div class="error__icon">
+                  <svg
+                    fill="none"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z"
+                      fill="#393a37"
+                    ></path>
+                  </svg>
+                </div>
+                <div class="error-tittle"> {{ message }} </div>
+                <div class="error__close">
+                <button type="button" class="btn-close p-1" data-bs-dismiss="alert" aria-label="Close"></button></div>
               </div>
             {% else %}
-              <div class="alert alert-success alert-dismissible" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <div class="alert mensaje_flash  alert-dismissible succes " role="alert">
+              <div class="error__icon">
+                <i class="bi bi-check-circle-fill" style="color: #fff" > </i>
               </div>
+              <div class="error-tittle"> {{ message }} </div>
+              <div class="error__close">
+              <button type="button" class="btn-close p-1" data-bs-dismiss="alert" aria-label="Close"></button></div>
+            </div>
             {% endif %}
           {% endfor %}
         </div>
@@ -29,8 +53,6 @@
     {% endwith %}
   </div>
 </div>
-
-<main>
 
   <div class="login_contenedor row col-9 mb-2"  >
     <div class="imagen_login col-xl-6 col-lg-6 col-sm-12">
@@ -48,7 +70,6 @@
               <label for="person" class="label">Usuario</label>
               <div class="underline"></div>
             </div>
-         
             <div class="input-container col" style="margin-right: 13px;" >
             {{ render_field(form.n_rif, class ="entrada", id="usuario" ) }}
             <div class="underline" style="margin-left: 10px; max-width: 100.9vh; " ></div>
@@ -79,4 +100,3 @@
 
 
 {% endblock %}
-

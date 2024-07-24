@@ -1,34 +1,35 @@
 {% extends 'layout_landings.html' %}
 {% block container %}
-<div class="error">
 
-    <div class="container contenedor_genericos ">
-        <div class="row d-flex justify-content-center align-items-center sub">
-            <div class="tools ">
-                <div class="circle">
-                  <span class="red box"></span>
-                </div>
-                <div class="circle">
-                  <span class="yellow box"></span>
-                </div>
-                <div class="circle">
-                  <span class="green box"></span>
-                </div>
-              </div>
-            <div class="texto_error text-center col" style="margin-left: 50px;">
-                <h6>ERROR</h6>
-                <h2 class="">404</h2>
-                <p>La pagina solicitada no fue encontrada/ click para ir al inicio</p>
-            </div>
-            <div class="imagen_error d-flex justify-content-center align-items-center col">
-                <img src="static/img/2montana-removebg-preview.png" alt="" style="margin-left: -50px;">
-            </div>
+<main class="px-3 " style="min-height: 70vh;  display: flex; justify-content: center; align-items: center;">
+
+
+  <div class="EfectoDiv  container "   >
+  
+    <div class="circle"></div>
+    <div class="circle"></div>
+
+    <div class="row d-flex justify-content-around  mt-3 inner h-100  " >
+        <div class="col-sm-12 col-xl-6 d-flex justify-content-center">
+            <img src="static/img/2montana-removebg-preview.png"  alt="" style="border-radius: 8px;">
         </div>
-        <div class="error_footer">
 
+        <div class="texto col-md-12 col-lg-12 col-sm-12 mt-3 col-xl-6 p-3" >
+            <div class="row" style="margin-left: 0px;">
+                <div class="col-12 col-sm-12">
+                    <h3 class="text-start pb-1 sub-titulo" style="font-size: 80px;">ERROR 404</h3>
+                    <p class="text-start">La pagina solicitada no fue encontrada </p>
+                </div>
+                <div class="col d-flex justify-content-end align-items-end "  >
+                    <a href="/" id="vermas" style="margin-top: 15%;"><h3 class="fs-4 ">click para ir al inicio &rarr;</h3></a>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+  </div>
+
+
+</main>
 
 
 {% endblock %}

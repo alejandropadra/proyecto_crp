@@ -1,54 +1,52 @@
 {% extends 'layout.html' %}
 {% from 'helpers/_forms.html' import render_field %}
-{% block estilos %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
-{% endblock%}
-{% block container %}
-<main style="margin-top: -90px !important;">
+{% block main %}
+<main class="px-3 pt-3">
 {% if current_user.nivel =="cliente" %}
-
-
-
-
-    <div class="mb-5 container is-fullhd table-responsive" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); padding: 20px 20px 20px 20px; border-radius: 7px;">  
-    <table id="example" class=" dataTable  table display my-3 cell-border" style="width:100%;">
+    <div class="my-5 container table-responsive tabla w-75 w-100 "  >  
+    <table id="example" class="dataTable table" style="width:100%;">
         <thead>
             <tr>
-                <th>Fecha del depósito</th>
-                <th>N° de depósito</th>
-                <th>Moneda</th>
-                <th>Monto</th>
-                <th>Saldo</th>
+                <th>N° Doc. Comercial</th>
+                <th>Descripción</th>
+                <th>Fecha emisión</th>
+                <th>Monto $</th>
+                <th>Monto Bs</th>
                 <th>Estatus</th>
             </tr>
         </thead>
         <tbody>
             {% for pago in pagos %}
-            <tr class="celda text-center" onclick="location.href='{{ url_for('.deposito', n=pago.n_deposito)}}'"; style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Click para mas detalles">
-                <td>{{pago.fecha_deposito}}</td>
-                <td>{{pago.n_deposito}}</td>
-                <td>{{pago.divisa}}</td>
-                <td>{{pago.monto}}</td>
-                <td></td>
+                
+            <tr class="celda text-center"  style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Click para mas detalles">
+                {% for clave, valor in pago.items() %}
+                {%if clave == 'fkdat'%}
+                <td class="">{{valor}} </td>
+                {% elif clave == 'blart' %}
+                <td>{% if valor == 'DZ' %}Abono{% elif valor == 'RV' %}Factura{% else %}{{valor}}{% endif %}</td>
+                {% elif clave == 'vbeln'%}
+                <td onclick="location.href='{{ url_for('.documento',  n=valor )}}'";>{{valor}}</td>
+                {% elif clave == 'dmbtr' %}
+                <td>{{ "{:,.2f}".format(valor) }} </td>
+                {% elif clave == 'totfactbs' %}
+                <td>{{ "{:,.2f}".format(valor) }}</td>
                 <td style="text-align: center;">
-                    <a href="{{ url_for('.deposito', n=pago.n_deposito)}}" style="text-align: center;" class="mt-1 btn {% if pago.estado == 1 %} bg-success text-white {% elif pago.estado == 2 %} bg-danger text-white {% elif pago.estado == 0 %} bg-warning {% endif %}" >{% if pago.estado == 1 %} <i class="bi bi-patch-check-fill"></i> {% elif pago.estado == 2 %} <i class="bi bi-x-octagon-fill"></i>{% elif pago.estado == 0 %}<i class="bi bi-hourglass-split"></i>{% endif %}</a>                   
+                    <a href="" style="text-align: center;" class="btn {% if  pago['status'] == '' %} bg-secondary text-white {% elif  pago['status'] == 'P' %} bg-warning text-white {% endif %}" >{% if  pago['status'] == '' and pago['blart'] == 'RV' %} Pendiente por pagar {% elif  pago['status'] == 'P' %} Pendiente por validar{% endif %}</a>                   
                 </td>
+                {% endif %}
+                {% endfor %}
             </tr>
+            
             {% endfor %}
         </tbody>
 
         <tfoot>
             <tr>
-                <th>Fecha del depósito</th>
-                <th>N° de depósito</th>
-                <th>Moneda</th>
-                <th>Monto</th>
-                <th>Saldo</th>
+                <th>N° Doc. Comercial</th>
+                <th>Descripción</th>
+                <th>Fecha emisión</th>
+                <th>Monto $</th>
+                <th>Monto Bs</th>
                 <th>Estatus</th>
             </tr>
         </tfoot>
@@ -56,10 +54,12 @@
 </div>
 
 
+
+
 {% else%}
 <div class="tab-content" id="myTabContent" style="margin-top: 100px;">
         <div class="container mt-4 table-responsive mb-5" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); padding: 20px 20px 20px 20px; border-radius: 7px;">  
-            <table id="example" class="display cell-border" style="width:100%">
+            <table id="example" class="table" style="width:100%">
                 <thead>
                     <tr>
                         <th>RIF</th>
@@ -73,9 +73,9 @@
                 </thead>
                 <tbody>
                     {% for pago in pagos %}
-                    <tr class="celda text-center" onclick="location.href='{{ url_for('.deposito', n=pago.n_deposito)}}'"; style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Click para mas detalles">
+                    <tr class="celda text-center p-5" onclick="location.href='{{ url_for('.deposito', n=pago.n_deposito)}}'"; style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Click para mas detalles">
                         
-                        <td>{{pago.rif}}</td>
+                        <td >{{pago.rif}}</td>
                         <td>{{pago.empresa}}</td>
                         <td>{{pago.fecha_deposito}}</td>
                         <td>{{pago.n_deposito}}</td>
@@ -107,25 +107,64 @@
 
 
 {% endif %}
-
-{% endblock %}
 </main>
-{% block js%}
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>  
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script> 
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>  
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>  
-<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bulma.min.js"></script> 
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-<script>  
-  $(document).ready(function () {
-    $('#example').DataTable();
-});
+{% endblock %}
 
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
+{% block js%}
+
+<script>
+    // Función para obtener el valor de 'filtro' de la URL
+    function getFilterFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('filtro');
+    }
+    
+    $(document).ready(function() {
+        // Obtener el valor de 'filtro' de la URL
+        var filterValue = getFilterFromUrl();
+        console.log(filterValue)
+    
+        // Eliminar las clases predeterminadas de los botones
+        $.fn.dataTable.Buttons.defaults.dom.button.className = '';
+    
+        var table = $('#example').DataTable({
+            lengthChange: false,
+            buttons: [
+                {
+                    extend: 'copy',
+                    className: 'button-name'
+                },
+                {
+                    extend: 'excel',
+                    className: 'button-name'
+                },
+                {
+                    extend: 'pdf',
+                    className: 'button-name'
+                },
+                {
+                    extend: 'pageLength',
+                    className: 'button-name'
+                }
+            ],
+            responsive: true
+        });
+    
+        // Aplicar el filtro de búsqueda después de que el DataTable esté inicializado
+        if (filterValue) {
+            table.search(filterValue).draw();
+        }
+    
+        table.buttons().container()
+        .appendTo('#example_wrapper .col-md-6:eq(0)');
+    });
+    
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
 </script>
+
+    
 
 {% endblock %}
 

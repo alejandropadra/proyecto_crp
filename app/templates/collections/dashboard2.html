@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/stilos_prueba.css') }}">
+    <link rel='icon' type='image/png' href="{{ url_for('static', filename = 'img/figura_corimonn.png') }}">
+    <title>Dashboard 2</title>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="#" class="logo">
+            
+            <img src="{{ url_for('static', filename = 'img/CRP.png') }}" alt="#">
+            <div class="logo-name">
+                <span class="letter-b">B</span>
+                <span class="letter-2">2</span>
+                <span class="letter-b">B</span>
+            </div>
+            <img class="img-close" src="{{ url_for('static', filename = 'img/figura_corimonn.png') }}" alt="#">
+        </a>
+        <ul class="side-menu">
+            <li class="active"><a href="#"><i class='bx bxs-dashboard'></i>Estado de Cuenta</a></li>
+            <li><a href="#"><i class='bx bx-money-withdraw'></i>Pagos</a></li>
+            <li ><a href="#"><i class='bx bx-food-menu'></i>Comprobantes</a></li>
+            <li><a href="#"><i class='bx bx-message-square-dots'></i>Ayuda</a></li>
+            <li><a href="#"><i class='bx bx-group'></i>Usuario</a></li>
+            <li><a href="#"><i class='bx bx-cog'></i>Configuraciones</a></li>
+        </ul>
+        <ul class="side-menu">
+            <li>
+                <a href="#" class="logout">
+                    <i class='bx bx-log-out-circle'></i>
+                    Cerrar Sesión
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- End of Sidebar -->
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav>
+            <i class='bx bx-menu'></i>
+            <form action="#">
+                <div class="form-input">
+                    <input type="search" placeholder="Search...">
+                    <button class="search-btn" type="submit"><i class='bx bx-search'></i></button>
+                </div>
+            </form>
+            <input type="checkbox" id="theme-toggle" hidden>
+            <label for="theme-toggle" class="theme-toggle"></label>
+            <a href="#" class="notif">
+                <i class='bx bx-bell'></i>
+                <span class="count">12</span>
+            </a>
+            <a href="#" class="profile">
+                <i class='bx bx-user-circle'></i>
+            </a>
+
+
+            <div class="sub-menu-wrap d-none d-xl-block">
+                <div class="sub-menu ">
+                    <div class="user-info " >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="mx-3 mb-2" width="30" height="30" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                          </svg>
+                          
+                        <h3 class="fs-5">{{current_user.username}}</h3>
+                    </div>
+                    <hr>
+                    {% if current_user.nivel != "cliente"%}
+                    <a href="{{ url_for('.usuarios')}}" class="sub-menu-link">
+                        <i class="bi bi-pencil-square"></i>
+                        <p>Gestión de usuario</p>
+                        <span>></span>
+                    </a>
+                    {% endif %}
+                    <a href="{{ url_for('.perfil')}}" class="sub-menu-link">
+                        <i class="bi bi-gear"></i>
+                        <p>Perfil</p>
+                        <span>></span>
+                    </a>
+                    <a href="" class="sub-menu-link">
+                        <i class="bi bi-question-circle"></i>
+                        <p>Ayuda</p>
+                        <span>></span>
+                    </a>
+                    <a href="{{ url_for('.logout')}}" class="sub-menu-link">
+                        <i class="bi bi-door-open"></i>
+                        <p>Cerrar sesión</p>
+                        <span>></span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- End of Navbar -->
+
+        <main>
+            <div class="header">
+                <div class="left">
+                    <h1>Estado de Cuenta</h1>
+                    <ul class="breadcrumb">
+                        <li><a href="#">
+                                Estado de cuenta
+                            </a></li>
+                        /
+                        <li><a href="#" class="active">Resumen</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Insights -->
+            <ul class="insights">
+                <li>
+                    <i class='bx bx-dollar-circle'></i>
+                    <span class="info">
+                        <h3>
+                            ${{ "{:,.2f}".format(total_dolares|float|abs) }}
+                        </h3>
+                        <p>Deuda en $</p>
+                    </span>
+                </li>
+                <li><i class='bx bx-money'></i>
+                    <span class="info">
+                        <h3>
+                            Bs.{{"{:,.2f}".format(total_bolos|float|abs)}}
+                        </h3>
+                        <p>Deuda en Bs</p>
+                    </span>
+                </li>
+                <li><i class='bx bx-line-chart'></i>
+                    <span class="info">
+                        <h3>
+                            ${{"{:,.2f}".format(total_vencido_d|float|abs)}}
+                        </h3>
+                        <p>Deuda Total Vencida en $</p>
+                    </span>
+                </li>
+                <li><i class='bx bx-dollar-circle'></i>
+                    <span class="info">
+                        <h3>
+                            Bs. {{"{:,.2f}".format(total_vencido_b|float|abs)}}
+                        </h3>
+                        <p>Deuda Total Vencida en Bs</p>
+                    </span>
+                </li>
+            </ul>
+            <!-- End of Insights -->
+
+            <div class="bottom-data">
+                <div class="orders">
+                    <div class="header">
+                        <i class='bx bx-receipt'></i>
+                        <h3>¿Como se llama esto?</h3>
+
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Vencimiento</th>
+                                <th>Monto en bs</th>
+                                <th>Monto en $</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Vencido 1-30</td>
+                                <td>Bs. {{"{:,.2f}".format(vencido_130_b|float|abs)}}</td>
+                                <td>$ {{"{:,.2f}".format(vencido_130_d|float|abs)}} </td>
+                                <!---
+                                <td><span class="status completed">Completed</span></td>
+                                -->
+                            </tr>
+                            <tr>
+                                <td>Vencido 31-60</td>
+                                <td>Bs. {{"{:,.2f}".format(vencido_3160_b|float|abs)}}</td>
+                                <td>$ {{"{:,.2f}".format(vencido_3160_d|float|abs)}} </td>
+                                <!--
+                                <td><span class="status pending">Pending</span></td>
+                                -->
+                            </tr>
+                            <tr>
+                                <td>Vencido 60+</td>
+                                <td>Bs. {{"{:,.2f}".format(vencido_60_b|float|abs)}}</td>
+                                <td>$ {{"{:,.2f}".format(vencido_60_d|float|abs)}}  </td>
+                                <!--
+                                <td><span class="status process">Processing</span></td>
+                                -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Reminders -->
+                <div class="reminders">
+                    <div class="header">
+                        <i class='bx bx-note'></i>
+                        <h3>Remiders</h3>
+                    </div>
+                    <ul class="task-list">
+                        <li class="pago">
+                            <div class="task-title">
+                                {% set na = namespace(contador=0) %}
+                                {% for factura in facturas %}
+                                {% if 'blart' in factura %}
+                                    {%  if factura['blart'] == 'RV' and factura['status']=='' %}
+                                        {% set na.contador = na.contador + 1 %}
+                                    {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="valor">{{ na.contador }}</div>
+                                <p>Documentos Pendientes por Pagar</p>
+                            </div>
+                            
+                        </li>
+                        <li class="verificar">
+                            <div class="task-title">
+                                {% set nd = namespace(contador=0) %}
+                                {% for factura in facturas %}
+                                {% if 'status' in factura %}
+                                    {%  if factura['status'] == 'P'  %}
+                                        {% set nd.contador = nd.contador + 1 %}
+                                    {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="valor ">{{ nd.contador }}</div>
+                                <p>Documentos por verificar</p>
+                            </div>
+
+                        </li>
+                        <li class="comprobante">
+                            <div class="task-title">
+                                {% set nb = namespace(contador=0) %}
+                                {% for factura in facturas %}
+                                    {% if 'blart' in factura %}
+                                    {%  if factura['blart'] == 'DZ' %}
+                                        {% set nb.contador = nb.contador + 1 %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="valor">{{ nb.contador }}</div>
+                                <p>Documentos pendientes por comprobante </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- End of Reminders-->
+                
+            </div>
+
+            <div class="bottom-data">
+                <div class="orders">
+                    <div class="header">
+                        <i class='bx bx-line-chart-down'></i>
+                        <h3>Descuentos por pronto pago disponibles a la fecha</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>N° Factura</th>
+                                <th>Monto (bs)</th>
+                                <th>Monto con descuento (bs)</th>
+                                <th>Monto ($)</th>
+                                <th>Monto con descuento ($)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for factura in facturas %}
+                                {% if 'blart' in factura %}
+                                    {%  if factura['blart'] == 'RV' and factura['dppbs']>0 %}
+                                    <tr>
+                                    <td>{{factura['fkdat'] }}</td>
+                                    <td>{{factura['vbeln'] }}</td>
+                                    <td>{{ "{:,.2f}".format(factura['totfactbs']|float|abs) }}</td>
+                                    <td>{{"{:,.2f}".format(factura['totfactbs']-factura['dppbs']) }}</td>
+                                    <td>{{ "{:,.2f}".format(factura['dmbtr']|float|abs) }}</td>
+                                    <td>{{"{:,.2f}".format(factura['dmbtr']-factura['montoncdpp']) }}</td>
+                                    </tr>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="bottom-data">
+                <div class="input-div">
+                    <label for="algo">Ingrese el monto</label>
+                    <input class="input" placeholder="text" id="algo">
+                </div>
+                    
+
+            </div>
+
+
+        </main>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app3.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+          $('.user').on('click', function() {
+              $('.sub-menu-wrap').toggleClass('active');
+          });
+      
+          $('.activador_de_nav').on('click', function() {
+              $('.responsive_nav').addClass('active');
+          });
+      
+          $('.desactivador_de_nav').on('click', function() {
+              $('.responsive_nav').removeClass('active');
+          });
+      });
+      </script>
+</body>
+
+</html>

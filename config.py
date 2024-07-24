@@ -6,13 +6,14 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = server
+    SQLALCHEMY_DATABASE_URI = server#local
 
     MAIL_SERVER = 'smtp.office365.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
     MAIL_USERNAME = 'noreply@corimon.com'
     MAIL_PASSWORD = 'Suz38159'
+    MAIL_TEST = 'eliezer_chirino@corimon.com'#'alejandro_padra@corimon.com'
 
 class ProductionConfig(DevelopmentConfig):
     DEBUG = False

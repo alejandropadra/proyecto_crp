@@ -3,158 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Tektur:wght@500&display=swap" rel="stylesheet">
+    <title>Correo de Confirmación de Pago</title>
+    <style>
+        body {
+            background-color: #E0E0E0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .usuario{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            background-color: #fff;
+            width: 80%;
+            max-width: 600px;
+            margin: 5% auto;
+            border-radius: 13px;
+            padding: 20px 30px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        .logo img {
+            height: 40;
+            width: 200px;
+        }
+        .Encabezado {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .titulo h3 {
+            font-size: 20px;
+            font-weight: 800;
+            text-align: center;
+        }
+        .cuerpo {
+            font-size: 13px;
+            text-align: center;
+            line-height: 23px;
+        }
+        .tabla {
+            margin: 20px 0;
+            width: 100%;
+            text-align: left;
+        }
+
+        table{
+            background-color: white;
+            text-align: left;
+            border-collapse: collapse;
+            max-width: 100%;
+            width: 100vh;
+            border-radius: 16px;
+        }
+        th, td{
+            padding: 10px;
+            
+        
+        }
+        
+        thead{
+            background-color: #ffffff;
+            border-bottom: solid 5px #640505;
+            color: black;
+        }
+        tr:nth-child(even){
+            background-color: #ddd;
+            
+        }
+        
+        
+        a.button {
+            width: 150px;
+            height: auto;
+            background-color: #ff0000;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            padding: 10px 0;
+            border-radius: 16px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            margin: 20px auto -5px auto;
+        }
+        .boton{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        a.button:hover {
+        background-color: #cccccc;
+        }
+        
+        footer {
+            bottom: 0;
+            padding: 20px;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            color: #ccc;
+            background: rgb(83, 81, 81);
+        
+        }
+        
+        
+        
+            .datos-pago {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+        
+            .datos-pago th, .datos-pago td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+        
+            .datos-pago th {
+                background-color: #f2f2f2;
+                font-weight: bold;
+            }
+        
+            .datos-pago tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+        
+            .datos-pago tr:hover {
+                background-color: #f5f5f5;
+            }
+        
+    </style>
 </head>
-
-<style>
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
-}
-
-body{
-    background-color: #E0E0E0 ;
-    height: 100vh;
-    display: grid;
-    place-items: center;
-}
-
-.card{
-    background-color: #fff;
-    height: auto;
-    margin-top: 5%;
-    width: 50%;
-    border-radius: 13px;
-    padding: 20px 30px;
-}
-
-.logo{
-    height: 40px ;
-    width: 200px;
-    left: 0;
-    top: 0;
-}
-
-.logo img{
-    height: 100%;
-    width: 100%;
-
-}
-
-.Encabezado{
-    display: flex;
-    justify-content: space-between;
-}
-
-.usuario{
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 10px;
-}
-
-hr{
-    margin: 15px 0px;
-}
-
-.titulo h3{
-    font-size: 20px;
-    font-weight: 800;
-    text-align: center;
-}
-
-.cuerpo{
-    font-size: 13px;
-    padding: 20px 3px;
-    text-align: center;
-    line-height: 23px;
-}
-.tabla{
-    margin: 20px 0px;
-	width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-
-table{
-	background-color: white;
-	text-align: left;
-	border-collapse: collapse;
-	max-width: 100%;
-    width: 100vh;
-    border-radius: 16px;
-}
-
-th, td{
-	padding: 10px;
-
-}
-
-thead{
-	background-color: #D10000;
-	border-bottom: solid 5px #640505;
-	color: white;
-}
-tr:nth-child(even){
-	background-color: #ddd;
-}
-
-table, th, td {
-  border: 1px solid black;
-}
-a.button {
-    width: 150px;
-    height: auto;
-    background-color: #ff0000;
-    color: #ffffff;
-    font-size: 16px;
-    font-weight: bold;
-    text-decoration: none;
-    padding: 10px 0;
-    border-radius: 16px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    margin: 20px auto -5px auto;
-}
-
-a.button:hover {
-background-color: #cccccc;
-}
-
-footer {
-    bottom: 0;
-    padding: 20px;
-    text-align: center;
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
-    color: #ccc;
-    background: rgb(83, 81, 81);
-
-}
-
-
-
-
-</style>
 <body>
     <div class="card">
         <div class="Encabezado">
             <div class="logo">
-                <img src="/CORIMON PINTURAS.png" alt="">
+                <img src="https://www.corimon.com/wp-content/uploads/2019/04/logocorimon-.png" alt="Corimon Pinturas">
             </div>
             <div class="usuario">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                </svg>
-                {{usurio}}
+                usuario:
+                {{current_user.rif}}
             </div>
         </div>
         <hr>
@@ -163,66 +156,53 @@ footer {
                 <h3>¡Pago Registrado exitosamente!</h3>
             </div>
             <div class="cuerpo">
-                <p >Nos complace informarte que el pago correspondiente a los siguientes datos ha sido registrado exitosamente.</p>
+                <p>Nos complace informarte que el pago correspondiente a los siguientes datos ha sido registrado exitosamente</p>
+                <hr>
                 <div class="tabla">
-                    <table>
+                    <table width="100%">
                         <thead>
                             <tr>
                                 <th>Descripción</th>
-                                <th>valor</th>
-
+                                <th>Valor</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>Documento de identidad</td>
-                                <td>{{rif}}</td>
-
-                            </tr>
-                            <tr>
-                                <td>Banco emisor</td>
-                                <td>{{BancoE}}</td>
-                            </tr>
-                            <tr>
-                                <td>Pagado a</td>
-                                <td>{{Empresa pagada}}</td>
-                            </tr>
-                            <tr>
-                                <td>Banco receptor</td>
-                                <td>{{BancoR}}</td>
+                                <td>{{current_user.rif}}</td>
                             </tr>
                             <tr>
                                 <td>Fecha</td>
-                                <td>{{Fecha}}</td>
+                                <td>{{pago['BLDAT']}}</td>
                             </tr>
-
                             <tr>
                                 <td>Monto</td>
-                                <td>{{monto}}</td>
+                                <td> {{ "{:,.2f}".format((pago['WRBTR']|float|abs) ) }} {%if pago['TIPOPAGO'] == 'B' %} Bs {% else %} $ {%endif%}</td>
                             </tr>
                             <tr>
-                                <td>referencia</td>
-                                <td>{{Referencia}}</td>
+                                <td>Referencia</td>
+                                <td>{{pago['XBLNR']}}</td>
                             </tr>
                         </tbody>
-                        
                     </table>
-            
                 </div>
-
-                <P style="font-weight: 900;">Puedes verificar el status de tu pago en tu panel de Dashboard ingresando en el siguiente enlace e ingresando tus credenciales de inicio de sesión</P>
+                <hr>
+                <p style="font-weight: 900;">Su pago será verificado y validado por nuestro departamento de Crédito y Cobranza. <br>Puedes verificar el status de tu pago en tu panel de Dashboard ingresando en el siguiente enlace e ingresando tus credenciales de inicio de sesión</p>
+            <div class="boton">
                 <a href="http://www.corimonpinturas.net/login" class="button" align="center">Ingresar</a>
+            </div>
+                
             </div>
         </div>
         <hr>
         <footer>
-            <p style="font-weight: bolder;">Corimon Pinturas C.A. RIF. J-00029572-7</p><br>
-            <hr style="margin-top: 0px !important;">
-            <p>Av. Hans Neumann, Urb. Industrial El Bosque, Valencia, Edo. Carabobo</p>
-            <p ><a style="color: #ccc;" href="http:/www.corimonpinturas.net"> www.corimonpinturas.net</a></p>
-            <p>Teléfono: +58 241 871 78 00</p>
-            <p>Correo electrónico: info@corimon.com</p>
-            <p style="color: #ccc; text-align: center;">**No responder a esta dirección de correo electrónico.**</p>
+            <p style="font-weight: bolder; text-align: center;">Corimon Pinturas C.A. RIF. J-00029572-7</p>
+            <hr style="margin-top: 0;">
+            <p style="text-align: center;">Av. Hans Neumann, Urb. Industrial El Bosque, Valencia, Edo. Carabobo</p>
+            <p style="text-align: center;" ><a style="color: #ccc; text-align: center;" href="http:/www.corimonpinturas.net">www.corimonpinturas.net</a></p>
+            <p style="text-align: center;">Le Comunicamos que la dirección a través de la cual usted está recibiendo el presente e-mail será utilizada únicamente para el servicio de notificaciones. Le agradecemos no responder a este correo.
+                Gracias por su confianza. En caso de dudas, contacte con soporte técnicoTeléfono: +58 241 871 78 00</p>
+            <p style="text-align: center;">Correo electrónico: info@corimon.com</p>
         </footer>
     </div>
 </body>

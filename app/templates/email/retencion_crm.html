@@ -1,0 +1,248 @@
+<!--Asunto: Comprobante de retención registrado cliente [rif] Nº [#comprobante]
+
+(&adjunto)
+
+Comprobante de retención para el cliente: [Nombre del Cliente],
+
+A continuación, se indican los detalles:
+
+Número de Comprobante de Retención: [Incluir número de comprobante]
+RIF del Cliente: [Incluir RIF del cliente]
+Nombre del Cliente: [Incluir nombre del cliente]
+Fecha de registro: []-->
+
+
+
+
+
+
+
+
+<!--
+
+Asunto: Comprobante de Reteción [# comprobante]
+
+Estimado/a usuario/a [Nombre cliente],
+
+Le informamos que el pago de comprobante de retención ha sido registrado en nuestro sistema, con las siguientes características:
+
+Número de Comprobante de Retención: [Incluir número de comprobante]
+Fecha de Registro: []
+RIF del Cliente: [Incluir RIF del cliente] 
+Nombre del Cliente: [Incluir nombre del cliente]
+
+Te invitamos a consultar el estatus del comprobante de retención en la sección de comprobantes de retención, comprobantes enviados.
+
+Comunicamos que la dirección a través de la cual usted está recibiendo el presente e-mail será utilizada únicamente para el servicio de notificaciones. Le agradecemos no responder a este correo.
+
+Gracias por su confianza. En caso de dudas, contacte con soporte técnico [# numero].
+
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Correo de Confirmación de Pago</title>
+    <style>
+        body {
+            background-color: #E0E0E0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .usuario{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            background-color: #fff;
+            width: 80%;
+            max-width: 600px;
+            margin: 5% auto;
+            border-radius: 13px;
+            padding: 20px 30px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        .logo img {
+            height: 40;
+            width: 200px;
+        }
+        .Encabezado {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .titulo h3 {
+            font-size: 20px;
+            font-weight: 800;
+            text-align: center;
+        }
+        .cuerpo {
+            font-size: 13px;
+            text-align: center;
+            line-height: 23px;
+        }
+        .tabla {
+            margin: 20px 0;
+            width: 100%;
+            text-align: left;
+        }
+
+        table{
+            background-color: white;
+            text-align: left;
+            border-collapse: collapse;
+            max-width: 100%;
+            width: 100vh;
+            border-radius: 16px;
+        }
+        th, td{
+            padding: 10px;
+            
+        
+        }
+        
+        thead{
+            background-color: #ffffff;
+            border-bottom: solid 5px #640505;
+            color: black;
+        }
+        tr:nth-child(even){
+            background-color: #ddd;
+            
+        }
+        
+        
+        a.button {
+            width: 150px;
+            height: auto;
+            background-color: #ff0000;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            padding: 10px 0;
+            border-radius: 16px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            margin: 20px auto -5px auto;
+        }
+        .boton{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        a.button:hover {
+        background-color: #cccccc;
+        }
+        
+        footer {
+            bottom: 0;
+            padding: 20px;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            color: #ccc;
+            background: rgb(83, 81, 81);
+        
+        }
+        
+        
+        
+            .datos-pago {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+        
+            .datos-pago th, .datos-pago td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+        
+            .datos-pago th {
+                background-color: #f2f2f2;
+                font-weight: bold;
+            }
+        
+            .datos-pago tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+        
+            .datos-pago tr:hover {
+                background-color: #f5f5f5;
+            }
+        
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="Encabezado">
+            <div class="logo">
+                <img src="https://www.corimon.com/wp-content/uploads/2019/04/logocorimon-.png" alt="Corimon Pinturas">
+            </div>
+            <div class="usuario">
+                Usuario:
+                {{current_user.rif}}
+            </div>
+        </div>
+        <hr>
+        <div class="contenido_correo">
+            <div class="titulo">
+                <h3>Comprobante de retención del cliente {{current_user.username}} registrado </h3>
+            </div>
+            <div class="cuerpo">
+                Le informamos que el pago de comprobante de retención ha sido registrado en nuestro sistema, con las siguientes características:</p>
+                <hr>
+                <div class="tabla">
+                    <table width="100%">
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Cliente</td>
+                                <td> {{current_user.username}} </td>
+                            </tr>
+                            <tr>
+                                <td>Rif</td>
+                                <td> {{current_user.rif}} </td>
+                            </tr>
+                            <tr>
+                                <td>Número de Comprobante de Retención:</td>
+                                <td> {{comprobante}} </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <hr>
+                <P style="font-weight: 900; text-align: center; ">Te invitamos a consultar el estatus del comprobante de retención en la sección de comprobantes de retención, comprobantes enviados. <br></P>
+            <div class="boton">
+                <a href="http://www.corimonpinturas.net/login" class="button" align="center">Ingresar</a>
+            </div>
+                
+            </div>
+        </div>
+        <hr>
+        <footer>
+            <p style="font-weight: bolder; text-align: center;">Corimon Pinturas C.A. RIF. J-00029572-7</p>
+            <hr style="margin-top: 0;">
+            <p style="text-align: center;">Av. Hans Neumann, Urb. Industrial El Bosque, Valencia, Edo. Carabobo</p>
+            <p style="text-align: center;" ><a style="color: #ccc; text-align: center;" href="http:/www.corimonpinturas.net">www.corimonpinturas.net</a></p>
+            <p style="text-align: center;">Le comunicamos que la dirección a través de la cual usted está recibiendo el presente e-mail será utilizada únicamente para el servicio de notificaciones. Le agradecemos no responder a este correo.
+                Gracias por su confianza. En caso de dudas, contacte con soporte técnicoTeléfono: +58 241 871 78 00</p>
+            <p style="text-align: center;">Correo electrónico: info@corimon.com</p>
+        </footer>
+    </div>
+</body>
+</html>
+

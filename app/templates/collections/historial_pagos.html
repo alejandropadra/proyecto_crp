@@ -1,0 +1,120 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_forms.html' import render_field %}
+{% block main %}
+<main class="px-3 pt-3">
+{% if current_user.nivel =="cliente" %}
+
+
+<div class="my-5 container table-responsive tabla w-75 w-100 "  >  
+    <div class="fechas d-flex w-100 mb-3 justify-content-between align-items-center ">
+        <div class="row w-100 d-flex justify-content-between align-items-center">
+            <div class="col">
+                <h5 class="ui-tittle" style="font-size: 17px;" >Indique la fecha desde la cual desea visualizar el historial de retenciones</h5>
+            </div>
+            <div class="col-5">
+                <input type="date" class="inputField w-50" id="tamaño"> 
+                <button type="submit" id="act" class="button-name">Enviar</button>
+            </div>
+        </div>            
+    </div>
+        
+
+    <table id="example" class="dataTable table" style="width:100%;">
+        <thead>
+            <tr>
+                <th>N° Doc. Comercial</th>
+                <th>Descripción</th>
+                <th>Fecha emisión</th>
+                <th>Monto $</th>
+                <th>Monto Bs</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pago in pagos %}
+                
+            <tr class="celda text-center"  style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Click para mas detalles">
+                {% for clave, valor in pago.items() %}
+                {%if clave == 'fkdat'%}
+                <td>{{valor}} </td>
+                {% elif clave == 'blart' %}
+                <td>{% if valor == 'DZ' %}Abono{% elif valor == 'RV' %}Factura{% else %}{% endif %}</td>
+                {% elif clave == 'vbeln'%}
+                <td onclick="location.href='{{ url_for('.documento',  n=valor )}}'";>{{valor}}</td>
+                {% elif clave == 'dmbtr' %}
+                <td>{{ "{:,.2f}".format(valor|abs) }} </td>
+                {% elif clave == 'totfactbs' %}
+                <td>{{ "{:,.2f}".format(valor|abs) }}</td>
+                {% endif %}
+                {% endfor %}
+            </tr>
+            
+            {% endfor %}
+        </tbody>
+
+        <tfoot>
+            <tr>
+                <th>N° Doc. Comercial</th>
+                <th>Descripción</th>
+                <th>Fecha emisión</th>
+                <th>Monto $</th>
+                <th>Monto Bs</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+{% endif %}
+</main>
+{% endblock %}
+
+{% block js%}
+
+
+<script>
+// Eliminar las clases predeterminadas de los botones
+$.fn.dataTable.Buttons.defaults.dom.button.className = '';
+
+$(document).ready(function() {
+    var table = $('#example').DataTable({
+        lengthChange: false,
+        buttons: [
+            {
+                extend: 'copy',
+                className: 'button-name'
+            },
+            {
+                extend: 'excel',
+                className: 'button-name'
+            },
+            {
+                extend: 'pdf',
+                className: 'button-name'
+            },
+            {
+                extend: 'pageLength',
+                className: 'button-name'
+            }
+        ],
+        responsive: true
+    });
+
+    table.buttons().container()
+        .appendTo('#example_wrapper .col-md-6:eq(0)');
+});
+
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})
+
+$(document).ready(function() {
+  $('#tamaño').datepicker({
+    format: 'yyyy-mm-dd' 
+  });
+});
+
+</script>
+
+
+
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_forms.html' import render_field %}
+{% block main %}
+
+<main class="position-relative mt-4 px-3 " style="min-height: 100vh;" >
+
+    <div class="courses-container z-0 container p-0 " >
+        <div class="cont-Fila w-100 d-flex flex-column">
+        <div class="row d-flex5 mb-4  " style="gap: 75px; padding: 0px 50px;">
+
+                <a class="tarjeta_saldo hover w-100 col-xl p-4 d-flex flex-column no-style " href="{{ url_for('.dashboard') }}">
+                    <div class="titulo_saldo d-flex align-items-center justify-content-center w-100 h-50 ">
+                        <div class="icono_modulo d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-money-bill d-flex align-items-center justify-content-center"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center w-100 h-50">
+                        <p class="etiqueta-size">Pagos</p>
+                    </div>
+                </a>
+            
+                <a class="tarjeta_saldo hover w-100 col-xl p-4 d-flex flex-column no-style" >
+                    <div class="titulo_saldo d-flex align-items-center justify-content-center w-100 h-50 ">
+                        <div class="icono_modulo d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-truck-fast d-flex align-items-center justify-content-center"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center w-100 h-50">
+                        <p class="etiqueta-size"> Pedidos</p>
+                    </div>
+                </a>
+
+
+
+                <a class="tarjeta_saldo hover w-100 col-xl p-4 d-flex flex-column no-style" >
+                    <div class="titulo_saldo d-flex align-items-center justify-content-center w-100 h-50 ">
+                        <div class="icono_modulo d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-paint-roller d-flex align-items-center justify-content-center"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center w-100 h-50">
+                        <p class="etiqueta-size"> Formulación</p>
+                    </div>
+                </a>
+                <a class="tarjeta_saldo hover w-100 col-xl p-4 d-flex flex-column no-style" >
+                    <div class="titulo_saldo d-flex align-items-center justify-content-center w-100 h-50 ">
+                        <div class="icono_modulo d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-shirt d-flex align-items-center justify-content-center"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center w-100 h-50">
+                        <p class="etiqueta-size"> Mercadeo</p>
+                    </div>
+                </a>
+
+                <a class="tarjeta_saldo hover w-100 col-xl p-4 d-flex flex-column no-style" >
+                    <div class="titulo_saldo d-flex align-items-center justify-content-center w-100 h-50 ">
+                        <div class="icono_modulo d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-phone d-flex align-items-center justify-content-center"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center w-100 h-50">
+                        <p class="etiqueta-size">Soporte</p>
+                    </div>
+                </a>
+                    
+        </div>
+    </div>
+
+ 
+
+    </div>
+</main>
+    
+    
+
+{% endblock %}
+

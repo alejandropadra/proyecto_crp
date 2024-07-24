@@ -1,0 +1,226 @@
+{% extends 'layout_landings.html' %}
+{% from 'helpers/_forms.html' import render_field %}
+{% block content %}
+
+
+
+<main class="px-3" style="min-height: 100vh;padding: 120px 0px 50px 0;" >
+    
+    <div class="contenedor_detalles  container position-relative mb-4 p-2 pb-5">
+        <div class="row d-flex justify-content-around p-2 position-relative">
+            <div class="imagen_detalles col-xl-5 col-lg-5 col-md-5 col-sm-12 d-flex  justify-content-center align-items-center" >
+                <img src="/static/img/maderas-wood-classic-natural.jpg" alt="">
+            </div>
+            
+            <div class="especificaciones col-xl-6 col-lg-6 col-md-6 col-sm-12 position-relative">
+                <h1 class="titulo w-100 ">AV-2000 HIDROESMALTE MATE BLANCO</h1>
+                <div class="d-flex align-items-center justify-content-around butones " >
+                    <h1 class="price p-0 m-0">Precio: 29$</h1> 
+                    <div class="counter">
+                        <button class="counter-btn">-</button>
+                        <div class="counter-score">2</div>
+                        <button class="counter-btn counter-btn-plus">+</button>
+                    </div>
+                    <div class="product__buttom d-flex justify-content-center p-2">
+                        <a class="button-vermas" href="#">
+                            <span class="button-vermas__icon-wrapper">
+                                <svg width="10" class="button-vermas__icon-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 15">
+                                    <path fill="currentColor" d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z"></path>
+                                </svg>
+                                <svg class="button-vermas__icon-svg  button-vermas__icon-svg--copy" xmlns="http://www.w3.org/2000/svg" width="10" fill="none" viewBox="0 0 14 15">
+                                    <path fill="currentColor" d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z"></path>
+                                </svg>
+                            </span>
+                            Ordenar
+                        </a>
+                    </div>
+                </div>
+
+                <h3 class="subtitulo-esp">Colores disponibles:</h3>
+
+                <!-- Estructura del Swiper -->
+                <div class="mi-swiper-container">
+                    <div class="swiper-wrapper">
+                        <!-- Slide 1 -->
+                        <div class="swiper-slide">
+                            <div class="colores mb-2">
+                                <div class="palette">
+                                    <div class="color"><span>264653</span></div>
+                                    <div class="color"><span>2A9D8F</span></div>
+                                    <div class="color"><span>E9C46A</span></div>
+                                    <div class="color"><span>F4A261</span></div>
+                                    <div class="color"><span>E76F51</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Slide 2 -->
+                        <div class="swiper-slide">
+                            <div class="colores mb-2">
+                                <div class="palette">
+                                    <div class="color"><span>264653</span></div>
+                                    <div class="color"><span>2A9D8F</span></div>
+                                    <div class="color"><span>E9C46A</span></div>
+                                    <div class="color"><span>F4A261</span></div>
+                                    <div class="color"><span>E76F51</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="swiper-button-next sig" data-bs-toggle="tooltip" title="Ver sigueinte muestra de colores"></div>
+                    <div class="swiper-button-prev atr" data-bs-toggle="tooltip" title="Ver anterior muestra de colores"></div>
+                    
+
+                </div>
+                <h3 class="subtitulo-esp">Características Génerales</h3>
+                <div class="Caracteristicas generales mb-4">
+                    <div class="row gap-2">
+                        <div class="caracteristica d-flex gap-2 col col-sm-12"><i class="bi bi-check-circle"></i><strong>Línea:</strong>Thinner</div>
+                        <div class="caracteristica d-flex gap-2 col col-sm-12"><i class="bi bi-check-circle"></i><strong>Acabado:</strong>Brillante</div>
+                        <div class="caracteristica d-flex gap-2 col col-sm-12"><i class="bi bi-check-circle"></i><strong>Acabado:</strong>Brillante</div>
+                        <div class="caracteristica d-flex gap-2 col col-sm-12"><i class="bi bi-check-circle"></i><strong>Calidad:</strong>A</div>
+                        <div class="caracteristica d-flex gap-2 col-auto"><i class="bi bi-check-circle"></i><strong>Superficies:</strong>Superficies Concreto Dañadas</div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-2 info" id="mostrarInformacion">
+                <h3 class="fs-5 m-0">Más informacion</h3>
+                <i class="bi bi-arrow-down-circle m-0"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-tecnica d-none container">
+        <div class="row gap-3">
+            <div class="contenedor_detalles especificaciones col p-4 position-relative">
+                <div class="dowload" data-bs-toggle="tooltip" title="Descargar toda la ficha tecnica"><i class="bi bi-download"></i></div>
+                <h3 class="text-center titulo">Caracteristicas Tecnicas</h3>
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Nombre del producto:</p> <p class="valor-ficha">"nombre"</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Descripción General:</p> <p class="valor-ficha">"Descripción"</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Marca:</p> <p class="valor-ficha">"Marcan"</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Línea:</p> <p class="valor-ficha">"869"</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Código (Línea):</p> <p class="valor-ficha">"FA-869001"</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Vehiculo</p> <p class="valor-ficha">"Poliuretano Alifático de base acrílica."</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Pigmentos</p> <p class="valor-ficha">"Inorgánicos"</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Color</p> <p class="valor-ficha">"Blanco"</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Aspecto de la pelicula</p> <p class="valor-ficha">Brillante</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Solventes</p> <p class="valor-ficha"> Mezcla de solventes aromáticos y oxigenados</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Densidad</p> <p class="valor-ficha"> 5,0 Kg/Galón Promedio</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">% SOLIDOS POR VOLUMEN:</p> <p class="valor-ficha"> 61,8 a 63,8 %</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">VOC</p> <p class="valor-ficha"> 56,64 g/L</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Viscosidad</p> <p class="valor-ficha"> 18 Seg. CF4 <-> 22 Segundos Copa Zahn 2</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Rendimiento Práctico</p> <p class="valor-ficha"> 90 a 100 </p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Rendimiento Teórico</p> <p class="valor-ficha"> 90 a 100 </p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Nota del rendimiento</p> <p class="valor-ficha"> 97 mt²/GAL a 1 mils de espesor de película seca </p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Relación de activación</p> <p class="valor-ficha"> 4 a 1 por volumen.</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Vida util de la mezcla</p> <p class="valor-ficha"> 4 a 1 por volumen.</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Viscosidad de empaque</p> <p class="valor-ficha"> 4 a 1 por volumen.</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Tiempo de oreo </p> <p class="valor-ficha"> 4 a 1 por volumen.</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Espesor de la pelicula </p> <p class="valor-ficha"> 4 a 1 por volumen.</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">PH </p> <p class="valor-ficha"> 4 a 1 por volumen.</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Flash Point </p> <p class="valor-ficha"> 4 a 1 por volumen.</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Sustratos recomendados</p> <p class="valor-ficha">Esmaltes Poliuretanos de la Línea 420 Duraflot de Montana.</p></div>
+                <hr class="m-0">
+                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Capas recomendadas</p> <p class="valor-ficha"> 2 a 3 Manos Húmedas                </p></div>
+                <hr class="m-0">
+            </div>
+
+            <div class=" especificaciones col gap-4 p-0">
+                <div class="contenedor_detalles p-4">
+                    <h3 class="text-center titulo fs-5" >Descripción del producto</h3>
+                    <div class="item d-flex w-100 mb-0 mt-2 "> <p class="valor-ficha ">IMPERCOAT PLUS es un recubrimiento acrílico elástico a base de agua, especialmente diseñado para impermeabilizar techos, terrazas, paredes y muros de casas y edificios. Está diseñado específicamente para solventar problemas de humedad debido a filtraciones en las placas de concreto nuevo y para reforzar placas impermeabilizadas con manto asfáltico. </p></div>
+                    <hr class="mt-3">
+                    <h3 class="text-center titulo fs-5 p-3" >Caracteristicas</h3>
+                    <div class="row gap-2">
+                        <div class="caracteristica d-flex gap-2 w-100 p-2"><i class="bi bi-check-circle"></i>Fácil de aplicar a brocha, rodillo o pistola.</div>
+                        <div class="caracteristica d-flex gap-2 w-100 p-2"><i class="bi bi-check-circle"></i>Acabado mate para ambientes interiores</div>
+                        <div class="caracteristica d-flex gap-2 w-100 p-2"><i class="bi bi-check-circle"></i>Minimiza los defectos superficiales</div>
+                        <div class="caracteristica d-flex gap-2 w-100 p-2"><i class="bi bi-check-circle"></i>Aplicable en superficies de hierro y acero debidamente fondeadas</div>
+                        <div class="caracteristica d-flex gap-2 w-100 p-2"><i class="bi bi-check-circle"></i>Aplicable en superficies de concreto</div>
+                        <div class="caracteristica d-flex gap-2 w-100 p-2"><i class="bi bi-check-circle"></i>Aplicable en superficies de madera debidamente tratadas</div>
+                    </div>
+                    <hr>
+                    <h3 class="text-center titulo fs-5 p-2" >Nota extra</h3>
+                    <div class="row gap-2">
+                        <div class="caracteristica d-flex gap-2 w-100 p-3">El flash point o punto de inflamación, es la temperatura más baja a la cual la aplicación de la llama, causa que el vapor generado por la mezcla de solventes, se encienda a presión atmosférica./ Para mejores resultados, no se utilice en grandes cantidades, evite excederse de un 10% cuando se aplique a pistola. Este producto puede ser utilizado como solvente de limpieza del mismo equipo.</div>
+                    </div>
+                </div>
+
+                <div class="contenedor_detalles p-4">
+                    <h3 class="text-center titulo fs-5 p-3" >SECAMIENTO A 25°C (77°F)</h3>
+                    <div class="row gap-3">
+                        <div class="caracteristica d-flex gap-2 w-100"><p class="ref">Al racto: </p> <p class="valor-ficha"> 30 minutos</p></div>
+                        <div class="caracteristica d-flex gap-2 w-100"><p class="ref">Al racto: </p> <p class="valor-ficha"> 30 minutos</p></div>
+                            <div class="caracteristica d-flex gap-2 w-100"><p class="ref">Para repintar: </p> <p class="valor-ficha"> 4 a 6 horas</p></div>
+                            <div class="caracteristica d-flex gap-2 w-100"><p class="ref">Secamiento Duro: </p> <p class="valor-ficha"> 24 horas</p></div>
+                            <div class="caracteristica d-flex gap-2 w-100"><p class="ref">Curado Total</p> <p class="valor-ficha"> 7 días</p></div>
+                            <div class="caracteristica d-flex gap-2 w-100"><p class="ref">Inmersión </p> <p class="valor-ficha"> 30 minutos</p></div>
+                            <div class="caracteristica d-flex gap-2 w-100"><p class="ref">Al polvo </p> <p class="valor-ficha"> 30 minutos</p></div>
+                            <div class="d-flex gap-2 w-100"><p class="ref">Nota </p> <p class="valor-ficha"> El Sellacril Original no se debe dejar sin acabado final por más de 4 horas, ya que no es un acabado final y por tanto como acondicionador de superficies debe ser recubierto en el menor tiempo posible con el fin de evitar fallas de desprendimiento del acabado final. </p></div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+
+    <div class="info-tecnica d-none  contenedor_detalles container p-3 mt-4">
+        <h3 class="text-center titulo fs-5 p-3" >Preparacion de la superficie</h3>
+        <p class="valor-ficha ">La superficie debe estar completamente limpia y seca, libre de polvo, aceite, grasa u otros materiales sueltos en mal estado. En caso de detectarse contaminación por grasa o aceite y previo a la realización de cualquier método de preparación de superficie, estos deben eliminarse según norma SSPC-SP-1, utilizando limpieza con solventes, agua y jabón, desengrasantes industriales biodegradables u otro material adecuado dependiendo del grado de contaminación. Elimine pintura vieja en mal estado. Elimine el exceso de polvo o caleo utilizando un cepillo de cerdas suaves y agua a alta presión. No se debe aplicar en superficies de concreto húmedas y/o con alta alcalinidad. Para una recomendación acorde a sus necesidades, consulte a un representante técnico de Corimon Pinturas, C.A..  *El tiempo de durabilidad del sistema de pintura dependerá del grado de limpieza y preparación de superficie.*</p>
+    </div>
+
+    <div class="info-tecnica d-none  container mt-4">
+    <div class="row gap-3" >
+        <div class="contenedor_detalles especificaciones col p-3">
+            <h3 class="text-center titulo fs-5 p-3" >Fondos recomendados</h3>
+            <div class="item d-flex w-100 mb-0"> <p class="valor-ficha ">IMPERCOAT PLUS es un recubrimiento acrílico elástico a base de agua, especialmente diseñado para impermeabilizar techos, terrazas, paredes y muros de casas y edificios. Está diseñado específicamente para solventar problemas de humedad debido a filtraciones en las placas de concreto nuevo y para reforzar placas impermeabilizadas con manto asfáltico. </p></div>
+            <hr>
+            <h3 class="text-center titulo fs-5 p-1" >Almacenamiento y precauciones</h3>
+            <div class="item d-flex w-100 mb-0 "> <p class="valor-ficha ">IMPERCOAT PLUS es un recubrimiento acrílico elástico a base de agua, especialmente diseñado para impermeabilizar techos, terrazas, paredes y muros de casas y edificios. Está diseñado específicamente para solventar problemas de humedad debido a filtraciones en las placas de concreto nuevo y para reforzar placas impermeabilizadas con manto asfáltico. </p></div>
+        </div>
+        <div class="contenedor_detalles  especificaciones col p-3">
+            <h3 class="text-center titulo fs-5 p-3" >Aplicación</h3>
+            <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Metodo de aplicación:</p> <p class="valor-ficha">"nombre"</p></div>
+            <hr class="m-0">
+            <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Equipos recomendados:</p> <p class="valor-ficha">"nombre"</p></div>
+            <hr class="m-0">
+            <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Limpieza de Equipos</p> <p class="valor-ficha">"nombre"</p></div>
+            <hr class="m-0">
+            <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Diluyente</p> <p class="valor-ficha">"nombre"</p></div>
+            <hr class="m-0">
+            <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Condiciones para aplicar</p> <p class="valor-ficha">"nombre"</p></div>
+            <hr class="m-0">
+            <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Nota</p> <p class="valor-ficha">"nombre"</p></div>
+            <hr class="m-0">
+        </div>
+    </div>
+</div>
+
+</main>
+
+
+
+{% endblock %}

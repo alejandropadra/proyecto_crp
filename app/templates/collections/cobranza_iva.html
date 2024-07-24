@@ -1,0 +1,91 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_forms.html' import render_field %}
+{% block main %}
+
+
+
+<main class="px-3">
+
+  <div class="container pt-3">
+    <form class="form_main mt-3 " method = "POST" enctype="multipart/form-data" >
+      <div class="row d-flex gap-5">
+
+        <div class="contenedor col-xl-5 col-md-5 col-lg-5 col-sm-12">
+          
+          <h5 class="etiqueta">RIF</h5>
+          <div class="inputContainer">
+            <i class="fa-solid fa-circle-user inputIcon"></i>
+            {{ render_field(form.rif, class="inputField", id="rif", value =current_user.rif, placeholder="Ingrese su numero de RIF") }}
+          </div>
+
+          <h5 class="etiqueta">Empresa</h5>
+          <div class="inputContainer">
+            <i class="fa-solid fa-building inputIcon"></i>
+            {{ render_field(form.empresa, class="inputField", id="empresa",value = current_user.username, placeholder="Nombre de la empresa") }}
+          </div>
+          
+          <h5 class="etiqueta">Banco Emisor</h5>
+          <div class="inputContainer">
+            <i class="fa-solid fa-money-bill-transfer inputIcon"></i>
+            {{ render_field(form.banco_emisor, class="inputField", id="banco_emisor",placeholder="Por favor, ingrese el Banco Emisor", placeholder="Ingrese su numero de RIF" ) }}
+          </div>
+          
+          <h5 class="etiqueta">Empresa Beneficiaria del Pago</h5>
+          <div class="inputContainer">
+            <i class="fa-solid fa-building-columns inputIcon"></i>
+            {{ render_field(form.empresa_beneficiaria, class="inputField", id="empresa_beneficiaria" ) }}
+          </div>
+        </div>
+
+        <!--onchange="javascript:seleccionar_empresa()"-->
+
+
+
+        <div class="contenedor col-xl col-md col-lg col-sm-12">
+          
+        <h5 class="etiqueta">Cuenta de banco a la cual se realizó el pago</h5>
+        <div class="inputContainer mt-3">
+         
+          <i class="fa-solid fa-building-columns inputIcon"></i>
+          {{ render_field(form.banco_receptor, class="inputField ", id="banco_receptor" ) }}
+        </div>
+
+        <h5 class="etiqueta">Fecha de depósito</h5>
+        <div class="inputContainer">
+          <i class="fa-regular fa-calendar inputIcon"></i>
+          {{ render_field(form.fecha_deposito, class="inputField", id="fecha", value=Fecha_pago, readonly=readonly  ) }}
+        </div>
+
+
+        <h5 class="etiqueta">Monto pagado</h5>
+        <div class="inputContainer">
+          <i class="fa-solid fa-hand-holding-dollar inputIcon"></i>
+          {{ render_field(form.monto, class="inputField", id="monto", required="", label_attr={"class": "label", "for": "monto"}) }}
+        </div>
+
+        <div class="inputContainer d-flex flex-column">
+          <h5 class="etiqueta">Ingrese el Número de Referencia del pago</h5>
+          <i class="fa-solid fa-book-bookmark inputIcon"></i>
+          {{ render_field(form.n_deposito, class ="inputField", id="ref", required="", label_attr={"class": "label", "for": "ref"}, value=algo) }}
+        </div>
+      </div>
+
+
+      </div>
+      <div class=" mb-2 w-100 d-flex justify-content-center" style="margin-top: 25px; padding-bottom: 100px;">
+        <p>{{ valorJinja }}</p>
+        <input type ="hidden" name = "csrf_token" value ="{{csrf_token()}}"/>
+        <button class="submit"> <span>Enviar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+
+
+
+</main>
+
+
+
+{% endblock %}

@@ -93,18 +93,18 @@ table{
 
 th, td{
 	padding: 10px;
+    
 
 }
 
 thead{
-	background-color: #D10000;
+	background-color: #ffffff;
 	border-bottom: solid 5px #640505;
-	color: white;
+	color: black;
 }
-tr:nth-child(odd) {
-    background-color: #ddd;
+tr:nth-child(even){
+	background-color: #ddd;
 }
-
 
 
 a.button {
@@ -132,13 +132,38 @@ footer {
     padding: 20px;
     text-align: center;
     font-family: 'Poppins', sans-serif;
-font-size: 12px;
-color: #ccc;
-background: rgb(83, 81, 81);
+    font-size: 12px;
+    color: #ccc;
+    background: rgb(83, 81, 81);
 
 }
 
 
+
+    .datos-pago {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    .datos-pago th, .datos-pago td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .datos-pago th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    .datos-pago tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .datos-pago tr:hover {
+        background-color: #f5f5f5;
+    }
 
 
 </style>
@@ -146,14 +171,14 @@ background: rgb(83, 81, 81);
     <div class="card">
         <div class="Encabezado">
             <div class="logo">
-                <img src="/CORIMON PINTURAS.png" alt="">
+                <img src="https://www.corimon.com/wp-content/uploads/2019/04/logocorimon-.png" alt="Corimon Pinturas">
             </div>
             <div class="usuario">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                     <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
                 </svg>
-                {{usurio}}
+                
             </div>
         </div>
         <hr>
@@ -161,14 +186,17 @@ background: rgb(83, 81, 81);
             <div class="titulo">
                 <h3>¡Pago Registrado exitosamente!</h3>
             </div>
-            
             <div class="cuerpo">
-                <p >Nos complace informarte que el pago correspondiente a los siguientes datos ha sido registrado exitosamente.</p>
-                <hr>
-                
-                <h3 style="text-align: center; margin-top: 20px;"> <strong>Información del pago realizado:</strong></h3>
+                <p >Nos complace informarte que el pago correspondiente a los siguientes datos ha sido registrado exitosamente</p>
                 <div class="tabla">
                     <table>
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th>valor</th>
+
+                            </tr>
+                        </thead>
                         <tbody>
                             <tr>
                                 <td>Documento de identidad</td>
@@ -181,7 +209,7 @@ background: rgb(83, 81, 81);
                             </tr>
                             <tr>
                                 <td>Pagado a</td>
-                                <td>{{Empresa pagada}}</td>
+                                <td>{{Empresa_pagada}}</td>
                             </tr>
                             <tr>
                                 <td>Banco receptor</td>

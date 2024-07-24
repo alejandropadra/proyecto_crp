@@ -1,95 +1,264 @@
 {% extends 'layout.html' %}
 {% from 'helpers/_forms.html' import render_field %}
+{% block main %}
 
-{% block container %}
+<main class="position-relative mt-2 px-3 " style="min-height: 100vh;" >
 
-<main>
+<div class="courses-container z-0 container p-0 " >
+  <div class="row d-flex gap-4 mb-4">
 
-<div class="courses-container">
-  <div class="row">
-    <div class="col-xl col-lg-12 col-sm-12 col-md-12" >
-      <div class="row" >
-        <div class="tarjeta_saldo mb-4 w-100 col-xl-12 col-lg-6 col-md-6 col-sm" >
-          <div class="titulo_saldo ">
-              <div class="icono_tarjeta verde_dolar text-white mr-2">
-                <i class="bi bi-currency-dollar"></i>
+    <div class="col-xl col-lg-12 col-sm-12 col-md-12 p-0 m-0 d-flex flex-column gap-2 align-items-center" >
+
+        <div class="tarjeta_saldo hover  mb-4 w-100 col-xl-12 col-lg-6 col-md-6 col-sm" >
+          <div class="titulo_saldo d-flex align-items-center gap-2">
+              <div class="icono_tarjeta verde_dolar text-white mr-2 d-flex align-items-center justify-content-center">
+                <i class="bi bi-currency-dollar d-flex align-items-center justify-content-center"></i>
               </div>
-              <p class="titulo_saldo-text text-center">
-                  Saldo ($)
+              <p class="ui-tittle text-center">
+                {% if total_dolares > 0%}
+                  Deuda $
+                  {%else%}
+                  Saldo a favor $
+                {%endif%}
               </p>
           </div>
-          <div class="data d-flex justify-content-center">
-            <p style="color: cornflowerblue;">+</p>
-              <p>0,00$</p>
+          <div class="d-flex justify-content-center">
+            
+              <p class="etiqueta-size">{{ "{:,.2f}".format(total_dolares|float|abs) }} </p>
           </div>
         </div>
       
-        <div class="tarjeta_saldo w-100 mb-3 col-xl-12 col-lg col-md col-sm" >
-          <div class="titulo_saldo">
-              <div class="icono_tarjeta rojo_mmg text-white mr-2 ">
-                <i class="bi bi-wallet2"></i>
+        <div class="tarjeta_saldo w-100  col-xl-12 col-lg col-md col-sm hover" >
+          <div class="titulo_saldo d-flex align-items-center gap-2">
+              <div class="icono_tarjeta rojo_mmg text-white mr-2 d-flex align-items-center justify-content-center">
+                <i class="bi bi-wallet2 d-flex align-items-center justify-content-center"></i>
               </div>
-              <p class="titulo_saldo-text text-center">
-                  Tasa bcv
+              <p class="ui-tittle text-center">
+                {% if total_bolos > 0%}
+                Deuda bs
+                {%else%}
+                Saldo a favor bs
+              {%endif%}
               </p>
           </div>
-          <div class="data d-flex justify-content-center">
-              <p>{{rate}} Bs</p>
+          <div class="d-flex justify-content-center etiqueta-size">
+              <p>{{"{:,.2f}".format(total_bolos|float|abs)}}</p>
           </div>
         </div>
-      </div>
+
     </div>
+	
+
+  <div class="d-flex flex-column  align-items-center col-xl-9 col-lg-12 col-md-12 col-sm-12 m-0 " style="background-color: #fdfdfd; padding: 20PX; border-radius: 16px;">
+    <h3 class="ui-tittle text-right w-100 mb-2"> Deuda total vencida:   {{"{:,.2f}".format(total_vencido_d|float|abs)}}($) | {{"{:,.2f}".format(total_vencido_b|float|abs)}}(bs)</h3>
+    <div class="row d-flex gap-3 px-3 pt-1 ">
+      <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
+        <div class="course-info d-flex flex-column justify-content-center ">
+          <h6 class="mx-1 ui-tittle fs-5">Vencido 1-30 </h6>
+          <p> <strong class="text-muted"> Monto (bs): </strong> <span class="texto2"> {{"{:,.2f}".format(vencido_130_b|float|abs)}} bs </span></p>
+          <p> <strong class="text-muted "> Monto ($): </strong> <span class="texto2"> {{"{:,.2f}".format(vencido_130_d|float|abs)}} $</span></p>
+          
+
+        </div>
+      </a>
+      <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
+        <div class="course-info d-flex flex-column justify-content-center ">
+
+          <h6 class="mx-1 ui-tittle fs-5">Vencido 31-60 </h6>
+          <p> <strong class="text-muted"> Monto (bs): </strong> <span class="texto2"> {{"{:,.2f}".format(vencido_3160_b|float|abs)}} bs </span></p>
+          <p> <strong class="text-muted "> Monto ($): </strong> <span class="texto2">  {{"{:,.2f}".format(vencido_3160_d|float|abs)}} $</span></p>
+          
+
+        </div>
+      </a>
+      <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
+        <div class="course-info d-flex flex-column justify-content-center ">
+          <h6 class="mx-1 ui-tittle fs-5">Vencido 60+ </h6>
+          <p> <strong class="text-muted"> Monto (bs): </strong> <span class="texto2"> {{"{:,.2f}".format(vencido_60_b|float|abs)}} bs </span></p>
+          <p> <strong class="text-muted "> Monto ($): </strong> <span class="texto2">  {{"{:,.2f}".format(vencido_60_d|float|abs)}} $</span></p>
+          
+
+        </div>
+      </a>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- ------------------------------------Otra Fila------------------------------------------>
+
+<div class="courses-container z-0 container p-0 w-100 " >
+  <div class="row d-flex gap-4 mb-4 w-100 p-0">
+    <div class="col-12 p-0 m-0 w-100">
+
+      <div class="row d-flex m-0 p-0 w-100 gap-4 este">
+        <a class="tarjeta_saldo hover mb-0 w-100  col text-decoration-none text-dark" href="{{ url_for('.lista_cobranza', filtro='Pendiente Por pagar') }}">
+          <div class="titulo_saldo d-flex align-items-center gap-2">
+            <div class="icono_tarjeta rojo_mmg text-white mr-2 d-flex align-items-center justify-content-center">
+              <i class="fa-solid fa-receipt"></i>
+            </div>
+            <p class="ui-tittle-dos " >
+              Documentos Pendientes por pagar
+            </p>
+          </div>
+          {% set na = namespace(contador=0) %}
+            {% for factura in facturas %}
+              {% if 'blart' in factura %}
+                {%  if factura['blart'] == 'RV' and factura['status']=='' %}
+                    {% set na.contador = na.contador + 1 %}
+                  {% endif %}
+                {% endif %}
+            {% endfor %}
+            <div class="d-flex justify-content-center align-items-center h-50">
+                <p class="etiqueta-size2" id="cantidadfacts">{{ na.contador }}</p>
+            </div>
+            <h6 class="masinfotarj w-100 mt-5">Ver Detalles <i class="bi bi-arrow-right"></i></h6>
+          </a>
+
+
+                    <!--Siguiente tarjeta saldo-->
+
+                    <a class="tarjeta_saldo hover w-100 col text-decoration-none text-dark" href="{{ url_for('.lista_cobranza', filtro='Pendiente Por validar') }}">
+                      <div class="titulo_saldo d-flex align-items-center gap-2">
+                          <div class="icono_tarjeta verde_dolar text-white mr-2 d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-money-bills"></i>
+                          </div>
+                          <p class="ui-tittle-dos text-center">
+                              Documentos por verificar
+                          </p>
+                      </div>
+                      {% set nd = namespace(contador=0) %}
+                        {% for factura in facturas %}
+                          {% if 'status' in factura %}
+                            {%  if factura['status'] == 'P'  %}
+                                {% set nd.contador = nd.contador + 1 %}
+                              {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        <div class="d-flex justify-content-center align-items-center h-50">
+                          <p class="etiqueta-size2" id="cantidadver">{{ nd.contador }}</p>
+                        </div>
+                        <h6 class="masinfotarj w-100 mt-5">Ver Detalles <i class="bi bi-arrow-right"></i></h6>
+                    </a>
+          <!--Siguiente tarjeta saldo-->
+
+          <a class="tarjeta_saldo hover col w-100 col text-decoration-none text-dark" href="{{ url_for('.lista_cobranza', filtro='Abono') }}">
+            <div class="titulo_saldo d-flex align-items-center gap-2">
+                <div class="icono_tarjeta amarillo_kbrn text-dark mr-2 d-flex align-items-center justify-content-center">
+                  <i class="fa-solid fa-receipt"></i>
+                </div>
+                <p class="ui-tittle-dos text-center">
+                    Abonos por conciliar
+                </p>
+            </div>
+            {% set nb = namespace(contador=0) %}
+              {% for factura in facturas %}
+                {% if 'blart' in factura %}
+                  {%  if factura['blart'] == 'DZ' %}
+                      {% set nb.contador = nb.contador + 1 %}
+                    {% endif %}
+                  {% endif %}
+              {% endfor %}
+              <div class="d-flex justify-content-center align-items-center h-50">
+                <p class="etiqueta-size2" id="cantidadAbon">{{ nb.contador }}</p>
+              </div>
+              <h6 class="masinfotarj w-100 mt-5">Ver Detalles <i class="bi bi-arrow-right"></i></h6>
+          </a>
+
+
+
+
+          <a class="tarjeta_saldo hover col  mb-0 w-100   text-decoration-none text-dark" href="{{ url_for('.certificados_pendientes')}}">
+            <div class="titulo_saldo d-flex align-items-center gap-2">
+                <div class="icono_tarjeta amarillo_kbrn p-1 text-dark d-flex align-items-center justify-content-center" style="width: 40px;">
+                  <i class="fa-solid fa-receipt"></i>
+                </div>
+                <p class="ui-tittle-dos lh-1 " >
+                    Facturas Pendientes por certificado de retención
+                </p>
+            </div>
+              <div class="d-flex justify-content-center align-items-center h-50">
+                  <p class="etiqueta-size2" id="factspend">{{ contador_fact }}</p>
+              </div>
+              <h6 class="masinfotarj w-100 mt-5">Ver Detalles <i class="bi bi-arrow-right"></i></h6>
+          </a>
+        </div>
+      </div>
+
+
+    </div>
+</div>
+
+<!---->
+<div class="courses-container z-0 container p-0 w-100 " >
+  <div class="row d-flex gap-4 mb-4 w-100 p-0">
+    <div class="col-12 p-0 m-0 w-100">
+
+      <div class="tabla p-4 col-xl col-lg col-md col-sm-12 table-responsive tabla-facturas d-flex justify-content-center flex-column" >
+        <h3 class="ui-tittle text-right w-100 mb-2"> Descuentos por pronto pago disponibles a la fecha</h3>
+        <table class="table m-0 w-100 table-sm  " >
+          <thead>
+            <tr>
+              <th scope="col">Fecha</th>
+              <th scope="col">Factura N°</th>
+              <th scope="col">Monto (bs)</th>
+              <th scope="col">Monto descuento (bs)</th>
+              <th scope="col">Monto ($)</th>
+              <th scope="col">Monto con descuento ($)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for factura in facturas %}
+            {% if 'blart' in factura %}
+            {%  if factura['blart'] == 'RV' and factura['dppbs']>0 %}
+            <tr>
+              <td>{{factura['fkdat'] }}</td>
+              <td>{{factura['vbeln'] }}</td>
+              <td>{{ "{:,.2f}".format(factura['totfactbs']|float|abs) }}</td>
+              <td>{{"{:,.2f}".format(factura['totfactbs']-factura['dppbs']) }}</td>
+              <td>{{ "{:,.2f}".format(factura['dmbtr']|float|abs) }}</td>
+              <td>{{"{:,.2f}".format(factura['dmbtr']-factura['montoncdpp']) }}</td>
+            </tr>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      </div>
+
+
+    </div>
+</div>
     
   
-      <div class="row d-flex justify-content-center col-xl-9 col-lg-12 col-md-12 col-sm-12 " style="margin: 0px !important;">
-        
-          {% for pago in pago_t %}
-              
-              
-                  <a href="{{ url_for('.deposito', n=pago.n_deposito)}}"class="course {% if pago.estado == 1 %} listo {% elif pago.estado == 2 %} nega {% elif pago.estado == 0 %} progreso {% endif %} col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
-                      <div class="course-info">
-                          <div class="progress-container">
-                              <div class="progress  {% if pago.estado == 1 %} listo {% elif pago.estado == 2 %} nega {% elif pago.estado == 0 %} progreso {% endif %} "></div>
-                          </div>
-                  
-                          <h5>{% if pago.estado == 1 %} listo  <i class="bi bi-check-square"></i>{% elif pago.estado == 2 %} Error <i class="bi bi-exclamation-circle"></i>{% elif pago.estado == 0 %} Verificado <i class="bi bi-three-dots"></i> {% endif %}</h5>
-                          <h6 class="mx-1">Datos:</h6>
-                          <p> <strong>N° de depósito: </strong> {{pago.n_deposito}}</p>
-                          <p> <strong> Fecha: </strong> {{pago.fecha_deposito}}</p> 
-                          <p> <strong> Monto: </strong> {{pago.monto}} {{pago.divisa}}</p>
-                          <h6 class="masinfo w-100">Ver Detalles <i class="bi bi-arrow-right"></i></h6>
-                      </div>
-                  </a>
-              
-                  {% endfor%}
-  </div>
-
-
-
-
-</div>
-  
-</div>
-
 </main>
 
 
 
 
-    
 {% endblock %}
 
 {% block js%}
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>  
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>  
 <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bulma.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
 <script>  
-  $(document).ready(function () {
-    $('#example').DataTable();
-});
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
+
+
+
+
+
+
 </script>
+
+
+
+
 {% endblock %}

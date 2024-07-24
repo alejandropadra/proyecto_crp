@@ -1,42 +1,254 @@
-{% extends 'layout_emails.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Correo De Bienvenida</title>
+    <!--Bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <link rel='icon' type='image/png' href="{{ url_for('static', filename = 'img/figura_corimonn.png') }}">
+</head>
 
-{% block content %}
-    {% block container %}
-    <div class="container contenedor_email border">
-        <div class="logo_encabezado d-flex justify-content-center align-items-center">
-            <img src="/static/img/CRP.png" alt="">
-            
-        </div>
-        <hr style="color: black; width: 100%;">
-        <div class="contenedor_texto_email ">
-            <h4 class="my-3 titulo_email text-center">Titulo del email</h4>
-            <p class="">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veniam rerum perferendis sit. Non magni nihil placeat, eum aspernatur atque quas molestias quasi exercitationem consequatur suscipit ex sequi, delectus repellendus neque?
-            </p>
-        </div>
-        <hr style="margin: 20px 5px 10 5px; width: 100%;">
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body{
+        font-family: sans-serif;
+        padding: 75px;
+        background-color: #EFEFEF;
+    }
+
+.contenedor_email{
+    margin-top: 5%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 16px;
+    padding: 0 !important;
+    background-color: #fff;
+    border-color: 2px red;
+    margin: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+
+}
+
+a.button {
+    display: block;
+    width: 150px;
+    height: 50px;
+    background-color: #ff0000;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 10px 0;
+    border-radius: 5px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+    }
     
-        <div class="contenedor_texto_email contexto" >
-            <p class="">
-                <strong> Este es un correo automatico, por favor no responder   </strong>  
+    a.button:hover {
+    background-color: #cccccc;
+    }
+
+
+.logo_encabezado{
+    padding: 20px;
+    width: 100%;
+    border-radius: 16px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+  }
+
+  .logo_encabezado img{
+    max-width: 300px;
+    max-height: 350px;
+   }
+
+   .titulo_email{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 30px;
+    font-weight: 600;
+   }
+
+   .contenedor_texto_email{
+    min-height: 350px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    align-items: center;
+
+
+   }
+
+   .cuerpo{
+    display: flex;
+    justify-content: center;
+    text-align: justify;
+    flex-direction: column;
+
+    width: 100%;
+    padding: 0 25px;
+    height: 100%;
+    
+
+    
+   }
+
+   .cuerpo p{
+    font-family: sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+
+   }
+   .subtitulo_pie_pagina{
+    font-size: 35px;
+    font-weight: 900;
+    font-family:sans-serif;
+    
+    color: white;
+  }
+
+  .pie-pagina{
+    background-color: black;
+    width: 100%;
+    text-align: center;
+    border-top: #D50000 solid 3px;
+    margin-top: auto;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    padding-top: 20px;
+
+  }
+  .contexto p{
+    font-size: 13px;
+    color: #7e7f80;
+  
+    
+  }
+  
+  .contexto{
+    background-color: #f1ecec;
+    padding: 15px 38px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+  
+  }
+
+  .pie-pagina ul{
+    display: flex;
+    justify-content: center;
+    }
+  .pie-pagina ul li a{
+    color: #b10505;
+    }
+    
+  .pie-pagina ul li a:hover{
+    color: cadetblue
+    }
+
+
+
+.subtitulo{
+  font-family: 'Tahoma', sans-serif;
+  font-weight: 400;
+  font-size: 20px ;
+                                                
+}
+
+
+</style>
+
+<body>
+
+    <main>
+
+        <div class="contenedor_email border ">
+            <div class="logo_encabezado d-flex justify-content-center align-items-center">
+                <img src="/static/img/CRP.png" alt="">
+            </div>
+            <hr style="color: black; width: 100%; margin: 0px;">
+            <div class="contenedor_texto_email " style="min-height: 250px;">
+                <h4 class=" titulo_email text-center ">¡Bienvenido "Nombre de Usuario" a la aplicación de Corimon Pinturas!</h4>
                 
-            </p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores magni aut aliquam rem blanditiis quibusdam debitis. Nesciunt quo est eveniet qui laborum error totam quas architecto aliquam earum. Non, recusandae?</p>
-            
+                <div class="cuerpo " >
+                    <p class="parrafo"> Estamos emocionados de que te unas a nosotros.</p>  
+                    <p class="parrafo">  Para comenzar, debes ingresar iniciando sesión con el usuario y contraseña {{hola}} y dirigirte a la sección de perfil para cambiar tu clave de acceso. Puedes hacerlo haciendo clic en el enlace a continuación:  </p>
+                    <a href="http://www.corimonpinturas.net/login" class="button" align="center">Ingresar</a>
+                </div>
+            </div>
+    
+        
+            <div class="contexto" >
+                <h1 class="subtitulo ">
+                     Este es un correo automatico, por favor no responder   
+                    
+                </h1>
+                <p>Si necesita asistencia, le recomendamos comunicarse con nuestro equipo de soporte a través de los siguientes canales: </p>
+                <p class="mx-3"> Teléfono de atención al cliente: [Insertar número]</p class="mx-3">
+                <p class="mx-3">  Correo electrónico de soporte: [Insertar dirección de email]</p>
+                
+            </div>
+        
+            <div class="pie-pagina p-4">
+                <h4 class="subtitulo_pie_pagina">Corimon Pinturas, C.A.</h4>
+            </div>
         </div>
     
-        <div class="pie-pagina">
-            <h4 class="subtitulo_pie_pagina">Corimon Pinturas, C.A.</h4>
-            <ul class="socials list-unstyled d-flex">
-                <li><a href="#"><i class="bi bi-instagram mx-2"></i></a></li>
-                <li><a href="#"><i class="bi bi-facebook mx-2"></i></a></li>
-                <li><a href="#"><i class="bi bi-reddit mx-2"></i></a></li>
-             </ul>
-            <p>
-                0241-4926013 <br>
-                pa las babys: 0424-4966405 ;)
-            </p>
-        </div>
-    </div>
-    {% endblock %}
-{% endblock %}
+
+
+
+    </main>
+    
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

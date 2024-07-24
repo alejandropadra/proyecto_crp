@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Tektur:wght@500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat&family=Play&family=Sora:wght@300&display=swap');
+@import url('https://fonts.cdnfonts.com/css/tahoma');
 
+                
 *{
     margin: 0;
     padding: 0;
@@ -17,6 +19,7 @@
     padding: 0 !important;
     background-color: #fff;
     border-bottom: #D50000 solid 3´x;
+    min-height: 500px;
   }
   .logo_encabezado{
     padding: 20px 20px 20xp 20px;
@@ -41,12 +44,12 @@
   }
   
   .contenedor_texto_email p{
-    padding: 0 20px;
+    padding: 0 10px;
     text-align: justify;
     font-family: 'Montserrat', sans-serif;
   }
   .contenedor_texto_email{
-    padding: 0 40px 0 40px;
+    padding: 40px 20px;
   }
   .logo_encabezado img{
    max-width: 300px;
@@ -72,8 +75,8 @@
   }
   
   .contexto{
-    background-color: #cacdd2;
-  padding: 20px 30px 0 30px
+    background-color: #f1ecec;
+    padding: 15px;
   
   }
 
@@ -88,3 +91,146 @@
   .pie-pagina ul li a:hover{
     color: cadetblue
     }
+
+.cuerpo{
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+
+}
+
+.subtitulo{
+  font-family: 'Tahoma', sans-serif;
+  font-weight: 400;
+  font-size: 20px ;
+                                                
+}
+
+a.button {
+  display: block;
+  width: 150px;
+  height: 50px;
+  background-color: #ff0000;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 10px 0;
+  border-radius: 5px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  }
+  
+  a.button:hover {
+  background-color: #cccccc;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  .subtitulo_pie_pagina{
+    font-size: 35px;
+    font-weight: 900;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+  }
+  
+  .contenedor_texto_email p{
+    padding: 0 10px;
+    text-align: justify;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  
+  .pie-pagina{
+    background-color: black;
+    width: 100%;
+    text-align: center;
+    border-top: #D50000 solid 3px;
+    margin-top: auto;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    padding-top: 20px;
+
+  }
+
+  
+  .contexto{
+    background-color: #f1ecec;
+    padding: 15px;
+    max-height: 100px;
+  
+  }
+
+  .contexto p{
+    font-size: 13px;
+    color: #7e7f80;
+  
+    
+  }
+
+  .pie-pagina ul{
+    display: flex;
+    justify-content: center;
+    }
+  .pie-pagina ul li a{
+    color: #b10505;
+    }
+    
+
+
+
+
+.subtitulo{
+  font-family: sans-serif;
+  font-weight: 400;
+  font-size: 20px ;
+                                                
+}
+

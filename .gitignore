@@ -4,3 +4,7 @@ env/
 wsgi.py
 functions.py
 respaldos/
+test_connect
+rif.txt
+app/promo.py
+fun.py

@@ -1,0 +1,519 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_forms.html' import render_field %}
+{% block main %}
+
+
+
+<main class="px-3">
+  {{condicion_pago}}
+  <div class="container pt-3">
+    <form class="form_main mt-3 " method = "POST" enctype="multipart/form-data" >
+      <div class="row d-flex gap-5">
+
+        <div class="contenedor col-xl-5 col-md-5 col-lg-5 col-sm-12 gap-1">
+          
+          <h5 class="etiqueta">RIF</h5>
+          <div class="inputContainer">
+            <i class="fa-solid fa-circle-user inputIcon"></i>
+            {{ render_field(form.rif, class="inputField", id="rif", value =current_user.rif, placeholder="Ingrese su numero de RIF") }}
+          </div>
+
+          <h5 class="etiqueta">Empresa</h5>
+          <div class="inputContainer">
+            <i class="fa-solid fa-building inputIcon"></i>
+            {{ render_field(form.empresa, class="inputField", id="empresa",value = current_user.username, placeholder="Nombre de la empresa") }}
+          </div>
+          
+          <!--
+          <h5 class="etiqueta">Banco Emisor</h5>
+          <div class="inputContainer">
+            <i class="fa-solid fa-money-bill-transfer inputIcon"></i>
+            {{ render_field(form.banco_emisor, class="inputField", id="banco_emisor",placeholder="Por favor, ingrese el Banco Emisor", placeholder="Ingrese su numero de RIF" ) }}
+          </div>
+          -->
+          
+          <h5 class="etiqueta">Empresa Beneficiaria del Pago</h5>
+          <div class="inputContainer">
+            <i class="fa-solid fa-building-columns inputIcon"></i>
+            {{ render_field(form.empresa_beneficiaria, class="inputField", id="empresa_beneficiaria" ) }}
+          </div>
+        </div>
+
+        <!--onchange="javascript:seleccionar_empresa()"-->
+
+
+
+        <div class="contenedor col-xl col-md col-lg col-sm-12">
+          <h5 class="etiqueta">Seleccione el tipo de moneda</h5>
+          <div class="d-flex justify-content-center gap-5 p-3">
+          <label class="check">
+            <p class="m-0 p-0">bs</p>
+            {{ form.bolivares(class="divisa", id="check3") }}
+            <div class="checkmark"></div>
+        </label>
+
+        <label class="check">
+          <p class="m-0 p-0">$</p>
+          {{ form.dolares(class="divisa", id="check2") }}
+          <div class="checkmark"></div>
+      </label>
+      <label class="check">
+        <p class="m-0 p-0">€</p>
+        {{ form.euro(class="divisa", id="check1") }}
+        <div class="checkmark"></div>
+    </label>
+        </div>
+        <h5 class="etiqueta">Cuenta de banco a la cual se realizó el pago</h5>
+        <div class="inputContainer mt-3">
+          <div class="mensaje"><p>Por favor, seleccione un tipo de moneda para acceder a este campo</p></div>
+          <i class="fa-solid fa-building-columns inputIcon"></i>
+          {{ render_field(form.banco_receptor, class="inputField disabled", id="banco_receptor", disabled='disabled' ) }}
+          {{ render_field(form.banco_receptor_dolar, class="inputField d-none", id="banco_receptor_dolar") }}
+        </div>
+
+        <h5 class="etiqueta">Fecha de depósito</h5>
+        <div class="inputContainer">
+          <i class="fa-regular fa-calendar inputIcon"></i>
+          {{ render_field(form.fecha_deposito, class="inputField", id="fecha", value=Fecha_pago, readonly=readonly  ) }}
+        </div>
+
+
+        <h5 class="etiqueta">Monto pagado</h5>
+        <div class="inputContainer">
+          <i class="fa-solid fa-hand-holding-dollar inputIcon"></i>
+          {{ render_field(form.monto, class="inputField", id="monto", required="", label_attr={"class": "label", "for": "monto"}) }}
+        </div>
+      </div>
+
+      <div class="contenedor col-xl-5 col-md-6 col-lg-6 col-sm-12 d-flex flex-column justify-content-around ">
+        <div class="inputContainer d-flex flex-column">
+          <h5 class="etiqueta">Ingrese el Número de Referencia del pago</h5>
+          <i class="fa-solid fa-book-bookmark inputIcon"></i>
+          {{ render_field(form.n_deposito, class ="inputField", id="ref", required="", label_attr={"class": "label", "for": "ref"}, value=algo) }}
+        </div>
+
+        <div class="inputContainer d-flex flex-column">
+          <h5 class="etiqueta">Cargue el soporte del Pago</h5>
+          <i class="fa-regular fa-credit-card inputIcon"></i>
+          <input type="file" name="archivo" class="inputField" style="max-width: 100%;">
+        </div>
+      </div>
+
+      <div class="contenedor atention col-xl col-md col-lg col-sm-12 d-flex flex-column p-4 position-relative" >
+        <div class="mensajeDos w-100"><p>Por favor, ingrese el monto</p></div>
+        
+        
+        
+    
+        <div class="header"> 
+          <h5 class="etiqueta">Monto disponible para abonar:</h5>
+          <div class="flotante" id="actualizar"></div>
+        </div>
+    
+        
+        
+        <div class="tabla-facturas dos w-100 mt-0 p-1">
+          <div class="inputContainer flex-column mt-2 ">
+            {% set ns = namespace(contador=1) %}
+            {% for factura in facturas_vencidas %}
+                {% if 'blart' in factura %}
+                  {%  if factura['blart'] == 'RV' and factura['status'] == ''%}
+                    {% set fecvenc1 = factura['fecvenc1'] %}
+                        
+                      <div class="vencidos w-100 d-flex flex-column tap">
+                        <span class="vencido text-center justify-content-center mx-2"> <i class="fa-solid fa-circle-exclamation mx-2"></i> Factura vencida: {{fecvenc1}}</span>
+                        <label class="check p-2 d-flex gap-2">
+                          {{ form.factura(class="divisa cheket", id="check5Ven", data_contador=ns.contador) }}
+                          <div class="checkmark"></div>
+                          <div class="d-flex texto-mid w-100 flex-column ">
+                            <div class="factura mb-2 p-0 w-100 d-flex justify-content-center"> 
+                              <div class="row">
+                                <div class="texto-mid d-flex align-items-center justify-content-center col " id="factura_comparar">
+                                  <strong>Factura: </strong> {{factura['vbeln'] }} 
+                                  <span id="vbeln{{ ns.contador }}" class="d-none" name="fact[]">{{factura['vbeln'] }} </span>
+                                  <span id="fkdat{{ ns.contador }}" class="d-none">{{factura['fkdat'] }} </span>
+                                  <span id="belnr1{{ ns.contador }}" class="d-none">{{factura['belnr1'] }} </span>
+                                  <span id="buzei{{ ns.contador }}" class="d-none">{{factura['buzei'] }} </span>
+                                </div>
+                                <div class=" mx-1 texto-faltante d-flex align-items-center justify-content-center col text-center"></div>
+                                <div class="mx-1 texto-abono d-flex align-items-center justify-content-center col text-center"></div>
+                              </div>
+                            </div>
+                            {%if condicion_pago == "base+iva"%}
+                              <!--Si existe dpp entonces será el unico monto a mostrar-->
+                              {%if factura['montoncdpp']>0 %}
+                              <div class="montos d-flex">
+                                
+                                <div class="row w-100">
+                                  <!--$-->
+                                    
+                                    <div class="col-xl col-lg-12 d-flex flex-column">
+                                      <!--Si es contribuyente especial: se cobra la base mas el 25%-->
+                                        {% if factura['tipoce'] == 'CE' %}
+                                        <div class="row w-100">
+                                          <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total dpp $:</strong></div>
+                                          
+                                          <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
+                                            {{ "{:,.2f}".format(((factura['netwr']|float|abs) - (factura['montoncdpp']|float|abs) + (factura['iva25div']|float|abs))) }} ($)
+                                          </div>
+                                        </div>
+                                        {%else%}
+                                        <!--De lo contrario, si no es contribuyente especial, entonces se muestra el total-->
+                                        <div class="row w-100">
+                                          <div class="col p-0" style="font-size: 13.5px;"><strong >Monto Total dpp $:</strong></div>
+                                          <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
+                                            {{"{:,.2f}".format(factura['dmbtr']-factura['montoncdpp']) }} ($)
+                                          </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <!--bs-->
+                                    <div class="col-xl col-lg-12 d-flex flex-column ">
+                                      <!--Si es contribuyente especial: se cobra la base mas el 25%-->
+                                      {% if contri == 'CE' %}
+                                        <div class="row w-100 gap-0">
+                                          <div class="col p-0 " style="font-size: 13.5px;"><strong>Monto Total  dpp Bs:</strong></div>
+                                          <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
+                                            {{ "{:,.2f}".format(((factura['basebs']|float|abs) - (factura['dppbs']|float|abs) + (factura['iva25bs']|float|abs))) }} (Bs)
+                                          </div>
+                                        </div>
+                                        {%else%}
+                                        <!--De lo contrario, si no es contribuyente especial, entonces se muestra el total-->
+                                        <div class="row w-100">
+                                          <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total dpp Bs:</strong></div>
+                                          <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center " id="montoBs">
+                                            {{"{:,.2f}".format(factura['totfactbs']-factura['dppbs']) }}(bs) 
+                                          </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <!--Hasta aqui bs-->
+                                </div>
+                              </div>
+
+                              {%else%} <!--Hasta aqui el dpp-->
+                              
+                              <!--De lo contrario no se muestra nada de dpp sino que se muestra lo de a continuación-->
+                              <div class="montos d-flex w-100 justify-content-center">
+                                <div class="row w-100">
+                                  <!--$-->
+                                    
+                                    <div class="col-xl col-lg-12 d-flex flex-column">
+                                      <!--Si es contribuyente especial: se cobra la base mas el 25%-->
+                                        {% if factura['tipoce'] == 'CE' %}
+                                        <div class="row w-100">
+                                          <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total $:</strong></div>
+                                          
+                                          <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
+                                            {{ "{:,.2f}".format(((factura['netwr']|float|abs) + (factura['iva25div']|float|abs))) }} ($)
+                                          </div>
+                                        </div>
+                                        {%else%}
+                                        <!--De lo contrario, si no es contribuyente especial, entonces se muestra el total-->
+                                        <div class="row w-100">
+                                          <div class="col p-0" style="font-size: 13.5px;"><strong >Monto total $:</strong></div>
+                                          <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
+                                            {{ "{:,.2f}".format(factura['dmbtr']|float|abs) }}($)
+                                          </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <!--bs-->
+                                    <div class="col-xl col-lg-12 d-flex flex-column ">
+                                      <!--Si es contribuyente especial: se cobra la base mas el 25%-->
+                                      {% if factura['tipoce'] == 'CE' %}
+                                        <div class="row w-100 gap-0">
+                                          <div class="col p-0 " style="font-size: 13.5px;"><strong>Monto Total Bs:</strong></div>
+                                          <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
+                                            {{ "{:,.2f}".format((factura['basebs']|float|abs + factura['iva25bs']|float|abs)) }} (bs)
+                                          </div>
+                                        </div>
+                                        {%else%}
+                                        <!--De lo contrario, si no es contribuyente especial, entonces se muestra el total-->
+                                        <div class="row w-100">
+                                          <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total Bs:</strong></div>
+                                          <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center " id="montoBs">
+                                            {{ "{:,.2f}".format(factura['totfactbs']|float|abs) }}(bs)
+                                          </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <!--Hasta aqui bs-->
+                                </div>
+                            </div>
+                            {%endif%}
+
+                          {%elif condicion_pago== "base"%}
+                            <!--Si existe dpp entonces será el unico monto a mostrar-->
+                            {%if factura['montoncdpp']>0 %}
+                            <div class="montos d-flex">
+                              <div class="row w-100">
+                                <div class="col-xl col-lg-12 d-flex">
+                                  <strong> Monto $ con dpp: </strong>
+                                  <div class="texto-mid d-flex align-items-center justify-content-center" id="Montodlrdpp">  
+                                    {{"{:,.2f}".format(factura['netwr']-factura['montoncdpp']) }} ($)
+                                  </div>
+                                </div>
+                                <div class="col-xl col-lg-12 d-flex">
+                                  <strong> Monto bs dpp:</strong> 
+                                  <div class="texto-mid align-items-center justify-content-center" id="montobsdpp">
+                                    {%if factura['dppbs']>0 %} 
+                                    {{"{:,.2f}".format(factura['basebs']-factura['dppbs']) }}(bs) 
+                                    {% endif %}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {%else %}
+                            <!--De lo contrario no se muestra nada de dpp sino que se muestra lo de a continuación-->
+                            <div class="montos d-flex w-100 justify-content-center">
+                              <div class="row w-100">
+                                <!--$-->
+                                  <div class="col-xl col-lg-12 d-flex flex-column">
+                                      <div class="row w-100">
+                                        <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total $:</strong></div>
+                                        <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
+                                          {{ "{:,.2f}".format((factura['netwr']|float|abs) ) }} ($)
+                                        </div>
+                                      </div>
+                                  </div>
+                                  <!--bs-->
+                                  <div class="col-xl col-lg-12 d-flex flex-column ">
+                                      <div class="row w-100 gap-0">
+                                        <div class="col p-0 " style="font-size: 13px;"><strong>Monto Total Bs:</strong></div>
+                                        <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
+                                          {{ "{:,.2f}".format((factura['basebs']|float|abs) ) }}
+                                        </div>
+                                      </div>
+                                  </div>
+                                  <!--Hasta aqui bs-->
+                              </div>
+                          </div>
+                          {%endif%}
+                        {% endif %}
+                    </div>
+                  </label>
+                  {% set ns.contador = ns.contador + 1 %}
+                </div>
+                  {% endif %}
+                {% endif %}
+            {% endfor %}
+
+
+            {% set facturas_filtradas = facturas_NOvencidas | selectattr('blart', 'equalto', 'RV') | selectattr('status', 'equalto', '') | list %}
+            {% if facturas_filtradas|length > 0 %}
+              <div class="contenedor_facts_noven w-100 p-0 m-0">
+              {% for factura in facturas_NOvencidas %}
+                {% if 'blart' in factura %}
+                  {%  if factura['blart'] == 'RV' and factura['status'] == ''%}
+                    {% set fecvenc1 = factura['fecvenc1'] %}
+                      <div class="NOvencidos w-100 d-flex flex-column tap">
+                        <label class="check p-2 d-flex gap-2">
+                          
+                          {{ form.factura(class="divisa cheket", id="check5", data_contador=ns.contador) }}
+                          <div class="checkmark"></div>
+                          <div class="d-flex texto-mid w-100 flex-column ">
+                            <div class="factura mb-2 p-0 w-100 d-flex justify-content-center"> 
+                              <div class="row">
+                                <div class="texto-mid d-flex align-items-center justify-content-center col " id="factura_comparar">
+                                  <strong>Factura: </strong> {{factura['vbeln'] }}
+                                  <span id="vbeln{{ ns.contador }}" class="d-none" name="fact[]">{{factura['vbeln'] }} </span>
+                                  <span id="fkdat{{ ns.contador }}" class="d-none">{{factura['fkdat'] }} </span>
+                                  <span id="belnr1{{ ns.contador }}" class="d-none">{{factura['belnr1'] }} </span>
+                                  <span id="buzei{{ ns.contador }}" class="d-none">{{factura['buzei'] }} </span>
+                                </div>
+                          
+                                <div class=" mx-1 texto-faltante d-flex align-items-center justify-content-center col text-center"></div>
+                                <div class="mx-1 texto-abono d-flex align-items-center justify-content-center col text-center"></div>
+                              </div>
+                            </div>
+                            <!--Si existe dpp entonces será el unico monto a mostrar-->
+                            {%if condicion_pago == "base+iva"%}
+                              <!--Si existe dpp entonces será el unico monto a mostrar-->
+                              {%if factura['montoncdpp']>0 %}
+                              <div class="montos d-flex">
+                                
+                                <div class="row w-100">
+                                  <!--$-->
+                                    
+                                    <div class="col-xl col-lg-12 d-flex flex-column">
+                                      <!--Si es contribuyente especial: se cobra la base mas el 25%-->
+                                        {% if factura['tipoce'] == 'CE' %}
+                                        <div class="row w-100">
+                                          <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total dpp $:</strong></div>
+                                          
+                                          <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
+                                            {{ "{:,.2f}".format(((factura['netwr']|float|abs) - (factura['montoncdpp']|float|abs) + (factura['iva25div']|float|abs))) }} ($)
+                                          </div>
+                                        </div>
+                                        {%else%}
+                                        <!--De lo contrario, si no es contribuyente especial, entonces se muestra el total-->
+                                        <div class="row w-100">
+                                          <div class="col p-0" style="font-size: 13.5px;"><strong >Monto Total dpp $:</strong></div>
+                                          <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
+                                            {{"{:,.2f}".format(factura['dmbtr']-factura['montoncdpp']) }} ($)
+                                          </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <!--bs-->
+                                    <div class="col-xl col-lg-12 d-flex flex-column ">
+                                      <!--Si es contribuyente especial: se cobra la base mas el 25%-->
+                                      {% if contri == 'CE' %}
+                                        <div class="row w-100 gap-0">
+                                          <div class="col p-0 " style="font-size: 13.5px;"><strong>Monto Total dpp Bs:</strong></div>
+                                          <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
+                                            {{ "{:,.2f}".format(((factura['basebs']|float|abs) - (factura['dppbs']|float|abs) + (factura['iva25bs']|float|abs))) }} (Bs)
+                                          </div>
+                                        </div>
+                                        {%else%}
+                                        <!--De lo contrario, si no es contribuyente especial, entonces se muestra el total-->
+                                        <div class="row w-100">
+                                          <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total dpp Bs:</strong></div>
+                                          <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center " id="montoBs">
+                                            {{"{:,.2f}".format(factura['totfactbs']-factura['dppbs']) }}(bs) 
+                                          </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <!--Hasta aqui bs-->
+                                </div>
+                              </div>
+
+                              {%else%} <!--Hasta aqui el dpp-->
+                              
+                              <!--De lo contrario no se muestra nada de dpp sino que se muestra lo de a continuación-->
+                              <div class="montos d-flex w-100 justify-content-center">
+                                <div class="row w-100">
+                                  <!--$-->
+                                    
+                                    <div class="col-xl col-lg-12 d-flex flex-column">
+                                      <!--Si es contribuyente especial: se cobra la base mas el 25%-->
+                                        {% if factura['tipoce'] == 'CE' %}
+                                        <div class="row w-100">
+                                          <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total $:</strong></div>
+                                          
+                                          <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
+                                            {{ "{:,.2f}".format(((factura['netwr']|float|abs) + (factura['iva25div']|float|abs))) }} ($)
+                                          </div>
+                                        </div>
+                                        {%else%}
+                                        <!--De lo contrario, si no es contribuyente especial, entonces se muestra el total-->
+                                        <div class="row w-100">
+                                          <div class="col p-0" style="font-size: 13.5px;"><strong >Monto total $:</strong></div>
+                                          <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
+                                            {{ "{:,.2f}".format(factura['dmbtr']|float|abs) }}($)
+                                          </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <!--bs-->
+                                    <div class="col-xl col-lg-12 d-flex flex-column ">
+                                      <!--Si es contribuyente especial: se cobra la base mas el 25%-->
+                                      {% if contri == 'CE' %}
+                                        <div class="row w-100 gap-0">
+                                          <div class="col p-0 " style="font-size: 13.5px;"><strong>Monto Total Bs:</strong></div>
+                                          <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
+                                            {{ "{:,.2f}".format((factura['basebs']|float|abs + factura['iva25bs']|float|abs)) }} (bs)
+                                          </div>
+                                        </div>
+                                        {%else%}
+                                        <!--De lo contrario, si no es contribuyente especial, entonces se muestra el total-->
+                                        <div class="row w-100">
+                                          <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total Bs:</strong></div>
+                                          <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center " id="montoBs">
+                                            {{ "{:,.2f}".format(factura['totfactbs']|float|abs) }}(bs)
+                                          </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    <!--Hasta aqui bs-->
+                                </div>
+                            </div>
+                            {%endif%}
+
+                          {%elif condicion_pago== "base"%}
+                            <!--Si existe dpp entonces será el unico monto a mostrar-->
+                            {%if factura['montoncdpp']>0 %}
+                            <div class="montos d-flex">
+                              <div class="row w-100">
+                                <div class="col-xl col-lg-12 d-flex">
+                                  <strong> Monto $ con dpp: </strong>
+                                  <div class="texto-mid d-flex align-items-center justify-content-center" id="Montodlrdpp">  
+                                    {{"{:,.2f}".format(factura['netwr']-factura['montoncdpp']) }} ($)
+                                  </div>
+                                </div>
+                                <div class="col-xl col-lg-12 d-flex">
+                                  <strong> Monto bs dpp:</strong> 
+                                  <div class="texto-mid align-items-center justify-content-center" id="montobsdpp">
+                                    {%if factura['dppbs']>0 %} 
+                                    {{"{:,.2f}".format(factura['basebs']-factura['dppbs']) }}(bs) 
+                                    {% endif %}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {%else %}
+                            <!--De lo contrario no se muestra nada de dpp sino que se muestra lo de a continuación-->
+                            <div class="montos d-flex w-100 justify-content-center">
+                              <div class="row w-100">
+                                <!--$-->
+                                  <div class="col-xl col-lg-12 d-flex flex-column">
+                                      <div class="row w-100">
+                                        <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total $:</strong></div>
+                                        <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
+                                          {{ "{:,.2f}".format((factura['netwr']|float|abs) ) }} ($)
+                                        </div>
+                                      </div>
+                                  </div>
+                                  <!--bs-->
+                                  <div class="col-xl col-lg-12 d-flex flex-column ">
+                                      <div class="row w-100 gap-0">
+                                        <div class="col p-0 " style="font-size: 13px;"><strong>Monto Total Bs:</strong></div>
+                                        <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
+                                          {{ "{:,.2f}".format((factura['basebs']|float|abs) ) }}
+                                        </div>
+                                      </div>
+                                  </div>
+                                  <!--Hasta aqui bs-->
+                              </div>
+                          </div>
+                          {%endif%}
+                        {% endif %}
+                          </div>
+                        </label>
+                        {% set ns.contador = ns.contador + 1 %}
+                      </div>
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {% else %}
+            <div class="w-100 p-0 m-0">
+              <p>No hay facturas no vencidas disponibles.</p>
+            </div>
+            {% endif %}
+          </div>
+          
+        </div>
+      </div>
+      </div>
+      <div class=" mb-2 w-100 d-flex justify-content-center" style="margin-top: 25px; padding-bottom: 100px;">
+        <p>{{ valorJinja }}</p>
+        <input type ="hidden" name = "csrf_token" value ="{{csrf_token()}}"/>
+        <button class="submit"> <span>Enviar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+
+
+
+</main>
+
+
+
+{% endblock %}
