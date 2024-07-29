@@ -69,7 +69,7 @@ header{
 nav{
   display: flex;
   justify-content:space-around;
-  
+  height: 98px;
 }
 
 .elementos_interac{
@@ -355,11 +355,7 @@ margin-right: 20px;
 }
 
 
-@media(max-width: 721px){
-.footer-content{
-  padding: 20px 30px;
-}
-}
+
 
 /*↓↓ dropdown de usuario ↓↓*/
 
@@ -367,11 +363,12 @@ margin-right: 20px;
   width: 100%;
   cursor: pointer;
   display: flex;
-  margin-right: 75px !important;
+  margin-right: 75px;
   color: var(--clr-text);
 
-
 }
+
+
 
 .sub-menu-wrap {
   position: absolute;
@@ -668,7 +665,17 @@ font-weight: 500;
   display: none;
 }
 
-
+.form-check-input{
+  display: block;
+  position: relative;
+  font-size: 20px;
+  align-items: center;
+  display: flex;
+  gap: 3px;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  border: solid 2px rgb(114, 114, 114);
+}
 
 .check .divisa {
   display: none;
@@ -800,12 +807,6 @@ button.submit:hover::before {
   align-items: center;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .celdas {
-    grid-template-columns: 1fr;
-  }
-}
 
 .cont {
   display: flex;
@@ -985,11 +986,6 @@ hr{
     cursor: pointer;
 }
 
-@media(max-width: 721px){
-  .course{
-    max-width:350px ;
-  }
-  }
 
 .hover:hover {
   transform: translateY(-5px);
@@ -1178,66 +1174,6 @@ h6.masinfotarj{
 }
 
 
-
-
-@media (max-width:900px) {
-  .footer-menu ul{
-    display: flex;
-    margin-top: 10px;
-    margin-bottom: 20px;
-  }
-  .imagen_error{
-    margin-top: 50px;
-  }
-
-  .imagen_construccion{
-    margin-top: 0px !important;
-  }
-}
-
-
-@media(max-width:665px){
-  .boton{
-      font-size: 10px;
-      text-align: center;
-      width: auto;
-  }
-  nav{
-    display: flex;
-    justify-content: space-between;
-    max-width: 100%;
-    padding: 10px;
-  }
-  .logo img{
-    height: 37px;
-    margin-left: -10px;
-  }
-
-  .logo{
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  .elementos_interac{
-    margin: 0;
-    padding: 0;
-  }
-  .activador_de_nav{
-    margin-left: -10px;
-  }
-
-
-}
-
-@media(max-width:900px){
-  .contenedor_form{
-      width: 100%;
-      margin: 5px 10px;
-  }
-}
-
-
-
-
 .activador {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(10px);
@@ -1248,9 +1184,10 @@ h6.masinfotarj{
   bottom: 0px;
   position: fixed; 
   transition: all 0.5s ease;
+  
 }
 
-.contenedor-elementos-responsive {
+.contenedor-elementos-responsive{
   margin-top: 70px;
   height: 100%;
   display: flex;
@@ -1258,7 +1195,6 @@ h6.masinfotarj{
   justify-content: space-between;
   display: none;
 }
-
 
 .activador.expandido .contenedor-elementos-responsive {
   display: block; /* Se muestra cuando la clase expandido está presente en .activador */
@@ -1274,12 +1210,65 @@ h6.masinfotarj{
   border-radius: 15px;
   display: flex;
   align-items: center;
-  padding-left: 10px;
-  margin: 25px 2px;
+  flex-direction: column;
   background-color: var(--blanco);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  padding: 0.5rem;
+  margin: 15px;
+  height: 70px;
+  transition: all ease-in-out 0.2s;
   
 }
+
+.contenedor-elementos-responsive ul .responsive-li.con-contenido:hover{
+  height:  300px;
+}
+
+.contenedor-elementos-responsive ul .responsive-li.con-contenidodos:hover{
+  height:  250px;
+}
+
+
+.dropdown-in-responsive{
+  display: none;
+  width: 100%;
+  padding: 15px;
+  
+}
+.dropdown-in-responsive ul{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdown-in-responsive ul li{
+  background-color: var(--gris);
+  box-shadow: var(--sombra);
+  padding: 10px;
+  border-radius: 10px;
+  margin: 5px;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+
+}
+
+
+.dropdown-in-responsive ul li a{
+  text-decoration: none; 
+  color: #000;
+  text-align: center;
+  width: 100%;
+  text-align: center;
+}
+
+.responsive-li:hover .dropdown-in-responsive{
+  display: block;
+}
+
+
+
 
 .contenedor-elementos-responsive ul li .responsive-a{
   text-decoration: none;
@@ -1293,9 +1282,7 @@ h6.masinfotarj{
   font-size: 15px;
 }
 
-.contenedor-elementos-responsive ul .responsive-li:hover{
-  background-color: #b4b3b3;
-}
+
 
 .footer_resp{
   width: 100%;
@@ -1340,11 +1327,6 @@ list-style: none;
   height: 90vh;
   margin-top: 20px;
   background-color: #EFEFEF;
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-  overflow: auto;
-
 }
 
 .mostrado {
@@ -1371,10 +1353,6 @@ list-style: none;
 }
 
 
-@media(max-width: 721px){
-  .activador{
-    display: block !important;
-  }}
 
 
   body > div.activador.d-sm-none.expandido > div.contenedor-elementos-responsive > div.pad{
@@ -1666,7 +1644,6 @@ list-style: none;
   flex: 1;           
 }
 
-
 .inner {
   background: rgba(255, 255, 255, 0.05);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
@@ -1747,3 +1724,80 @@ list-style: none;
 }
 
 /*↑↑ Efecto del div ↑↑*/
+
+/* ↓↓ Reponsividad ↓↓*/
+
+@media only screen and (max-width: 725px) {
+  .boton{
+    font-size: 10px;
+    text-align: center;
+    width: auto;
+  }
+  nav{
+    display: flex;
+    justify-content: space-between;
+    max-width: 100%;
+    padding: 15px 7px;
+  }
+  .logo img{
+    height: 35px;
+    margin-left: -10px;
+  }
+
+  .logo{
+    margin-left: 6px;
+    padding: 0 !important;
+  }
+  .elementos_interac{
+    margin: 0;
+    padding: 0;
+  }
+  .activador_de_nav{
+    margin-left: -10px;
+  }
+  .user{
+    margin-right: 0px;
+    font-size: 13px;
+  }
+
+  .sub-menu-wrap{
+    top: 95px;
+    right: 0px;
+  }
+
+  .footer-content{
+    padding: 20px 30px;
+  }
+  
+  .activador{
+    display: block !important;
+  }
+
+  .course{
+    max-width:350px ;
+  }
+
+  .celdas {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media(max-width:900px){
+  .contenedor_form{
+    width: 100%;
+    margin: 5px 10px;
+  }
+  .footer-menu ul{
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  .imagen_error{
+    margin-top: 50px;
+  }
+
+  .imagen_construccion{
+    margin-top: 0px !important;
+  }
+}

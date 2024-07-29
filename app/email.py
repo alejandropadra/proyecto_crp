@@ -42,7 +42,7 @@ def pago_mail(user, pago):
 def comprobante_crm_mail(user,comprobante, post_imagen, nombre_imagen):
     message = Message('Comprobante de Reteción' +' '+ str(comprobante),
                     sender=current_app.config['MAIL_USERNAME'],
-                    recipients=[current_app.config['MAIL_TEST']])
+                    recipients=['retenciones_corimonpinturas@corimon.com'])
     #"retenciones_corimonpinturas@corimon.com"
     message.html = render_template('email/retencion_cliente.html', user=user, comprobante = comprobante)
     try:
@@ -55,16 +55,17 @@ def comprobante_crm_mail(user,comprobante, post_imagen, nombre_imagen):
 
 def pago_crm_mail(user, pago,post_imagen,nombre_imagen):
     if user.zona == 'Centro':
-        correo = ''
-        pass
+        correo = 'cxc_crp_centro@corimon.com'
     elif user.zona == 'Occidente':
-        pass
+        correo = 'cxc_crp_occidente@corimon.com'
     elif user.zona == 'Oriente':
-        pass
+        correo = 'cxc_crp_oriente@corimon.com'
+    elif user.zona == 'Capital':
+        correo = 'cxc_crp_capital@corimon.com'
 
     message = Message('Pago Registrado Referencia'+' '+ pago['XBLNR'],
                     sender=current_app.config['MAIL_USERNAME'],
-                    recipients=[current_app.config['MAIL_TEST']])
+                    recipients=[correo])
     message.html = render_template('email/registro_pago_crm.html', user=user, pago=pago)
     try:
         with app.open_resource(post_imagen) as adjunto:

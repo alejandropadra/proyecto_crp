@@ -166,6 +166,7 @@ function handleCheckChange(event, tipo) {
         estado.reset();
         [check1, check2, check3].forEach(check => check.disabled = false);
         restablecerEstado(bancoReceptor, mensaje, monto, checkboxes);
+        restablecerEstado(bancoReceptorDolar, mensaje, monto, checkboxes);
     }
 }
     
@@ -436,7 +437,7 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
             //console.log(diferenciass);
             actualizarDiv.textContent = `${diferenciass.toFixed(2)} ` + transaccion;
 
-            break;
+            
         }
     }
     return facturasCompensadas;
@@ -933,7 +934,7 @@ function gestionarInputs(label, montosElement, i, vblen, montoFactura, dif, fkda
             inputElement = document.createElement('input');
             inputElement.type = 'text';
             inputElement.name = `inputFactura${i}`;
-            inputElement.className = 'd-block';
+            inputElement.className = 'd-none';
             inputElement.value = vblen.toString();
             inputElement.id = `inputFactura${i}`;
             label.appendChild(inputElement);
@@ -1390,6 +1391,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
 });
+
+
+function maxLengthCheck(object)
+{
+    if (object.value.length > object.maxLength)
+        object.value = object.value.slice(0, object.maxLength)
+}
 
 /*
 document.addEventListener('DOMContentLoaded', function() {

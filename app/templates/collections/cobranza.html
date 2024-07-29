@@ -11,13 +11,13 @@
           <h5 class="etiqueta">RIF</h5>
           <div class="inputContainer">
             <i class="fa-solid fa-circle-user inputIcon"></i>
-            {{ render_field(form.rif, class="inputField", id="rif", value=current_user.rif, placeholder="Ingrese su numero de RIF") }}
+            {{ render_field(form.rif, class="inputField", id="rif", value=current_user.rif, placeholder="Ingrese su numero de RIF", readonly= readonly) }}
           </div>
 
           <h5 class="etiqueta">Empresa</h5>
           <div class="inputContainer">
             <i class="fa-solid fa-building inputIcon"></i>
-            {{ render_field(form.empresa, class="inputField", id="empresa", value=current_user.username, placeholder="Nombre de la empresa") }}
+            {{ render_field(form.empresa, class="inputField", id="empresa", value=current_user.username, placeholder="Nombre de la empresa", readonly= readonly) }}
           </div>
           
           <h5 class="etiqueta">Fecha de depósito</h5>
@@ -28,10 +28,10 @@
 
           <h5 class="etiqueta">Seleccione como desea pagar</h5>
           <div class="d-flex justify-content-center gap-5 p-3">
-            <div class="form-check">
+            <div class="form-check" >
 
               {{ render_field(form.base, class="divisa form-check-input", id="checkbase") }}
-              <label class="form-check-label" for="checkbase">Base + Iva</label>
+              <label class="form-check-label" for="checkbase" >Base + Iva</label>
             </div>
             <div class="form-check">
               {{ render_field(form.base_iva, class="divisa form-check-input", id="checkiva") }}

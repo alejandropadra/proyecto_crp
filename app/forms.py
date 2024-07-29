@@ -200,14 +200,15 @@ class RegistroPagoForm(Form):
                                                 ("FACEBANK","FACEBANK"),
                                                 ("MERCANTIL PANAMA","MERCANTIL PANAMA")])
     fecha_deposito = DateField("", [validators.DataRequired()])
-    n_deposito = StringField("", validators=[DataRequired(), Length(max=12)])
+    n_deposito = StringField("", validators=[DataRequired()])
     bolivares=BooleanField("")
     dolares= BooleanField("")
     euro = BooleanField("")
     factura = BooleanField('Factura') 
-    empresa_beneficiaria =SelectField("", [validators.DataRequired()], choices=[("","Seleccione una opción"), 
+    empresa_beneficiaria= StringField("", [validators.DataRequired()])
+    """empresa_beneficiaria =SelectField("", [validators.DataRequired()], choices=[("","Seleccione una opción"), 
                                                    ("CRP", "Corimon Pinturas"),
-                                                ("PPV", "Puras Pinturas Venezolanas")])
+                                                ("PPV", "Puras Pinturas Venezolanas")])"""
     divisa = RadioField("", [validators.DataRequired()],  choices=[(" $"," $"),("Bs","Bs")])
     comprobante = SelectField("", [validators.DataRequired()], choices = [("",""),("Con Comprobante de Retención","Con Comprobante de Retención"),("Sin Comprobante de Retención","Sin Comprobante de Retención")])
     monto = FloatField("", [validators.DataRequired()])

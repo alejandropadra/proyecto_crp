@@ -14,7 +14,9 @@
           <h5 class="etiqueta">Número de Comprobante</h5>
           <div class="inputContainer">
               <i class="fa-solid fa-circle-user inputIcon"></i>
-              {{ render_field(form.n_comprobante, class="inputField", id="n_comprobante", placeholder="Ingrese el número de comprobante de retención", maxlength="10", oninput="validateLength(this)") }}
+              {{ render_field(form.n_comprobante, class="inputField", id="n_comprobante", placeholder="Ingrese el número de comprobante de retención",  maxlength = "14",
+              min = "1",
+              max = "99999999999999", oninput="maxLengthCheck(this)") }}
           </div>
 
 
@@ -38,8 +40,6 @@
 
 
 </main>
-
-
 
 
 {% endblock %}

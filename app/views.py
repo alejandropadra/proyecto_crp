@@ -10,7 +10,7 @@ from .consts import *
 from .email import welcome_mail, pago_crm_mail, pago_mail, comprobante_mail, comprobante_crm_mail
 from flask import session
 from datetime import datetime
-from .promo import participantes
+#from .promo import participantes
 from .funciones import cadena_md5,obtener_hora_minutos_segundos_fecha,fecha_sap
 from requests.auth import HTTPBasicAuth
 
@@ -377,7 +377,8 @@ def cobranza2():
 @page.route("/cobranza_iva", methods= ["GET", "POST"])
 def cobranza_iva():
     control_form = RegistroPagoForm(request.form)
-    fecha_pago =  session.get('Fecha_pago') 
+    tiempo, fecha_enc = obtener_hora_minutos_segundos_fecha()
+    cadena = cadena_md5('1200',current_user.rif,tiempo,fecha_enc)
     if request.method == "POST":
         # Obtener los datos enviados desde JavaScript
         rif = current_user.rif
@@ -390,7 +391,10 @@ def cobranza_iva():
             banco_receptor = control_form.banco_receptor_ppv.data 
         elif control_form.banco_receptor_dolar_ppv.data:
             banco_receptor = control_form.banco_receptor_dolar_ppv.data 
-        fecha_deposito = control_form.fecha_deposito.data 
+        fecha_deposito = control_form.fecha_deposito.data
+        fecha_deposito_str = fecha_deposito.strftime("%Y-%m-%d") 
+        fecha_objeto = datetime.strptime(fecha_deposito_str, "%Y-%m-%d")
+        fecha_formateada = fecha_objeto.strftime("%Y%m%d")
         n_deposito = control_form.n_deposito.data
         comprobante = control_form.comprobante.data
         monto_total = control_form.monto.data
@@ -401,11 +405,20 @@ def cobranza_iva():
         bolivares = control_form.bolivares.data
 
         url = ip_fuente+'/sap/bc/rest/zrecdepo?sap-client=510&ENVIO=C'
+        headers = {
+            'Accept': 'application/json',
+            'Origin':'',
+            'BUKRS': '1200',
+            'KUNNR':current_user.rif,
+            'BUDAT':fecha_enc,
+            'TIMLO':tiempo,
+            'CORIMON':cadena
+        }
         data = [{
         'BUKRS': '1200',# por aca ppv o crp
         'XBLNR':n_deposito, #Número de documento de referencia... del pago
         'KUNNR':rif, #Número de deudor codif saps
-        'BLDAT':fecha_pago, #Fecha de documento en documento..Fecha pago
+        'BLDAT':fecha_formateada, #Fecha de documento en documento..Fecha pago
         'TIPOPAGO':'B', #FI AR: Tipo de Pago.... 
         'WRBTR':monto_total, #Importe en la moneda del documento... monto
         'CTABANCO':banco_receptor, #Cuenta Bancaria
@@ -431,7 +444,7 @@ def cobranza_iva():
                 flash(PAGO_CREADO)
 
                 return redirect(url_for('.dashboard'))
-    return render_template("/collections/cobranza_iva.html",titulo = "Pago de Iva", form = control_form, Fecha_pago=fecha_pago)
+    return render_template("/collections/cobranza_iva.html",titulo = "Pago de Iva", form = control_form)
 
 """@page.route("/Dashboard", methods=["GET","POST"])
 @login_required

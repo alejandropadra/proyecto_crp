@@ -327,6 +327,11 @@ margin-right: 20px;
     padding: 20px 30px;
   }
 
+  .logo img{
+    height: 40px;
+    margin-left: 10px;
+}
+
 }
 
 /*↑↑ Footer ↑↑*/
@@ -1085,7 +1090,7 @@ list-style: none;
 
 
 .expandido {
-  height: 80vh;
+  height: 90vh;
   margin-top: 20px;
   background-color: #EFEFEF;
 }
@@ -1369,7 +1374,7 @@ button.submit {
   padding: 5px 0;
   background-color: transparent;
   outline: none;
-  color: white;
+  color: black;
 }
 
 .input-container .label.contacto {

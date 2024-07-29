@@ -33,7 +33,7 @@
           <h5 class="etiqueta">Empresa Beneficiaria del Pago</h5>
           <div class="inputContainer">
             <i class="fa-solid fa-building-columns inputIcon"></i>
-            {{ render_field(form.empresa_beneficiaria, class="inputField", id="empresa_beneficiaria" ) }}
+            {{ render_field(form.empresa_beneficiaria, class="inputField", id="empresa_beneficiaria", value="Corimon Pinturas, C.A.", readonly= readonly )}}
           </div>
         </div>
 
@@ -45,15 +45,15 @@
           
         <h5 class="etiqueta">Cuenta de banco a la cual se realizó el pago</h5>
         <div class="inputContainer mt-3">
-         
+        
           <i class="fa-solid fa-building-columns inputIcon"></i>
-          {{ render_field(form.banco_receptor, class="inputField ", id="banco_receptor" ) }}
+          {{ render_field(form.banco_receptor, class="inputField ", id="banco_receptor", required= required ) }}
         </div>
 
         <h5 class="etiqueta">Fecha de depósito</h5>
         <div class="inputContainer">
           <i class="fa-regular fa-calendar inputIcon"></i>
-          {{ render_field(form.fecha_deposito, class="inputField", id="fecha", value=Fecha_pago, readonly=readonly  ) }}
+          {{ render_field(form.fecha_deposito, class="inputField", id="fecha", value=Fecha_pago, required= required  ) }}
         </div>
 
 
