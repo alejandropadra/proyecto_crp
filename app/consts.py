@@ -7,7 +7,7 @@ LOGIN = 'Usuario autenticado exitosamente.'
 LOGOUT = 'Cerraste sesión exitosamente.'
 ERROR_USER_PASSWORD = 'Usuario o contraseña incorrectos.'
 
-PAGO_CREADO = 'Pago creada exitosamente.'
+PAGO_CREADO = 'Pago registrado exitosamente.'
 RET_REGISTRADA = 'Comprobante de retencion registrado.'
 TASK_UPDATED =  'Tarea actualizada exitosamente.'
 TASK_DELETED = 'Tarea eliminada exitosamente.'

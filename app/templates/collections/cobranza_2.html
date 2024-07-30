@@ -81,7 +81,8 @@
         <h5 class="etiqueta">Monto pagado</h5>
         <div class="inputContainer">
           <i class="fa-solid fa-hand-holding-dollar inputIcon"></i>
-          {{ render_field(form.monto, class="inputField", id="monto", required="", label_attr={"class": "label", "for": "monto"}) }}
+          {{ render_field(form.monto, class="inputField", id="monto", required="", min="0.01",  min="0.01",  step="0.01",  oninput="validateMonto(this)" , label_attr={"class": "label", "for": "monto"}) }}
+
         </div>
       </div>
 
@@ -129,14 +130,15 @@
                             <div class="factura mb-2 p-0 w-100 d-flex justify-content-center"> 
                               <div class="row">
                                 <div class="texto-mid d-flex align-items-center justify-content-center col " id="factura_comparar">
-                                  <strong>Factura: </strong> {{factura['vbeln'] }} 
+                                  <p class="d-flex">  <strong>{%if factura['netwr'] < 0 %} Nota de Credito: {% elif factura['netwr']>0  %} Factura: {%endif%}</strong> {{factura['vbeln'] }}</p>
                                   <span id="vbeln{{ ns.contador }}" class="d-none" name="fact[]">{{factura['vbeln'] }} </span>
                                   <span id="fkdat{{ ns.contador }}" class="d-none">{{factura['fkdat'] }} </span>
                                   <span id="belnr1{{ ns.contador }}" class="d-none">{{factura['belnr1'] }} </span>
                                   <span id="buzei{{ ns.contador }}" class="d-none">{{factura['buzei'] }} </span>
                                 </div>
-                                <div class=" mx-1 texto-faltante d-flex align-items-center justify-content-center col text-center"></div>
-                                <div class="mx-1 texto-abono d-flex align-items-center justify-content-center col text-center"></div>
+                          
+                                <!-- <div class=" mx-1 texto-faltante d-flex align-items-center justify-content-center col text-center"></div>
+                                <div class="mx-1 texto-abono d-flex align-items-center justify-content-center col text-center"></div>-->
                               </div>
                             </div>
                             {%if condicion_pago == "base+iva"%}
@@ -154,7 +156,7 @@
                                           <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total dpp $:</strong></div>
                                           
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
-                                            {{ "{:,.2f}".format(((factura['netwr']|float|abs) - (factura['montoncdpp']|float|abs) + (factura['iva25div']|float|abs) - (factura['zislrdiv']|float|abs))) }} ($)
+                                            {{ "{:,.2f}".format(((factura['netwr']|float) - (factura['montoncdpp']|float) + (factura['iva25div']|float) - (factura['zislrdiv']|float))) }} ($)
                                           </div>
                                         </div>
                                         {%else%}
@@ -162,8 +164,8 @@
                                         <div class="row w-100">
                                           <div class="col p-0" style="font-size: 13.5px;"><strong >Monto Total dpp $:</strong></div>
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
-                                            {{ "{:,.2f}".format(((factura['netwr']|float|abs) - (factura['montoncdpp']|float|abs) - (factura['zislrdiv']|float|abs))) }} ($)
-                                          <!--  {{"{:,.2f}".format(factura['dmbtr']-factura['montoncdpp']-(factura['zislrdiv']|float|abs)) }} ($)-->
+                                            {{ "{:,.2f}".format(((factura['netwr']|float) - (factura['montoncdpp']|float) - (factura['zislrdiv']|float))) }} ($)
+                                          <!--  {{"{:,.2f}".format(factura['dmbtr']-factura['montoncdpp']-(factura['zislrdiv']|float)) }} ($)-->
                                           </div>
                                         </div>
                                         {% endif %}
@@ -175,7 +177,7 @@
                                         <div class="row w-100 gap-0">
                                           <div class="col p-0 " style="font-size: 13.5px;"><strong>Monto Total  dpp Bs:</strong></div>
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
-                                            {{ "{:,.2f}".format(((factura['basebs']|float|abs) - (factura['dppbs']|float|abs) + (factura['iva25bs']|float|abs) - (factura['zislrbs']|float|abs))) }} (Bs)
+                                            {{ "{:,.2f}".format(((factura['basebs']|float) - (factura['dppbs']|float) + (factura['iva25bs']|float) - (factura['zislrbs']|float))) }} (Bs)
                                           </div>
                                         </div>
                                         {%else%}
@@ -183,7 +185,7 @@
                                         <div class="row w-100">
                                           <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total dpp Bs:</strong></div>
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center " id="montoBs">
-                                            {{ "{:,.2f}".format(((factura['netwr']|float|abs) - (factura['montoncdpp']|float|abs) - (factura['zislrbs']|float|abs))) }} (bs)
+                                            {{ "{:,.2f}".format(((factura['netwr']|float) - (factura['montoncdpp']|float) - (factura['zislrbs']|float))) }} (bs)
                                           </div>
                                         </div>
                                         {% endif %}
@@ -206,7 +208,7 @@
                                           <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total $:</strong></div>
                                           
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
-                                            {{ "{:,.2f}".format(((factura['netwr']|float|abs) + (factura['iva25div']|float|abs) - (factura['zislrdiv']|float|abs))) }} ($)
+                                            {{ "{:,.2f}".format(((factura['netwr']|float) + (factura['iva25div']|float) - (factura['zislrdiv']|float))) }} ($)
                                           </div>
                                         </div>
                                         {%else%}
@@ -214,7 +216,7 @@
                                         <div class="row w-100">
                                           <div class="col p-0" style="font-size: 13.5px;"><strong >Monto total $:</strong></div>
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
-                                            {{ "{:,.2f}".format(factura['dmbtr']|float|abs -(factura['zislrdiv']|float|abs)) }}($)
+                                            {{ "{:,.2f}".format(factura['dmbtr']|float -(factura['zislrdiv']|float)) }}($)
                                           </div>
                                         </div>
                                         {% endif %}
@@ -226,7 +228,7 @@
                                         <div class="row w-100 gap-0">
                                           <div class="col p-0 " style="font-size: 13.5px;"><strong>Monto Total Bs:</strong></div>
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
-                                            {{ "{:,.2f}".format((factura['basebs']|float|abs + factura['iva25bs']|float|abs -(factura['zislrbs']|float|abs))) }} (bs)
+                                            {{ "{:,.2f}".format((factura['basebs']|float + factura['iva25bs']|float -(factura['zislrbs']|float))) }} (bs)
                                           </div>
                                         </div>
                                         {%else%}
@@ -234,7 +236,7 @@
                                         <div class="row w-100">
                                           <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total Bs:</strong></div>
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center " id="montoBs">
-                                            {{ "{:,.2f}".format(factura['totfactbs']|float|abs - (factura['zislrbs']|float|abs)) }}(bs)
+                                            {{ "{:,.2f}".format(factura['totfactbs']|float - (factura['zislrbs']|float)) }}(bs)
                                           </div>
                                         </div>
                                         {% endif %}
@@ -252,14 +254,14 @@
                                 <div class="col-xl col-lg-12 d-flex">
                                   <strong> Monto $ con dpp: </strong>
                                   <div class="texto-mid d-flex align-items-center justify-content-center" id="Montodlrdpp">  
-                                    {{"{:,.2f}".format(factura['netwr']-factura['montoncdpp'] - factura['zislrdiv']|float|abs) }} ($)
+                                    {{"{:,.2f}".format(factura['netwr']-factura['montoncdpp'] - factura['zislrdiv']|float) }} ($)
                                   </div>
                                 </div>
                                 <div class="col-xl col-lg-12 d-flex">
                                   <strong> Monto bs dpp:</strong> 
                                   <div class="texto-mid align-items-center justify-content-center" id="montobsdpp">
                                     {%if factura['dppbs']>0 %} 
-                                    {{"{:,.2f}".format(factura['basebs']-factura['dppbs'] - factura['zislrbs']|float|abs) }}(bs) 
+                                    {{"{:,.2f}".format(factura['basebs']-factura['dppbs'] - factura['zislrbs']|float) }}(bs) 
                                     {% endif %}
                                   </div>
                                 </div>
@@ -275,7 +277,7 @@
                                       <div class="row w-100">
                                         <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total $:</strong></div>
                                         <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
-                                          {{ "{:,.2f}".format((factura['netwr']|float|abs) -(factura['zislrdiv']|float|abs) ) }} ($)
+                                          {{ "{:,.2f}".format((factura['netwr']|float) -(factura['zislrdiv']|float) ) }} ($)
                                         </div>
                                       </div>
                                   </div>
@@ -284,7 +286,7 @@
                                       <div class="row w-100 gap-0">
                                         <div class="col p-0 " style="font-size: 13px;"><strong>Monto Total Bs:</strong></div>
                                         <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
-                                          {{ "{:,.2f}".format((factura['basebs']|float|abs) - (factura['zislrbs']|float|abs) ) }}(bs)
+                                          {{ "{:,.2f}".format((factura['basebs']|float) - (factura['zislrbs']|float) ) }}(bs)
                                         </div>
                                       </div>
                                   </div>
@@ -318,15 +320,15 @@
                             <div class="factura mb-2 p-0 w-100 d-flex justify-content-center"> 
                               <div class="row">
                                 <div class="texto-mid d-flex align-items-center justify-content-center col " id="factura_comparar">
-                                  <strong>Factura: </strong> {{factura['vbeln'] }}
+                                  <p class="d-flex">  <strong>{%if factura['netwr'] < 0 %} Nota de Credito: {% elif factura['netwr']>0  %} Factura: {%endif%}</strong> {{factura['vbeln'] }}</p>
                                   <span id="vbeln{{ ns.contador }}" class="d-none" name="fact[]">{{factura['vbeln'] }} </span>
                                   <span id="fkdat{{ ns.contador }}" class="d-none">{{factura['fkdat'] }} </span>
                                   <span id="belnr1{{ ns.contador }}" class="d-none">{{factura['belnr1'] }} </span>
                                   <span id="buzei{{ ns.contador }}" class="d-none">{{factura['buzei'] }} </span>
                                 </div>
                           
-                                <div class=" mx-1 texto-faltante d-flex align-items-center justify-content-center col text-center"></div>
-                                <div class="mx-1 texto-abono d-flex align-items-center justify-content-center col text-center"></div>
+                                <!-- <div class=" mx-1 texto-faltante d-flex align-items-center justify-content-center col text-center"></div>
+                                <div class="mx-1 texto-abono d-flex align-items-center justify-content-center col text-center"></div>-->
                               </div>
                             </div>
                             <!--Si existe dpp entonces será el unico monto a mostrar-->
@@ -345,7 +347,7 @@
                                           <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total dpp $:</strong></div>
                                           
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
-                                            {{ "{:,.2f}".format(((factura['netwr']|float|abs) - (factura['montoncdpp']|float|abs) + (factura['iva25div']|float|abs) - (factura['zislrdiv']|float|abs))) }} ($)
+                                            {{ "{:,.2f}".format(((factura['netwr']|float) - (factura['montoncdpp']|float) + (factura['iva25div']|float) - (factura['zislrdiv']|float))) }} ($)
                                           </div>
                                         </div>
                                         {%else%}
@@ -353,7 +355,7 @@
                                         <div class="row w-100">
                                           <div class="col p-0" style="font-size: 13.5px;"><strong >Monto Total dpp $:</strong></div>
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
-                                            {{"{:,.2f}".format(factura['dmbtr']-factura['montoncdpp'] - factura['zislrdiv']|float|abs) }} ($)
+                                            {{"{:,.2f}".format(factura['dmbtr']-factura['montoncdpp'] - factura['zislrdiv']|float) }} ($)
                                           </div>
                                         </div>
                                         {% endif %}
@@ -365,7 +367,7 @@
                                         <div class="row w-100 gap-0">
                                           <div class="col p-0 " style="font-size: 13.5px;"><strong>Monto Total dpp Bs:</strong></div>
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
-                                            {{ "{:,.2f}".format(((factura['basebs']|float|abs) - (factura['dppbs']|float|abs) + (factura['iva25bs']|float|abs) - (factura['zislrbs']|float|abs))) }} (Bs)
+                                            {{ "{:,.2f}".format(((factura['basebs']|float) - (factura['dppbs']|float) + (factura['iva25bs']|float) - (factura['zislrbs']|float))) }} (Bs)
                                           </div>
                                         </div>
                                         {%else%}
@@ -373,7 +375,7 @@
                                         <div class="row w-100">
                                           <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total dpp Bs:</strong></div>
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center " id="montoBs">
-                                            {{"{:,.2f}".format(factura['totfactbs']-factura['dppbs'] - factura['zislrbs']|float|abs) }}(bs) 
+                                            {{"{:,.2f}".format(factura['totfactbs']-factura['dppbs'] - factura['zislrbs']|float) }}(bs) 
                                           </div>
                                         </div>
                                         {% endif %}
@@ -396,7 +398,7 @@
                                           <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total $:</strong></div>
                                           
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
-                                            {{ "{:,.2f}".format(((factura['netwr']|float|abs) + (factura['iva25div']|float|abs) - (factura['zislrdiv']|float|abs) )) }} ($)
+                                            {{ "{:,.2f}".format(((factura['netwr']|float) + (factura['iva25div']|float) - (factura['zislrdiv']|float) )) }} ($)
                                           </div>
                                         </div>
                                         {%else%}
@@ -404,7 +406,7 @@
                                         <div class="row w-100">
                                           <div class="col p-0" style="font-size: 13.5px;"><strong >Monto total $:</strong></div>
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
-                                            {{ "{:,.2f}".format(factura['dmbtr']|float|abs - (factura['zislrdiv']|float|abs)) }}($)
+                                            {{ "{:,.2f}".format(factura['dmbtr']|float - (factura['zislrdiv']|float)) }}($)
                                           </div>
                                         </div>
                                         {% endif %}
@@ -416,7 +418,7 @@
                                         <div class="row w-100 gap-0">
                                           <div class="col p-0 " style="font-size: 13.5px;"><strong>Monto Total Bs:</strong></div>
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
-                                            {{ "{:,.2f}".format((factura['basebs']|float|abs + factura['iva25bs']|float|abs - factura['zislrbs']|float|abs)) }} (bs)
+                                            {{ "{:,.2f}".format((factura['basebs']|float + factura['iva25bs']|float - factura['zislrbs']|float)) }} (bs)
                                           </div>
                                         </div>
                                         {%else%}
@@ -424,7 +426,7 @@
                                         <div class="row w-100">
                                           <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total Bs:</strong></div>
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center " id="montoBs">
-                                            {{ "{:,.2f}".format(factura['totfactbs']|float|abs - factura['zislrbs']|float|abs) }}(bs)
+                                            {{ "{:,.2f}".format(factura['totfactbs']|float - factura['zislrbs']|float) }}(bs)
                                           </div>
                                         </div>
                                         {% endif %}
@@ -442,14 +444,14 @@
                                 <div class="col-xl col-lg-12 d-flex">
                                   <strong> Monto $ con dpp: </strong>
                                   <div class="texto-mid d-flex align-items-center justify-content-center" id="Montodlrdpp">  
-                                    {{"{:,.2f}".format(factura['netwr']-factura['montoncdpp'] - (factura['zislrdiv']|float|abs)) }} ($)
+                                    {{"{:,.2f}".format(factura['netwr']-factura['montoncdpp'] - (factura['zislrdiv']|float)) }} ($)
                                   </div>
                                 </div>
                                 <div class="col-xl col-lg-12 d-flex">
                                   <strong> Monto bs dpp:</strong> 
                                   <div class="texto-mid align-items-center justify-content-center" id="montobsdpp">
                                     {%if factura['dppbs']>0 %} 
-                                    {{"{:,.2f}".format(factura['basebs']-factura['dppbs'] - (factura['zislrbs']|float|abs)) }}(bs) 
+                                    {{"{:,.2f}".format(factura['basebs']-factura['dppbs'] - (factura['zislrbs']|float)) }}(bs) 
                                     {% endif %}
                                   </div>
                                 </div>
@@ -465,7 +467,7 @@
                                       <div class="row w-100">
                                         <div class="col p-0" style="font-size: 13.5px;"><strong>Monto Total $:</strong></div>
                                         <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montodlr">
-                                          {{ "{:,.2f}".format((factura['netwr']|float|abs) - (factura['zislrdiv']|float|abs) ) }} ($)
+                                          {{ "{:,.2f}".format((factura['netwr']|float) - (factura['zislrdiv']|float) ) }} ($)
                                         </div>
                                       </div>
                                   </div>
@@ -474,7 +476,7 @@
                                       <div class="row w-100 gap-0">
                                         <div class="col p-0 " style="font-size: 13px;"><strong>Monto Total Bs:</strong></div>
                                         <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
-                                          {{ "{:,.2f}".format((factura['basebs']|float|abs) - (factura['zislrbs']|float|abs) ) }}
+                                          {{ "{:,.2f}".format((factura['basebs']|float) - (factura['zislrbs']|float) ) }}
                                         </div>
                                       </div>
                                   </div>
@@ -516,5 +518,12 @@
 </main>
 
 
-
+<script>
+  function validateMonto(input) {
+    if (parseFloat(input.value) <= 0) {
+        input.value = '';
+        alert('El monto debe ser mayor a 0');
+    }
+}
+</script>
 {% endblock %}

@@ -80,7 +80,7 @@ def pago_iva(user, pago):
                     sender=current_app.config['MAIL_USERNAME'],
                     recipients=[current_app.config['MAIL_TEST']])#[user.email])
 
-    message.html = render_template('email/registro_pago.html', user=user, pago=pago)
+    message.html = render_template('email/correo_iva_cliente.html', user=user, pago=pago)
 
     thread = Thread(target=send_async_mail, args=[message])
     thread.start()

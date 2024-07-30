@@ -7,7 +7,7 @@ from .forms import LoginForm, RegisterForm, RegistroPagoForm,EditForm,PerfilForm
 from .models import User, Cobranza
 from . import login_manager
 from .consts import *
-from .email import welcome_mail, pago_crm_mail, pago_mail, comprobante_mail, comprobante_crm_mail
+from .email import welcome_mail, pago_crm_mail, pago_mail, comprobante_mail, comprobante_crm_mail, pago_iva
 from flask import session
 from datetime import datetime
 #from .promo import participantes
@@ -375,7 +375,7 @@ def cobranza2():
     return render_template("collections/cobranza_2.html",form = control_form,titulo = 'Registrar Pago', facturas = facturas, datos = datos, Fecha_pago=fecha, facturas_vencidas= facturas_vencidas, facturas_NOvencidas=facturas_NOvencidas, condicion_pago =  condicion_pago)
 
 @page.route("/cobranza_iva", methods= ["GET", "POST"])
-def cobranza_iva():
+def cobranza_iva(): 
     control_form = RegistroPagoForm(request.form)
     tiempo, fecha_enc = obtener_hora_minutos_segundos_fecha()
     cadena = cadena_md5('1200',current_user.rif,tiempo,fecha_enc)
@@ -424,7 +424,7 @@ def cobranza_iva():
         'CTABANCO':banco_receptor, #Cuenta Bancaria
         'PROCESADO':'', #Check de Procesado,
         'ABONOCTA':'',#ENVIAR
-        'PagoIva': 'S'
+        'PAGAIVA': 'S'
         }]
  
         # Realizar la solicitud POST con los datos en formato JSON
@@ -440,6 +440,21 @@ def cobranza_iva():
                 flash('Deposito repetido','error')
                 print("fallo")
             elif respuesta == "Actualizacion de deposito Satisfactoria":
+                fec = datetime.now()
+                fec = fec.strftime('%d/%m/%Y')
+                data = {
+                'BUKRS': '1200',# por aca ppv o crp
+                'XBLNR':n_deposito, #Número de documento de referencia... del pago
+                'KUNNR':rif, #Número de deudor codif saps
+                'BLDAT':fec, #Fecha de documento en documento..Fecha pago
+                'TIPOPAGO':'B', #FI AR: Tipo de Pago.... 
+                'WRBTR':monto_total, #Importe en la moneda del documento... monto
+                'CTABANCO':banco_receptor, #Cuenta Bancaria
+                'PROCESADO':'', #Check de Procesado,
+                'ABONOCTA':'',#ENVIAR
+                'PAGAIVA': 'S'
+                }
+                pago_iva(current_user,data)
                 print("todo bien")
                 flash(PAGO_CREADO)
 
@@ -700,12 +715,16 @@ def historial():
         }
         response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=False)
         if response.status_code == 200:
-            response_json = json.loads(response.content)
-            response_json = str(response_json)
-            response_json = response_json[1:]
-            response_json = response_json[:-1]
-            response_json = eval(response_json)
-            print("Exito en la peticion")
+            try:
+                response_json = json.loads(response.content)
+                response_json = str(response_json)
+                response_json = response_json[1:]
+                response_json = response_json[:-1]
+                response_json = eval(response_json)
+                print(response_json)
+                print("Exito en la peticion")
+            except:
+                response_json = []
         else:
             print('Error en la peticion')
         return render_template("collections/historial_pagos.html", titulo="Historial de pagos", pagos=response_json)

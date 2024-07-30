@@ -24,11 +24,7 @@
             {{ render_field(form.empresa, class="inputField", id="empresa",value = current_user.username, placeholder="Nombre de la empresa") }}
           </div>
           
-          <h5 class="etiqueta">Banco Emisor</h5>
-          <div class="inputContainer">
-            <i class="fa-solid fa-money-bill-transfer inputIcon"></i>
-            {{ render_field(form.banco_emisor, class="inputField", id="banco_emisor",placeholder="Por favor, ingrese el Banco Emisor", placeholder="Ingrese su numero de RIF" ) }}
-          </div>
+
           
           <h5 class="etiqueta">Empresa Beneficiaria del Pago</h5>
           <div class="inputContainer">
