@@ -81,8 +81,7 @@
         <h5 class="etiqueta">Monto pagado</h5>
         <div class="inputContainer">
           <i class="fa-solid fa-hand-holding-dollar inputIcon"></i>
-          {{ render_field(form.monto, class="inputField", id="monto", required="", min="0.01",  min="0.01",  step="0.01",  oninput="validateMonto(this)" , label_attr={"class": "label", "for": "monto"}) }}
-
+          {{ render_field(form.monto, class="inputField", id="monto", required="", min="0.01", step="0.01" , oninput="validateMonto(this)" , label_attr={"class": "label", "for": "monto"}) }}
         </div>
       </div>
 
@@ -128,17 +127,17 @@
                           <div class="checkmark"></div>
                           <div class="d-flex texto-mid w-100 flex-column ">
                             <div class="factura mb-2 p-0 w-100 d-flex justify-content-center"> 
-                              <div class="row">
+                              <div class="row w-100">
                                 <div class="texto-mid d-flex align-items-center justify-content-center col " id="factura_comparar">
-                                  <p class="d-flex">  <strong>{%if factura['netwr'] < 0 %} Nota de Credito: {% elif factura['netwr']>0  %} Factura: {%endif%}</strong> {{factura['vbeln'] }}</p>
+                                  
+                                  <p>  <strong>{%if factura['netwr'] < 0 %} Nota de Credito: {% elif factura['netwr']>0  %} Factura: {%endif%}</strong> {{factura['vbeln'] }}  </p>   
                                   <span id="vbeln{{ ns.contador }}" class="d-none" name="fact[]">{{factura['vbeln'] }} </span>
                                   <span id="fkdat{{ ns.contador }}" class="d-none">{{factura['fkdat'] }} </span>
                                   <span id="belnr1{{ ns.contador }}" class="d-none">{{factura['belnr1'] }} </span>
                                   <span id="buzei{{ ns.contador }}" class="d-none">{{factura['buzei'] }} </span>
                                 </div>
-                          
-                                <!-- <div class=" mx-1 texto-faltante d-flex align-items-center justify-content-center col text-center"></div>
-                                <div class="mx-1 texto-abono d-flex align-items-center justify-content-center col text-center"></div>-->
+                                <div class=" mx-1 texto-faltante d-flex align-items-center justify-content-center text-center" style="width: 1px !important;"></div>
+                                <div class="mx-1 texto-abono d-flex align-items-center justify-content-center text-center" style="width: 1px !important;"></div>
                               </div>
                             </div>
                             {%if condicion_pago == "base+iva"%}
@@ -318,17 +317,17 @@
                           <div class="checkmark"></div>
                           <div class="d-flex texto-mid w-100 flex-column ">
                             <div class="factura mb-2 p-0 w-100 d-flex justify-content-center"> 
-                              <div class="row">
+                              <div class="row w-100">
                                 <div class="texto-mid d-flex align-items-center justify-content-center col " id="factura_comparar">
-                                  <p class="d-flex">  <strong>{%if factura['netwr'] < 0 %} Nota de Credito: {% elif factura['netwr']>0  %} Factura: {%endif%}</strong> {{factura['vbeln'] }}</p>
+                                  <div class="algo"> <p> <strong>{%if factura['netwr'] < 0 %} Nota de Credito: {% elif factura['netwr']>0  %} Factura: {%endif%}</strong> {{factura['vbeln'] }}</p> </div>
                                   <span id="vbeln{{ ns.contador }}" class="d-none" name="fact[]">{{factura['vbeln'] }} </span>
                                   <span id="fkdat{{ ns.contador }}" class="d-none">{{factura['fkdat'] }} </span>
                                   <span id="belnr1{{ ns.contador }}" class="d-none">{{factura['belnr1'] }} </span>
                                   <span id="buzei{{ ns.contador }}" class="d-none">{{factura['buzei'] }} </span>
                                 </div>
-                          
-                                <!-- <div class=" mx-1 texto-faltante d-flex align-items-center justify-content-center col text-center"></div>
-                                <div class="mx-1 texto-abono d-flex align-items-center justify-content-center col text-center"></div>-->
+                                
+                                <div class=" mx-1 texto-faltante d-flex align-items-center justify-content-center  text-center" style="width: 1px !important;"></div>
+                                <div class="mx-1 texto-abono d-flex align-items-center justify-content-center text-center" style="width: 1px !important;"></div>
                               </div>
                             </div>
                             <!--Si existe dpp entonces será el unico monto a mostrar-->
@@ -517,13 +516,14 @@
 
 </main>
 
-
 <script>
   function validateMonto(input) {
     if (parseFloat(input.value) <= 0) {
         input.value = '';
-        alert('El monto debe ser mayor a 0');
+        alert('El monto debe ser mayor o igual a 1');
     }
 }
+
 </script>
+
 {% endblock %}
