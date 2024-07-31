@@ -213,7 +213,7 @@ def cobranza2():
             for factura in facturas:
                 if factura['fecvenc1'] < fecha:
                     facturas_vencidas.append(factura)
-                elif factura['fecvenc1'] > fecha:
+                elif factura['fecvenc1'] >= fecha:
                     facturas_NOvencidas.append(factura)
                     facturas_NOvencidas.append('novencidas')      
     #---------------------------------------------------------------------
