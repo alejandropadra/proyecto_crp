@@ -42,7 +42,7 @@ def pago_mail(user, pago):
 def comprobante_crm_mail(user,comprobante, post_imagen, nombre_imagen):
     message = Message('Comprobante de Reteción' +' '+ str(comprobante),
                     sender=current_app.config['MAIL_USERNAME'],
-                    recipients=['retenciones_corimonpinturas@corimon.com'])
+                    recipients=['juan_valery@corimon.com'])
     #"retenciones_corimonpinturas@corimon.com"
     message.html = render_template('email/retencion_cliente.html', user=user, comprobante = comprobante)
     try:
@@ -65,7 +65,7 @@ def pago_crm_mail(user, pago,post_imagen,nombre_imagen):
 
     message = Message('Pago Registrado Referencia'+' '+ pago['XBLNR'],
                     sender=current_app.config['MAIL_USERNAME'],
-                    recipients=[correo])
+                    recipients=['juan_valery@corimon.com'])
     message.html = render_template('email/registro_pago_crm.html', user=user, pago=pago)
     try:
         with app.open_resource(post_imagen) as adjunto:
