@@ -183,14 +183,24 @@
                                 <td>Referencia</td>
                                 <td>{{pago['XBLNR']}}</td>
                             </tr>
+
+                            
+                            {% for factura in pagos%}
+                                {% if factura['VBELN'] %}
+                                    <tr>
+                                        <td>N° de factura</td>
+                                        <td>{{ factura['VBELN'] }}</td>
+                                    </tr>
+                                {%endif%}
+                            {% endfor %}
+
+                            
+
+                            
                         </tbody>
                     </table>
                 </div>
                 <hr>
-                <p style="font-weight: 900;">Su pago será verificado y validado por nuestro departamento de Crédito y Cobranza. <br>Puedes verificar el status de tu pago en tu panel de Dashboard ingresando en el siguiente enlace e ingresando tus credenciales de inicio de sesión</p>
-            <div class="boton">
-                <a href="http://corimonpinturas.net/login" class="button" align="center">Ingresar</a>
-            </div>
                 
             </div>
         </div>

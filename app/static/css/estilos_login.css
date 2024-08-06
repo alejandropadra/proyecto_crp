@@ -170,7 +170,7 @@ button.submit {
     
 .input-container .label {
   position: absolute;
-  top: 20px;
+  top: 0px;
   left: 0;
   color: #ccc;
   transition: all 0.3s ease;
@@ -179,10 +179,16 @@ button.submit {
 
 .input-container .entrada:focus ~ .label,
 .input-container .entrada:valid ~ .label {
-  top: 0px;
+  top: -25px;
   font-size: 16px;
   color: #333;
 }
+
+.input-container .entrada:focus ~ .eye,
+.input-container .entrada:valid ~ .eye {
+  display: block;
+}
+
 
 
 .input-container .underline, .underline.t {
@@ -206,5 +212,38 @@ button.submit {
 .input-container .entrada:focus ~ .underline,
 .input-container .entrada:valid ~ .underline {
   transform: scaleX(1);
+}
+
+
+.eye{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 25px;
+  display: none;
+}
+
+.flash{
+  left: 0px;
+}
+.mensaje-flashc{
+  top: 25%;
+  left: 10%;
+}
+
+input[type="password"]::-ms-reveal {
+  display: none;
+}
+
+
+input[type="password"] {
+  -webkit-text-security: disc;
+}
+@media only screen and (max-width: 725px) {
+  .mensaje-flashc{
+    top: 15%;
+    left: 0%;
+  }
 }
 

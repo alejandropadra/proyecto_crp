@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', (event) => {
+/*document.addEventListener('DOMContentLoaded', (event) => {
   let tl = gsap.timeline();
 
   // Animación de entrada
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   }
 
 
-});
+});*/
 
 ///Registrando el pluggin
 gsap.registerPlugin(ScrollTrigger);

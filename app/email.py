@@ -29,12 +29,12 @@ def comprobante_mail(user,comprobante):
     thread = Thread(target=send_async_mail, args=[message])
     thread.start()
 
-def pago_mail(user, pago):
+def pago_mail(user, pago, pagos):
     message = Message('Pago Registrado Referencia'+' '+ pago['XBLNR'],
                     sender=current_app.config['MAIL_USERNAME'],
                     recipients=[current_app.config['MAIL_TEST']])#[user.email])
 
-    message.html = render_template('email/registro_pago.html', user=user, pago=pago)
+    message.html = render_template('email/registro_pago.html', user=user, pago=pago, pagos = pagos)
 
     thread = Thread(target=send_async_mail, args=[message])
     thread.start()
@@ -42,7 +42,7 @@ def pago_mail(user, pago):
 def comprobante_crm_mail(user,comprobante, post_imagen, nombre_imagen):
     message = Message('Comprobante de Reteción' +' '+ str(comprobante),
                     sender=current_app.config['MAIL_USERNAME'],
-                    recipients=['juan_valery@corimon.com'])
+                    recipients=['retenciones_corimonpinturas@corimon.com'])
     #"retenciones_corimonpinturas@corimon.com"
     message.html = render_template('email/retencion_cliente.html', user=user, comprobante = comprobante)
     try:
@@ -53,7 +53,7 @@ def comprobante_crm_mail(user,comprobante, post_imagen, nombre_imagen):
     thread = Thread(target=send_async_mail, args=[message])
     thread.start()
 
-def pago_crm_mail(user, pago,post_imagen,nombre_imagen):
+def pago_crm_mail(user, pago,post_imagen,nombre_imagen, pagos):
     if user.zona == 'Centro':
         correo = 'cxc_crp_centro@corimon.com'
     elif user.zona == 'Occidente':
@@ -65,8 +65,8 @@ def pago_crm_mail(user, pago,post_imagen,nombre_imagen):
 
     message = Message('Pago Registrado Referencia'+' '+ pago['XBLNR'],
                     sender=current_app.config['MAIL_USERNAME'],
-                    recipients=['juan_valery@corimon.com'])
-    message.html = render_template('email/registro_pago_crm.html', user=user, pago=pago)
+                    recipients=[correo])
+    message.html = render_template('email/registro_pago_crm.html', user=user, pago=pago, pagos=pagos)
     try:
         with app.open_resource(post_imagen) as adjunto:
             message.attach(nombre_imagen,'application/pdf', adjunto.read())

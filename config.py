@@ -13,7 +13,7 @@ class DevelopmentConfig(Config):
     MAIL_USE_TLS = True
     MAIL_USERNAME = 'noreply@corimon.com'
     MAIL_PASSWORD = 'Suz38159'
-    MAIL_TEST = 'jesus_romero@corimon.com'#'eliezer_chirino@corimon.com'#'alejandro_padra@corimon.com'
+    MAIL_TEST = 'jesus_romero@corimon.com'
 
 class ProductionConfig(DevelopmentConfig):
     DEBUG = False

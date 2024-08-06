@@ -11,11 +11,11 @@
 <main class="position-relative">
 
   
-<div class="container d-flex justify-content-center w-100 position-absolute" style="top: 20%; left: 35%;" >
-  <div class="col-md-12 col-md-offset-1 " >
+<div class="container d-flex justify-content-center w-100 position-absolute mensaje-flashc"  >
+  <div class="col-12  col-md-offset-1 flash  z-2 " >
     {% with messages = get_flashed_messages(with_categories=True) %}
       {% if messages %}
-        <div class="alert-container" >
+        <div class="alert-container d-flex justify-content-center" >
           {% for category, message in messages %}
             {% if category == 'error' %}
               <div class="alert mensaje_flash  alert-dismissible " role="alert">
@@ -45,6 +45,7 @@
               <div class="error-tittle"> {{ message }} </div>
               <div class="error__close">
               <button type="button" class="btn-close p-1" data-bs-dismiss="alert" aria-label="Close"></button></div>
+            
             </div>
             {% endif %}
           {% endfor %}
@@ -73,14 +74,16 @@
             <div class="input-container col" style="margin-right: 13px;" >
             {{ render_field(form.n_rif, class ="entrada", id="usuario" ) }}
             <div class="underline" style="margin-left: 10px; max-width: 100.9vh; " ></div>
+            
             </div>
           </div>
           
         </div>
 
          <!--PASSWORD-->
-         <div class="input-container">
+         <div class="input-container d-flex">
           {{ render_field(form.clave, class ="entrada", id="password" ) }}
+          <div class="eye"><i class="bi bi-eye h-100"></i></div>
           <label for="password" class="label">Ingrese la Contraseña</label>
           <div class="underline"></div>
         </div>
@@ -98,5 +101,25 @@
 
 </main>
 
+<script>
+  const eye = document.querySelector('.eye');
 
+  const input = document.getElementById('password');
+// Función para manejar el cambio de tipo de entrada
+  function toggleInputType() {
+    if (input.type === 'password') {
+      input.type = 'text';
+    } else {
+      input.type = 'password';
+    }
+  }
+
+// Agregar event listeners
+eye.addEventListener('mousedown', toggleInputType);
+eye.addEventListener('mouseup', toggleInputType);
+eye.addEventListener('mouseleave', toggleInputType);
+
+eye.addEventListener('click', toggleInputType);
+
+</script>
 {% endblock %}
