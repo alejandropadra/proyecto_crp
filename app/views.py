@@ -235,7 +235,10 @@ def cobranza2():
                     facturas_vencidas.append(factura)
                 elif factura['fecvenc1'] >= fecha:
                     facturas_NOvencidas.append(factura)
-                    facturas_NOvencidas.append('novencidas')      
+                    facturas_NOvencidas.append('novencidas')
+        print(facturas_NOvencidas)
+        print(len(facturas_NOvencidas))
+        print(len(facturas_vencidas))
     #---------------------------------------------------------------------
     if request.method == "POST":
         # Obtener los datos enviados desde JavaScript
@@ -560,15 +563,22 @@ def dashboard():
     }
     response1 = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args,headers=headers, verify=True)
     if response1.status_code == 200:
-        response_json1 = json.loads(response1.content)
-        response_json1 = str(response_json1)
-        response_json1 = response_json1[1:]
-        response_json1 = response_json1[:-1]
-        response_json1 = eval(response_json1)
-        for dic in response_json1:
-            if 'blart' in dic:
-                if dic['blart'] == 'RV':
-                    datos = dic
+        try:
+            response_json1 = json.loads(response1.content)
+            response_json1 = str(response_json1)
+            response_json1 = response_json1[1:]
+            response_json1 = response_json1[:-1]
+            response_json1 = eval(response_json1)
+            """for dic in response_json1:
+                if 'blart' in dic:
+                    if dic['blart'] == 'RV':
+                        datos = dic"""
+            if isinstance(response_json1 , dict):
+                response_json1 = [response_json1]
+                print(len(response_json1))
+        except:
+            response_json1 = []
+
     #---------------------------------------------------------
     sap = ip_fuente+"/sap/bc/rest/zpasdeudores"
     args = {
@@ -579,11 +589,14 @@ def dashboard():
     }
     response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args,headers=headers, verify=True)
     if response.status_code == 200:
-        response_json = json.loads(response.content)
-        response_json = str(response_json)
-        response_json = response_json[1:]
-        response_json = response_json[:-1]
-        response_json = eval(response_json)
+        try:
+            response_json = json.loads(response.content)
+            response_json = str(response_json)
+            response_json = response_json[1:]
+            response_json = response_json[:-1]
+            response_json = eval(response_json)
+        except:
+            response_json=[]
         """
         print('Importe en moneda local($):',response_json['dmbtr'] )
         print('Total facturas(Bs):' ,response_json['totfactbs'])
@@ -597,12 +610,15 @@ def dashboard():
     }
     response_ret = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
     if response_ret.status_code == 200:
-        response_json2 = json.loads(response_ret.content)
-        response_json2 = str(response_json2)
-        response_json2 = response_json2[1:]
-        response_json2 = response_json2[:-1]
-        response_json2 = eval(response_json2)
-        print("Exito en la peticion")
+        try:
+            response_json2 = json.loads(response_ret.content)
+            response_json2 = str(response_json2)
+            response_json2 = response_json2[1:]
+            response_json2 = response_json2[:-1]
+            response_json2 = eval(response_json2)
+            print("Exito en la peticion")
+        except:
+            response_json2 = []
     else:
         print('Error en la peticion')
     #----------------------------------------------------------------------------------------------
@@ -626,13 +642,9 @@ def dashboard():
         print("Exito en la peticion")
         
         ret = len(response_json3) if response_json3 else 0
-    except requests.exceptions.RequestException as err:
-        print(f"Error en la petición: {err}")
-        ret = 0  # Asegúrate de inicializar 'ret' en caso de error
+    except:
+        ret = 0
 
-    except Exception as e:
-        print(f"Otro error: {e}")
-        ret = 0  # Asegúrate de inicializar 'ret' en caso de otro tipo de error
 
     return render_template("collections/dashboard.html", titulo = "Estado de cuenta", pagos=pagos, pago_t = pago_t,rate=0, no_vencido_dolar=response_json['tnovencdiv'],no_vencido_bs=response_json['tnovencbs'],total_deudas_dolares=response_json['tdeudadiv'],total_deudas_bs=response_json['tdeudabs'], total_saldo_dolar=response_json['tsaldofdiv'],total_saldo_bs=response_json['tsaldofbs'], total_bolos=response_json['totfactbs'],total_vencido_d=response_json['tvencdiv'],total_vencido_b=response_json['tvencbs'],vencido_130_d=response_json['tvenc130d'],vencido_130_b=response_json['tvenc130b'], vencido_3160_d=response_json['tvecc3160d'], vencido_3160_b=response_json['tvecc3160b'], vencido_60_d=response_json['tvec61masd'], vencido_60_b=response_json['tvec61masb'], facturas =response_json1, retenciones=response_json2,contador_fact = ret)
 
@@ -669,12 +681,18 @@ def lista_cobranza():
     }
     response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente),params=args, headers=headers,verify=True)
     if response.status_code == 200:
-        response_json = json.loads(response.content)
-        response_json = str(response_json)
-        response_json = response_json[1:]
-        response_json = response_json[:-1]
-        response_json = eval(response_json)
-    return render_template("collections/tabla_cobranza.html", titulo = "Pagos Pendientes", pagos=response_json)
+        try:
+            response_json = json.loads(response.content)
+            response_json = str(response_json)
+            response_json = response_json[1:]
+            response_json = response_json[:-1]
+            response_json = eval(response_json)
+            if isinstance(response_json , dict):
+                response_json = [response_json]
+        except:
+            print("nada")
+            response_json = []
+    return render_template("collections/tabla_cobranza.html", titulo = "Documentos Pendientes", pagos=response_json)
 
 
 @page.route('/ejemplo<n>', methods=['GET'])

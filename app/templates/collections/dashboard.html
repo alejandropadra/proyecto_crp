@@ -52,38 +52,41 @@
 
       <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
         <div class="course-info d-flex flex-column justify-content-center ">
-          <h6 class="mx-1 ui-tittle fs-5">No Vencido: </h6>
-          <div class="d-flex justify-content-between"> <div> <p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div> <span class="texto2">{{ "{:,.2f}".format(no_vencido_dolar|float|abs) }} </span> </div> </div>
-          <div class="d-flex justify-content-between"> <div> <p> <strong class="text-muted "> Monto ($): </strong> </p> </div> <div>  <span class="texto2">{{ "{:,.2f}".format(no_vencido_bs|float|abs) }} </span></p> </div> </div>
+          <h6 class=" ui-tittle-tres">No Vencido: </h6>
+          <div class="d-flex justify-content-between"> <div> <p> <strong class="text-muted "> Monto ($): </strong> </p> </div> <div>  <span class="texto2">{{ "{:,.2f}".format(no_vencido_dolar|float|abs)}} </span></p> </div> </div>
+          <div class="d-flex justify-content-between"> <div> <p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div> <span class="texto2">{{  "{:,.2f}".format(no_vencido_bs|float|abs) }} </span> </div> </div>
+
           
 
         </div>
       </a>
 
       <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
-        <div class="course-info d-flex flex-column justify-content-between ">
-          <h6 class="mx-1 ui-tittle fs-5">Vencido 1-30 </h6>
-          <div class="d-flex justify-content-between "> <div><p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div> <span class="texto2">{% if vencido_130_b > 0 %} {{"{:,.2f}".format(vencido_130_b|float)}} {% else %} 0.00{% endif %} </span> </div> </div>
+        <div class="course-info d-flex flex-column justify-content-center ">
+          <h6 class=" ui-tittle-tres">Vencido 1-30 </h6>
+          
           <div class="d-flex justify-content-between "> <div> <p> <strong class="text-muted "> Monto ($): </strong> </p> </div> <div> <span class="texto2">{% if vencido_130_d > 0 %} {{"{:,.2f}".format(vencido_130_d|float)}}{% else %} 0.00{% endif %} </span> </div> </div>
-          
+          <div class="d-flex justify-content-between "> <div><p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div> <span class="texto2">{% if vencido_130_b > 0 %} {{"{:,.2f}".format(vencido_130_b|float)}} {% else %} 0.00{% endif %} </span> </div> </div>
 
         </div>
       </a>
       <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
         <div class="course-info d-flex flex-column justify-content-center ">
 
-          <h6 class="mx-1 ui-tittle fs-5 mb-4">Vencido 31-60 </h6>
-          <div class="d-flex justify-content-between"> <div>  <p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div>  <span class="texto2">{% if vencido_3160_b > 0 %} {{"{:,.2f}".format(vencido_3160_b|float)}}{% else %} 0.00{% endif %} </span></div> </div>
+          <h6 class=" ui-tittle-tres ">Vencido 31-60 </h6>
+
           <div class="d-flex justify-content-between" > <div>  <p> <strong class="text-muted "> Monto ($): </strong> </p> </div> <div>  <span class="texto2">{% if vencido_3160_d > 0 %}  {{"{:,.2f}".format(vencido_3160_d|float)}}{% else %} 0.00{% endif %} </span> </div> </div>
+          <div class="d-flex justify-content-between"> <div>  <p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div>  <span class="texto2">{% if vencido_3160_b > 0 %} {{"{:,.2f}".format(vencido_3160_b|float)}}{% else %} 0.00{% endif %} </span></div> </div>
           
 
         </div>
       </a>
       <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
         <div class="course-info d-flex flex-column justify-content-center ">
-          <h6 class="mx-1 ui-tittle fs-5">Vencido 60+ </h6>
-          <div class="d-flex justify-content-between"> <div> <p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div> <span class="texto2">{% if vencido_60_b > 0 %} {{"{:,.2f}".format(vencido_60_b|float)}}{% else %} 0.00 {% endif %} </span> </div> </div>
-          <div class="d-flex justify-content-between"> <div> <p> <strong class="text-muted "> Monto ($): </strong> </p> </div> <div>  <span class="texto2">{% if vencido_60_d > 0 %}  {{"{:,.2f}".format(vencido_60_d|float)}}{% else %} 0.00{% endif %} </span></p> </div> </div>
+          <h6 class=" ui-tittle-tres">No Vencido: </h6>
+          <div class="d-flex justify-content-between"> <div> <p> <strong class="text-muted "> Monto ($): </strong> </p> </div> <div>  <span class="texto2">{% if vencido_60_b > 0 %} {{"{:,.2f}".format(vencido_60_d|float)}}{% else %} 0.00 {% endif %}  </span></p> </div> </div>
+          <div class="d-flex justify-content-between"> <div> <p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div> <span class="texto2">{% if vencido_60_d > 0 %}  {{"{:,.2f}".format(vencido_60_b|float)}}{% else %} 0.00{% endif %}</span> </div> </div>
+
           
 
         </div>
@@ -116,6 +119,8 @@
               {% if 'blart' in factura %}
                 {%  if factura['blart'] == 'RV' and factura['status']=='' %}
                     {% set na.contador = na.contador + 1 %}
+                  {% elif factura['blart'] == 'DA' and factura['status']=='' %}
+                  {% set na.contador = na.contador + 1 %}
                   {% endif %}
                 {% endif %}
             {% endfor %}
@@ -157,19 +162,19 @@
                 <div class="icono_tarjeta amarillo_kbrn text-dark mr-2 d-flex align-items-center justify-content-center">
                   <i class="fa-solid fa-receipt"></i>
                 </div>
-                <p class="ui-tittle-dos text-center">
+                <p class="ui-tittle-dos text-center pt-2">
                     Abonos por conciliar
                 </p>
             </div>
             {% set nb = namespace(contador=0) %}
               {% for factura in facturas %}
                 {% if 'blart' in factura %}
-                  {%  if factura['blart'] == 'DZ' %}
+                  {%  if factura['blart'] == 'DZ' or factura['blart'] == 'AB' %}
                       {% set nb.contador = nb.contador + 1 %}
-                    {% endif %}
+                  {% endif %}
                   {% endif %}
               {% endfor %}
-              <div class="d-flex justify-content-center align-items-center h-50">
+              <div class="d-flex justify-content-center align-items-center h-50 mt-4">
                 <p class="etiqueta-size2" id="cantidadAbon">{{ nb.contador }}</p>
               </div>
               <h6 class="masinfotarj w-100 mt-5">Ver Detalles <i class="bi bi-arrow-right"></i></h6>

@@ -19,6 +19,9 @@
   --openSans: font-family: 'Open Sans', sans-serif;
 }
 
+.text-muted, .texto2{
+  font-size: 13px;
+}
 
 .este .tarjeta_saldo:last-child{
   margin: 0;
@@ -994,6 +997,8 @@ hr{
     z-index: 2;
     position: relative;
     cursor: pointer;
+    padding-top: 10px;
+    margin-top: 10px;
 }
 
 
@@ -1025,11 +1030,17 @@ hr{
 
 
 .course-info {
+    
     padding: 10px;
+    padding-top: 16px !important;
     position: relative;
     width: 100%;
-    padding-top: 35px;
+    height: 100%;
+    
+    height: 100%;
+    gap: 5px
 }
+
 
 .course-info p{
     display: inline-block;
@@ -1121,6 +1132,13 @@ h6.masinfotarj{
   font-family: 'Clash Display', sans-serif;
   font-weight: 500;
   font-size: 17px;
+}
+
+.ui-tittle-tres{
+  font-family: 'Clash Display', sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  max-height: 20px;
 }
 
 .tarjeta_saldo{
@@ -1843,5 +1861,38 @@ list-style: none;
 
 }
 .alert-container2 i {
+  margin-right: 10px;
+}
+
+
+.alert-container3 {
+  display: block;
+  
+  
+  color: #721c24;
+  padding: 15px;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  max-width: 500px;
+
+ 
+  
+}
+
+.alert-container3::before{
+  content: "";
+  position: absolute;
+  top: -9.5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #721c24; 
+
+}
+.alert-container3 i {
   margin-right: 10px;
 }

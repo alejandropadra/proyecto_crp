@@ -26,13 +26,25 @@
             <input type="file" name="archivo" class="inputField" style="max-width: 100%;">
           </div>
 
+          
+
         </div>
 
       </div>
-      <div class="  mt-4 mb-2 w-100 d-flex justify-content-center" style="margin-top: 25px; padding-bottom: 100px;">
+      <div class="  mt-4 mb-2 p-3 w-100 d-flex justify-content-center" style="margin-top: 25px; padding-bottom: 100px;">
         <input type ="hidden" name = "csrf_token" value ="{{csrf_token()}}"/>
         <button class="submit" > <span>Enviar</span>
         </button>
+      </div>
+
+      <div class="d-flex w-100  justify-content-between position-relative mb-4">
+        <div id="alert" class="alert-container3 ">
+          <i class="bi bi-exclamation-circle h-100"></i>
+          <span id="alert-message"> Para una mayor fluidez del proceso de registro de su comprobante, por favor tener en cuenta los siguientes aspectos: <br><br>
+            -El comprobante debe estar completamente legible. <br><br>
+            -El comprobante no puede estar cortado en cualquiera de sus cuatro bordes (visualización completa de la información impresa). <br><br>
+            -Verifique que los datos impresos en el comprobante estén correctos (RIF, razón social, dirección fiscal, 14 dígitos del numero de comprobante, numero de factura, numero de control e importes del documento).</span>
+        </div>
       </div>
     </form>
   </div>

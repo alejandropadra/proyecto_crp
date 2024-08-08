@@ -427,8 +427,8 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
             //console.log(diferenciass);
             actualizarDiv.textContent = `${diferenciass.toFixed(2)}` + transaccion;
 
-            if (!facturasSi.includes(vblen)) {
-                facturasSi.push(vblen);
+            if (!facturasSi.includes(i)) {
+                facturasSi.push(i);
             }
 
             facturasCompensadas.push({
@@ -849,18 +849,17 @@ function colocarReadOnlyFacturasDos(posicion) {
 function colocarReadOnlyFacturastres(posicion) {
     const facturas = document.querySelectorAll('.NOvencidos');
 
-
     facturas.forEach((factura, index) => {
         const inputs = factura.querySelectorAll('input, select, textarea');
         if (index === posicion) {
             inputs.forEach(input => {
-                input.setAttribute('readonly');
-                input.setAttribute('disabled');
+                input.setAttribute('readonly', 'true');
+                input.setAttribute('disabled', 'true');
             });
         } else {
             inputs.forEach(input => {
-                input.removeAttribute('readonly', 'true');
-                input.removeAttribute('disabled', 'true');
+                input.removeAttribute('readonly');
+                input.removeAttribute('disabled');
             });
         }
     });

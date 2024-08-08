@@ -96,7 +96,7 @@
           {{ render_field(form.monto, class="inputField", id="monto", required="", min="0.01", step="0.01" , oninput="validateMonto(this)" , label_attr={"class": "label", "for": "monto"}) }}
         </div>
         <div class="d-flex w-100  justify-content-between position-relative">
-          <div id="alert" class="alert-container2 z-2">
+          <div id="alert" class="alert-container2 z-2 bg-warning">
             <i class="bi bi-exclamation-circle h-100"></i>
             <span id="alert-message"></span>
           </div>
@@ -120,7 +120,7 @@
               <div class="flotante" id="actualizar"></div>
             </div>
             <div class="col d-flex">
-              <h5 class="etiqueta">Facturas seleccionadas</h5>
+              <h5 class="etiqueta">Documentos seleccionados</h5>
               <div class="flotante" id="actualizar2"></div>
             </div>
           </div>
@@ -135,7 +135,7 @@
             {% set ns = namespace(contador=1) %}
             {% for factura in facturas_vencidas %}
                 {% if 'blart' in factura %}
-                  {%  if factura['blart'] == 'RV' and factura['status'] == ''%}
+                  {%  if (factura['blart'] == 'RV' or factura['blart'] == 'DA') and factura['status'] == ''  %}
                     {% set fecvenc1 = factura['fecvenc1'] %}
                         
                       <div class="vencidos w-100 d-flex flex-column tap">
@@ -148,7 +148,7 @@
                               <div class="row w-100">
                                 <div class="texto-mid d-flex align-items-center justify-content-center col " id="factura_comparar">
                                   
-                                  <p>  <strong>{%if factura['netwr'] < 0 %} Nota de Credito: {% elif factura['netwr']>0  %} Factura: {%endif%}</strong> {{factura['vbeln'] }}  </p>   
+                                  <p>  <strong>{%if factura['netwr'] < 0 %} Nota de Credito: {% elif factura['blart']== 'DA' and factura['netwr']>0%}Giros por pagar: {% elif factura['netwr']>0  %} Factura: {%endif%}</strong> {{factura['vbeln'] }}  </p>   
                                   <span id="vbeln{{ ns.contador }}" class="d-none" name="fact[]">{{factura['vbeln'] }} </span>
                                   <span id="fkdat{{ ns.contador }}" class="d-none">{{factura['fkdat'] }} </span>
                                   <span id="belnr1{{ ns.contador }}" class="d-none">{{factura['belnr1'] }} </span>
@@ -320,13 +320,14 @@
                 {% endif %}
             {% endfor %}
 
-
-            {% set facturas_filtradas = facturas_NOvencidas | selectattr('blart', 'equalto', 'RV') | selectattr('status', 'equalto', '') | list %}
+            {% set facturas_filtradas_rv = facturas_NOvencidas | selectattr('blart', 'equalto', 'RV')|  selectattr('status', 'equalto', '') | list %}
+            {% set facturas_filtradas_da = facturas_NOvencidas | selectattr('blart', 'equalto', 'DA')|  selectattr('status', 'equalto', '') | list %}
+            {% set facturas_filtradas = facturas_filtradas_rv + facturas_filtradas_da%}
             {% if facturas_filtradas|length > 0 %}
               <div class="contenedor_facts_noven w-100 p-0 m-0">
               {% for factura in facturas_NOvencidas %}
                 {% if 'blart' in factura %}
-                  {%  if factura['blart'] == 'RV' and factura['status'] == ''%}
+                {%  if (factura['blart'] == 'RV' or factura['blart'] == 'DA') and factura['status'] == ''  %}
                     {% set fecvenc1 = factura['fecvenc1'] %}
                       <div class="NOvencidos w-100 d-flex flex-column tap">
                         <label class="check p-2 d-flex gap-2">
@@ -528,8 +529,6 @@
       </div>
     </form>
   </div>
-
-
 
 
 </main>
