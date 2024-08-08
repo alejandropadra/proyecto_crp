@@ -36,10 +36,10 @@
               </p>
           </div>
           <div class="d-flex justify-content-between py-1 px-2">
-            <div><p class="etiqueta-size">Monto $</p></div>  <div><p class="etiqueta-size "> {{ "{:,.2f}".format(total_saldo_dolar|float) }}</p> </div>
+            <div><p class="etiqueta-size">Monto $</p></div>  <div><p class="etiqueta-size "> {{ "{:,.2f}".format(total_saldo_dolar|float|abs) }}</p> </div>
         </div>
         <div class="d-flex justify-content-between py-1 px-2">
-          <div><p class="etiqueta-size">Monto bs</p></div> <div> <p class="etiqueta-size">{{ "{:,.2f}".format(total_saldo_bs|float) }}</p> </div>  
+          <div><p class="etiqueta-size">Monto bs</p></div> <div> <p class="etiqueta-size">{{ "{:,.2f}".format(total_saldo_bs|float|abs) }}</p> </div>  
       </div>
         </div>
 

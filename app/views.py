@@ -629,9 +629,17 @@ def dashboard():
     except requests.exceptions.RequestException as err:
         print(f"Error en la petición: {err}")
         ret = 0  # Asegúrate de inicializar 'ret' en caso de error
+        response_json = []
+        response_json1 =[]
+        response_json2 = []
+        response_json3 = []
     except Exception as e:
         print(f"Otro error: {e}")
         ret = 0  # Asegúrate de inicializar 'ret' en caso de otro tipo de error
+        response_json = []
+        response_json1 =[]
+        response_json2 = []
+        response_json3 = []
 
     return render_template("collections/dashboard.html", titulo = "Estado de cuenta", pagos=pagos, pago_t = pago_t,rate=0, no_vencido_dolar=response_json['tnovencdiv'],no_vencido_bs=response_json['tnovencbs'],total_deudas_dolares=response_json['tdeudadiv'],total_deudas_bs=response_json['tdeudabs'], total_saldo_dolar=response_json['tsaldofdiv'],total_saldo_bs=response_json['tsaldofbs'], total_bolos=response_json['totfactbs'],total_vencido_d=response_json['tvencdiv'],total_vencido_b=response_json['tvencbs'],vencido_130_d=response_json['tvenc130d'],vencido_130_b=response_json['tvenc130b'], vencido_3160_d=response_json['tvecc3160d'], vencido_3160_b=response_json['tvecc3160b'], vencido_60_d=response_json['tvec61masd'], vencido_60_b=response_json['tvec61masb'], facturas =response_json1, retenciones=response_json2,contador_fact = ret)
 
