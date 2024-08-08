@@ -7,9 +7,9 @@
     <table id="example" class="dataTable table" style="width:100%;">
         <thead>
             <tr>
-                <th>N° Doc. Comercial</th>
-                <th>Descripción</th>
                 <th>Fecha emisión</th>
+                <th>Descripción</th>
+                <th>N° Doc. Comercial</th>
                 <th>Monto $</th>
                 <th>Monto Bs</th>
                 <th>Estatus</th>
@@ -17,34 +17,31 @@
         </thead>
         <tbody>
             {% for pago in pagos %}
-                
+            {% if pago['blart'] !='AB' %}
+            {% if pago['blart'] != 'ZD' %}
+            {% if pago['blart'] != 'DA' %}
             <tr class="celda text-center"  style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Click para mas detalles">
-                {% for clave, valor in pago.items() %}
-                {%if clave == 'fkdat'%}
-                <td class="">{{valor}} </td>
-                {% elif clave == 'blart' %}
-                <td>{% if valor == 'DZ' %}Abono{% elif valor == 'RV' %}Factura{% else %}{{valor}}{% endif %}</td>
-                {% elif clave == 'vbeln'%}
-                <td onclick="location.href='{{ url_for('.documento',  n=valor )}}'";>{{valor}}</td>
-                {% elif clave == 'dmbtr' %}
-                <td>{{ "{:,.2f}".format(valor) }} </td>
-                {% elif clave == 'totfactbs' %}
-                <td>{{ "{:,.2f}".format(valor) }}</td>
-                <td style="text-align: center;">
-                    <a href="" style="text-align: center;" class="btn {% if  pago['status'] == '' %} bg-secondary text-white {% elif  pago['status'] == 'P' %} bg-warning text-white {% endif %}" >{% if  pago['status'] == '' and pago['blart'] == 'RV' %} Pendiente por pagar {% elif  pago['status'] == 'P' %} Pendiente por validar{% endif %}</a>                   
-                </td>
-                {% endif %}
-                {% endfor %}
-            </tr>
-            
+                <td class="">{{pago['fkdat']}} </td>
+                <td>{% if pago['blart'] == 'DZ' %}Abono{% elif pago['blart'] == 'RV' and pago['dmbtr']>0 %}Factura{% elif pago['blart'] == 'RV' and 0>pago['dmbtr'] %}Nota de Crédito {% else %}{{pago['blart']}}{% endif %}</td>
+                <td onclick="location.href='{{ url_for('.documento',  n=pago['vbeln'] )}}'";>{{pago['vbeln']}}</td>
+                <td>{{ "{:,.2f}".format(pago['dmbtr']) }} </td>
+                <td>{{ "{:,.2f}".format(pago['totfactbs']) }}</td>
+                
+            <td style="text-align: center;">
+                <a href="" style="text-align: center;" class="btn {% if  pago['status'] == '' %} bg-secondary text-white {% elif  pago['status'] == 'P' %} bg-warning text-white {% endif %}" >{% if  pago['status'] == '' and pago['blart'] == 'RV' %} Pendiente por pagar {% elif  pago['status'] == 'P' %} Pendiente por validar {% elif pago['blart'] == 'DZ' %}Abono por conciliar{% endif %}</a>                   
+            </td>
+        </tr>
+            {% endif%}
+            {% endif%}
+            {% endif%}
             {% endfor %}
         </tbody>
 
         <tfoot>
             <tr>
-                <th>N° Doc. Comercial</th>
-                <th>Descripción</th>
                 <th>Fecha emisión</th>
+                <th>Descripción</th>
+                <th>N° Doc. Comercial</th>
                 <th>Monto $</th>
                 <th>Monto Bs</th>
                 <th>Estatus</th>
@@ -52,10 +49,6 @@
         </tfoot>
     </table>
 </div>
-
-
-
-
 {% else%}
 <div class="tab-content" id="myTabContent" style="margin-top: 100px;">
         <div class="container mt-4 table-responsive mb-5" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); padding: 20px 20px 20px 20px; border-radius: 7px;">  

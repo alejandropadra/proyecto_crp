@@ -7,7 +7,7 @@
 <div class="courses-container z-0 container p-0 " >
   <div class="row d-flex gap-4 mb-4">
 
-    <div class="col-xl col-lg-12 col-sm-12 col-md-12 p-0 m-0 d-flex flex-column gap-2 align-items-center" >
+    <div class="col-xl col-lg-12 col-sm-12 col-md-12 p-0 m-0 d-flex flex-column gap-3 align-items-center" >
 
         <div class="tarjeta_saldo hover  mb-4 w-100 col-xl-12 col-lg-6 col-md-6 col-sm" >
           <div class="titulo_saldo d-flex align-items-center gap-2 m-0 p-0">
@@ -18,11 +18,11 @@
                   Deuda
               </p>
           </div>
-          <div class="d-flex justify-content-between px-3" >
-              <div> <p class="etiqueta-size">Monto $</p></div>  <div><p class="etiqueta-size">{% if total_dolares > 0 %} {{ "{:,.2f}".format(total_dolares|float|abs) }} {% else %}0 {% endif %}</p></div>
+          <div class="d-flex justify-content-between py-1 px-2" >
+              <div> <p class="etiqueta-size">Monto $</p></div>  <div><p class="etiqueta-size"> {{ "{:,.2f}".format(total_deudas_dolares|float|abs) }} </p></div>
           </div>
-          <div class="d-flex justify-content-between px-3" >
-            <div><p class="etiqueta-size">Monto bs</p></div>  <div>  <p class="etiqueta-size">{% if total_bolos > 0 %}{{ "{:,.2f}".format(total_bolos|float|abs) }}{% else %}0 {% endif %} </p> </div>
+          <div class="d-flex justify-content-between py-1 px-2" >
+            <div><p class="etiqueta-size">Monto bs</p></div>  <div>  <p class="etiqueta-size">{{ "{:,.2f}".format(total_deudas_bs|float|abs) }} </p> </div>
         </div>
         </div>
       
@@ -35,11 +35,11 @@
                 Saldo a favor
               </p>
           </div>
-          <div class="d-flex justify-content-between px-3">
-            <div><p class="etiqueta-size">Monto $</p></div>  <div><p class="etiqueta-size ">{% if total_dolares < 0 %}{{ "{:,.2f}".format(total_dolares|float|abs) }}{% else %}0.00 {% endif %} </p> </div>
+          <div class="d-flex justify-content-between py-1 px-2">
+            <div><p class="etiqueta-size">Monto $</p></div>  <div><p class="etiqueta-size "> {{ "{:,.2f}".format(total_saldo_dolar|float) }}</p> </div>
         </div>
-        <div class="d-flex justify-content-between px-3">
-          <div><p class="etiqueta-size">Monto bs</p></div> <div> <p class="etiqueta-size">{% if total_bolos < 0 %}{{ "{:,.2f}".format(total_bolos|float|abs) }}{% else %}0.00 {% endif %}</p> </div>  
+        <div class="d-flex justify-content-between py-1 px-2">
+          <div><p class="etiqueta-size">Monto bs</p></div> <div> <p class="etiqueta-size">{{ "{:,.2f}".format(total_saldo_bs|float) }}</p> </div>  
       </div>
         </div>
 
@@ -49,6 +49,17 @@
   <div class="d-flex flex-column  align-items-center col-xl-9 col-lg-12 col-md-12 col-sm-12 m-0 " style="background-color: #fdfdfd; padding: 20PX; border-radius: 16px;">
     <h3 class="ui-tittle text-right w-100 mb-2">  Deuda total vencida: {% if total_vencido_d > 0 %}{{"{:,.2f}".format(total_vencido_d|float|abs)}}($) | {{"{:,.2f}".format(total_vencido_b|float|abs)}}(bs){% else %}  {%endif%}</h3>
     <div class="row d-flex gap-3 px-3 pt-1 ">
+
+      <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
+        <div class="course-info d-flex flex-column justify-content-center ">
+          <h6 class="mx-1 ui-tittle fs-5">No Vencido: </h6>
+          <div class="d-flex justify-content-between"> <div> <p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div> <span class="texto2">{{ "{:,.2f}".format(no_vencido_dolar|float|abs) }} </span> </div> </div>
+          <div class="d-flex justify-content-between"> <div> <p> <strong class="text-muted "> Monto ($): </strong> </p> </div> <div>  <span class="texto2">{{ "{:,.2f}".format(no_vencido_bs|float|abs) }} </span></p> </div> </div>
+          
+
+        </div>
+      </a>
+
       <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
         <div class="course-info d-flex flex-column justify-content-between ">
           <h6 class="mx-1 ui-tittle fs-5">Vencido 1-30 </h6>
@@ -61,7 +72,7 @@
       <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
         <div class="course-info d-flex flex-column justify-content-center ">
 
-          <h6 class="mx-1 ui-tittle fs-5">Vencido 31-60 </h6>
+          <h6 class="mx-1 ui-tittle fs-5 mb-4">Vencido 31-60 </h6>
           <div class="d-flex justify-content-between"> <div>  <p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div>  <span class="texto2">{% if vencido_3160_b > 0 %} {{"{:,.2f}".format(vencido_3160_b|float)}}{% else %} 0.00{% endif %} </span></div> </div>
           <div class="d-flex justify-content-between" > <div>  <p> <strong class="text-muted "> Monto ($): </strong> </p> </div> <div>  <span class="texto2">{% if vencido_3160_d > 0 %}  {{"{:,.2f}".format(vencido_3160_d|float)}}{% else %} 0.00{% endif %} </span> </div> </div>
           
@@ -77,6 +88,7 @@
 
         </div>
       </a>
+      
       <p><em>Este cálculo solo corresponde al monto de la deuda vencida.</em></p>
     </div>
   </div>

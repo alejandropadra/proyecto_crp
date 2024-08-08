@@ -3,6 +3,7 @@ const check3 = document.getElementById('check3');
 const check2 = document.getElementById('check2');
 const check1 = document.getElementById('check1');
 const actualizarDiv = document.getElementById('actualizar');
+const actualizarDiv2 = document.getElementById('actualizar2');
 let detenerObservador;
 let facturasCompensadas = [];
 let diferenciaActual = 0;
@@ -167,6 +168,7 @@ function handleCheckChange(event, tipo) {
         [check1, check2, check3].forEach(check => check.disabled = false);
         restablecerEstado(bancoReceptor, mensaje, monto, checkboxes);
         restablecerEstado(bancoReceptorDolar, mensaje, monto, checkboxes);
+        actualizarDiv2.textContent= ''
     }
 }
     
@@ -218,6 +220,7 @@ function handleCheckChange(event, tipo) {
     
         if (monto.value === '') {
             limpiarYResetearEstados();
+            actualizarDiv2.textContent= "";
             return;
         }
     
@@ -232,7 +235,7 @@ function handleCheckChange(event, tipo) {
         const montodpp = estado.transaccion === "bs" ? "#montobsdpp" : "#Montodlrdpp";
         const montoNormal = estado.transaccion === "bs" ? "#montoBs" : "#Montodlr";
         const montoElements = obtenerElementosMonto(checkboxes, montodpp, montoNormal);
-        s = procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas, estado.transaccion);
+        casoDos.resultado = procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas, estado.transaccion);
         document.dispatchEvent(new CustomEvent('sYtActualizados'));
     }
     
@@ -259,8 +262,8 @@ function handleCheckChange(event, tipo) {
         const containerFacts = casoDos.containerFacts;
         const noVencidas = casoDos.noVencidas;
         const checkboxesDos = document.querySelectorAll('#check5');
-        
-        const lengthsIguales = s && containerFacts && s.length === containerFacts.length;
+        const resultado = casoDos.resultado;
+        const lengthsIguales = resultado && containerFacts && resultado.facturasCompensadas.length === containerFacts.length;
     
         if (!lengthsIguales) {
             checkboxesDos.forEach(resetCheckbox);
@@ -276,7 +279,8 @@ function handleCheckChange(event, tipo) {
             const montodpp = estado.transaccion === "bs" ? "#montobsdpp" : "#Montodlrdpp";
             const montoNormal = estado.transaccion === "bs" ? "#montoBs" : "#Montodlr";
             
-            procesarFacturasCasoTres(checkboxesDos, valorActual, montodpp, montoNormal, estado.transaccion);
+             // Pasar el observador y el contador como propiedad a procesarFacturasCasoDos
+        procesarFacturasCasoDos(checkboxesDos, valorActual, montodpp, montoNormal, estado.transaccion, resultado.contador);
         } else {
             colocarReadOnlyFacturas();
             checkboxesDos.forEach(resetCheckbox);
@@ -297,6 +301,8 @@ function handleCheckChange(event, tipo) {
         casoDos.checkboxes = checkboxes;
         casoDos.containerFacts = containerFacts;
         casoDos.noVencidas = noVencidas;
+
+        casoDos.resultado = null;
     
         // Agregar event listeners
         monto.addEventListener('input', montoInputHandler);
@@ -335,6 +341,7 @@ function casoUnoTresInputHandler(event) {
         limpiarDivs('.texto-faltante', 'facts');
         limpiarDivs('.texto-abono', 'abon');
         actualizarDiv.textContent = "";
+        actualizarDiv2.textContent= "";
         facturasCompensadas = [];
         console.log('Lista de facturas compensadas vaciada');
         return;
@@ -362,7 +369,7 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
     const actualizarDiv = document.getElementById('actualizar');
     facturasCompensadas = [];
     const containerFacts = document.querySelectorAll('.vencidos');
-    
+    const facturasSi = []
     if (estado.transaccion === "bs"){
         
         montoNormal="#montoBs";
@@ -374,7 +381,15 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
 
 
     }
+
+    for (let i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i].checked) {
+            facturasAnteriores.add(i);
+        }
+    }
+
     transaccion= estado.transaccion
+    actualizarDiv2.textContent = ""
     for (let i = 0; i < checkboxes.length; i++) {
         const checkbox = checkboxes[i];
         const label = checkbox.parentNode;
@@ -405,11 +420,16 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
             console.log('suma de facturas hasta ahora: ' + sumaFacturas)*/
             checkbox.checked = true;
             label.classList.add('listo');
+            
             limpiarDivs('.texto-faltante', 'facts', label);
             limpiarDivs('.texto-abono', 'abon', checkbox.parentNode);
             diferenciass = redondear(montoValue-sumaFacturas, 2); // Actualizar dif correctamente
             //console.log(diferenciass);
             actualizarDiv.textContent = `${diferenciass.toFixed(2)}` + transaccion;
+
+            if (!facturasSi.includes(vblen)) {
+                facturasSi.push(vblen);
+            }
 
             facturasCompensadas.push({
                 vblen: vblen,
@@ -423,8 +443,13 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
                 break;
             }
         } else {
-            console.log(transaccion)
-            
+            const index = facturasSi.indexOf(vblen);
+            if (index > -1) {
+                facturasSi.splice(index, 1);
+            }
+            checkbox.checked = false;
+            label.classList.remove('listo');
+
             const montoFaltante = redondear(montoFactura - (montoValue - sumaFacturas), 2);
             const montoAbono = redondear(montoValue - sumaFacturas, 2);
             const textoFaltanteDiv = label.querySelector('.texto-faltante');
@@ -436,11 +461,20 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
             diferenciass = redondear(montoValue-sumaFacturas, 2); // Actualizar dif correctamente
             //console.log(diferenciass);
             actualizarDiv.textContent = `${diferenciass.toFixed(2)} ` + transaccion;
-
             
         }
+        
+        
+        
     }
-    return facturasCompensadas;
+    actualizarDiv2.textContent = facturasSi.length.toString();
+     // Verificación final
+     console.log("Número final de facturas seleccionadas:", facturasSi.length);
+     console.log("Facturas seleccionadas:", facturasSi);
+     return {
+        facturasCompensadas: facturasCompensadas,
+        contador: facturasSi.length
+    };
 }
 
 // Función para redondear valores a n decimales
@@ -449,119 +483,15 @@ function redondear(valor, decimales) {
     return Math.round(valor * factor) / factor;
 }
 // Función para procesar facturas en caso dos
-function procesarFacturasCasoDos(checkboxes, montoValue, montodpp, montoNormal, transaccion) {
+
+function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal, transaccion, variableConta) {
+    console.log('se ejecuta el caso 2')
     quitarReadOnlyYDisabledFacturas();
     const checksSeleccionados = [];
     let abonoRealizado = false;
     let facturaParcial = null;
     let sumaFacturasSeleccionadas = 0;
-    const checkboxesArray = Array.from(checkboxes);
-
-    checkboxesArray.forEach(checkbox => {
-        checkbox.removeEventListener('change', checkbox.changeHandler);
-
-        checkbox.changeHandler = function() {
-            const label = this.parentNode;
-            const montosElement = label.querySelector('.montos');
-            const elementoMonto = obtenerElementoMontoDos(this, montodpp, montoNormal);
-            const textoDelElemento = elementoMonto ? elementoMonto.textContent : '';
-            const valorSinSimbolo = textoDelElemento.slice(0, -2);
-            const valorNumerico = parseFloat(valorSinSimbolo.replace(',', ''));
-            const montoFactura = valorNumerico;
-            console.log(transaccion)
-            if (this.checked) {
-                if (!checksSeleccionados.includes(this)) {
-                    checksSeleccionados.push(this);
-                }
-
-                if (montosElement) {
-                    montosElement.classList.add('evaluando');
-                }
-
-                sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas + montoFactura).toFixed(2));
-                label.classList.remove('listo');
-
-
-                const posicionArray = checkboxesArray.indexOf(checkbox);
-                const vblen = document.getElementById('vbeln' + (posicionArray + 1))?.textContent;
-                const fkdat = document.getElementById('fkdat' + (posicionArray + 1))?.textContent;
-                const belnr1 = document.getElementById('belnr1' + (posicionArray + 1))?.textContent;
-                const buzei = document.getElementById('buzei' + (posicionArray + 1))?.textContent;
-                const dif = sumaFacturasSeleccionadas - montoValue;
-
-                if (dif < 0) {
-                    dif == 0.00;
-                }
-
-
-                if (!abonoRealizado) {
-                    gestionarInputs(label, montosElement, posicionArray, vblen, montoFactura, dif, fkdat, belnr1, buzei);
-                    console.log(transaccion)
-                    if (sumaFacturasSeleccionadas <= montoValue) {
-                        console.log(transaccion)
-                        checkbox.checked = true;
-                        label.classList.add('listo');
-                        limpiarDivs('.texto-faltante', 'facts', label);
-                        limpiarDivs('.texto-abono', 'abon', checkbox.parentNode);
-                        const diferenciaDos = (parseFloat(montoValue) - sumaFacturasSeleccionadas).toFixed(2);
-                        actualizarDiv.textContent = `${diferenciaDos} ` + transaccion;
-
-                    } else {
-                        console.log(transaccion)
-                        const montoFaltante = (sumaFacturasSeleccionadas - montoValue).toFixed(2);
-                        const montoAbono = (montoValue - (sumaFacturasSeleccionadas - montoFactura)).toFixed(2);
-                        const textoFaltanteDiv = label.querySelector('.texto-faltante');
-                        textoFaltanteDiv.textContent = `Monto pendiente: ${montoFaltante} ` + transaccion;
-                        const textoAbonoDiv = checkbox.parentNode.querySelector('.texto-abono');
-                        textoAbonoDiv.textContent = `Monto abonado: ${montoAbono} ` + transaccion;
-                        actualizarDiv.textContent = `${0.00} ` + transaccion;
-                        textoFaltanteDiv.classList.add('facts');
-                        textoAbonoDiv.classList.add('abon');
-                        abonoRealizado = true;
-
-                        facturaParcial = posicionArray;
-                        colocarReadOnlyFacturasDos(facturaParcial);
-
-                    }
-                } else {
-                    colocarReadOnlyFacturasDos(facturaParcial);
-                }
-            } else {
-                const index = checksSeleccionados.indexOf(this);
-                if (index > -1) {
-                    const elementoMonto = obtenerElementoMontoDos(this, montodpp, montoNormal);
-                    const textoDelElemento = elementoMonto ? elementoMonto.textContent : '';
-                    const valorSinSimbolo = textoDelElemento.slice(0, -2);
-                    const valorNumerico = parseFloat(valorSinSimbolo.replace(',', ''));
-                    const montoFactura = valorNumerico;
-
-                    checksSeleccionados.splice(index, 1);
-                    sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
-                    actualizarDiv.textContent = `${(montoValue - sumaFacturasSeleccionadas).toFixed(2)} ` + transaccion;
-                    resetCheckbox(this);
-                    const posicionArray = checkboxesArray.indexOf(checkbox);
-                    const vblen = document.getElementById('vbeln' + (posicionArray + 1))?.textContent;
-                    eliminarClaseEvaluando(montosElement);
-                    eliminarInputsDos(posicionArray);
-                }
-                abonoRealizado = false;
-                quitarReadOnlyYDisabledFacturas();
-                eliminarClaseEvaluando(montosElement);
-            }
-        };
-
-        checkbox.addEventListener('change', checkbox.changeHandler);
-    });
-}
-
-
-function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal, transaccion) {
-    console.log('sssssss')
-    quitarReadOnlyYDisabledFacturas();
-    const checksSeleccionados = [];
-    let abonoRealizado = false;
-    let facturaParcial = null;
-    let sumaFacturasSeleccionadas = 0;
+    let contador= variableConta;
 
     const checkboxesArray = Array.from(checkboxes);
 
@@ -616,6 +546,8 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                         limpiarDivs('.texto-faltante', 'facts', label);
                         limpiarDivs('.texto-abono', 'abon', checkbox.parentNode);
                         actualizarDiv.textContent = `${(montoValue - sumaFacturasSeleccionadas).toFixed(2)} `+ transaccion; // Actualizar el contenido del div
+                        contador ++;
+                        actualizarDiv2.textContent = contador;
                     } else {
                         checkbox.checked= false;
                         sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
@@ -625,6 +557,12 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                         console.log(sumaFacturasSeleccionadas)
                         facturaParcial = posicionArray;
                         colocarReadOnlyFacturastres(facturaParcial)
+                        contador--;
+                        if (contador < 0 ){
+                            actualizarDiv2.textContent = "0";
+                        }else{
+                            actualizarDiv2.textContent = contador;
+                        }
                         
                         /*
                         
@@ -658,6 +596,149 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                     actualizarDiv.textContent = `${(montoValue - sumaFacturasSeleccionadas).toFixed(2)} `+ transaccion; // Actualizar el contenido del div
                     console.log(`Diferencia actual: ${(montoValue - sumaFacturasSeleccionadas).toFixed(2)} `+ transaccion);
 
+                    contador--;
+                        if (contador < 0 ){
+                            actualizarDiv2.textContent = "0";
+                        }else{
+                            actualizarDiv2.textContent = contador;
+                        }
+                    resetCheckbox(this);
+                    const posicionArray = checkboxesArray.indexOf(checkbox);
+                    const vblen = document.getElementById('vbeln' + (posicionArray + 1))?.textContent;
+                    console.log("Se desmarcó la factura: " + vblen + " con un monto de " + valorNumerico);
+                    console.log("Suma total hasta ahora: " + sumaFacturasSeleccionadas);
+                    eliminarClaseEvaluando(montosElement);
+                    eliminarInputsDos(posicionArray);
+                }
+                abonoRealizado = false;
+                quitarReadOnlyYDisabledFacturas();
+                eliminarClaseEvaluando(montosElement);
+            }
+        };
+
+        checkbox.addEventListener('change', checkbox.changeHandler);
+    });
+}
+
+
+function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal, transaccion) {
+    console.log('sssssss')
+    quitarReadOnlyYDisabledFacturas();
+    const checksSeleccionados = [];
+    let abonoRealizado = false;
+    let facturaParcial = null;
+    let sumaFacturasSeleccionadas = 0;
+    let contador= 0
+
+    const checkboxesArray = Array.from(checkboxes);
+
+    checkboxesArray.forEach(checkbox => {
+        checkbox.removeEventListener('change', checkbox.changeHandler);
+
+        checkbox.changeHandler = function() {
+            const label = this.parentNode;
+            const montosElement = label.querySelector('.montos');
+            if (this.checked) {
+                if (!checksSeleccionados.includes(this)) {
+                    checksSeleccionados.push(this);
+                }
+
+                if (montosElement) {
+                    montosElement.classList.add('evaluando');
+                }
+                const elementoMonto = obtenerElementoMontoDos(this, montodpp, montoNormal);
+                const textoDelElemento = elementoMonto ? elementoMonto.textContent : '';
+                const valorSinSimbolo = textoDelElemento.slice(0, -2);
+                const valorNumerico = parseFloat(valorSinSimbolo.replace(',', ''));
+                const montoFactura = valorNumerico;
+                sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas + parseFloat(montoFactura)).toFixed(2));
+                label.classList.remove('listo');
+            
+                const posicionArray = checkboxesArray.indexOf(checkbox);
+                const vblen = document.getElementById('vbeln' + (posicionArray + 1))?.textContent;
+                const fkdat = document.getElementById('fkdat' + (posicionArray + 1))?.textContent;
+                const belnr1 = document.getElementById('belnr1' + (posicionArray + 1))?.textContent;
+                const buzei = document.getElementById('buzei' + (posicionArray + 1))?.textContent;
+                const dif =  sumaFacturasSeleccionadas - montoValue ;
+                if (dif < 0){
+                    dif==0.00
+                }
+
+                const diferenciaInput = redondear(montoValue - (sumaFacturasSeleccionadas - montoFactura), 2)
+                ///actualizarDiv.textContent = `${parseFloat(dif).toFixed(2)} ` + transaccion; // Actualizar el contenido del div
+                console.log("Se seleccionó la factura: " + vblen + " con un monto de " + valorNumerico);
+                console.log("Suma total hasta ahora: " + sumaFacturasSeleccionadas);
+                
+
+                if (!abonoRealizado) {
+
+                    
+
+                    if (sumaFacturasSeleccionadas <= montoValue) {
+                        
+                        gestionarInputs(label, montosElement, posicionArray, vblen, montoFactura, diferenciaInput, fkdat, belnr1, buzei);
+                        console.log(transaccion)
+                        checkbox.checked = true;
+                        label.classList.add('listo');
+                        limpiarDivs('.texto-faltante', 'facts', label);
+                        limpiarDivs('.texto-abono', 'abon', checkbox.parentNode);
+                        actualizarDiv.textContent = `${(montoValue - sumaFacturasSeleccionadas).toFixed(2)} `+ transaccion; // Actualizar el contenido del div
+                        contador ++;
+                        actualizarDiv2.textContent = contador;
+                    } else {
+                        checkbox.checked= false;
+                        sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
+                        
+                        actualizarDiv.textContent = `${(montoValue - sumaFacturasSeleccionadas).toFixed(2)} ` + transaccion; // Actualizar el contenido del div
+                        console.log("La selección de esta factura hace que la suma exceda el monto permitido. La suma se ha anulado.");
+                        console.log(sumaFacturasSeleccionadas)
+                        facturaParcial = posicionArray;
+                        colocarReadOnlyFacturastres(facturaParcial)
+                        contador--;
+                        if (contador < 0 ){
+                            actualizarDiv2.textContent = "0";
+                        }else{
+                            actualizarDiv2.textContent = contador;
+                        }
+                        
+                        /*
+                        
+                        const montoFaltante = (sumaFacturasSeleccionadas - montoValue).toFixed(2);
+                        const montoAbono = (montoValue - (sumaFacturasSeleccionadas - montoFactura)).toFixed(2);
+                        const textoFaltanteDiv = label.querySelector('.texto-faltante');
+                        textoFaltanteDiv.textContent = `Monto pendiente: ${montoFaltante} `+ transaccion;
+                        const textoAbonoDiv = checkbox.parentNode.querySelector('.texto-abono');
+                        textoAbonoDiv.textContent = `Monto abonado: ${montoAbono} `+ transaccion;
+                        actualizarDiv.textContent = `${0.00} ` + transaccion; // Actualizar el contenido del div
+                        ///textoFaltanteDiv.classList.add('facts');->Comentado para los abonos
+                        ///textoAbonoDiv.classList.add('abon'); ->Comentado para los abonos
+                        abonoRealizado = true;
+
+                        facturaParcial = posicionArray;
+                        colocarReadOnlyFacturasDos(facturaParcial)*/
+                    }
+                } else {
+                    colocarReadOnlyFacturasDos(facturaParcial)
+                }
+            } else {
+                const index = checksSeleccionados.indexOf(this);
+                if (index > -1) {
+                    checksSeleccionados.splice(index, 1);
+                    const elementoMonto = obtenerElementoMontoDos(this, montodpp, montoNormal);
+                    const textoDelElemento = elementoMonto ? elementoMonto.textContent : '';
+                    const valorSinSimbolo = textoDelElemento.slice(0, -2);
+                    const valorNumerico = parseFloat(valorSinSimbolo.replace(',', ''));
+                    const montoFactura = valorNumerico;
+                    sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
+                    actualizarDiv.textContent = `${(montoValue - sumaFacturasSeleccionadas).toFixed(2)} `+ transaccion; // Actualizar el contenido del div
+                    console.log(`Diferencia actual: ${(montoValue - sumaFacturasSeleccionadas).toFixed(2)} `+ transaccion);
+
+                    contador--;
+                        if (contador < 0 ){
+                            actualizarDiv2.textContent = "0";
+                        }else{
+                            actualizarDiv2.textContent = contador;
+                        }
                     resetCheckbox(this);
                     const posicionArray = checkboxesArray.indexOf(checkbox);
                     const vblen = document.getElementById('vbeln' + (posicionArray + 1))?.textContent;
@@ -1415,3 +1496,31 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300); // Ajusta el tiempo en milisegundos según sea necesario
     });
 });*/
+
+
+
+
+function showAlert(message) {
+    const alertContainer = document.getElementById('alert');
+    const alertMessage = document.getElementById('alert-message');
+    alertMessage.textContent = message;
+    alertContainer.style.display = 'flex';
+    setTimeout(() => {
+        alertContainer.style.display = 'none';
+    }, 3000); // Ocultar después de 3 segundos
+}
+
+function validateMonto(input) {
+    const value = parseFloat(input.value);
+
+    if (value <= 0) {
+        input.value = '';
+        showAlert('El monto debe ser mayor a 0');
+        return;
+    }
+
+    if (input.value.includes(',')) {
+        input.value = '';
+        showAlert('Para colocar decimales utilice ".", no la ","');
+    }
+}

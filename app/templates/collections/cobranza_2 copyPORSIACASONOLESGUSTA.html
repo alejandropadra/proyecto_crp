@@ -37,13 +37,7 @@
             <i class="fa-solid fa-building-columns inputIcon"></i>
             {{ render_field(form.empresa_beneficiaria, class="inputField", id="empresa_beneficiaria", value="Corimon Pinturas, C.A.", readonly= readonly ) }}
           </div>
-          <h5 class="etiqueta">Fecha de depósito</h5>
-        <div class="inputContainer">
-          <i class="fa-regular fa-calendar inputIcon"></i>
-          {{ render_field(form.fecha_deposito, class="inputField", id="fecha", value=Fecha_pago, readonly=readonly  ) }}
         </div>
-      </div>
-        
 
         <!--onchange="javascript:seleccionar_empresa()"-->
 
@@ -77,6 +71,29 @@
           {{ render_field(form.banco_receptor_dolar, class="inputField d-none", id="banco_receptor_dolar") }}
         </div>
 
+        <h5 class="etiqueta">Fecha de depósito</h5>
+        <div class="inputContainer">
+          <i class="fa-regular fa-calendar inputIcon"></i>
+          {{ render_field(form.fecha_deposito, class="inputField", id="fecha", value=Fecha_pago, readonly=readonly  ) }}
+        </div>
+
+        
+        
+        <h5 class="etiqueta">Monto pagado</h5>
+        <div class="inputContainer z-1">
+          <i class="fa-solid fa-hand-holding-dollar inputIcon"></i>
+          {{ render_field(form.monto, class="inputField", id="monto", required="", min="0.01", step="0.01" , oninput="validateMonto(this)" , label_attr={"class": "label", "for": "monto"}) }}
+        </div>
+
+        <div class="d-flex w-100  justify-content-between position-relative">
+          <div id="alert" class="alert-container z-2">
+            <i class="bi bi-exclamation-circle h-100"></i>
+            <span id="alert-message"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="contenedor col-xl-5 col-md-6 col-lg-6 col-sm-12 d-flex flex-column justify-content-around ">
         <div class="inputContainer d-flex flex-column">
           <h5 class="etiqueta">Ingrese el Número de Referencia del pago</h5>
           <i class="fa-solid fa-book-bookmark inputIcon"></i>
@@ -88,50 +105,29 @@
           <i class="fa-regular fa-credit-card inputIcon"></i>
           <input type="file" name="archivo" class="inputField" style="max-width: 100%;">
         </div>
-
-
-        <h5 class="etiqueta">Monto pagado</h5>
-        <div class="inputContainer z-1">
-          <i class="fa-solid fa-hand-holding-dollar inputIcon"></i>
-          {{ render_field(form.monto, class="inputField", id="monto", required="", min="0.01", step="0.01" , oninput="validateMonto(this)" , label_attr={"class": "label", "for": "monto"}) }}
-        </div>
-        <div class="d-flex w-100  justify-content-between position-relative">
-          <div id="alert" class="alert-container2 z-2">
-            <i class="bi bi-exclamation-circle h-100"></i>
-            <span id="alert-message"></span>
-          </div>
-        </div>
-
-
       </div>
 
-
-
-      <div class="contenedore atention col-xl-12 col-md-12 col-lg-12 h-100 col-sm-12 d-flex flex-column p-4 position-relative  py-3" style="min-height: 500px; " >
+      <div class="contenedor atention col-xl col-md col-lg col-sm-12 d-flex flex-column p-4 position-relative" >
         <div class="mensajeDos w-100"><p>Por favor, ingrese el monto</p></div>
         
         
         
     
-        <div class="header  gap-2">
-          <div class="row w-100">
-            <div class="col d-flex">
-              <h5 class="etiqueta">Monto disponible para abonar:</h5>
-              <div class="flotante" id="actualizar"></div>
-            </div>
-            <div class="col d-flex">
-              <h5 class="etiqueta">Facturas seleccionadas</h5>
-              <div class="flotante" id="actualizar2"></div>
-            </div>
+        <div class="header flex-column gap-2">
+          <div class="d-flex w-100"> 
+            <h5 class="etiqueta">Monto disponible para abonar:</h5>
+            <div class="flotante" id="actualizar"></div>
           </div>
-            
-          
+          <div class="d-flex w-100">
+            <h5 class="etiqueta">Facturas seleccionadas</h5>
+            <div class="flotante" id="actualizar"></div>
+          </div>
         </div>
     
         
         
-        <div class="tabla-facturas w-100 mt-0 p-1 h-100">
-          <div class="inputContainer flex-column mt-2 h-100">
+        <div class="tabla-facturas dos w-100 mt-0 p-1">
+          <div class="inputContainer flex-column mt-2 ">
             {% set ns = namespace(contador=1) %}
             {% for factura in facturas_vencidas %}
                 {% if 'blart' in factura %}
@@ -534,5 +530,31 @@
 
 </main>
 
+<script>
+  function showAlert(message) {
+    const alertContainer = document.getElementById('alert');
+    const alertMessage = document.getElementById('alert-message');
+    alertMessage.textContent = message;
+    alertContainer.style.display = 'flex';
+    setTimeout(() => {
+        alertContainer.style.display = 'none';
+    }, 8000); // Ocultar después de 3 segundos
+}
+
+function validateMonto(input) {
+    const value = parseFloat(input.value);
+
+    if (value <= 0) {
+        input.value = '';
+        showAlert('El monto debe ser mayor a 0');
+        return;
+    }
+
+    if (input.value.includes(',')) {
+        input.value = '';
+        showAlert('Para colocar decimales utilice ".", no la ","');
+    }
+}
+</script>
 
 {% endblock %}

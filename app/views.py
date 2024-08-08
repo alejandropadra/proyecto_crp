@@ -73,6 +73,26 @@ def login():
             flash(ERROR_USER_PASSWORD ,'error')
     return render_template("auth/login.html", form = login_form, titulo = "Login")
 
+@page.route("/portal", methods = ["GET","POST"])
+def portal():
+    if current_user.is_authenticated:
+        return redirect(url_for('.dashboard'))
+    
+    login_form = LoginForm(request.form)
+    if request.method == "POST":
+        rif = login_form.rif.data
+        n_rif =login_form.n_rif.data
+        usuario = rif+""+n_rif
+        clave = login_form.clave.data
+        user = User.get_by_rif(usuario)
+        if user and user.verify_password(clave):
+            login_user(user)
+            flash(LOGIN)
+            return redirect(url_for('.modulos'))
+        else:
+            flash(ERROR_USER_PASSWORD ,'error')
+    return render_template("auth/portal.html", form = login_form, titulo = "Login")
+
 @page.route("/registro", methods = ["GET", "POST"])
 #@login_required
 def registroUsuario():
@@ -192,7 +212,7 @@ def cobranza2():
         'CLIENTE':current_user.rif,
         'FEC_DEP': fecha_pago
     }
-    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=False)
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
     fecha = datetime.strptime(fecha_pago, "%Y%m%d")  # Usar el mismo formato
     fecha = fecha.strftime("%Y-%m-%d")  # Formato original
     if response.status_code == 200:
@@ -334,7 +354,7 @@ def cobranza2():
         print('cabecera:',data)
         print('detalle:',datos)
         # Realizar la solicitud POST con los datos en formato JSON
-        response = requests.post(url, auth=HTTPBasicAuth(user_fuente, contra_fuente),json=datos,headers=headers,verify=False)
+        response = requests.post(url, auth=HTTPBasicAuth(user_fuente, contra_fuente),json=datos,headers=headers,verify=True)
         print(response)
         # Verificar la respuesta
         if response.status_code == 200:
@@ -538,7 +558,7 @@ def dashboard():
         'CLIENTE':current_user.rif,
         'FEC_DEP': Fecha_pago
     }
-    response1 = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args,headers=headers, verify=False)
+    response1 = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args,headers=headers, verify=True)
     if response1.status_code == 200:
         response_json1 = json.loads(response1.content)
         response_json1 = str(response_json1)
@@ -557,7 +577,7 @@ def dashboard():
         'CLIENTE':current_user.rif,
         'TOTALES':'X'
     }
-    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args,headers=headers, verify=False)
+    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args,headers=headers, verify=True)
     if response.status_code == 200:
         response_json = json.loads(response.content)
         response_json = str(response_json)
@@ -575,7 +595,7 @@ def dashboard():
         'SOCIEDAD': '1200',
         'CLIENTE':current_user.rif,
     }
-    response_ret = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=False)
+    response_ret = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
     if response_ret.status_code == 200:
         response_json2 = json.loads(response_ret.content)
         response_json2 = str(response_json2)
@@ -596,7 +616,7 @@ def dashboard():
         'CLIENTE':current_user.rif,
     }
     try:
-        response_fact = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=False)
+        response_fact = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
         response_fact.raise_for_status()  # Esto lanzará una excepción para códigos de estado HTTP no exitosos
         
         response_json3 = json.loads(response_fact.content)
@@ -613,7 +633,7 @@ def dashboard():
         print(f"Otro error: {e}")
         ret = 0  # Asegúrate de inicializar 'ret' en caso de otro tipo de error
 
-    return render_template("collections/dashboard.html", titulo = "Estado de cuenta", pagos=pagos, pago_t = pago_t,rate=0,total_dolares=response_json['dmbtr'],total_bolos=response_json['totfactbs'],total_vencido_d=response_json['tvencdiv'],total_vencido_b=response_json['tvencbs'],vencido_130_d=response_json['tvenc130d'],vencido_130_b=response_json['tvenc130b'], vencido_3160_d=response_json['tvecc3160d'], vencido_3160_b=response_json['tvecc3160b'], vencido_60_d=response_json['tvec61masd'], vencido_60_b=response_json['tvec61masb'], facturas =response_json1, retenciones=response_json2,contador_fact = ret)
+    return render_template("collections/dashboard.html", titulo = "Estado de cuenta", pagos=pagos, pago_t = pago_t,rate=0, no_vencido_dolar=response_json['tnovencdiv'],no_vencido_bs=response_json['tnovencbs'],total_deudas_dolares=response_json['tdeudadiv'],total_deudas_bs=response_json['tdeudabs'], total_saldo_dolar=response_json['tsaldofdiv'],total_saldo_bs=response_json['tsaldofbs'], total_bolos=response_json['totfactbs'],total_vencido_d=response_json['tvencdiv'],total_vencido_b=response_json['tvencbs'],vencido_130_d=response_json['tvenc130d'],vencido_130_b=response_json['tvenc130b'], vencido_3160_d=response_json['tvecc3160d'], vencido_3160_b=response_json['tvecc3160b'], vencido_60_d=response_json['tvec61masd'], vencido_60_b=response_json['tvec61masb'], facturas =response_json1, retenciones=response_json2,contador_fact = ret)
 
 
 @page.route("/lista", methods=["GET","POST"])
@@ -646,7 +666,7 @@ def lista_cobranza():
         'SOCIEDAD': '1200',
         'CLIENTE':current_user.rif,
     }
-    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente),params=args, headers=headers,verify=False)
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente),params=args, headers=headers,verify=True)
     if response.status_code == 200:
         response_json = json.loads(response.content)
         response_json = str(response_json)
@@ -713,7 +733,7 @@ def historial():
             'CLIENTE': current_user.rif,
             'MESES': ''
         }
-        response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=False)
+        response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
         if response.status_code == 200:
             try:
                 response_json = json.loads(response.content)
@@ -727,7 +747,7 @@ def historial():
                 response_json = []
         else:
             print('Error en la peticion')
-        return render_template("collections/historial_pagos.html", titulo="Historial de pagos", pagos=response_json)
+        return render_template("collections/historial_pagos.html", titulo="Historial de documentos verificados", pagos=response_json)
     else:
         # Manejar otros métodos HTTP (PUT, DELETE, etc.) si es necesario
         return jsonify({'error': 'Método HTTP no permitido'}), 405

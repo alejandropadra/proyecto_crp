@@ -65,7 +65,7 @@ def pago_crm_mail(user, pago,post_imagen,nombre_imagen, pagos):
 
     message = Message('Pago Registrado Referencia'+' '+ pago['XBLNR'],
                     sender=current_app.config['MAIL_USERNAME'],
-                    recipients=[correo])
+                    recipients=['alejandro_padra@corimon.com'])
     message.html = render_template('email/registro_pago_crm.html', user=user, pago=pago, pagos=pagos)
     try:
         with app.open_resource(post_imagen) as adjunto:
