@@ -83,7 +83,7 @@
       </a>
       <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
         <div class="course-info d-flex flex-column justify-content-center ">
-          <h6 class=" ui-tittle-tres">No Vencido: </h6>
+          <h6 class=" ui-tittle-tres">Vencido 60+: </h6>
           <div class="d-flex justify-content-between"> <div> <p> <strong class="text-muted "> Monto ($): </strong> </p> </div> <div>  <span class="texto2">{% if vencido_60_b > 0 %} {{"{:,.2f}".format(vencido_60_d|float)}}{% else %} 0.00 {% endif %}  </span></p> </div> </div>
           <div class="d-flex justify-content-between"> <div> <p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div> <span class="texto2">{% if vencido_60_d > 0 %}  {{"{:,.2f}".format(vencido_60_b|float)}}{% else %} 0.00{% endif %}</span> </div> </div>
 
