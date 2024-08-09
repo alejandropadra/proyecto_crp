@@ -2,7 +2,7 @@
 {% from 'helpers/_forms.html' import render_field %}
 {% block main %}
 
-<main class="position-relative mt-2 px-3 " style="min-height: 100vh;" >
+<main class="position-relative mt-2 p-3 mb-5 "  >
 
 <div class="courses-container z-0 container p-0 " >
   <div class="row d-flex gap-4 mb-4">
@@ -63,7 +63,7 @@
 
       <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
         <div class="course-info d-flex flex-column justify-content-center ">
-          <h6 class=" ui-tittle-tres">Vencido 1-30 </h6>
+          <h6 class=" ui-tittle-tres">Vencido 1-30: </h6>
           
           <div class="d-flex justify-content-between "> <div> <p> <strong class="text-muted "> Monto ($): </strong> </p> </div> <div> <span class="texto2">{% if vencido_130_d > 0 %} {{"{:,.2f}".format(vencido_130_d|float)}}{% else %} 0.00{% endif %} </span> </div> </div>
           <div class="d-flex justify-content-between "> <div><p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div> <span class="texto2">{% if vencido_130_b > 0 %} {{"{:,.2f}".format(vencido_130_b|float)}} {% else %} 0.00{% endif %} </span> </div> </div>
@@ -73,7 +73,7 @@
       <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
         <div class="course-info d-flex flex-column justify-content-center ">
 
-          <h6 class=" ui-tittle-tres ">Vencido 31-60 </h6>
+          <h6 class=" ui-tittle-tres ">Vencido 31-60: </h6>
 
           <div class="d-flex justify-content-between" > <div>  <p> <strong class="text-muted "> Monto ($): </strong> </p> </div> <div>  <span class="texto2">{% if vencido_3160_d > 0 %}  {{"{:,.2f}".format(vencido_3160_d|float)}}{% else %} 0.00{% endif %} </span> </div> </div>
           <div class="d-flex justify-content-between"> <div>  <p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div>  <span class="texto2">{% if vencido_3160_b > 0 %} {{"{:,.2f}".format(vencido_3160_b|float)}}{% else %} 0.00{% endif %} </span></div> </div>
@@ -205,7 +205,7 @@
 </div>
 
 <!---->
-<div class="courses-container z-0 container p-0 w-100 " >
+<div class="courses-container z-0 container p-0 w-100 mb-3 " >
   <div class="row d-flex gap-4 mb-4 w-100 p-0">
     <div class="col-12 p-0 m-0 w-100">
 
