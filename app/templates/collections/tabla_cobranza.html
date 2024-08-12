@@ -23,9 +23,9 @@
                 <td class="">{{pago['fkdat']}} </td>
                 <td>{% if pago['blart'] == 'DZ' %}Abono{% elif pago['blart'] == 'RV' and pago['dmbtr']>0 %}Factura{% elif pago['blart'] == 'RV' and 0>pago['dmbtr'] %}Nota de Crédito {% elif pago['blart'] == 'DA' %}Giros{% elif pago['blart']=='AB' %}Abono{% endif %}</td>
                 <td >{{pago['vbeln']}}</td>
-                <td>{{ "{:,.2f}".format(pago['dmbtr']) }} </td>
-                <td>{{ "{:,.2f}".format(pago['totfactbs']) }}</td>
+                <td>{{ "{:,.2f}".format(pago['dmbtr']|abs) }} </td>
                 
+                <td>{{ "{:,.2f}".format(pago['totfactbs']|abs) }}</td>
             <td style="text-align: center;">
                 <a href="" style="text-align: center;" class="btn {% if  pago['status'] == '' %} bg-secondary text-white {% elif  pago['status'] == 'P' %} bg-warning text-white {% endif %}" >{% if  pago['status'] == '' and pago['blart'] == 'RV' %} Pendiente por pagar {% elif  pago['status'] == 'P' %} Pendiente por validar {% elif pago['blart'] == 'DZ' %}Abono por conciliar{% elif pago['blart'] == 'AB' %}Abono por conciliar{% elif pago['blart'] == 'DA' %}Pendiente por pagar{% endif %}</a>                   
             </td>

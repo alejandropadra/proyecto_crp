@@ -21,8 +21,10 @@ VALIDATE_FORM = 'Seleccione tipo de moneda'
 
 #---------------------------
 U_FUENTE ='700-010'
-C_FUENTE = 'Corimon.2404'
+#C_FUENTE = 'Corimon.2404'#QA
+C_FUENTE = 'Corimon.2408'#pr
 #URL_FUENTE = 'https://10.207.4.68:44300'
-URL_FUENTE = 'https://qa.grupocorimon.com:8443'
+#URL_FUENTE = 'https://qa.grupocorimon.com:8443'
+URL_FUENTE = 'https://grupocorimon.com:9443'
 
 #------------------

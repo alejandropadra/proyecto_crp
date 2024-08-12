@@ -1600,8 +1600,9 @@ list-style: none;
 
 .tabla-facturas {
   max-height: 400px; 
-  overflow-y: auto; 
+  overflow-y: auto;
 }
+
 .tabla-facturas.dos {
   max-height: 250px; 
   overflow-y: auto; 

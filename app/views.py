@@ -236,9 +236,6 @@ def cobranza2():
                 elif factura['fecvenc1'] >= fecha:
                     facturas_NOvencidas.append(factura)
                     facturas_NOvencidas.append('novencidas')
-        print(facturas_NOvencidas)
-        print(len(facturas_NOvencidas))
-        print(len(facturas_vencidas))
     #---------------------------------------------------------------------
     if request.method == "POST":
         # Obtener los datos enviados desde JavaScript
@@ -616,7 +613,7 @@ def dashboard():
             response_json2 = response_json2[1:]
             response_json2 = response_json2[:-1]
             response_json2 = eval(response_json2)
-            print("Exito en la peticion")
+            #print("Exito en la peticion")
         except:
             response_json2 = []
     else:
@@ -639,7 +636,7 @@ def dashboard():
         # Considera reemplazar el uso de eval con una alternativa más segura si es posible
         response_json3 = str(response_json3)[1:-1]
         response_json3 = eval(response_json3) if response_json3 else None
-        print("Exito en la peticion")
+        #print("Exito en la peticion")
         
         ret = len(response_json3) if response_json3 else 0
     except:
@@ -760,8 +757,8 @@ def historial():
                 response_json = response_json[1:]
                 response_json = response_json[:-1]
                 response_json = eval(response_json)
-                print(response_json)
-                print("Exito en la peticion")
+                #print(response_json)
+                #print("Exito en la peticion")
             except:
                 response_json = []
         else:
@@ -797,7 +794,7 @@ def certificados_pendientes():
     }
 
     #response_post = requests.post(url, data=json.dumps(payload), headers=headers)
-    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=False)
+    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
     #time.sleep(5)
     if response.status_code == 200:
         response_json = json.loads(response.content)
@@ -805,8 +802,8 @@ def certificados_pendientes():
         response_json = response_json[1:]
         response_json = response_json[:-1]
         response_json = eval(response_json)
-        print(len(response_json))
-        print("Exito en la peticion")
+        #print(len(response_json))
+        #print("Exito en la peticion")
     else:
         print('Error en la peticion')
     return render_template("collections/certificados_pendientes.html", titulo = "Facturas Pendientes por Comprobantes",pagos=response_json)
