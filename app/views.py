@@ -229,14 +229,72 @@ def cobranza2():
         facturas = sorted(response_json, key= lambda x: x['fecvenc1'])
         facturas_vencidas= []
         facturas_NOvencidas= []
+        abonos_nc= []
         if (facturas):
             for factura in facturas:
-                if factura['fecvenc1'] < fecha:
+            
+                if factura['fecvenc1'] < fecha and factura['dmbtr'] >0 :
                     facturas_vencidas.append(factura)
-                elif factura['fecvenc1'] >= fecha:
+                elif factura['fecvenc1'] >= fecha  and factura['dmbtr'] >0:
                     facturas_NOvencidas.append(factura)
                     facturas_NOvencidas.append('novencidas')
+                elif factura['dmbtr'] <0 and factura['status']=='':
+                    abonos_nc.append(factura)
+                
+                
     #---------------------------------------------------------------------
+
+    #--------Porcentaje descuento pag en $--------------------------------------
+    sap = ip_fuente + "/sap/bc/rest/zobdecesp"
+    args = {
+        'sap-client':'510',
+        'SOCIEDAD': '1200',
+        'FEC_DEP': fecha_pago
+    }
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
+    if response.status_code == 200:
+        try:
+            response_json_descuento = json.loads(response.content)
+            response_json_descuento = str(response_json_descuento)
+            response_json_descuento = response_json_descuento[1:]
+            response_json_descuento = response_json_descuento[:-1]
+            response_json_descuento = eval(response_json_descuento)
+            descuento_div = response_json_descuento['descesp']
+            print("si")
+        except:
+            response_json_descuento=[]
+            descuento_div = 0
+            print('no')
+    else:
+        descuento_div = 0
+        
+        print(descuento_div)
+    #----------------------------------------------------------------------------------
+    #----------------------- Tolerancia-----------------------------------------------
+    sap = ip_fuente + "/sap/bc/rest/zobdecesp"
+    args = {
+        'sap-client':'510',
+        'SOCIEDAD': '1200',
+        'TOLERANCIA': 'X'
+    }
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
+    if response.status_code == 200:
+        try:
+            response_json_tolerancia = json.loads(response.content)
+            response_json_tolerancia = str(response_json_tolerancia)
+            response_json_tolerancia = response_json_tolerancia[1:]
+            response_json_tolerancia = response_json_tolerancia[:-1]
+            response_json_tolerancia = eval(response_json_tolerancia)
+            print("si")
+        except:
+            response_json_tolerancia=[]
+            print('no')
+    else:
+        descuento_div = 0
+        
+        print(response_json_tolerancia) 
+    #----------------------------------------------------------
+
     if request.method == "POST":
         # Obtener los datos enviados desde JavaScript
         rif = current_user.rif
@@ -269,6 +327,7 @@ def cobranza2():
         fkdat_list=[]
         belnr1_list=[]
         buzei_list=[]
+        blart_list = []
         facturas = response_json[::-1]
         for i in range(len(facturas)):
             factura = request.form.get('inputFactura' + str(i))
@@ -287,6 +346,9 @@ def cobranza2():
             buzei = request.form.get('inputbuzei' + str(i))
             if buzei:
                 buzei_list.append(buzei)
+            blart = request.form.get('inputblart' + str(i))
+            if blart:
+                blart_list.append(blart)
         """          
         print(f"facturas: {facturas_list}")
         print('-------------')
@@ -392,7 +454,7 @@ def cobranza2():
             #print(response.status_code)
 #------------------------------------------------------------------------------------------------------------------------
     
-    return render_template("collections/cobranza_2.html",form = control_form,titulo = 'Registrar Pago', facturas = facturas, datos = datos, Fecha_pago=fecha, facturas_vencidas= facturas_vencidas, facturas_NOvencidas=facturas_NOvencidas, condicion_pago =  condicion_pago)
+    return render_template("collections/cobranza_2.html",form = control_form,titulo = 'Registrar Pago', facturas = facturas, datos = datos, Fecha_pago=fecha, facturas_vencidas= facturas_vencidas, facturas_NOvencidas=facturas_NOvencidas, condicion_pago =  condicion_pago, abonos_nc= abonos_nc, descuento_div = descuento_div, tolerancia = response_json_tolerancia)
 
 @page.route("/cobranza_iva", methods= ["GET", "POST"])
 def cobranza_iva(): 

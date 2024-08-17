@@ -4,14 +4,6 @@ const check2 = document.getElementById('check2');
 const check1 = document.getElementById('check1');
 const actualizarDiv = document.getElementById('actualizar');
 const actualizarDiv2 = document.getElementById('actualizar2');
-const divInputmonto2 = document.getElementById('montoDescuento');
-const inputMonto2 = document.getElementById('monto-descuento');
-let betrsdiv = document.getElementById('betrsdiv');
-let betrs = document.getElementById('betrs');
-
-
-
-
 let detenerObservador;
 let facturasCompensadas = [];
 let diferenciaActual = 0;
@@ -23,6 +15,7 @@ if (typeof colocarReadOnlyFacturas === "function") {
 }
 
 let dif = 0;
+
 function reiniciarObservador() {
     monitorearActualizaciones(actualizarDiv, texto => {
         const match = texto.match(/(\d+(\.\d+)?)/);
@@ -33,50 +26,42 @@ function reiniciarObservador() {
     });
 }
 
-function monitorearActualizaciones(elemento, callback) { 
-    if (!elemento) {
-        console.error("actualizarDiv no está presente en el DOM.");
-        return;
-    }
-    
-    console.log("Iniciando el observador en actualizarDiv:", elemento);
 
+function monitorearActualizaciones(elemento, callback) {//observador para analizar el div que cambia de la diferencai
     const observer = new MutationObserver(mutations => {
-        console.log("MutationObserver activado.");
         mutations.forEach(mutation => {
-            console.log("Mutation detectada:", mutation);
-            if (mutation.type === 'childList' || mutation.type === 'characterData') {
+            if (mutation.type === 'childList') {
                 callback(elemento.textContent);
             }
         });
     });
 
-    observer.observe(elemento, { childList: true, subtree: true, characterData: true });
+    observer.observe(elemento, { childList: true });
 
-    // No necesitamos detener el observador aquí.
-    // detenerObservador = () => observer.disconnect();  // Eliminado
+    detenerObservador = () => observer.disconnect();
 }
 
-const actualizarTextoYResolver = () => {
+const actualizarTextoYResolver = () => {//->Promesa para actualizar los datos consultados en consola
     return new Promise((resolve, reject) => {
-        // Aquí actualizamos directamente el valor de diferenciaActual y resolvemos la promesa.
-        const texto = actualizarDiv.textContent;
-        console.log("Texto actual en actualizarDiv:", texto);
+        monitorearActualizaciones(actualizarDiv, (texto) => {
+            ///console.log("Texto capturado:", texto);
+            const match = texto.match(/(\d+(\.\d+)?)/);
+            if (match) {
+                diferenciaActual = parseFloat(match[0]);
 
-        const match = texto.match(/(\d+(\.\d+)?)/);
-        if (match) {
-            diferenciaActual = parseFloat(match[0]);
-            resolve(diferenciaActual); // Resolver la promesa con diferenciaActual
-        } else {
-            console.log("No se encontró un número válido en el texto:", texto);
-            reject("No se encontró un número válido");
-        }
+                resolve(diferenciaActual); // Resolver la promesa con diferenciaActual
+            } else {
+                console.log("No se encontró un número válido en el texto:", texto);
+                reject("No se encontró un número válido");
+            }
+        });
     });
 }
 
-function obtenerDiferenciaActual() {
+function obtenerDiferenciaActual() {//->Funcion a la que llamar para obtener el valor del observador
     return diferenciaActual;
 }
+
 
 // Objeto de estado para manejar la transacción y los checkboxes
 const estado = {
@@ -150,7 +135,6 @@ function handleCheckChange(event, tipo) {
         const noVencidas = document.querySelectorAll('.NOvencidos');
         // Lógica de casos
         let caso;
-        
         if (containerFacts.length > 0 && noVencidas.length === 0) {
             console.log('El cliente solo tiene facturas vencidas, por lo tanto no puede escoger la que quiera');
             colocarReadOnlyFacturas();
@@ -180,8 +164,6 @@ function handleCheckChange(event, tipo) {
         const mensaje = document.querySelector('.mensaje');
         const monto = document.getElementById('monto');
         const checkboxes = document.querySelectorAll('#check5Ven, #check5');
-        divInputmonto2.classList.add('d-none')
-        
         estado.reset();
         [check1, check2, check3].forEach(check => check.disabled = false);
         restablecerEstado(bancoReceptor, mensaje, monto, checkboxes);
@@ -221,31 +203,7 @@ function handleCheckChange(event, tipo) {
         mensaje.classList.add('d-none');
 
     }
-
-    function casoDos(bancoReceptor, mensaje, monto, checkboxes, containerFacts, noVencidas) {
-        // Establecer el estado
-        estado.setTransaccion(estado.transaccion, null, 2);
-    
-        // Configuración inicial
-        bancoReceptor.removeAttribute('disabled');
-        bancoReceptor.value = '';
-        mensaje.classList.add('d-none');
-    
-        // Guardar referencias para uso en los handlers
-        casoDos.checkboxes = checkboxes;
-        casoDos.containerFacts = containerFacts;
-        casoDos.noVencidas = noVencidas;
-        
-        casoDos.resultado = null;
-    
-        // Agregar event listeners
-
-        monto.addEventListener('input', montoInputHandler);
-
-    }
-
-
-    async function montoInputHandler(event) {
+    function montoInputHandler(event) {
         const monto = event.target;
         const montoValue = parseFloat(monto.value);
         const checkboxes = casoDos.checkboxes;
@@ -255,7 +213,7 @@ function handleCheckChange(event, tipo) {
     
         // Limpiar y resetear estados
         noVencidas.forEach(noVencida => noVencida.checked = false);
-        eliminarInputs('input[id^="inputFactura"]', 'input[id^="inputfacturaMonto"]', 'input[id^="inputfkdat"]', 'input[id^="inputbelnr1"]', 'input[id^="inputbuzei"]', 'input[id^="inputblart"]');
+        eliminarInputs('input[id^="inputFactura"]', 'input[id^="inputfacturaMonto"]', 'input[id^="inputfkdat"]', 'input[id^="inputbelnr1"]', 'input[id^="inputbuzei"]');
         eliminarClaseEvaluando();
         checkboxes.forEach(resetCheckbox);
         checkboxesDos.forEach(resetCheckbox);
@@ -263,7 +221,6 @@ function handleCheckChange(event, tipo) {
         if (monto.value === '') {
             limpiarYResetearEstados();
             actualizarDiv2.textContent= "";
-            inputMonto2.value = '';
             return;
         }
     
@@ -279,17 +236,7 @@ function handleCheckChange(event, tipo) {
         const montoNormal = estado.transaccion === "bs" ? "#montoBs" : "#Montodlr";
         const montoElements = obtenerElementosMonto(checkboxes, montodpp, montoNormal);
         casoDos.resultado = procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas, estado.transaccion);
-        
-        console.log( casoDos.resultado.facturasCompensadas.length);
-        
-        
-        if (casoDos.resultado.facturasCompensadas.length == checkboxes.length) {
-            // Actualizar manualmente actualizarDiv y resolver directamente la promesa
-            
-            console.log(actualizarDiv);
-    
-            await sYtActualizadosHandler();  // Llamada directa a la función en lugar de despachar un evento
-        }
+        document.dispatchEvent(new CustomEvent('sYtActualizados'));
     }
     
     function limpiarYResetearEstados() {
@@ -302,57 +249,65 @@ function handleCheckChange(event, tipo) {
         checkboxesDos.forEach(resetCheckbox);
         limpiarDivs('.texto-faltante', 'facts');
         limpiarDivs('.texto-abono', 'abon');
-        eliminarInputs('input[id^="inputFactura"]', 'input[id^="inputfacturaMonto"]', 'input[id^="inputfkdat"]', 'input[id^="inputbelnr1"]', 'input[id^="inputbuzei"]', 'input[id^="inputblart"]');
+        eliminarInputs('input[id^="inputFactura"]', 'input[id^="inputfacturaMonto"]', 'input[id^="inputfkdat"]', 'input[id^="inputbelnr1"]', 'input[id^="inputbuzei"]');
         eliminarClaseEvaluando();
         actualizarDiv.textContent = "";
     }
     
     async function sYtActualizadosHandler(event) {
-        console.log('Inicio sYtActualizadosHandler');
-        
-        console.log('Llamando a actualizarTextoYResolver...');
         await actualizarTextoYResolver();
-        console.log('actualizarTextoYResolver finalizado');
-        
         const valorActual = obtenerDiferenciaActual();
-        console.log('Valor actual:', valorActual);
+        console.log(valorActual);
     
         const containerFacts = casoDos.containerFacts;
         const noVencidas = casoDos.noVencidas;
         const checkboxesDos = document.querySelectorAll('#check5');
         const resultado = casoDos.resultado;
         const lengthsIguales = resultado && containerFacts && resultado.facturasCompensadas.length === containerFacts.length;
-        
-        console.log('Lengths iguales:', lengthsIguales);
-        
+    
         if (!lengthsIguales) {
-            console.log('Lengths no iguales, reseteando checkboxesDos');
             checkboxesDos.forEach(resetCheckbox);
         }
-        
+    
         if (lengthsIguales && valorActual > 0) {
-            console.log('Lengths iguales y valor actual mayor que 0');
-            
             quitarReadOnlyYDisabledFacturasCaso3(noVencidas);
-            console.log("Habilitando selección de no vencidas");
-            
+            console.log("ya puede escoger");
             noVencidas.forEach(noVencida => noVencida.checked = false);
+            detenerObservador();
+            console.log('se detuvo el observador');
+    
+            const montodpp = estado.transaccion === "bs" ? "#montobsdpp" : "#Montodlrdpp";
+            const montoNormal = estado.transaccion === "bs" ? "#montoBs" : "#Montodlr";
             
-            console.log('Llamando a procesarFacturasCasoDos...');
-            procesarFacturasCasoDos(checkboxesDos, valorActual, montodpp, montoNormal, estado.transaccion, resultado.contador);
-            console.log('procesarFacturasCasoDos llamado');
+             // Pasar el observador y el contador como propiedad a procesarFacturasCasoDos
+        procesarFacturasCasoDos(checkboxesDos, valorActual, montodpp, montoNormal, estado.transaccion, resultado.contador);
         } else {
-            console.log('Lengths no iguales o valor actual <= 0, colocando readonly facturas');
             colocarReadOnlyFacturas();
             checkboxesDos.forEach(resetCheckbox);
             noVencidas.forEach(noVencida => noVencida.checked = false);
         }
-        
-        console.log('Fin de sYtActualizadosHandler');
     }
     
+    function casoDos(bancoReceptor, mensaje, monto, checkboxes, containerFacts, noVencidas) {
+        // Establecer el estado
+        estado.setTransaccion(estado.transaccion, null, 2);
     
+        // Configuración inicial
+        bancoReceptor.removeAttribute('disabled');
+        bancoReceptor.value = '';
+        mensaje.classList.add('d-none');
+    
+        // Guardar referencias para uso en los handlers
+        casoDos.checkboxes = checkboxes;
+        casoDos.containerFacts = containerFacts;
+        casoDos.noVencidas = noVencidas;
 
+        casoDos.resultado = null;
+    
+        // Agregar event listeners
+        monto.addEventListener('input', montoInputHandler);
+        document.addEventListener('sYtActualizados', sYtActualizadosHandler);
+    }
     
 function casoTres(bancoReceptor, mensaje, monto, checkboxes, transaccion) {
     estado.setTransaccion(transaccion, null, 3);
@@ -378,7 +333,7 @@ function casoUnoTresInputHandler(event) {
     const montoNormal = estado.transaccion === "bs" ? "#montoBs" : "#Montodlr";
 
     // Limpiar y resetear elementos
-    eliminarInputs('input[id^="inputFactura"]', 'input[id^="inputfacturaMonto"]', 'input[id^="inputfkdat"]', 'input[id^="inputbelnr1"]', 'input[id^="inputbuzei"]', 'input[id^="inputblart"]');
+    eliminarInputs('input[id^="inputFactura"]', 'input[id^="inputfacturaMonto"]', 'input[id^="inputfkdat"]', 'input[id^="inputbelnr1"]', 'input[id^="inputbuzei"]');
     eliminarClaseEvaluando();
     checkboxes.forEach(checkbox => resetCheckbox(checkbox));
 
@@ -387,7 +342,6 @@ function casoUnoTresInputHandler(event) {
         limpiarDivs('.texto-abono', 'abon');
         actualizarDiv.textContent = "";
         actualizarDiv2.textContent= "";
-        divInputmonto2.value= '';
         facturasCompensadas = [];
         console.log('Lista de facturas compensadas vaciada');
         return;
@@ -413,13 +367,6 @@ function casoUnoTresInputHandler(event) {
 
 function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , transaccion) {
     const actualizarDiv = document.getElementById('actualizar');
-
-    let betrsdiv = document.getElementById('betrsdiv');
-    let betrs = document.getElementById('betrs');
-    let descuento_div = document.getElementById('descuento_div');
-    if (descuento_div){
-        descuento_div = parseFloat(descuento_div.textContent);
-    }
     facturasCompensadas = [];
     const containerFacts = document.querySelectorAll('.vencidos');
     const facturasSi = []
@@ -432,20 +379,10 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
     } else if(estado.transaccion === "$"){
         montoNormal="#Montodlr";
         montodpp= "#Montodlrdpp";
-        divInputmonto2.classList.remove('d-none')
+        montoValue= montoValue+(montoValue* 0.07);
 
-        if (descuento_div>0){
-            descuento_div= descuento_div/100
-            let montoValueX=0;
-            
-            //montoValueX = redondear(((montoValue/(1-descuento_div))*descuento_div), 2)
-            montoValueX= montoValue*descuento_div;
-            montoValue= montoValue+montoValueX;
-            actualizarDiv.textContent= `${montoValue} ${transaccion}`;
-        }
-        inputMonto2.value= montoValue;
     }
-    
+    console.log(montoValue)
     for (let i = 0; i < checkboxes.length; i++) {
         if (checkboxes[i].checked) {
             facturasAnteriores.add(i);
@@ -455,7 +392,6 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
     transaccion= estado.transaccion
     actualizarDiv2.textContent = ""
     for (let i = 0; i < checkboxes.length; i++) {
-        
         const checkbox = checkboxes[i];
         const label = checkbox.parentNode;
         const montosElement = label.querySelector('.montos');
@@ -473,16 +409,13 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
         const fkdat = document.getElementById('fkdat' + (i + 1))?.textContent;
         const belnr1 = document.getElementById('belnr1' + (i + 1))?.textContent;
         const buzei = document.getElementById('buzei' + (i + 1))?.textContent;
-        const blart = document.getElementById('blart' + (i + 1))?.textContent;
-        console.log(blart)
         const dif = redondear(montoValue - sumaFacturas, 2); // Redondear a 2 decimales
-        console.log(vblen + 'de la ' + i)
-        console.log(checkboxes.length)
+
+        
         
 
         if (sumaFacturas + montoFactura <= montoValue) {
-            
-            gestionarInputs(label, montosElement, i, vblen, montoFactura, dif, fkdat, belnr1, buzei, blart);
+            gestionarInputs(label, montosElement, i, vblen, montoFactura, dif, fkdat, belnr1, buzei);
             sumaFacturas = redondear(sumaFacturas + montoFactura, 2); // Redondear sumaFacturas
             /*console.log('se compenso la factura ' + vblen)
             console.log('suma de facturas hasta ahora: ' + sumaFacturas)*/
@@ -520,99 +453,16 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
             }
             if (encontrado== false){
                 const montoFaltante = redondear(montoFactura - (montoValue - sumaFacturas), 2);
-                console.log(`falta para compensar la factura ${i} un total de ${montoFaltante}`)
-                betrs = parseFloat ( betrs.textContent )
-                betrsdiv = parseFloat ( betrsdiv.textContent )
-                
-                if (estado.transaccion== "$"){
-                    console.log('algo')
-                
-
-                    if (montoFaltante <= betrsdiv ){
-                        gestionarInputs(label, montosElement, i, vblen, montoFactura, dif, fkdat, belnr1, buzei, blart);
-                        sumaFacturas = redondear(sumaFacturas + montoFactura, 2); // Redondear sumaFacturas
-                        /*console.log('se compenso la factura ' + vblen)
-                        console.log('suma de facturas hasta ahora: ' + sumaFacturas)*/
-                        checkbox.checked = true;
-                        label.classList.add('listo');
-                        
-                        limpiarDivs('.texto-faltante', 'facts', label);
-                        limpiarDivs('.texto-abono', 'abon', checkbox.parentNode);
-                        diferenciass = redondear(montoValue-sumaFacturas, 2);
-                        diferenciass = 0 // Actualizar dif correctamente
-                        //console.log(diferenciass);
-                        actualizarDiv.textContent = `${diferenciass.toFixed(2)}` + transaccion;
-
-                        if (!facturasSi.includes(i)) {
-                            facturasSi.push(i);
-                        }
-
-                        facturasCompensadas.push({
-                            vblen: vblen,
-                            fkdat: fkdat,
-                            belnr1: belnr1,
-                            buzei: buzei,
-                            monto: montoFactura
-                        });
-
-                        if (facturasCompensadas.length == containerFacts.length){
-                            break;
-                        }
-                    }else{
-                        const index = facturasSi.indexOf(vblen);
-                        if (index > -1) {
-                            facturasSi.splice(index, 1);
-                        }
-                        console.log(facturasSi.length)
-                    }
-                }else if (estado.transaccion == "bs"){
-                    if (montoFaltante <=betrs ){
-                        gestionarInputs(label, montosElement, i, vblen, montoFactura, dif, fkdat, belnr1, buzei, blart);
-                        sumaFacturas = redondear(sumaFacturas + montoFactura, 2); // Redondear sumaFacturas
-                        /*console.log('se compenso la factura ' + vblen)
-                        console.log('suma de facturas hasta ahora: ' + sumaFacturas)*/
-                        checkbox.checked = true;
-                        label.classList.add('listo');
-                        
-                        limpiarDivs('.texto-faltante', 'facts', label);
-                        limpiarDivs('.texto-abono', 'abon', checkbox.parentNode);
-                        diferenciass = redondear(montoValue-sumaFacturas, 2);
-                        diferenciass = 0 // Actualizar dif correctamente
-                        //console.log(diferenciass);
-                        actualizarDiv.textContent = `${diferenciass.toFixed(2)}` + transaccion;
-
-                        if (!facturasSi.includes(i)) {
-                            facturasSi.push(i);
-                        }
-
-                        facturasCompensadas.push({
-                            vblen: vblen,
-                            fkdat: fkdat,
-                            belnr1: belnr1,
-                            buzei: buzei,
-                            monto: montoFactura
-                        });
-
-                        if (facturasCompensadas.length == containerFacts.length){
-                            break;
-                        }
-                    }else{
-                        const index = facturasSi.indexOf(vblen);
-                        if (index > -1) {
-                            facturasSi.splice(index, 1);
-                        }
-                        console.log(facturasSi.length)
-                    }
-                }
+                console.log(montoFaltante)
             }
-            
-            
+            console.log(vblen)
+            console.log(facturasCompensadas)
             const index = facturasSi.indexOf(vblen);
             if (index > -1) {
                 facturasSi.splice(index, 1);
             }
-            console.log(facturasSi.length)
-            console.log(sumaFacturas)
+            checkbox.checked = false;
+            label.classList.remove('listo');
 
             const montoFaltante = redondear(montoFactura - (montoValue - sumaFacturas), 2);
             const montoAbono = redondear(montoValue - sumaFacturas, 2);
@@ -624,8 +474,8 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
             //textoAbonoDiv.classList.add('abon'); ->Comentado para abonos
             diferenciass = redondear(montoValue-sumaFacturas, 2); // Actualizar dif correctamente
             //console.log(diferenciass);
-            //actualizarDiv.textContent = `${diferenciass.toFixed(2)} ` + transaccion;
-            break
+            actualizarDiv.textContent = `${diferenciass.toFixed(2)} ` + transaccion;
+            
         }
         
         
@@ -633,9 +483,9 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
     }
     actualizarDiv2.textContent = facturasSi.length.toString();
      // Verificación final
-    console.log("Número final de facturas seleccionadas:", facturasSi.length);
-    console.log("Facturas seleccionadas:", facturasSi);
-    return {
+     console.log("Número final de facturas seleccionadas:", facturasSi.length);
+     console.log("Facturas seleccionadas:", facturasSi);
+     return {
         facturasCompensadas: facturasCompensadas,
         contador: facturasSi.length
     };
@@ -650,10 +500,6 @@ function redondear(valor, decimales) {
 
 function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal, transaccion, variableConta) {
     console.log('se ejecuta el caso 2')
-    console.log(montoValue)
-    let betrsdiv = document.getElementById('betrsdiv');
-    let betrs = document.getElementById('betrs');
-
     quitarReadOnlyYDisabledFacturas();
     const checksSeleccionados = [];
     let abonoRealizado = false;
@@ -690,7 +536,6 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
                 const fkdat = document.getElementById('fkdat' + (posicionArray + 1))?.textContent;
                 const belnr1 = document.getElementById('belnr1' + (posicionArray + 1))?.textContent;
                 const buzei = document.getElementById('buzei' + (posicionArray + 1))?.textContent;
-                const blart = document.getElementById('blart' + (posicionArray + 1))?.textContent;
                 const dif =  sumaFacturasSeleccionadas - montoValue ;
                 if (dif < 0){
                     dif==0.00
@@ -704,9 +549,11 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
 
                 if (!abonoRealizado) {
 
+                    
+
                     if (sumaFacturasSeleccionadas <= montoValue) {
                         
-                        gestionarInputs(label, montosElement, posicionArray, vblen, montoFactura, diferenciaInput, fkdat, belnr1, buzei, blart);
+                        gestionarInputs(label, montosElement, posicionArray, vblen, montoFactura, diferenciaInput, fkdat, belnr1, buzei);
                         console.log(transaccion)
                         checkbox.checked = true;
                         label.classList.add('listo');
@@ -716,65 +563,8 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
                         contador ++;
                         actualizarDiv2.textContent = contador;
                     } else {
-                        console.log(betrsdiv.textContent)
-                            const montoFaltante = (sumaFacturasSeleccionadas - montoValue).toFixed(2);
-                            console.log(`falta para compensar la factura  un total de ${montoFaltante}`)
-                            if (estado.transaccion == "$"){
-                                //
-                                if (montoFaltante <= parseFloat(betrsdiv.textContent)){
-                                    console.log('entro en la tolerancia pa')
-                                    gestionarInputs(label, montosElement, posicionArray, vblen, montoFactura, diferenciaInput, fkdat, belnr1, buzei, blart);
-                                    console.log(transaccion)
-                                    checkbox.checked = true;
-                                    label.classList.add('listo');
-                                    limpiarDivs('.texto-faltante', 'facts', label);
-                                    limpiarDivs('.texto-abono', 'abon', checkbox.parentNode);
-                                    actualizarDiv.textContent = `0.00 `+ transaccion; // Actualizar el contenido del div
-                                    contador ++;
-                                    actualizarDiv2.textContent = contador;
-                                    facturaParcial = posicionArray;
-                                    colocarReadOnlyFacturasDos(facturaParcial)
-                                }else {
-                                    checkbox.checked= false;
-                                    sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
-                                    
-                                    actualizarDiv.textContent = `${(montoValue - sumaFacturasSeleccionadas).toFixed(2)} ` + transaccion; // Actualizar el contenido del div
-                                    console.log("La selección de esta factura hace que la suma exceda el monto permitido. La suma se ha anulado.");
-                                    console.log(sumaFacturasSeleccionadas)
-                                    facturaParcial = posicionArray;
-                                    colocarReadOnlyFacturastres(facturaParcial)
-                                    
-                                }
-                            }else if (estado.transaccion == "bs"){
-                                //
-                                if (montoFaltante <= parseFloat(betrs.textContent)){
-                                    console.log('entro en la tolerancia pa')
-                                    gestionarInputs(label, montosElement, posicionArray, vblen, montoFactura, diferenciaInput, fkdat, belnr1, buzei, blart);
-                                    console.log(transaccion)
-                                    checkbox.checked = true;
-                                    label.classList.add('listo');
-                                    limpiarDivs('.texto-faltante', 'facts', label);
-                                    limpiarDivs('.texto-abono', 'abon', checkbox.parentNode);
-                                    actualizarDiv.textContent = `0.00 `+ transaccion; // Actualizar el contenido del div
-                                    contador ++;
-                                    actualizarDiv2.textContent = contador;
-                                    facturaParcial = posicionArray;
-                                    colocarReadOnlyFacturasDos(facturaParcial)
-                                }else {
-                                    checkbox.checked= false;
-                                    sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
-                                    
-                                    actualizarDiv.textContent = `${(montoValue - sumaFacturasSeleccionadas).toFixed(2)} ` + transaccion; // Actualizar el contenido del div
-                                    console.log("La selección de esta factura hace que la suma exceda el monto permitido. La suma se ha anulado.");
-                                    console.log(sumaFacturasSeleccionadas)
-                                    facturaParcial = posicionArray;
-                                    colocarReadOnlyFacturastres(facturaParcial)
-                                    
-                                }
-                            }
-                            
-                        //checkbox.checked= false;
-                        /*sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
+                        checkbox.checked= false;
+                        sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
                         
                         actualizarDiv.textContent = `${(montoValue - sumaFacturasSeleccionadas).toFixed(2)} ` + transaccion; // Actualizar el contenido del div
                         console.log("La selección de esta factura hace que la suma exceda el monto permitido. La suma se ha anulado.");
@@ -786,7 +576,7 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
                             actualizarDiv2.textContent = "0";
                         }else{
                             actualizarDiv2.textContent = contador;
-                        }*/
+                        }
                         
                         /*
                         
@@ -810,8 +600,6 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
             } else {
                 const index = checksSeleccionados.indexOf(this);
                 if (index > -1) {
-                    const posicionArray = checkboxesArray.indexOf(checkbox);
-                    eliminarInputsDos(posicionArray);
                     checksSeleccionados.splice(index, 1);
                     const elementoMonto = obtenerElementoMontoDos(this, montodpp, montoNormal);
                     const textoDelElemento = elementoMonto ? elementoMonto.textContent : '';
@@ -829,7 +617,7 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
                             actualizarDiv2.textContent = contador;
                         }
                     resetCheckbox(this);
-                    
+                    const posicionArray = checkboxesArray.indexOf(checkbox);
                     const vblen = document.getElementById('vbeln' + (posicionArray + 1))?.textContent;
                     console.log("Se desmarcó la factura: " + vblen + " con un monto de " + valorNumerico);
                     console.log("Suma total hasta ahora: " + sumaFacturasSeleccionadas);
@@ -855,37 +643,6 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
     let facturaParcial = null;
     let sumaFacturasSeleccionadas = 0;
     let contador= 0
-    let betrsdiv = document.getElementById('betrsdiv');
-    let betrs = document.getElementById('betrs');
-    let descuento_div = document.getElementById('descuento_div');
-    if (descuento_div){
-        descuento_div = parseFloat(descuento_div.textContent);
-    }
-    facturasCompensadas = [];
-
-    
-    if (estado.transaccion === "bs"){
-        
-        montoNormal="#montoBs";
-        montodpp= "#montobsdpp";
-
-    } else if(estado.transaccion === "$"){
-        montoNormal="#Montodlr";
-        montodpp= "#Montodlrdpp";
-        divInputmonto2.classList.remove('d-none')
-
-        if (descuento_div>0){
-            descuento_div= descuento_div/100
-            let montoValueX=0;
-            
-            //montoValueX = redondear(((montoValue/(1-descuento_div))*descuento_div), 2)
-            montoValueX= montoValue*descuento_div;
-            montoValue= montoValue+montoValueX;
-            actualizarDiv.textContent = `${montoValue} ${transaccion}`
-            
-        }
-        inputMonto2.value= montoValue;
-    }
 
     const checkboxesArray = Array.from(checkboxes);
 
@@ -916,7 +673,6 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                 const fkdat = document.getElementById('fkdat' + (posicionArray + 1))?.textContent;
                 const belnr1 = document.getElementById('belnr1' + (posicionArray + 1))?.textContent;
                 const buzei = document.getElementById('buzei' + (posicionArray + 1))?.textContent;
-                const blart = document.getElementById('blart' + (posicionArray + 1))?.textContent;
                 const dif =  sumaFacturasSeleccionadas - montoValue ;
                 if (dif < 0){
                     dif==0.00
@@ -934,7 +690,7 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
 
                     if (sumaFacturasSeleccionadas <= montoValue) {
                         
-                        gestionarInputs(label, montosElement, posicionArray, vblen, montoFactura, diferenciaInput, fkdat, belnr1, buzei, blart);
+                        gestionarInputs(label, montosElement, posicionArray, vblen, montoFactura, diferenciaInput, fkdat, belnr1, buzei);
                         console.log(transaccion)
                         checkbox.checked = true;
                         label.classList.add('listo');
@@ -944,68 +700,8 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                         contador ++;
                         actualizarDiv2.textContent = contador;
                     } else {
-                            const montoFaltante = (sumaFacturasSeleccionadas - montoValue).toFixed(2);
-                            console.log(`falta para compensar la factura  un total de ${montoFaltante}`)
-                            if (estado.transaccion == "$"){
-                                if (montoFaltante <= parseFloat(betrsdiv.textContent) ){
-                                    console.log('entro en la tolerancia pa')
-                                    gestionarInputs(label, montosElement, posicionArray, vblen, montoFactura, diferenciaInput, fkdat, belnr1, buzei, blart);
-                                    console.log(transaccion)
-                                    checkbox.checked = true;
-                                    label.classList.add('listo');
-                                    limpiarDivs('.texto-faltante', 'facts', label);
-                                    limpiarDivs('.texto-abono', 'abon', checkbox.parentNode);
-                                    actualizarDiv.textContent = `0.00 `+ transaccion; // Actualizar el contenido del div
-                                    contador ++;
-                                    actualizarDiv2.textContent = contador;
-                                    facturaParcial = posicionArray;
-                                    colocarReadOnlyFacturasDos(facturaParcial)
-                                }else {
-                                    checkbox.checked= false;
-                                    sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
-                                    
-                                    actualizarDiv.textContent = `${(montoValue - sumaFacturasSeleccionadas).toFixed(2)} ` + transaccion; // Actualizar el contenido del div
-                                    console.log("La selección de esta factura hace que la suma exceda el monto permitido. La suma se ha anulado.");
-                                    console.log(sumaFacturasSeleccionadas)
-                                    facturaParcial = posicionArray;
-                                    colocarReadOnlyFacturastres(facturaParcial)
-                                    
-                                }
-                            }else if (estado.transaccion == "bs"){
-                                if (montoFaltante <= parseFloat(betrs.textContent) ){
-                                    console.log('entro en la tolerancia pa')
-                                    gestionarInputs(label, montosElement, posicionArray, vblen, montoFactura, diferenciaInput, fkdat, belnr1, buzei, blart);
-                                    console.log(transaccion)
-                                    checkbox.checked = true;
-                                    label.classList.add('listo');
-                                    limpiarDivs('.texto-faltante', 'facts', label);
-                                    limpiarDivs('.texto-abono', 'abon', checkbox.parentNode);
-                                    actualizarDiv.textContent = `0.00 `+ transaccion; // Actualizar el contenido del div
-                                    contador ++;
-                                    actualizarDiv2.textContent = contador;
-                                    facturaParcial = posicionArray;
-                                    colocarReadOnlyFacturasDos(facturaParcial)
-                                }else {
-                                    checkbox.checked= false;
-                                    sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
-                                    
-                                    actualizarDiv.textContent = `${(montoValue - sumaFacturasSeleccionadas).toFixed(2)} ` + transaccion; // Actualizar el contenido del div
-                                    console.log("La selección de esta factura hace que la suma exceda el monto permitido. La suma se ha anulado.");
-                                    console.log(sumaFacturasSeleccionadas)
-                                    facturaParcial = posicionArray;
-                                    colocarReadOnlyFacturastres(facturaParcial)
-                                    
-                                }
-                            }
-                            
-                            
-                            
-                            
-                            
-                            
-                     
-                        //checkbox.checked= false;
-                        /*sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
+                        checkbox.checked= false;
+                        sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
                         
                         actualizarDiv.textContent = `${(montoValue - sumaFacturasSeleccionadas).toFixed(2)} ` + transaccion; // Actualizar el contenido del div
                         console.log("La selección de esta factura hace que la suma exceda el monto permitido. La suma se ha anulado.");
@@ -1017,7 +713,7 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                             actualizarDiv2.textContent = "0";
                         }else{
                             actualizarDiv2.textContent = contador;
-                        }*/
+                        }
                         
                         /*
                         
@@ -1281,7 +977,7 @@ function restablecerEstado(bancoReceptor, mensaje, monto, checkboxes) {
     check2.disabled = false;
     check3.disabled = false;
     monto.value = '';
-    eliminarInputs('input[id^="inputFactura"]', 'input[id^="inputfacturaMonto"]', 'input[id^="inputfkdat"]', 'input[id^="inputbelnr1"]', 'input[id^="inputbuzei"]', 'input[id^="inputblart"]');
+    eliminarInputs('input[id^="inputFactura"]', 'input[id^="inputfacturaMonto"]', 'input[id^="inputfkdat"]', 'input[id^="inputbelnr1"]', 'input[id^="inputbuzei"]');
     eliminarClaseEvaluando();
     limpiarDivs('.texto-faltante', 'facts');
     limpiarDivs('.texto-abono', 'abon');
@@ -1316,17 +1012,15 @@ function resetCheckboxDos(checkbox) {
 
 
 //Funcion para insertar inputs
-function gestionarInputs(label, montosElement, i, vblen, montoFactura, dif, fkdat, belnr1, buzei, blart) {
+function gestionarInputs(label, montosElement, i, vblen, montoFactura, dif, fkdat, belnr1, buzei) {
     // Seleccionar elementos de entrada existentes
-    
     let inputElement = label.querySelector(`#inputFactura${i}`);
     let inputElementMonto = label.querySelector(`#inputfacturaMonto${i}`);
     let inputElementfkdat = label.querySelector(`#inputfkdat${i}`);
     let inputElementbelnr1 = label.querySelector(`#inputbelnr1${i}`);
     let inputElementbuzei = label.querySelector(`#inputbuzei${i}`);
-    let inputElementblart = label.querySelector(`#inputblart${i}`);
     const valorSinComa = montoFactura.toString().replace(',', '.');
-    
+
     // Verificar si la clase 'evaluando' está presente
     if (montosElement.classList.contains('evaluando')) {
         // Crear y agregar input de número de factura si no existe
@@ -1337,16 +1031,6 @@ function gestionarInputs(label, montosElement, i, vblen, montoFactura, dif, fkda
             inputElement.className = 'd-none';
             inputElement.value = vblen.toString();
             inputElement.id = `inputFactura${i}`;
-            label.appendChild(inputElement);
-        }
-
-        if (!inputElementblart) {
-            inputElement = document.createElement('input');
-            inputElement.type = 'text';
-            inputElement.name = `inputblart${i}`;
-            inputElement.className = 'd-none';
-            inputElement.value = blart.toString();
-            inputElement.id = `inputblart${i}`;
             label.appendChild(inputElement);
         }
 
@@ -1406,9 +1090,6 @@ function gestionarInputs(label, montosElement, i, vblen, montoFactura, dif, fkda
         if (inputElement) {
             label.removeChild(inputElement);
         }
-        if (inputElement) {
-            label.removeChild(inputElementblart);
-        }
         if (inputElementMonto) {
             label.removeChild(inputElementMonto);
         }
@@ -1427,22 +1108,17 @@ function gestionarInputs(label, montosElement, i, vblen, montoFactura, dif, fkda
 
 
 //Funcion para eliminar inputs
-function eliminarInputs(inputFacturaIds, inputFacturaMontoIds, inputFkdatIds, inputBelnr1Ids, inputBuzeiIds, inputblartiIds) {
+function eliminarInputs(inputFacturaIds, inputFacturaMontoIds, inputFkdatIds, inputBelnr1Ids, inputBuzeiIds) {
     // Obtener elementos de entrada por su ID
     const inputFacturaElements = document.querySelectorAll(inputFacturaIds);
     const inputFacturaMontoElements = document.querySelectorAll(inputFacturaMontoIds);
     const inputFkdatElements = document.querySelectorAll(inputFkdatIds);
     const inputBelnr1Elements = document.querySelectorAll(inputBelnr1Ids);
     const inputBuzeiElements = document.querySelectorAll(inputBuzeiIds);
-    const inputElementblart = document.querySelectorAll(inputblartiIds);
 
     // Eliminar elementos de entrada
     inputFacturaElements.forEach(inputElement => {
         inputElement.parentNode.removeChild(inputElement);
-    });
-
-    inputElementblart.forEach(inputElementblart => {
-        inputElementblart.parentNode.removeChild(inputElementblart);
     });
 
     inputFacturaMontoElements.forEach(inputElementMonto => {
@@ -1469,7 +1145,6 @@ function eliminarInputsDos(posicionArray) {
     const inputFkdatId = `input[id="inputfkdat${posicionArray}"]`;
     const inputBelnr1Id = `input[id="inputbelnr1${posicionArray}"]`;
     const inputBuzeiId = `input[id="inputbuzei${posicionArray}"]`;
-    const inputblartiId = `input[id="inputblart${posicionArray}"]`;
 
     // Obtener y eliminar los elementos específicos
     const inputFactura = document.querySelector(inputFacturaId);
@@ -1477,14 +1152,12 @@ function eliminarInputsDos(posicionArray) {
     const inputFkdat = document.querySelector(inputFkdatId);
     const inputBelnr1 = document.querySelector(inputBelnr1Id);
     const inputBuzei = document.querySelector(inputBuzeiId);
-    const inputblart = document.querySelector(inputblartiId);
 
     if (inputFactura) inputFactura.remove();
     if (inputFacturaMonto) inputFacturaMonto.remove();
     if (inputFkdat) inputFkdat.remove();
     if (inputBelnr1) inputBelnr1.remove();
     if (inputBuzei) inputBuzei.remove();
-    if (inputblart) inputblart.remove();
 }
 
 

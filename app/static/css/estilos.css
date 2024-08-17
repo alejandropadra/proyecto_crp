@@ -546,6 +546,20 @@ font-weight: 500;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+.contenedor-hijo {
+  flex-basis: 100px; /* Tamaño base del div */
+  width: auto; /* Asegúrate de que el ancho no interfiera */
+}
+
+.primer-hijo {
+  flex-grow: 1;
+}
+
+.segundo-hijo {
+  flex-grow: 2 !important;
+}
+
+
 .contenedore {
   display: flex;
   flex-direction: column;
@@ -1599,12 +1613,12 @@ list-style: none;
 }
 
 .tabla-facturas {
-  max-height: 400px; 
+  max-height: 350px; 
   overflow-y: auto;
 }
 
 .tabla-facturas.dos {
-  max-height: 250px; 
+  max-height: 300px; 
   overflow-y: auto; 
 }
 
@@ -1651,6 +1665,7 @@ list-style: none;
   align-items: center; 
   justify-content: space-between; 
   width: 100%;
+  max-height: 100px;
 }
 
 .flotante{

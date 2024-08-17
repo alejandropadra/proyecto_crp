@@ -184,11 +184,12 @@
                             <td>{{pago['XBLNR']}}</td>
                         </tr>
                         <tr>
+                            Facturas
                         </tr>
                         {% for factura in pagos%}
                             {% if factura['VBELN'] %}
                                 <tr>
-                                    <td>{% if factura['blart'] == 'DZ' %}Abono{% elif factura['blart'] == 'RV' and factura['MONTOPG']>0 %}Factura{% elif factura['blart'] == 'RV' and 0>factura['MONTOPG'] %}Nota de Crédito {% elif factura['blart'] == 'DA' %}Giros{% elif factura['blart']=='AB' %}Abono{% endif %}</td>
+                                    <td>N° de Documento</td>
                                     <td>{{ factura['VBELN'] }}</td>
                                 </tr>
                             {%endif%}
