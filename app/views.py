@@ -408,7 +408,7 @@ def cobranza2():
         'PBASE': condicion_pago_pivote
         }]
         #response_c = requests.post(url_c, auth=HTTPBasicAuth(user_fuente, contra_fuente),json=data,headers=headers,verify=False)
-        datos = [{'BUKRS': '1200','XBLNR':n_deposito,'KUNNR':rif,'BLDAT':fecha_pago,'TIPOPAGO':divisa,'WRBTR':monto_total,'CTABANCO':banco_receptor,'PROCESADO':'','ABONOCTA':'','PBASE': condicion_pago_pivote,'BELNR1':belnr1,'VBELN': factura,'buzei':buzei,'BLDATF':fkdat,'MONTOPG': monto,'HORAP':''} for factura, monto, fkdat, belnr1, buzei  in zip(facturas_list, montos_list,fkdat_list,belnr1_list,buzei_list)]
+        datos = [{'BUKRS': '1200','XBLNR':n_deposito,'KUNNR':rif,'BLDAT':fecha_pago,'TIPOPAGO':divisa,'WRBTR':monto_total,'CTABANCO':banco_receptor,'PROCESADO':'','ABONOCTA':'','PBASE': condicion_pago_pivote,'BELNR1':belnr1,'VBELN': factura,'buzei':buzei,'BLDATF':fkdat,'MONTOPG': monto,'HORAP':''} for factura, monto, fkdat, belnr1, buzei, blart  in zip(facturas_list, montos_list,fkdat_list,belnr1_list,buzei_list,blart_list)]
         if datos:
             print('existe')
         else:
