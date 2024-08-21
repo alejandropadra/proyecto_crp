@@ -32,7 +32,7 @@ def comprobante_mail(user,comprobante):
 def pago_mail(user, pago, pagos):
     message = Message('Pago Registrado Referencia'+' '+ pago['XBLNR'],
                     sender=current_app.config['MAIL_USERNAME'],
-                    recipients=[user.mail])#[user.email])
+                    recipients=[user.email])#[user.email])
 
     message.html = render_template('email/registro_pago.html', user=user, pago=pago, pagos = pagos)
 

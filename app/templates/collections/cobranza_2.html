@@ -3,7 +3,9 @@
 {% block main %}
 
 
-
+{% set ns = namespace(contador=1) %}
+{% set nt = namespace(contador=0) %}
+{% set nv = namespace(contador=0) %}
 <main class="px-3">
   <span class="d-none" id="betrsdiv" > {{tolerancia['betrsdiv']}}</span>
   <span class="d-none" id="betrs" > {{tolerancia['betrs']}}</span>
@@ -119,17 +121,17 @@
 
 
       </div>
-      {% set ns = namespace(contador=1) %}
       
+
       {%if abonos_nc|length >0%}
       <div class="contenedor col-xl-4  col-md-6 col-lg-6 col-sm-12 d-flex flex-column justify-content-around ">
         <h2 class="etiqueta text-center mb-2 mx-0" style="font-size: 16px !important;">Saldos a favor</h2>
         
         <div class=" p-1 m-0  w-100 tabla-facturas">
-          {% set ns = namespace(contador=1) %}
+          
           {% for factura in abonos_nc %}
             {% if 'blart' in factura %}
-                {% set fecvenc1 = factura['fecvenc1'] %}
+                {% set fecvenc1 = factura['fecvencr'] %}
                   <div class="vencidos w-100 d-flex flex-column tap p-1">
                     <label class="check p-2 d-flex gap-2">
 
@@ -184,7 +186,7 @@
                                 <!--bs-->
                                 <div class="d-flex flex-column ">
                                   <!--Si es contribuyente especial: se cobra la base mas el 25%-->
-                                  {% if contri == 'CE' %}
+                                  {% if factura['tipoce'] == 'CE' %}
                                     
                                       <div class="col p-0 " style="font-size: 13.5px;"><strong>Monto Total dpp Bs:</strong></div>
                                       <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
@@ -235,7 +237,7 @@
                                 <!--bs-->
                                 <div class="col-xl col-lg-12 d-flex flex-column ">
                                   <!--Si es contribuyente especial: se cobra la base mas el 25%-->
-                                  {% if contri == 'CE' %}
+                                  {% if factura['tipoce'] == 'CE' %}
                                     <div class="row w-100 px-2">
                                       <div class="col p-0 " style="font-size: 13.5px;"><strong>Monto Total Bs:</strong></div>
                                       <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
@@ -343,7 +345,7 @@
         
         <div class="tabla-facturas dos w-100 mt-0 p-1" >
           <div class="inputContainer flex-column mt-2 ">
-            {% set nt = namespace(contador=0) %}
+            
 
             {% set nt.contador = nt.contador + ns.contador%}
 
@@ -351,7 +353,7 @@
             {% for factura in facturas_vencidas %}
                 {% if 'blart' in factura %}
                   {%  if factura['blart'] == 'RV' and factura['status'] == ''%}
-                    {% set fecvenc1 = factura['fecvenc1'] %}
+                    {% set fecvenc1 = factura['fecvencr'] %}
                         
                       <div class="vencidos w-100 d-flex flex-column tap">
                         <span class="vencido text-center justify-content-center mx-2"> <i class="fa-solid fa-circle-exclamation mx-2"></i> Documento Vencido: {{fecvenc1}}</span>
@@ -407,7 +409,7 @@
                                     <!--bs-->
                                     <div class="col-xl col-lg-12 d-flex flex-column ">
                                       <!--Si es contribuyente especial: se cobra la base mas el 25%-->
-                                      {% if contri == 'CE' %}
+                                      {% if factura['tipoce'] == 'CE' %}
                                         <div class="row w-100 gap-0">
                                           <div class="col p-0 " style="font-size: 13.5px;"><strong>Monto Total  dpp Bs:</strong></div>
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
@@ -537,29 +539,33 @@
                 {% endif %}
             {% endfor %}
 
-
+              
+            
+            
+            {% set nv.contador = nt.contador + nv.contador %}
+            
             {% set facturas_filtradas = facturas_NOvencidas | selectattr('blart', 'equalto', 'RV') | selectattr('status', 'equalto', '') | list %}
             {% if facturas_filtradas|length > 0 %}
               <div class="contenedor_facts_noven w-100 p-0 m-0">
               {% for factura in facturas_NOvencidas %}
                 {% if 'blart' in factura %}
                   {%  if factura['blart'] == 'RV' and factura['status'] == ''%}
-                    {% set fecvenc1 = factura['fecvenc1'] %}
+                    {% set fecvenc1 = factura['fecvencr'] %}
                       <div class="NOvencidos w-100 d-flex flex-column tap">
                         <label class="check p-2 d-flex gap-2">
                         
-                          {{ form.factura(class="divisa cheket", id="check5", data_contador=ns.contador) }}
+                          {{ form.factura(class="divisa cheket", id="check5", data_contador=nv.contador) }}
                           <div class="checkmark"></div>
                           <div class="d-flex texto-mid w-100 flex-column ">
                             <div class="factura mb-2 p-0 w-100 d-flex justify-content-center"> 
                               <div class="row w-100">
                                 <div class="texto-mid d-flex align-items-center justify-content-center col " id="factura_comparar">
                                   <div class="algo"> <p> <strong>{%if factura['netwr'] < 0 %} Nota de Credito: {% elif factura['netwr']>0  %} Factura: {%endif%}</strong> {{factura['vbeln'] }}</p> </div>
-                                  <span id="vbeln{{ ns.contador }}" class="d-none" name="fact[]">{{factura['vbeln'] }} </span>
-                                  <span id="fkdat{{ ns.contador }}" class="d-none">{{factura['fkdat'] }} </span>
-                                  <span id="belnr1{{ ns.contador }}" class="d-none">{{factura['belnr1'] }} </span>
-                                  <span id="buzei{{ ns.contador }}" class="d-none">{{factura['buzei'] }} </span>
-                                  <span id="blart{{ ns.contador }}" class="d-none">{{factura['blart'] }} </span>
+                                  <span id="vbelnNV{{ nv.contador }}" class="d-none" name="fact[]">{{factura['vbeln'] }} </span>
+                                  <span id="fkdatNV{{ nv.contador }}" class="d-none">{{factura['fkdat'] }} </span>
+                                  <span id="belnr1NV{{ nv.contador }}" class="d-none">{{factura['belnr1'] }} </span>
+                                  <span id="buzeiNV{{ nv.contador }}" class="d-none">{{factura['buzei'] }} </span>
+                                  <span id="blartNV{{ nv.contador }}" class="d-none">{{factura['blart'] }} </span>
                                 </div>
                                 
                                 <div class=" mx-1 texto-faltante d-flex align-items-center justify-content-center  text-center" style="width: 1px !important;"></div>
@@ -598,7 +604,7 @@
                                     <!--bs-->
                                     <div class="col-xl col-lg-12 d-flex flex-column ">
                                       <!--Si es contribuyente especial: se cobra la base mas el 25%-->
-                                      {% if contri == 'CE' %}
+                                      {% if factura['tipoce'] == 'CE' %}
                                         <div class="row w-100 gap-0">
                                           <div class="col p-0 " style="font-size: 13.5px;"><strong>Monto Total dpp Bs:</strong></div>
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
@@ -649,7 +655,7 @@
                                     <!--bs-->
                                     <div class="col-xl col-lg-12 d-flex flex-column ">
                                       <!--Si es contribuyente especial: se cobra la base mas el 25%-->
-                                      {% if contri == 'CE' %}
+                                      {% if factura['tipoce'] == 'CE' %}
                                         <div class="row w-100 gap-0">
                                           <div class="col p-0 " style="font-size: 13.5px;"><strong>Monto Total Bs:</strong></div>
                                           <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
@@ -722,7 +728,7 @@
                         {% endif %}
                           </div>
                         </label>
-                        {% set ns.contador = ns.contador + 1 %}
+                        {% set nv.contador = nv.contador + 1 %}
                       </div>
                     {% endif %}
                   {% endif %}
@@ -746,9 +752,6 @@
       </div>
     </form>
   </div>
-
-
-
 </main>
 
 <script>

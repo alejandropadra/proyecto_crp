@@ -226,16 +226,16 @@ def cobranza2():
             if 'blart' in dic:
                 if dic['blart'] == 'RV':
                     datos = dic
-        facturas = sorted(response_json, key= lambda x: x['fecvenc1'])
+        facturas = sorted(response_json, key= lambda x: x['fecvencr'])
         facturas_vencidas= []
         facturas_NOvencidas= []
         abonos_nc= []
         if (facturas):
             for factura in facturas:
             
-                if factura['fecvenc1'] < fecha and factura['dmbtr'] >0 :
+                if factura['fecvencr'] < fecha and factura['dmbtr'] >0 :
                     facturas_vencidas.append(factura)
-                elif factura['fecvenc1'] >= fecha  and factura['dmbtr'] >0:
+                elif factura['fecvencr'] >= fecha  and factura['dmbtr'] >0:
                     facturas_NOvencidas.append(factura)
                     facturas_NOvencidas.append('novencidas')
                 elif factura['dmbtr'] <0 and factura['status']=='':
@@ -349,7 +349,7 @@ def cobranza2():
             blart = request.form.get('inputblart' + str(i))
             if blart:
                 blart_list.append(blart)
-        """          
+                 
         print(f"facturas: {facturas_list}")
         print('-------------')
         print(f"montos list: {montos_list}")
@@ -360,7 +360,7 @@ def cobranza2():
         print('-------------')
         print(f"las buzeis son: {buzei_list}")
         print('-------------')
-        """  
+        
         if  request.files['archivo']:
             imagen = request.files['archivo']
             nombre_imagen = secure_filename(current_user.username + '_' + str(n_deposito)+'_'+imagen.filename)
@@ -408,7 +408,7 @@ def cobranza2():
         'PBASE': condicion_pago_pivote
         }]
         #response_c = requests.post(url_c, auth=HTTPBasicAuth(user_fuente, contra_fuente),json=data,headers=headers,verify=False)
-        datos = [{'BUKRS': '1200','XBLNR':n_deposito,'KUNNR':rif,'BLDAT':fecha_pago,'TIPOPAGO':divisa,'WRBTR':monto_total,'CTABANCO':banco_receptor,'PROCESADO':'','ABONOCTA':'','PBASE': condicion_pago_pivote,'BELNR1':belnr1,'VBELN': factura,'buzei':buzei,'BLDATF':fkdat,'MONTOPG': monto,'HORAP':''} for factura, monto, fkdat, belnr1, buzei, blart  in zip(facturas_list, montos_list,fkdat_list,belnr1_list,buzei_list,blart_list)]
+        datos = [{'BUKRS': '1200','XBLNR':n_deposito,'KUNNR':rif,'BLDAT':fecha_pago,'TIPOPAGO':divisa,'WRBTR':monto_total,'CTABANCO':banco_receptor,'PROCESADO':'','ABONOCTA':'','PBASE': condicion_pago_pivote,'BELNR1':belnr1,'VBELN': factura,'buzei':buzei,'BLDATF':fkdat,'MONTOPG': monto,'HORAP':'', 'BLART':blart} for factura, monto, fkdat, belnr1, buzei, blart  in zip(facturas_list, montos_list,fkdat_list,belnr1_list,buzei_list,blart_list)]
         if datos:
             print('existe')
         else:
@@ -436,7 +436,7 @@ def cobranza2():
                 'BUKRS': '1200',# por aca ppv o crp
                 'XBLNR':n_deposito, #Número de documento de referencia... del pago
                 'KUNNR':rif, #Número de deudor codif saps
-                'BLDAT':fec, #Fecha de documento en documento..Fecha pago
+                'BLDAT':fecha_pago, #Fecha de documento en documento..Fecha pago
                 'TIPOPAGO':divisa, #FI AR: Tipo de Pago.... 
                 'WRBTR':monto_total, #Importe en la moneda del documento... monto
                 'CTABANCO':banco_receptor, #Cuenta Bancaria
@@ -748,6 +748,7 @@ def lista_cobranza():
             response_json = eval(response_json)
             if isinstance(response_json , dict):
                 response_json = [response_json]
+            print(response_json)
         except:
             print("nada")
             response_json = []
@@ -879,9 +880,9 @@ def deposito(n):
     return render_template("collections/info_pago.html", titulo = "Deposito",datos=datos)"""
 
 
-@page.route("/documento/<n>")
+@page.route("/documento/<n>-<i>")
 @login_required
-def documento(n):
+def documento(n,i):
     sap = ip_fuente+"/sap/bc/rest/zpasdeudores"
     tiempo, fecha = obtener_hora_minutos_segundos_fecha()
     cadena = cadena_md5('1200',current_user.rif,tiempo,fecha)
@@ -908,7 +909,7 @@ def documento(n):
         response_json = response_json[:-1]
         response_json = eval(response_json)
         for dic in response_json:
-            if 'vbeln' in dic and dic['vbeln'] ==n:
+            if 'vbeln' in dic and dic['vbeln'] ==n and dic['buzei']==i:
                 datos = dic
                 #print(dic)
         #print(datos['vbeln'] )

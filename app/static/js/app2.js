@@ -650,10 +650,12 @@ function redondear(valor, decimales) {
 
 function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal, transaccion, variableConta) {
     console.log('se ejecuta el caso 2')
+    console.log(checkboxes)
     console.log(montoValue)
     let betrsdiv = document.getElementById('betrsdiv');
     let betrs = document.getElementById('betrs');
-
+    let posicionHastaAhora =0;
+    posicionHastaAhora= casoDos.checkboxes.length
     quitarReadOnlyYDisabledFacturas();
     const checksSeleccionados = [];
     let abonoRealizado = false;
@@ -664,6 +666,7 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
     const checkboxesArray = Array.from(checkboxes);
 
     checkboxesArray.forEach(checkbox => {
+        console.log(checkbox)
         checkbox.removeEventListener('change', checkbox.changeHandler);
 
         checkbox.changeHandler = function() {
@@ -685,12 +688,14 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
                 sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas + parseFloat(montoFactura)).toFixed(2));
                 label.classList.remove('listo');
             
-                const posicionArray = checkboxesArray.indexOf(checkbox);
-                const vblen = document.getElementById('vbeln' + (posicionArray + 1))?.textContent;
-                const fkdat = document.getElementById('fkdat' + (posicionArray + 1))?.textContent;
-                const belnr1 = document.getElementById('belnr1' + (posicionArray + 1))?.textContent;
-                const buzei = document.getElementById('buzei' + (posicionArray + 1))?.textContent;
-                const blart = document.getElementById('blart' + (posicionArray + 1))?.textContent;
+                let posicionArray = checkboxesArray.indexOf(checkbox);
+                posicionArray = posicionArray + posicionHastaAhora;
+                console.log(posicionArray)
+                const vblen = document.getElementById('vbelnNV' + (posicionArray + 1 ))?.textContent;
+                const fkdat = document.getElementById('fkdatNV' + (posicionArray +1 ))?.textContent;
+                const belnr1 = document.getElementById('belnr1NV' + (posicionArray +1))?.textContent;
+                const buzei = document.getElementById('buzeiNV' + (posicionArray +1 ))?.textContent;
+                const blart = document.getElementById('blartNV' + (posicionArray+1 ))?.textContent;
                 const dif =  sumaFacturasSeleccionadas - montoValue ;
                 if (dif < 0){
                     dif==0.00
@@ -810,8 +815,13 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
             } else {
                 const index = checksSeleccionados.indexOf(this);
                 if (index > -1) {
-                    const posicionArray = checkboxesArray.indexOf(checkbox);
-                    eliminarInputsDos(posicionArray);
+                    let posicionArray = checkboxesArray.indexOf(checkbox);
+                    let posicionHastaAhora =0;
+                    posicionHastaAhora= casoDos.checkboxes.length
+                    posicionArray = posicionArray + posicionHastaAhora;
+                    console.log(posicionArray)
+                    
+                    eliminarInputsDos(posicionArray+1);
                     checksSeleccionados.splice(index, 1);
                     const elementoMonto = obtenerElementoMontoDos(this, montodpp, montoNormal);
                     const textoDelElemento = elementoMonto ? elementoMonto.textContent : '';
@@ -912,11 +922,12 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                 label.classList.remove('listo');
             
                 const posicionArray = checkboxesArray.indexOf(checkbox);
-                const vblen = document.getElementById('vbeln' + (posicionArray + 1))?.textContent;
-                const fkdat = document.getElementById('fkdat' + (posicionArray + 1))?.textContent;
-                const belnr1 = document.getElementById('belnr1' + (posicionArray + 1))?.textContent;
-                const buzei = document.getElementById('buzei' + (posicionArray + 1))?.textContent;
-                const blart = document.getElementById('blart' + (posicionArray + 1))?.textContent;
+                
+                const vblen = document.getElementById('vbelnNV' + (posicionArray +1))?.textContent;
+                const fkdat = document.getElementById('fkdatNV' + (posicionArray +1))?.textContent;
+                const belnr1 = document.getElementById('belnr1NV' + (posicionArray +1))?.textContent;
+                const buzei = document.getElementById('buzeiNV' + (posicionArray +1))?.textContent;
+                const blart = document.getElementById('blartNV' + (posicionArray +1))?.textContent;
                 const dif =  sumaFacturasSeleccionadas - montoValue ;
                 if (dif < 0){
                     dif==0.00

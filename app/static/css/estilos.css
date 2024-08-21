@@ -23,6 +23,10 @@
   font-size: 13px;
 }
 
+#example{
+  text-align: center;
+}
+
 .este .tarjeta_saldo:last-child{
   margin: 0;
 }

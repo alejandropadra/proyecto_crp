@@ -35,9 +35,10 @@
             {% if pago['blart'] != 'ZD' %}
             {% if pago['blart'] != 'DA' %}
             <tr class="celda text-center"  style="cursor:pointer;" >
-                <td class="">{{pago['fkdat']}} </td>
-                <td>{% if pago['blart'] == 'DZ' %}Abono{% elif pago['blart'] == 'RV' and pago['dmbtr']>0 %}Factura{% elif pago['blart'] == 'RV' and 0>pago['dmbtr'] %}Nota de Crédito{% else %}{{pago['blart']}}{% endif %}</td>
                 <td >{{pago['vbeln']}}</td>
+                <td>{% if pago['blart'] == 'DZ' %}Abono{% elif pago['blart'] == 'RV' and pago['dmbtr']>0 %}Factura{% elif pago['blart'] == 'RV' and 0>pago['dmbtr'] %}Nota de Crédito{% else %}{{pago['blart']}}{% endif %}</td>
+                <td class="">{{pago['fkdat']}} </td>
+                
                 <td>{{ "{:,.2f}".format(pago['dmbtr']|abs) }} </td>
                 <td>{{ "{:,.2f}".format(pago['totfactbs']|abs) }}</td>
         </tr>
