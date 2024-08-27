@@ -52,7 +52,12 @@
             <label for="zona" class="label">Ingrese Codigo del usuario</label>
             <div class="underline"></div>
           </div>
-
+        <!--NIVEL-->
+        <div class="input-container">
+          {{ render_field(form.password, class ="entrada", id="encrypted_password" ) }}
+          <label for="zona" class="label">Contraseña</label>
+          <div class="underline"></div>
+        </div>
             <!--↓↓ iNPUT DE EMPRESA ↓↓-->
             {% if form.nivel.data !="administrador" %}
             <div class=" mb-2 w-100 d-flex justify-content-center" style="margin-top: 25px;">

@@ -12,8 +12,8 @@ class DevelopmentConfig(Config):
     MAIL_PORT = 587
     MAIL_USE_TLS = True
     MAIL_USERNAME = 'noreply@corimon.com'
-    MAIL_PASSWORD = 'Suz38159'
-    MAIL_TEST = 'jesus_romero@corimon.com'
+    MAIL_PASSWORD = 'jkvljsdlyqtskkcx'
+    MAIL_TEST = ''
 
 class ProductionConfig(DevelopmentConfig):
     DEBUG = False

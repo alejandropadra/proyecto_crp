@@ -126,17 +126,23 @@ def perfil():
     form = PerfilForm(request.form)
     if request.method == 'POST':
         password = form.password.data
+        confirm_password = form.confirm_password.data
         email = form.email.data
         verify_email = form.verify_email.data
         if password:
-            update = User.update_password(rif,password)
-
+            if password==confirm_password:
+                print("contra")
+                update = User.update_password(rif,password)
+                flash(USER_EDIT)
+            elif password!=confirm_password:
+                flash(USER_ERROR,'error')
+        
         if email:
-            #if email == verify_email:
-            #flash(P_CONFIRM)
-            #   print(email)
-            update_email = User.update_email(rif,email)
-            print(update_email)
+            if email== verify_email:
+                flash(USER_EDIT)
+                update_email = User.update_email(rif,email)
+            elif email != verify_email:
+                flash(USER_ERROR, 'error')
 
     return render_template("auth/perfil.html",titulo="Cambiar clave",form = form) 
 
@@ -160,7 +166,11 @@ def usuario(rif):
         zona = edit_form.zona.data
         nivel = edit_form.nivel.data
         codigo = edit_form.codigo.data
+        password = edit_form.password.data
         edit = User.update_user(rif,empresa,correo,zona,nivel,codigo)
+        if password:
+            update = User.update_password(rif,password)
+            flash("Contraseña actualizada")
         mensaje = USER_EDIT
         flash(mensaje)
     return render_template("auth/edit_user.html",titulo="Info usuario", form=edit_form)
@@ -510,7 +520,7 @@ def cobranza_iva():
         }]
  
         # Realizar la solicitud POST con los datos en formato JSON
-        response = requests.post(url, auth=HTTPBasicAuth(user_fuente, contra_fuente),json=data,headers=headers,verify=False)
+        response = requests.post(url, auth=HTTPBasicAuth(user_fuente, contra_fuente),json=data,headers=headers,verify=True)
         print(response)
         # Verificar la respuesta
         if response.status_code == 200:
@@ -1187,7 +1197,7 @@ def ret_enviadas():
         'SOCIEDAD': '1200',
         'CLIENTE':current_user.rif,
     }
-    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=False)
+    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
     try:
         if response.status_code == 200:
             response_json = json.loads(response.content)
@@ -1245,7 +1255,7 @@ def retenciones():
             'CLIENTE':current_user.rif,
             'C_RET':n_retencion
         }
-        response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=False)
+        response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
         if response.status_code == 200:
             print("Exito en la peticion")
             flash(RET_REGISTRADA)
@@ -1281,7 +1291,7 @@ def dashboard2():
         'CLIENTE':current_user.rif,
         'FEC_DEP': Fecha_pago
     }
-    response1 = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args,headers=headers, verify=False)
+    response1 = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args,headers=headers, verify=True)
     #print(response.url)
     if response1.status_code == 200:
         response_json1 = json.loads(response1.content)
@@ -1305,7 +1315,7 @@ def dashboard2():
         'CLIENTE':current_user.rif,
         'TOTALES':'X'
     }
-    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args,headers=headers, verify=False)
+    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args,headers=headers, verify=True)
     if response.status_code == 200:
 
         response_json = json.loads(response.content)
@@ -1324,7 +1334,7 @@ def dashboard2():
         'SOCIEDAD': '1200',
         'CLIENTE':current_user.rif,
     }
-    response_ret = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=False)
+    response_ret = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
     if response_ret.status_code == 200:
         response_json2 = json.loads(response_ret.content)
         response_json2 = str(response_json2)
@@ -1344,7 +1354,7 @@ def dashboard2():
         'SOCIEDAD': '1200',
         'CLIENTE':current_user.rif,
     }
-    response_fact = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=False)
+    response_fact = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
     if response_fact.status_code == 200:
         response_json3 = json.loads(response_fact.content)
         response_json3 = str(response_json3)
