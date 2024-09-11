@@ -107,9 +107,11 @@ def registroUsuario():
         password = registro_form.password.data
         zona = registro_form.zona.data
         nivel = registro_form.nivel.data
+        codigo = registro_form.codigo.data
+        vendedor = registro_form.vendedor.data
         argumentos = (rif+""+n_rif,empresa, password,correo,zona)
         print(argumentos)
-        registro = User.create_element(rif+""+n_rif,empresa, password,correo,zona,nivel)
+        registro = User.create_element(rif+""+n_rif,empresa, password,correo,zona,nivel,codigo,vendedor)
         try:
             mensaje = USER_CREATED
             flash(mensaje)

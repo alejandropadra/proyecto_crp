@@ -51,6 +51,8 @@ class RegisterForm(Form):
     ])'''
     zona = SelectField("",[validators.DataRequired()], choices = [("",""),("Occidente","Occidente"),("Oriente","Oriente"),("Centro","Centro"),("all","all"),("Capital","Capital")])
     nivel = SelectField("", choices=[("cliente","Cliente"),("corimon","Corimon"),("administrador","Administrador")])
+    codigo = StringField("",[validators.DataRequired('El codigo es requerido.')])
+    vendedor = StringField("",[validators.DataRequired('El vendedor es requerido.')])
     
     def validate_username(self, username):
         if User.get_by_username(username.data):
