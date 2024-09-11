@@ -32,7 +32,7 @@ class ContactForm(Form):
 
 class RegisterForm(Form):
     rif = SelectField("", choices=[("J","J"),("G","G"),("V","V")])
-    n_rif = StringField("",[ validators.length(min=5,max=8),
+    n_rif = StringField("",[ validators.length(min=5,max=10),
                             validators.DataRequired()])
     username = StringField("",[ validators.length(min=2,max=50),
                             validators.DataRequired()])
