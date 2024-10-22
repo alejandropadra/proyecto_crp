@@ -2,71 +2,53 @@
 {% from 'helpers/_forms.html' import render_field %}
 {% block main %}
 <main class="px-3 pt-3">
+
 {% if current_user.nivel =="cliente" %}
     <div class="my-5 container table-responsive tabla w-75 w-100  "  >  
     <table id="example" class="dataTable table" style="width:100%;">
         <thead>
             <tr>
-                <th>Fecha emisión</th>
-                <th>Fecha Venc.</th>
-                <th>Descripción</th>
-                <th>N° Doc. Comercial</th>
-                <th>Monto $</th>
-                <th>Monto Bs</th>
+                <th>Fecha de pago</th>
+                <th>N° de Referencia</th>
+                <th>Tipo Moneda</th>
+                <th>Monto</th>
+                <th>Cta Banco</th>
                 <th>Estatus</th>
             </tr>
         </thead>
         <tbody>
             {% for pago in pagos %}
-            {% if pago['blart'] != 'AD' %}
-            {% if pago['blart'] != 'ZD' %}
-            {% if pago['blart'] != 'DA' %}
-            <tr onclick="location.href='{{ url_for('.documento',  n=pago['vbeln'], i=pago['buzei'] )}}'"; class="celda text-center"  style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Click para mas detalles">
-                <td class="">{{pago['fkdat']}} </td>
-                <td>{{pago['fecvencr']}}</td>
-                <td>{% if pago['blart'] == 'DZ' and 0>pago['dmbtr'] and pago["pagaiva"]!='S' %}Abono{% elif pago['blart'] == 'DZ' and pago['dmbtr']>0 %}Iva por pagar{% elif pago['blart'] == 'DZ' and pago['pagaiva']=='S'%}Pago Iva{% elif pago['blart'] == 'RV' and pago['dmbtr']>0 %}Factura{% elif pago['blart'] == 'RV' and 0>pago['dmbtr'] %}Nota de Crédito {% elif pago['blart']=='AB' %}Abono{% endif %}</td>
-                <td >{{pago['vbeln']}}</td>
-                <td>{{ "{:,.2f}".format(pago['dmbtr']|abs) }} </td>
-                
-                <td>{{ "{:,.2f}".format(pago['totfactbs']|abs) }}</td>
-            <td style="text-align: center;">
-                <a href="" style="text-align: center;" class="btn {% if  pago['status'] == '' %} bg-secondary text-white {% elif  pago['status'] == 'P' %} bg-warning text-white {% endif %}" >{% if  pago['status'] == '' and pago['blart'] == 'RV' %} Pendiente por pagar {% elif  pago['status'] == 'P' %} Pendiente por validar {% elif pago['blart'] == 'DZ' and 0>pago['dmbtr'] and pago['pagaiva']!= 'S' %}Abono por conciliar{% elif pago['blart'] == 'AB' %}Abono por conciliar{% elif pago['blart'] == 'DA' %}Pendiente por pagar{% elif pago['blart'] == 'DZ' and pago['dmbtr']>0 %}Pendente por pagar {%elif pago['pagaiva']== 'S'  %} Iva por conciliar {% endif %}</a>                   
-            </td>
+            
+            <tr  class="celda text-center"   >
+                <td class="">{{pago['bldat']}} </td>
+                <td>{{pago['xblnr']}}</td>
+                <td>{% if pago['tipopago'] == 'B' %}Bs{% elif pago['tipopago'] == 'D'  %}${% endif %}</td>
+                <td>{{ "{:,.2f}".format(pago['wrbtr']|abs) }} </td>
+                <td >{{pago['ctabanco']}}</td>
+                <td style="text-align: center;">
+                    <a href="" style="text-align: center;" class="btn {% if  pago['procesado'] == '' %} bg-secondary text-white {% elif  pago['procesado'] == 'X' %} bg-success text-white {% endif %}" >{% if  pago['procesado'] == '' %} Pendiente {% elif  pago['procesado'] == 'X' %} Validado {% endif %}</a>                   
+                </td>
         </tr>
-            {% endif%}
-            {% endif%}
-            {% endif%}
-            {% endfor %}
-            {% for pago in ivas%}
-            <tr onclick="location.href='{{ url_for('.documento',  n=pago['vbeln'], i=pago['buzei'] )}}'"; class="celda text-center"  style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Click para mas detalles">
-                <td class="">{{pago['fkdat']}} </td>
-                <td>{{pago['fecvencr']}}</td>
-                <td>Iva</td>
-                <td >{{pago['vbeln']}}</td>
-                <td> </td>
-                
-                <td>{{ "{:,.2f}".format(pago['totfactbs']|abs) }}</td>
-            <td style="text-align: center;">
-                <a href="" style="text-align: center;" class="btn {% if  pago['statusiva'] == '' %} bg-secondary text-white {% elif  pago['statusiva'] == 'P' %} bg-warning text-white {% endif %}" >Pendiente por validar</a>                   
-            </td>
-            </tr>
+
             {% endfor %}
         </tbody>
 
         <tfoot>
             <tr>
-                <th>Fecha emisión</th>
-                <th>Fecha Venc.</th>
-                <th>Descripción</th>
-                <th>N° Doc. Comercial</th>
-                <th>Monto $</th>
-                <th>Monto Bs</th>
+                <th>Fecha de pago</th>
+                <th>N° de Referencia</th>
+                <th>Tipo Moneda</th>
+                <th>Monto</th>
+                <th>Cta Banco</th>
                 <th>Estatus</th>
             </tr>
         </tfoot>
     </table>
 </div>
 {% else%}
+
+
+
 <div class="tab-content" id="myTabContent" style="margin-top: 100px;">
         <div class="container mt-4 table-responsive mb-5" style="box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); padding: 20px 20px 20px 20px; border-radius: 7px;">  
             <table id="example" class="table" style="width:100%">
@@ -116,9 +98,7 @@
 </div>
 
 
-
 {% endif %}
-
 </main>
 {% endblock %}
 

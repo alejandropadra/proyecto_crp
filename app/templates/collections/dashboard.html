@@ -2,251 +2,328 @@
 {% from 'helpers/_forms.html' import render_field %}
 {% block main %}
 
-<main class="position-relative mt-2 p-3 mb-5 "  >
 
-<div class="courses-container z-0 container p-0 " >
-  <div class="row d-flex gap-4 mb-4">
+<main class="position-relative mt-2 p-3 mb-5"  >
+  <div class=" z-0 container p-0 " >
+    <div class="row d-flex gap-2 mb-2">
 
-    <div class="col-xl col-lg-12 col-sm-12 col-md-12 p-0 m-0 d-flex flex-column gap-3 align-items-center" >
+      <div class="col-xl col-lg-12 col-sm-12 col-md-12 p-0 m-0 d-flex flex-column gap-3 align-items-center" >
 
-        <div class="tarjeta_saldo hover  mb-4 w-100 col-xl-12 col-lg-6 col-md-6 col-sm" >
-          <div class="titulo_saldo d-flex align-items-center gap-2 m-0 p-0">
-              <div class="icono_tarjeta verde_dolar text-white mr-2 d-flex align-items-center justify-content-center">
-                <i class="bi bi-currency-dollar d-flex align-items-center justify-content-center"></i>
-              </div>
-              <p class="ui-tittle text-center m-0 p-0">
-                  Deuda
-              </p>
-          </div>
-          <div class="d-flex justify-content-between py-1 px-2" >
-              <div> <p class="etiqueta-size">Monto $</p></div>  <div><p class="etiqueta-size"> {{ "{:,.2f}".format(total_deudas_dolares|float|abs) }} </p></div>
-          </div>
-          <div class="d-flex justify-content-between py-1 px-2" >
-            <div><p class="etiqueta-size">Monto bs</p></div>  <div>  <p class="etiqueta-size">{{ "{:,.2f}".format(total_deudas_bs|float|abs) }} </p> </div>
-        </div>
-        </div>
-      
-        <div class="tarjeta_saldo w-100  col-xl-12 col-lg col-md col-sm hover" >
-          <div class="titulo_saldo d-flex align-items-center gap-2">
-              <div class="icono_tarjeta rojo_mmg text-white mr-2 d-flex align-items-center justify-content-center">
-                <i class="bi bi-wallet2 d-flex align-items-center justify-content-center"></i>
-              </div>
-              <p class="ui-tittle text-center m-0 p-0">
-                Saldo a favor
-              </p>
-          </div>
-          <div class="d-flex justify-content-between py-1 px-2">
-            <div><p class="etiqueta-size">Monto $</p></div>  <div><p class="etiqueta-size "> {{ "{:,.2f}".format(total_saldo_dolar|float|abs) }}</p> </div>
-        </div>
-        <div class="d-flex justify-content-between py-1 px-2">
-          <div><p class="etiqueta-size">Monto bs</p></div> <div> <p class="etiqueta-size">{{ "{:,.2f}".format(total_saldo_bs|float|abs) }}</p> </div>  
-      </div>
-        </div>
 
-    </div>
-	
 
-  <div class="d-flex flex-column  align-items-center col-xl-9 col-lg-12 col-md-12 col-sm-12 m-0 " style="background-color: #fdfdfd; padding: 20PX; border-radius: 16px;">
-    <h3 class="ui-tittle text-right w-100 mb-2">  Deuda total vencida: {% if total_vencido_d > 0 %}{{"{:,.2f}".format(total_vencido_d|float|abs)}}($) | {{"{:,.2f}".format(total_vencido_b|float|abs)}}(bs){% else %}  {%endif%}</h3>
-    <div class="row d-flex gap-3 px-3 pt-1 ">
-
-      <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
-        <div class="course-info d-flex flex-column justify-content-center ">
-          <h6 class=" ui-tittle-tres">No Vencido: </h6>
-          <div class="d-flex justify-content-between"> <div> <p> <strong class="text-muted "> Monto ($): </strong> </p> </div> <div>  <span class="texto2">{{ "{:,.2f}".format(no_vencido_dolar|float|abs)}} </span></p> </div> </div>
-          <div class="d-flex justify-content-between"> <div> <p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div> <span class="texto2">{{  "{:,.2f}".format(no_vencido_bs|float|abs) }} </span> </div> </div>
-
-          
-
-        </div>
-      </a>
-
-      <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
-        <div class="course-info d-flex flex-column justify-content-center ">
-          <h6 class=" ui-tittle-tres">Vencido 1-30: </h6>
-          
-          <div class="d-flex justify-content-between "> <div> <p> <strong class="text-muted "> Monto ($): </strong> </p> </div> <div> <span class="texto2">{% if vencido_130_d > 0 %} {{"{:,.2f}".format(vencido_130_d|float)}}{% else %} 0.00{% endif %} </span> </div> </div>
-          <div class="d-flex justify-content-between "> <div><p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div> <span class="texto2">{% if vencido_130_b > 0 %} {{"{:,.2f}".format(vencido_130_b|float)}} {% else %} 0.00{% endif %} </span> </div> </div>
-
-        </div>
-      </a>
-      <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
-        <div class="course-info d-flex flex-column justify-content-center ">
-
-          <h6 class=" ui-tittle-tres ">Vencido 31-60: </h6>
-
-          <div class="d-flex justify-content-between" > <div>  <p> <strong class="text-muted "> Monto ($): </strong> </p> </div> <div>  <span class="texto2">{% if vencido_3160_d > 0 %}  {{"{:,.2f}".format(vencido_3160_d|float)}}{% else %} 0.00{% endif %} </span> </div> </div>
-          <div class="d-flex justify-content-between"> <div>  <p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div>  <span class="texto2">{% if vencido_3160_b > 0 %} {{"{:,.2f}".format(vencido_3160_b|float)}}{% else %} 0.00{% endif %} </span></div> </div>
-          
-
-        </div>
-      </a>
-      <a class="course hover col-sm-12 col-xl" > <!--si es verificado se aplica este (porque esta en verde)-->
-        <div class="course-info d-flex flex-column justify-content-center ">
-          <h6 class=" ui-tittle-tres">Vencido 60+: </h6>
-          <div class="d-flex justify-content-between"> <div> <p> <strong class="text-muted "> Monto ($): </strong> </p> </div> <div>  <span class="texto2">{% if vencido_60_b > 0 %} {{"{:,.2f}".format(vencido_60_d|float)}}{% else %} 0.00 {% endif %}  </span></p> </div> </div>
-          <div class="d-flex justify-content-between"> <div> <p> <strong class="text-muted"> Monto (bs): </strong> </p> </div> <div> <span class="texto2">{% if vencido_60_d > 0 %}  {{"{:,.2f}".format(vencido_60_b|float)}}{% else %} 0.00{% endif %}</span> </div> </div>
-
-          
-
-        </div>
-      </a>
-      
-      <p><em>Este cálculo solo corresponde al monto de la deuda vencida.</em></p>
-    </div>
-  </div>
-  </div>
-</div>
-
-<!-- ------------------------------------Otra Fila------------------------------------------>
-
-<div class="courses-container z-0 container p-0 w-100 " >
-  <div class="row d-flex gap-4 mb-4 w-100 p-0">
-    <div class="col-12 p-0 m-0 w-100">
-
-      <div class="row d-flex m-0 p-0 w-100 gap-4 este">
-        <a class="tarjeta_saldo hover mb-0 w-100  col text-decoration-none text-dark" href="{{ url_for('.lista_cobranza', filtro='Pendiente Por pagar') }}">
-          <div class="titulo_saldo d-flex align-items-center gap-2">
-            <div class="icono_tarjeta rojo_mmg text-white mr-2 d-flex align-items-center justify-content-center">
-              <i class="fa-solid fa-receipt"></i>
+          <div class="base-contenedor d-flex flex-column w-100">
+            <div class="titulo px-2 d-flex ">
+              <h3>Deuda</h3>
             </div>
-            <p class="ui-tittle-dos " >
-              Documentos Pendientes por pagar
-            </p>
+            <div class="d-flex flex-column gap-3 py-2 px-3">
+              <div class=" data "> <div class="icono rojo_mmg"> <p>Bs</p> </div> <div class="d-flex align-items-center pr-2"><p class="valor">{{ "{:,.2f}".format( total_deudas_bs|float|abs - deuda_dif_bs|float|abs )  }}</p> </div> </div>
+              <div class=" data "> <div class="icono verde_dolar"> <p> <i class="bi bi-currency-dollar"></i> </p> </div> <div class="d-flex align-items-center pr-2"><p class="valor">{{ "{:,.2f}".format(total_deudas_dolares|float|abs - deuda_dif_dolar|float|abs) }}</p> </div></div>
+            </div>
           </div>
-          {% set na = namespace(contador=0) %}
-            {% for factura in facturas %}
-              {% if 'blart' in factura %}
-                {%  if factura['blart'] == 'RV' and factura['status']=='' %}
+
+
+          <div class="base-contenedor d-flex flex-column w-100 ">
+            <div class="titulo px-2">
+              <h3>Saldo a favor</h3>
+            </div>
+            <div class="d-flex flex-column gap-3 py-2 px-3">
+              <div class=" data "> <div class="icono rojo_mmg"> <p>Bs</p> </div> <div class="d-flex align-items-center pr-2"><p class="valor">{{ "{:,.2f}".format(total_saldo_bs|float|abs - favor_dif_bs|float|abs ) }}</p> </div> </div>
+              <div class=" data "> <div class="icono verde_dolar"> <p> <i class="bi bi-currency-dollar"></i> </p> </div> <div class="d-flex align-items-center pr-2"><p class="valor"> {{ "{:,.2f}".format(total_saldo_dolar|float|abs - favor_dif_dolar|float|abs) }}</p> </div></div>
+            </div>
+          </div>
+
+
+      </div>
+    
+
+      <div class="d-flex flex-column gap-4  align-items-center col-xl-9 col-lg-12 col-md-12 col-sm-12 m-0 base-contenedor" >
+
+          
+
+        
+        
+        <!--<p>{% if total_vencido_d > 0 %}{{"{:,.2f}".format(total_vencido_d|float|abs)}}($) | {{"{:,.2f}".format(total_vencido_b|float|abs)}}(bs){% else %}  {%endif%}</p>-->
+        <div class="d-flex w-100 gap-3">
+          <h3 class=" m-0 " style="text-align:left; width:40%">  Deuda total vencida: </h3>
+          <div class=" w-25 data justify-content-center"> <div class="icono rojo_mmg"> <p>Bs</p> </div> <div class="d-flex align-items-center pr-2"><p class="valor">{% if total_vencido_d > 0 %}{{"{:,.2f}".format(total_vencido_b|float|abs)}}  {%endif%}</p> </div> </div>
+          <div class="w-25 data justify-content-center"> <div class="icono verde_dolar"> <p> <i class="bi bi-currency-dollar"></i> </p> </div> <div class="d-flex align-items-center pr-2"><p class="valor">{% if total_vencido_d > 0 %}{{"{:,.2f}".format(total_vencido_d|float|abs)}} {%endif%}</p> </div></div>
+        </div>
+
+        <!--↓↓Otra fila ↓↓↓-->
+        <div class="row w-100 d-flex gap-2 mt-2">
+
+          <div class="col divs-in-deuda">
+            <h2>No Vencida</h2>
+
+            <div class="d-flex flex-column gap-4 ">
+              <div class=" data "> <div class="icono rojo_mmg"> <p>Bs</p> </div> <div class="d-flex align-items-center pr-2"><p class="valor">{{  "{:,.2f}".format(no_vencido_bs|float|abs) }}</p> </div> </div>
+              <div class=" data "> <div class="icono verde_dolar"> <p> <i class="bi bi-currency-dollar"></i> </p> </div> <div class="d-flex align-items-center pr-2"><p class="valor">{{ "{:,.2f}".format(no_vencido_dolar|float|abs)}}</p> </div></div>
+            </div>
+          </div>
+
+          <div class="col divs-in-deuda">
+            <h2>Vencido 1-30</h2>
+
+            <div class="d-flex flex-column gap-4 ">
+              <div class=" data "> <div class="icono rojo_mmg"> <p>Bs</p> </div> <div class="d-flex align-items-center pr-2"><p class="valor">{{"{:,.2f}".format(vencido_130_b|float|abs)}}</p> </div> </div>
+              <div class=" data "> <div class="icono verde_dolar"> <p> <i class="bi bi-currency-dollar"></i> </p> </div> <div class="d-flex align-items-center pr-2"><p class="valor">{{"{:,.2f}".format(vencido_130_d|float|abs)}}</p> </div></div>
+            </div>
+          </div>
+
+          <div class="col divs-in-deuda">
+            <h2>Vencido 31-60</h2>
+
+            <div class="d-flex flex-column gap-4 ">
+              <div class=" data "> <div class="icono rojo_mmg"> <p>Bs</p> </div> <div class="d-flex align-items-center pr-2"><p class="valor">{{"{:,.2f}".format(vencido_3160_b|float|abs)}}</p> </div> </div>
+              <div class=" data "> <div class="icono verde_dolar"> <p> <i class="bi bi-currency-dollar"></i> </p> </div> <div class="d-flex align-items-center pr-2"><p class="valor">{{"{:,.2f}".format(vencido_3160_d|float|abs)}}</p> </div></div>
+            </div>
+          </div>
+
+          <div class="col divs-in-deuda">
+            <h2>Vencido 60+</h2>
+
+            <div class="d-flex flex-column gap-4 ">
+              <div class=" data rounded"> <div class="icono rojo_mmg"> <p>Bs</p> </div> <div class="d-flex align-items-center pr-2"><p class="valor">{{"{:,.2f}".format(vencido_60_b|float|abs)}}</p> </div> </div>
+              <div class=" data rounded"> <div class="icono verde_dolar"> <p> <i class="bi bi-currency-dollar"></i> </p> </div> <div class="d-flex align-items-center pr-2"><p class="valor">{{"{:,.2f}".format(vencido_60_d|float|abs)}}</p> </div></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!--↓↓↓ Otra Fila ↓↓↓-->
+
+        <div class="w-100 mt-4">
+          <h4> Este cálculo solo corresponde al monto de la deuda vencida. </h4>
+        </div>
+        
+      
+          <!-- 
+          <div class="w-100 p-3 mt-1 " style="background-color: #EFEFEF; border-radius:13px">
+            
+            <table id="tabla">
+                <thead>
+                    <tr>
+                        <th> <h2>  Vencimiento </h2></th>
+                        <th > <h2> Monto en bs </h2></th>
+                        <th> <h2> Monto en $ </h2></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><p class="valor"> 1-30</p> </td>
+                        <td> <p class="valor">{{"{:,.2f}".format(vencido_130_b|float|abs)}}</p> </td>
+                        <td> <p class="valor"> {{"{:,.2f}".format(vencido_130_d|float|abs)}}</p> </td>
+                        <!---
+                        <td><span class="status completed">Completed</span></td>
+                        
+                    </tr>
+                    <tr>
+                        <td> <p class="valor">31-60</p> </td>
+                        <td> <p class="valor"> {{"{:,.2f}".format(vencido_3160_b|float|abs)}} </p> </td>
+                        <td>  <p class="valor"> {{"{:,.2f}".format(vencido_3160_d|float|abs)}} </p> </td>
+                        <!--
+                        <td><span class="status pending">Pending</span></td>
+                        
+                    </tr>
+                    <tr>
+                        <td> <p class="valor">60+</p> </td>
+                        <td> <p class="valor"> {{"{:,.2f}".format(vencido_60_b|float|abs)}} </p> </td>
+                        <td> <p class="valor"> {{"{:,.2f}".format(vencido_60_d|float|abs)}} </p>   </td>
+                        <!--
+                        <td><span class="status process">Processing</span></td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+        </div>-->
+      </div>
+    </div>
+
+
+
+<!--//////////////////////////////////////Otra Fila//////////////////////////////////////////////////////////////////-->
+
+    <div class="row d-flex gap-2 mb-2 mt-3">
+      <div class="col-xl col-lg-12 col-sm-12 col-md-12 p-0 m-0 d-flex flex-column gap-3 align-items-center" >
+        <div class="row w-100 gap-2">
+
+        <div class="base-contenedor d-flex flex-column col ">
+          <div class="titulo px-2 mb-2">
+            <h3>Documentos</h3>
+          </div>
+          <div class="d-flex flex-column gap-2 pt-3 ">
+            <a class="elemento-dentro" href="{{ url_for('.lista_cobranza', filtro='Pendiente por pagar') }}"  style="cursor: pointer;"">
+              <div class="d-flex align-items-center gap-1">
+                <div class="icono azul_byk"> <p>  <i class="bi bi-cash"></i> </p></div>
+                <h2 class="m-0">Por pagar</h2> 
+              </div>
+              {% set na = namespace(contador=0) %}
+                {% for factura in facturas %}
+                  {% if 'blart' in factura %}
+                    {%  if factura['blart'] == 'RV' and factura['status']=='' %}
                     {% set na.contador = na.contador + 1 %}
                   {% elif factura['blart'] == 'DA' and factura['status']=='' %}
                   {% set na.contador = na.contador + 1 %}
                   {% endif %}
                 {% endif %}
             {% endfor %}
-            <div class="d-flex justify-content-center align-items-center h-50">
-                <p class="etiqueta-size2" id="cantidadfacts">{{ na.contador }}</p>
-            </div>
-            <h6 class="masinfotarj w-100 mt-5">Ver Detalles <i class="bi bi-arrow-right"></i></h6>
-          </a>
-
-
-                    <!--Siguiente tarjeta saldo-->
-
-                    <a class="tarjeta_saldo hover w-100 col text-decoration-none text-dark" href="{{ url_for('.lista_cobranza', filtro='Pendiente Por validar') }}">
-                      <div class="titulo_saldo d-flex align-items-center gap-2">
-                          <div class="icono_tarjeta verde_dolar text-white mr-2 d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-money-bills"></i>
-                          </div>
-                          <p class="ui-tittle-dos text-center">
-                              Documentos por verificar
-                          </p>
-                      </div>
-                      {% set nd = namespace(contador=0) %}
-                        {% for factura in facturas %}
-                          {% if 'status' in factura %}
-                            {%  if factura['status'] == 'P'  %}
-                                {% set nd.contador = nd.contador + 1 %}
-                              {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                        <div class="d-flex justify-content-center align-items-center h-50">
-                          <p class="etiqueta-size2" id="cantidadver">{{ nd.contador }}</p>
-                        </div>
-                        <h6 class="masinfotarj w-100 mt-5">Ver Detalles <i class="bi bi-arrow-right"></i></h6>
-                    </a>
-          <!--Siguiente tarjeta saldo-->
-
-          <a class="tarjeta_saldo hover col w-100 col text-decoration-none text-dark" href="{{ url_for('.lista_cobranza', filtro='Abono') }}">
-            <div class="titulo_saldo d-flex align-items-center gap-2">
-                <div class="icono_tarjeta amarillo_kbrn text-dark mr-2 d-flex align-items-center justify-content-center">
-                  <i class="fa-solid fa-receipt"></i>
-                </div>
-                <p class="ui-tittle-dos text-center pt-2">
-                    Abonos por conciliar
-                </p>
-            </div>
-            {% set nb = namespace(contador=0) %}
+              <div class="d-flex justify-content-center align-items-center h-50">
+                  <p class="my-0 valor" id="cantidadfacts" style="margin-right: 14px;">{{ na.contador }}</p>
+              </div>
+            </a>
+            
+            <a class="elemento-dentro" href="{{ url_for('.lista_cobranza', filtro='Abono') }}">
+              <div class="d-flex align-items-center gap-1">
+                <div class="icono amarillo_kbrn"> <p>  <i class="bi bi-piggy-bank"></i> </p></div>
+                <h2 class="m-0">Abono por conciliar</h2> 
+              </div> 
+  
+              {% set nb = namespace(contador=0) %}
               {% for factura in facturas %}
                 {% if 'blart' in factura %}
-                  {%  if factura['blart'] == 'DZ' or factura['blart'] == 'AB' %}
+                  {%  if (factura['blart'] == 'DZ' or factura['blart'] == 'AB') and factura['pagaiva']!='S' %}
                       {% set nb.contador = nb.contador + 1 %}
                   {% endif %}
                   {% endif %}
               {% endfor %}
-              <div class="d-flex justify-content-center align-items-center h-50 mt-4">
-                <p class="etiqueta-size2" id="cantidadAbon">{{ nb.contador }}</p>
-              </div>
-              <h6 class="masinfotarj w-100 mt-5">Ver Detalles <i class="bi bi-arrow-right"></i></h6>
-          </a>
-
-
-
-
-          <a class="tarjeta_saldo hover col  mb-0 w-100   text-decoration-none text-dark" href="{{ url_for('.certificados_pendientes')}}">
-            <div class="titulo_saldo d-flex align-items-center gap-2">
-                <div class="icono_tarjeta amarillo_kbrn p-1 text-dark d-flex align-items-center justify-content-center" style="width: 40px;">
-                  <i class="fa-solid fa-receipt"></i>
-                </div>
-                <p class="ui-tittle-dos lh-1 " >
-                    Facturas Pendientes por certificado de retención
-                </p>
-            </div>
               <div class="d-flex justify-content-center align-items-center h-50">
-                  <p class="etiqueta-size2" id="factspend">{{ contador_fact }}</p>
+                  <p class="my-0 valor" id="cantidadfacts" style="margin-right: 14px;">{{ nb.contador }}</p>
               </div>
-              <h6 class="masinfotarj w-100 mt-5">Ver Detalles <i class="bi bi-arrow-right"></i></h6>
-          </a>
+            </a>
+          </div>
+        </div>
+
+        
+        <div class="base-contenedor d-flex flex-column col ">
+          <div class="titulo px-2 mb-2">
+  
+            <h3>Por verificar</h3>
+          </div>
+          <div class="d-flex flex-column gap-2 pt-3 ">
+            <a class="elemento-dentro " href="{{ url_for('.lista_cobranza', filtro='Factura validar') }}" style="cursor: pointer;"">
+              <div class="d-flex align-items-center gap-1">
+                <div class="icono azul_byk "> <p>  <i class="bi bi-receipt"></i> </p></div>
+                <h2 class="m-0">Facturas</h2> 
+              </div>
+              
+              {% set nd = namespace(contador=0) %}
+              {% for factura in facturas %}
+                {% if 'status' in factura %}
+                  {%  if factura['status'] == 'P'  %}
+                      {% set nd.contador = nd.contador + 1 %}
+                    {% endif %}
+                  {% endif %}
+              {% endfor %}
+              <div class="d-flex justify-content-center align-items-center h-50">
+                  <p class="my-0 valor" id="cantidadfacts" style="margin-right: 14px;">{{ nd.contador }}</p>
+              </div>
+            </a>
+            
+            <a class="elemento-dentro "  href="{{ url_for('.lista_cobranza', filtro='Iva validar') }}">
+              <div class="d-flex align-items-center gap-1">
+                <div class="icono amarillo_kbrn"> <p>  <i class="bi bi-bank"></i> </p></div>
+                <h2 class="m-0">Iva</h2> 
+              </div>
+
+              <div class="d-flex justify-content-center align-items-center h-50">
+                  <p class="my-0 valor" id="cantidadfacts" style="margin-right: 14px;">{{ iva_x_pagar }}</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  
+
+    <div class="d-flex flex-column  align-items-center col-xl-4 col-lg-12 col-md-12 col-sm-12 m-0 p-0 " >
+      <div class="row w-100 gap-2">
+
+      
+
+      
+
+  
+        <div class="base-contenedor d-flex flex-column col ">
+          <div class="titulo px-2 mb-2">
+            <h3>Retenciones</h3>
+          </div>
+          <div class="d-flex flex-column gap-2 pt-3 ">
+            <a class="elemento-dentro"  href="{{ url_for('.certificados_pendientes') }}" style="cursor: pointer;"">
+              <div class="d-flex align-items-center gap-1">
+                <div class="icono azul_byk"> <p>  <i class="bi bi-clipboard2-check"></i> </p></div>
+                <h2 class="m-0">Por registrar</h2> 
+              </div>
+  
+              <div class="d-flex justify-content-center align-items-center h-50">
+                  <p class="my-0 valor" id="cantidadfacts" style="margin-right: 14px;">{{ contador_fact }}</p>
+              </div>
+            </a>
+            
+            <a class="elemento-dentro "  href="{{ url_for('.ret_enviadas') }}">
+              <div class="d-flex align-items-center gap-1">
+                <div class="icono amarillo_kbrn"> <p>  <i class="bi bi-ui-checks"></i> </p></div>
+                <h2 class="m-0">Por verificar</h2> 
+              </div>
+  
+              <div class="d-flex justify-content-center align-items-center h-50">
+                  <p class=" my-0 valor" id="cantidadfacts" style="margin-right: 14px;">{{ret_pendiente}}</p>
+              </div>
+            </a>
+          </div>
+        </div>
+  
+      </div>
+
+  </div>
+</div>
+
+
+
+<!-- ------------------------------------Otra Fila------------------------------------------>
+
+
+
+    <div class="row d-flex gap-2 mb-2 mt-3">
+      <div class="col-xl col-lg-12 col-sm-12 col-md-12 p-0 m-0 d-flex flex-column gap-3 align-items-center" >
+        <div class="row w-100 gap-2">
+          <div class="tabla p-4 col-xl-12 col-lg col-md col-sm-12 table-responsive   " style="max-height: 300px ; overflow: auto;"  >
+            <h3 class=" text-right w-100 "> Descuentos por pronto pago disponibles a la fecha</h3>
+            <table class="table m-0 w-100 table-sm  text-center " >
+              <thead>
+                <tr>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Factura N°</th>
+                  <th scope="col">Monto (bs)</th>
+                  <th scope="col">Monto descuento (bs)</th>
+                  <th scope="col">Monto ($)</th>
+                  <th scope="col">Monto con descuento ($)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for factura in facturas %}
+                {% if 'blart' in factura %}
+                {%  if factura['blart'] == 'RV' and factura['dppbs']>0 %}
+                <tr>
+                  <td>{{factura['fkdat'] }}</td>
+                  <td>{{factura['vbeln'] }}</td>
+                  <td>{{ "{:,.2f}".format(factura['totfactbs']|float|abs) }}</td>
+                  <td>{{"{:,.2f}".format(factura['totfactbs']-factura['dppbs']) }}</td>
+                  <td>{{ "{:,.2f}".format(factura['dmbtr']|float|abs) }}</td>
+                  <td>{{"{:,.2f}".format(factura['dmbtr']-factura['montoncdpp']) }}</td>
+                </tr>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-
-
     </div>
-</div>
 
-<!---->
-<div class="courses-container z-0 container p-0 w-100 mb-3 " >
-  <div class="row d-flex gap-4 mb-4 w-100 p-0">
-    <div class="col-12 p-0 m-0 w-100">
-      
-      <div class="tabla p-4 col-xl col-lg col-md col-sm-12 table-responsive   " style="max-height: 300px ; overflow: auto;"  >
-        <h3 class="ui-tittle text-right w-100 mb-2"> Descuentos por pronto pago disponibles a la fecha</h3>
-        <table class="table m-0 w-100 table-sm  text-center " >
-          <thead>
-            <tr>
-              <th scope="col">Fecha</th>
-              <th scope="col">Factura N°</th>
-              <th scope="col">Monto (bs)</th>
-              <th scope="col">Monto descuento (bs)</th>
-              <th scope="col">Monto ($)</th>
-              <th scope="col">Monto con descuento ($)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for factura in facturas %}
-            {% if 'blart' in factura %}
-            {%  if factura['blart'] == 'RV' and factura['dppbs']>0 %}
-            <tr>
-              <td>{{factura['fkdat'] }}</td>
-              <td>{{factura['vbeln'] }}</td>
-              <td>{{ "{:,.2f}".format(factura['totfactbs']|float|abs) }}</td>
-              <td>{{"{:,.2f}".format(factura['totfactbs']-factura['dppbs']) }}</td>
-              <td>{{ "{:,.2f}".format(factura['dmbtr']|float|abs) }}</td>
-              <td>{{"{:,.2f}".format(factura['dmbtr']-factura['montoncdpp']) }}</td>
-            </tr>
-            {% endif %}
-            {% endif %}
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      </div>
-
-
-    </div>
-</div>
-    
-  
+  </div> 
 </main>
 
 
@@ -272,6 +349,15 @@ $(function () {
 
 
 </script>
+
+
+
+
+
+
+
+
+
 
 
 

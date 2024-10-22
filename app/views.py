@@ -7,7 +7,7 @@ from .forms import LoginForm, RegisterForm, RegistroPagoForm,EditForm,PerfilForm
 from .models import User, Cobranza
 from . import login_manager
 from .consts import *
-from .email import welcome_mail, pago_crm_mail, pago_mail, comprobante_mail, comprobante_crm_mail, pago_iva
+from .email import welcome_mail, pago_crm_mail, pago_mail, comprobante_mail, comprobante_crm_mail, pago_iva_mail,pago_iva_crm_mail
 from flask import session
 from datetime import datetime
 #from .promo import participantes
@@ -73,28 +73,8 @@ def login():
             flash(ERROR_USER_PASSWORD ,'error')
     return render_template("auth/login.html", form = login_form, titulo = "Login")
 
-@page.route("/portal", methods = ["GET","POST"])
-def portal():
-    if current_user.is_authenticated:
-        return redirect(url_for('.dashboard'))
-    
-    login_form = LoginForm(request.form)
-    if request.method == "POST":
-        rif = login_form.rif.data
-        n_rif =login_form.n_rif.data
-        usuario = rif+""+n_rif
-        clave = login_form.clave.data
-        user = User.get_by_rif(usuario)
-        if user and user.verify_password(clave):
-            login_user(user)
-            flash(LOGIN)
-            return redirect(url_for('.modulos'))
-        else:
-            flash(ERROR_USER_PASSWORD ,'error')
-    return render_template("auth/portal.html", form = login_form, titulo = "Login")
-
 @page.route("/registro", methods = ["GET", "POST"])
-#@login_required
+@login_required
 def registroUsuario():
     if current_user.nivel == "cliente":
         return redirect(url_for(".panel"))
@@ -110,7 +90,7 @@ def registroUsuario():
         codigo = registro_form.codigo.data
         vendedor = registro_form.vendedor.data
         argumentos = (rif+""+n_rif,empresa, password,correo,zona)
-        print(argumentos)
+        #print(argumentos)
         registro = User.create_element(rif+""+n_rif,empresa, password,correo,zona,nivel,codigo,vendedor)
         try:
             mensaje = USER_CREATED
@@ -168,8 +148,9 @@ def usuario(rif):
         zona = edit_form.zona.data
         nivel = edit_form.nivel.data
         codigo = edit_form.codigo.data
+        vendedor = edit_form.seller.data
         password = edit_form.password.data
-        edit = User.update_user(rif,empresa,correo,zona,nivel,codigo)
+        edit = User.update_user(rif,empresa,correo,zona,nivel,codigo,vendedor)
         if password:
             update = User.update_password(rif,password)
             flash("Contraseña actualizada")
@@ -244,15 +225,15 @@ def cobranza2():
         abonos_nc= []
         if (facturas):
             for factura in facturas:
-            
-                if factura['fecvencr'] < fecha and factura['dmbtr'] >0 :
-                    facturas_vencidas.append(factura)
-                elif factura['fecvencr'] >= fecha  and factura['dmbtr'] >0:
-                    facturas_NOvencidas.append(factura)
-                    facturas_NOvencidas.append('novencidas')
-                elif factura['dmbtr'] <0 and factura['status']=='':
-                    abonos_nc.append(factura)
                 
+                if factura['pagaiva'] != "S":
+                    if factura['fecvencr'] < fecha and factura['dmbtr'] >0 :
+                        facturas_vencidas.append(factura)
+                    elif factura['fecvencr'] >= fecha  and factura['dmbtr'] >0:
+                        facturas_NOvencidas.append(factura)
+                        facturas_NOvencidas.append('novencidas')
+                    elif factura['dmbtr'] <0 and factura['status']=='':
+                        abonos_nc.append(factura)     
                 
     #---------------------------------------------------------------------
 
@@ -272,15 +253,11 @@ def cobranza2():
             response_json_descuento = response_json_descuento[:-1]
             response_json_descuento = eval(response_json_descuento)
             descuento_div = response_json_descuento['descesp']
-            print("si")
         except:
             response_json_descuento=[]
             descuento_div = 0
-            print('no')
     else:
         descuento_div = 0
-        
-        print(descuento_div)
     #----------------------------------------------------------------------------------
     #----------------------- Tolerancia-----------------------------------------------
     sap = ip_fuente + "/sap/bc/rest/zobdecesp"
@@ -297,14 +274,10 @@ def cobranza2():
             response_json_tolerancia = response_json_tolerancia[1:]
             response_json_tolerancia = response_json_tolerancia[:-1]
             response_json_tolerancia = eval(response_json_tolerancia)
-            print("si")
         except:
             response_json_tolerancia=[]
-            print('no')
     else:
         descuento_div = 0
-        
-        print(response_json_tolerancia) 
     #----------------------------------------------------------
 
     if request.method == "POST":
@@ -361,7 +334,7 @@ def cobranza2():
             blart = request.form.get('inputblart' + str(i))
             if blart:
                 blart_list.append(blart)
-                 
+        """
         print(f"facturas: {facturas_list}")
         print('-------------')
         print(f"montos list: {montos_list}")
@@ -372,6 +345,7 @@ def cobranza2():
         print('-------------')
         print(f"las buzeis son: {buzei_list}")
         print('-------------')
+        """
         
         if  request.files['archivo']:
             imagen = request.files['archivo']
@@ -422,25 +396,26 @@ def cobranza2():
         #response_c = requests.post(url_c, auth=HTTPBasicAuth(user_fuente, contra_fuente),json=data,headers=headers,verify=False)
         datos = [{'BUKRS': '1200','XBLNR':n_deposito,'KUNNR':rif,'BLDAT':fecha_pago,'TIPOPAGO':divisa,'WRBTR':monto_total,'CTABANCO':banco_receptor,'PROCESADO':'','ABONOCTA':'','PBASE': condicion_pago_pivote,'BELNR1':belnr1,'VBELN': factura,'buzei':buzei,'BLDATF':fkdat,'MONTOPG': monto,'HORAP':'', 'BLART':blart} for factura, monto, fkdat, belnr1, buzei, blart  in zip(facturas_list, montos_list,fkdat_list,belnr1_list,buzei_list,blart_list)]
         if datos:
-            print('existe')
+            #print('existe')
+            pass
         else:
             datos=data     
-        print('cabecera:',data)
-        print('detalle:',datos)
+        #print('cabecera:',data)
+        #print('detalle:',datos)
         # Realizar la solicitud POST con los datos en formato JSON
         response = requests.post(url, auth=HTTPBasicAuth(user_fuente, contra_fuente),json=datos,headers=headers,verify=True)
-        print(response)
+        #print(response)
         # Verificar la respuesta
         if response.status_code == 200:
-            print("Solicitud exitosa")
+            #print("Solicitud exitosa")
             #print(response.status_code)
             respuesta = response.content.decode('utf-8')
-            print(response.content)
+            #print(response.content)
             if respuesta == "Deposito Enviado Anteriormente por favor Verificar." or respuesta =="Actualizacion de deposito no Satisfactoria datos vacios":
                 flash('Deposito repetido','error')
-                print("fallo")
+                #print("fallo")
             elif respuesta == "Actualizacion de deposito Satisfactoria":
-                print("todo bien")
+                #print("todo bien")
                 flash(PAGO_CREADO)
                 fec = datetime.now()
                 fec = fec.strftime('%d/%m/%Y')
@@ -462,17 +437,94 @@ def cobranza2():
             #print(response.json())
 
         else:
-            print("Error en la solicitud, no se envio los detalles del pago")
+            #print("Error en la solicitud, no se envio los detalles del pago")
+            flash(ERROR_PAGO,'error')
             #print(response.status_code)
 #------------------------------------------------------------------------------------------------------------------------
     
     return render_template("collections/cobranza_2.html",form = control_form,titulo = 'Registrar Pago', facturas = facturas, datos = datos, Fecha_pago=fecha, facturas_vencidas= facturas_vencidas, facturas_NOvencidas=facturas_NOvencidas, condicion_pago =  condicion_pago, abonos_nc= abonos_nc, descuento_div = descuento_div, tolerancia = response_json_tolerancia)
 
 @page.route("/cobranza_iva", methods= ["GET", "POST"])
+@login_required
 def cobranza_iva(): 
     control_form = RegistroPagoForm(request.form)
+#---------------------------------Documentos pendientes-------------------------
+    sap = ip_fuente+"/sap/bc/rest/zpasdeudores"
     tiempo, fecha_enc = obtener_hora_minutos_segundos_fecha()
     cadena = cadena_md5('1200',current_user.rif,tiempo,fecha_enc)
+    headers = {
+        'Accept': 'application/json',
+        'Origin':'',
+        'BUKRS': '1200',
+        'KUNNR':current_user.rif,
+        'BUDAT':fecha_enc,
+        'TIMLO':tiempo,
+        'CORIMON':cadena
+    }
+    args = {
+        'sap-client':'510',
+        'SOCIEDAD': '1200',
+        'CLIENTE':current_user.rif,
+    }
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
+    if response.status_code == 200:
+        response_json = json.loads(response.content)
+        response_json = str(response_json)
+        response_json = response_json[1:]
+        response_json = response_json[:-1]
+        response_json = eval(response_json)
+        documentos = response_json
+        pago_iva = []
+        iva_x_pagar= []
+
+        if (documentos):
+            for documento in documentos:
+                if documento['status']=='':
+                    if documento['blart'] == 'DZ' and documento['pagaiva']== 'S':
+                        pago_iva.append(documento)
+                    elif documento['blart'] == 'DZ' and documento['dmbtr']>0:
+                        iva_x_pagar.append(documento)   
+
+#---------------------------------IVAs pendientes-------------------------
+    sap = ip_fuente+"/sap/bc/rest/zpasdeudoiva"
+    tiempo, fecha_enc = obtener_hora_minutos_segundos_fecha()
+    cadena = cadena_md5('1200',current_user.rif,tiempo,fecha_enc)
+    headers = {
+        'Accept': 'application/json',
+        'Origin':'',
+        'BUKRS': '1200',
+        'KUNNR':current_user.rif,
+        'BUDAT':fecha_enc,
+        'TIMLO':tiempo,
+        'CORIMON':cadena
+    }
+    args = {
+        'sap-client':'510',
+        'SOCIEDAD': '1200',
+        'CLIENTE':current_user.rif,
+        'PAGAIVA':'X'
+    }
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
+    if response.status_code == 200:
+        response_json = json.loads(response.content)
+        response_json = str(response_json)
+        response_json = response_json[1:]
+        response_json = response_json[:-1]
+        response_json = eval(response_json)
+        ivas = response_json
+        iva_x_pagar= []
+
+        if (ivas):
+            for iva in ivas:
+                if iva['statusiva']=='':
+                        iva_x_pagar.append(iva)  
+        #print(iva_x_pagar)
+    #-----------------------------------Tolerancia----------------------------------
+    
+    #NO HAY TOLERANCIA EN IVA PA
+        
+    #---------------------------------------------------------------------        
+
     if request.method == "POST":
         # Obtener los datos enviados desde JavaScript
         rif = current_user.rif
@@ -489,6 +541,7 @@ def cobranza_iva():
         fecha_deposito_str = fecha_deposito.strftime("%Y-%m-%d") 
         fecha_objeto = datetime.strptime(fecha_deposito_str, "%Y-%m-%d")
         fecha_formateada = fecha_objeto.strftime("%Y%m%d")
+        fecha_pago=fecha_formateada
         n_deposito = control_form.n_deposito.data
         comprobante = control_form.comprobante.data
         monto_total = control_form.monto.data
@@ -497,6 +550,46 @@ def cobranza_iva():
         euro = control_form.euro.data
         factura= control_form.factura.data
         bolivares = control_form.bolivares.data
+
+        facturas_list = []
+        montos_list=[]
+        fkdat_list=[]
+        belnr1_list=[]
+        buzei_list=[]
+        blart_list = []
+        facturas = response_json[::-1]
+        for i in range(len(facturas)):
+            factura = request.form.get('inputFactura' + str(i))
+            #print(factura)
+            if factura:
+                facturas_list.append(factura)
+            montos = request.form.get('inputfacturaMonto' + str(i))
+            if montos:
+                montos_list.append(montos)
+            fecha= request.form.get('inputfkdat' + str(i))
+            if fecha:
+                fkdat_list.append(fecha)
+            belnr1 = request.form.get('inputbelnr1' + str(i))
+            if belnr1:
+                belnr1_list.append(belnr1)
+            buzei = request.form.get('inputbuzei' + str(i))
+            if buzei:
+                buzei_list.append(buzei)
+            blart = request.form.get('inputblart' + str(i))
+            if blart:
+                blart_list.append(blart)
+        """
+        print(f"facturas: {facturas_list}")
+        print('-------------')
+        print(f"montos list: {montos_list}")
+        print('-------------')
+        print(f"las fechas son: {fkdat_list}")
+        print('-------------')
+        print(f"las belnr1 son: {belnr1_list}")
+        print('-------------')
+        print(f"las buzeis son: {buzei_list}")
+        print('-------------')
+        """
 
         url = ip_fuente+'/sap/bc/rest/zrecdepo?sap-client=510&ENVIO=C'
         headers = {
@@ -520,19 +613,29 @@ def cobranza_iva():
         'ABONOCTA':'',#ENVIAR
         'PAGAIVA': 'S'
         }]
- 
+        datos = [{'BUKRS': '1200','XBLNR':n_deposito,'KUNNR':rif,'BLDAT':fecha_pago,'TIPOPAGO':'B','WRBTR':monto_total,'CTABANCO':banco_receptor,'PROCESADO':'','ABONOCTA':'','PAGAIVA': 'S','PBASE': '','BELNR1':belnr1,'VBELN': factura,'buzei':buzei,'BLDATF':fkdat,'MONTOPG': monto,'HORAP':'', 'BLART':blart} for factura, monto, fkdat, belnr1, buzei, blart  in zip(facturas_list, montos_list,fkdat_list,belnr1_list,buzei_list,blart_list)]
         # Realizar la solicitud POST con los datos en formato JSON
-        response = requests.post(url, auth=HTTPBasicAuth(user_fuente, contra_fuente),json=data,headers=headers,verify=True)
-        print(response)
+
+        if datos:
+            pass
+            #print('existe')
+        else:
+            datos=data
+            #print("no existe datos")
+
+        #print('cabecera:',data)
+        #print('detalle:',datos)
+        response = requests.post(url, auth=HTTPBasicAuth(user_fuente, contra_fuente),json=datos,headers=headers,verify=True)
+        #print(response)
         # Verificar la respuesta
         if response.status_code == 200:
-            print("Solicitud exitosa")
+            #print("Solicitud exitosa")
             #print(response.status_code)
             respuesta = response.content.decode('utf-8')
-            print(response.content)
+            #print(response.content)
             if respuesta == "Deposito Enviado Anteriormente por favor Verificar." or respuesta =="Actualizacion de deposito no Satisfactoria datos vacios":
                 flash('Deposito repetido','error')
-                print("fallo")
+                #print("fallo")
             elif respuesta == "Actualizacion de deposito Satisfactoria":
                 fec = datetime.now()
                 fec = fec.strftime('%d/%m/%Y')
@@ -548,12 +651,13 @@ def cobranza_iva():
                 'ABONOCTA':'',#ENVIAR
                 'PAGAIVA': 'S'
                 }
-                pago_iva(current_user,data)
-                print("todo bien")
+                pago_iva_crm_mail(current_user,data)
+                pago_iva_mail(current_user,data)
+                #print("todo bien")
                 flash(PAGO_CREADO)
 
                 return redirect(url_for('.dashboard'))
-    return render_template("/collections/cobranza_iva.html",titulo = "Pago de Iva", form = control_form)
+    return render_template("/collections/cobranza_iva.html",titulo = "Pago de Iva", form = control_form, iva_x_pagar=iva_x_pagar, tolerancia = 10)
 
 """@page.route("/Dashboard", methods=["GET","POST"])
 @login_required
@@ -609,6 +713,7 @@ def modulos():
 
 
 @page.route("/dashboard", methods=["GET"])
+@login_required
 def dashboard():
     pagos = Cobranza.get_pagos_order(current_user.rif)
     pago_t = pagos[:3]
@@ -646,7 +751,6 @@ def dashboard():
                         datos = dic"""
             if isinstance(response_json1 , dict):
                 response_json1 = [response_json1]
-                print(len(response_json1))
         except:
             response_json1 = []
 
@@ -691,7 +795,8 @@ def dashboard():
         except:
             response_json2 = []
     else:
-        print('Error en la peticion')
+        #print('Error en la peticion')
+        pass
     #----------------------------------------------------------------------------------------------
 
     #-----------------------------------Facturas pendietes por retencion---------------------------
@@ -713,11 +818,63 @@ def dashboard():
         #print("Exito en la peticion")
         
         ret = len(response_json3) if response_json3 else 0
+        #for retencion in response_json3
+        #    if retencion
+        #print(response_json3)
     except:
         ret = 0
+    
 
+    #----------------------retenciones pendientes por validacion------------------------------------------------
+    sap = ip_fuente+"/sap/bc/rest/zcertrete"
 
-    return render_template("collections/dashboard.html", titulo = "Estado de cuenta", pagos=pagos, pago_t = pago_t,rate=0, no_vencido_dolar=response_json['tnovencdiv'],no_vencido_bs=response_json['tnovencbs'],total_deudas_dolares=response_json['tdeudadiv'],total_deudas_bs=response_json['tdeudabs'], total_saldo_dolar=response_json['tsaldofdiv'],total_saldo_bs=response_json['tsaldofbs'], total_bolos=response_json['totfactbs'],total_vencido_d=response_json['tvencdiv'],total_vencido_b=response_json['tvencbs'],vencido_130_d=response_json['tvenc130d'],vencido_130_b=response_json['tvenc130b'], vencido_3160_d=response_json['tvecc3160d'], vencido_3160_b=response_json['tvecc3160b'], vencido_60_d=response_json['tvec61masd'], vencido_60_b=response_json['tvec61masb'], facturas =response_json1, retenciones=response_json2,contador_fact = ret)
+    args = {
+        'sap-client':'510',
+        'ENVIO':'C',
+        'SOCIEDAD': '1200',
+        'CLIENTE':current_user.rif,
+    }
+    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
+    try:
+        if response.status_code == 200:
+            response_json4 = json.loads(response.content)
+            response_json4 = str(response_json4)
+            response_json4 = response_json4[1:]
+            response_json4 = response_json4[:-1]
+            response_json4 = eval(response_json4)
+            #print(response_json4)
+            #print("Exito en la peticion")
+        else:
+            pass#print('Error en la peticion')
+    except:
+        response_json4 = []
+    ret_pendiente = len(response_json4)
+
+    #-----------------ivas pendientes por pagar---------------
+    sap = ip_fuente+"/sap/bc/rest/zpasdeudoiva"
+
+    args = {
+        'sap-client':'510',
+        'SOCIEDAD': '1200',
+        'CLIENTE':current_user.rif,
+        'PAGAIVA':'X'
+    }
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
+    if response.status_code == 200:
+        response_json5 = json.loads(response.content)
+        response_json5 = str(response_json5)
+        response_json5 = response_json5[1:]
+        response_json5 = response_json5[:-1]
+        response_json5 = eval(response_json5)
+        ivas = response_json5
+        iva_x_pagar= []
+
+        if (ivas):
+            for iva in ivas:
+                if iva['statusiva']=='P':
+                        iva_x_pagar.append(iva)  
+        iva_x_pagar = len(iva_x_pagar)
+    return render_template("collections/dashboard.html", titulo = "Estado de cuenta", pagos=pagos, pago_t = pago_t,rate=0, no_vencido_dolar=response_json['tnovencdiv'],no_vencido_bs=response_json['tnovencbs'],total_deudas_dolares=response_json['tdeudadiv'],total_deudas_bs=response_json['tdeudabs'], total_saldo_dolar=response_json['tsaldofdiv'],total_saldo_bs=response_json['tsaldofbs'], total_bolos=response_json['totfactbs'],total_vencido_d=response_json['tvencdiv'],total_vencido_b=response_json['tvencbs'],vencido_130_d=response_json['tvenc130d'],vencido_130_b=response_json['tvenc130b'], vencido_3160_d=response_json['tvecc3160d'], vencido_3160_b=response_json['tvecc3160b'], vencido_60_d=response_json['tvec61masd'], vencido_60_b=response_json['tvec61masb'], facturas =response_json1, retenciones=response_json2,contador_fact = ret, deuda_dif_dolar=response_json['tdifedeudadiv'],deuda_dif_bs=response_json['tdifedeudabs'],favor_dif_dolar=response_json['tdifesaldofdiv'],favor_dif_bs=response_json['tdifesaldofbs'],ret_pendiente=ret_pendiente,iva_x_pagar=iva_x_pagar)
 
 
 @page.route("/lista", methods=["GET","POST"])
@@ -760,11 +917,72 @@ def lista_cobranza():
             response_json = eval(response_json)
             if isinstance(response_json , dict):
                 response_json = [response_json]
-            print(response_json)
+            #print(response_json)
         except:
-            print("nada")
+            #print("nada")
             response_json = []
-    return render_template("collections/tabla_cobranza.html", titulo = "Documentos Pendientes", pagos=response_json)
+   #-----------------ivas pendientes por pagar---------------
+    sap = ip_fuente+"/sap/bc/rest/zpasdeudoiva"
+
+    args = {
+        'sap-client':'510',
+        'SOCIEDAD': '1200',
+        'CLIENTE':current_user.rif,
+        'PAGAIVA':'X'
+    }
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
+    if response.status_code == 200:
+        response_json5 = json.loads(response.content)
+        response_json5 = str(response_json5)
+        response_json5 = response_json5[1:]
+        response_json5 = response_json5[:-1]
+        response_json5 = eval(response_json5)
+        ivas = response_json5
+        iva_x_pagar= []
+
+        if (ivas):
+            for iva in ivas:
+                if iva['statusiva']=='P':
+                        iva_x_pagar.append(iva) 
+        #print(iva_x_pagar) 
+    return render_template("collections/tabla_cobranza.html", titulo = "Documentos Pendientes", pagos=response_json, ivas = iva_x_pagar)
+
+@page.route("/pagos", methods=["GET","POST"])
+@login_required
+def pagos_cobranza():
+    sap = ip_fuente+"/sap/bc/rest/zstpagosrec"
+    tiempo, fecha = obtener_hora_minutos_segundos_fecha()
+    cadena = cadena_md5('1200',current_user.rif,tiempo,fecha)
+
+    headers = {
+        'Accept': 'application/json',
+        'Origin':'',
+        'BUKRS': '1200',
+        'KUNNR':current_user.rif,
+        'BUDAT':fecha,
+        'TIMLO':tiempo,
+        'CORIMON':cadena
+    }
+    args = {
+        'sap-client':'510',
+        'SOCIEDAD': '1200',
+        'CLIENTE':current_user.rif,
+    }
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente),params=args, headers=headers,verify=True)
+    if response.status_code == 200:
+        try:
+            response_json = json.loads(response.content)
+            response_json = str(response_json)
+            response_json = response_json[1:]
+            response_json = response_json[:-1]
+            response_json = eval(response_json)
+            if isinstance(response_json , dict):
+                response_json = [response_json]
+            #print(response_json)
+        except:
+            #print("nada")
+            response_json = []
+    return render_template("collections/pagos_cobranza.html", titulo = "Pagos realizados", pagos=response_json)
 
 
 @page.route('/ejemplo<n>', methods=['GET'])
@@ -796,9 +1014,10 @@ def ejemplo(n):
             response_json = response_json[1:]
             response_json = response_json[:-1]
             response_json = eval(response_json)
-            print("Exito en la peticion")
+            #print("Exito en la peticion")
         else:
-            print('Error en la peticion')
+            pass
+            #print('Error en la peticion')
         return jsonify(response_json)
 
 @page.route("/historial", methods=['POST', 'GET'])
@@ -837,7 +1056,7 @@ def historial():
             except:
                 response_json = []
         else:
-            print('Error en la peticion')
+            pass#print('Error en la peticion')
         return render_template("collections/historial_pagos.html", titulo="Historial de documentos verificados", pagos=response_json)
     else:
         # Manejar otros métodos HTTP (PUT, DELETE, etc.) si es necesario
@@ -880,7 +1099,8 @@ def certificados_pendientes():
         #print(len(response_json))
         #print("Exito en la peticion")
     else:
-        print('Error en la peticion')
+        pass
+        #print('Error en la peticion')
     return render_template("collections/certificados_pendientes.html", titulo = "Facturas Pendientes por Comprobantes",pagos=response_json)
 
 
@@ -1169,17 +1389,8 @@ def details():
 
     return render_template("/products/detalles.html",titulo = "Detalles")
 
-@page.route("/email", methods= ["GET", "POST"])
-def email():
-
-    return render_template("/email/bienvenida.html",titulo = "Detalles")
-
-@page.route("/emaill", methods= ["GET", "POST"])
-def emaill():
-
-    return render_template("/email/registro_pago.html",titulo = "Detalles")
-
 @page.route("/retenciones", methods= ["GET"])
+@login_required
 def ret_enviadas():
     sap = ip_fuente+"/sap/bc/rest/zcertrete"
     tiempo, fecha = obtener_hora_minutos_segundos_fecha()
@@ -1207,15 +1418,16 @@ def ret_enviadas():
             response_json = response_json[1:]
             response_json = response_json[:-1]
             response_json = eval(response_json)
-            print(response_json)
-            print("Exito en la peticion")
+            #print(response_json)
+            #print("Exito en la peticion")
         else:
-            print('Error en la peticion')
+            pass#print('Error en la peticion')
     except:
         response_json = []
     return render_template("/collections/ret_enviadas.html",titulo = "Estado Retención", retenciones=response_json)
 
 @page.route("/registrar_retenciones", methods= ["GET", "POST"])
+@login_required
 def retenciones():
     control_form = Retenciones(request.form)
     if request.method == "POST":
@@ -1259,13 +1471,14 @@ def retenciones():
         }
         response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
         if response.status_code == 200:
-            print("Exito en la peticion")
+            #print("Exito en la peticion")
             flash(RET_REGISTRADA)
             comprobante_mail(current_user, n_retencion)
             comprobante_crm_mail(current_user, n_retencion,post_imagen,nombre_imagen)
             return redirect(url_for('.dashboard'))
         else:
-            print('Error en la peticion')
+            flash("Error al registrar",'error')
+            #print('Error en la peticion')
         
     return render_template("/collections/registrar_retenciones.html",titulo = "Registrar Comprobante de Retención", form = control_form)
 

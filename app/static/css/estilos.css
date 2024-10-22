@@ -2,6 +2,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
 @import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,700,500,600,1,300&display=swap');
 
+
+
+
+
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 :root{
   --rojo: #D50000;
   --gris: rgba(255, 255, 255, 0.63);
@@ -17,6 +25,8 @@
   --azul: rgb(0, 110, 183);
   --sombra: 0 2px 8px rgba(0, 0, 0, 0.2);
   --openSans: font-family: 'Open Sans', sans-serif;
+  --poppins: "Poppins", sans-serif;
+  --border-Radius: 10px
 }
 
 .text-muted, .texto2{
@@ -27,9 +37,6 @@
   text-align: center;
 }
 
-.este .tarjeta_saldo:last-child{
-  margin: 0;
-}
 *{
   padding: 0;
   margin: 0;
@@ -518,12 +525,30 @@ font-weight: 500;
   margin: 10px 0px 0px 30px;
 }
 
+.etiqueta-inIva{
+  font-family: var(--montserrat);
+  font-weight: 600;
+  font-size: 12.5px;
+  text-align: left;
+  width: 100%;
+  margin: 10px 0px 0px 30px;
+}
+
 .etiqueta-size{
   font-size: 18px;
   text-align: center;
   margin: 0;
   font-weight: 600;
 }
+
+.etiqueta-monto{
+  font-family: var(--montserrat);
+  font-size: 18px;
+  text-align: center;
+  margin: 0;
+  font-weight: 500;
+}
+
 
 
 .etiqueta-size2{
@@ -547,6 +572,13 @@ font-weight: 500;
   background-color: var(--blanco);
   padding: 30px;
   border-radius: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.contenedor-2{
+  background-color: var(--blanco);
+  border-radius: 30px;
+  padding: 30px 20px 30px 30px ;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -676,9 +708,8 @@ font-weight: 500;
   font-weight: 700;
   background-color: #000000;
   border-radius: 20px;
-  padding: 10px 5px;
+  padding: 15px 5px;
   text-align: center;
-  padding-bottom: 0;
   font-size: 12px;
   z-index: 99;
   display: none;
@@ -892,9 +923,9 @@ button.submit:hover::before {
 
 /*↑↑ Estilos para el archivo info_pago.html ↑↑*/
 hr{
-    border: solid 4px ;
+    border: solid 2px ;
     border-radius: 5px;
-    margin-top: 0 !important;
+    margin: 0px !important;
 }
 
 /*↓↓ Estilos para el archivo tabla_cobranza.html ↓↓*/
@@ -987,6 +1018,10 @@ hr{
 }
 
 #example thead th {
+  text-align: center;
+}
+
+#example tfoot th {
   text-align: center;
 }
 
@@ -1135,11 +1170,7 @@ h6.masinfotarj{
 
 }
 
-.tarjeta_saldo:hover .masinfotarj{
-  opacity: 1;
-  transform: translateX(20px);
 
-}
 
 .ui-tittle{
   font-family: 'Clash Display', sans-serif;
@@ -1160,17 +1191,7 @@ h6.masinfotarj{
   max-height: 20px;
 }
 
-.tarjeta_saldo{
-  padding: 15px;
-  background-color: #fff;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  border-radius: 16px;
-  width: 100%;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-  max-height: 250px;
 
-
-}
 
 .no-style{
   text-decoration: none;
@@ -1202,22 +1223,22 @@ h6.masinfotarj{
 }
 
 .verde{
-  background-color: #10B981;
+  background-color: #0d8059a4 !important;
 }
 
 .verde_dolar{
-  background-color: #64c27b;
+  background-color: #586e2694 !important;
 }
 .rojo_mmg{
-  background-color: #f44336;
+  background-color: #d5000079 !important;
 }
 
 .amarillo_kbrn{
-  background-color: #f3fe4f;
+  background-color: #b88b5c !important;
 }
 
 .azul_byk{
-  background-color: #1065c0;
+  background-color: #1065c080 !important;
 }
 
 
@@ -1608,12 +1629,14 @@ list-style: none;
 }
 
 .listo{
-
-  background-color: #c2c2c2;
+  color: white !important;
+  background-color: #D9DDDC !important;
 }
 
+
+
 .listo div{
-  color: #8b8b8b;
+  color: rgba(61, 60, 60, 0.856);
 }
 
 .tabla-facturas {
@@ -1916,4 +1939,193 @@ list-style: none;
 }
 .alert-container3 i {
   margin-right: 10px;
+}
+
+.tope{
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+/*----------------------------------------------------------*/
+
+.base-contenedor{
+  background-color: var(--blanco);
+  box-shadow: var(--sombra);
+  border-radius: 13px;
+  padding: 1.3rem;
+  transition: all ease-in-out 0.3s;
+}
+
+.base-contenedor:hover{
+  box-shadow: none;
+  transform: translateY(-5px);
+}
+
+
+h1{
+  font-weight: 600;
+  font-size: 1.8rem;
+}
+
+h2{
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+
+h3{
+  font-family: "Poppins", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 26px;
+
+}
+
+h4{
+  font-weight: 500;
+  font-size: 1rem;
+  font-style: italic;
+}
+
+small{
+  font-size: 0.76rem;
+}
+
+
+.data{
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.2s ease-in-out;
+  
+}
+
+.valor {
+  color: #1F2937;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -1px;
+  max-width: 150px;
+  margin: 0px;
+
+
+}
+
+.icono{
+  background-color: var(--gris_hover);
+  border-radius: 50%;
+  height: 2rem;
+  width: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: none;
+  direction: ltr;
+}
+
+.icono p{
+  color: white !important;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  margin: 0px;
+  transform: none;
+  direction: ltr;
+  text-align: center;
+
+  font-size: 16px;
+}
+
+.elemento-dentro{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  color: #000;
+  border-radius: 13px;
+  background-color: #EFEFEF;
+  padding: 4px 0px;
+  color: #000;
+  transition: all ease-in-out 0.3s;
+}
+
+.elemento-dentro:hover{
+  transform: translateY(-5px);
+}
+
+
+#tabla{
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#tabla th{
+  padding-bottom: 12px;
+  font-size: 13px;
+  text-align: left;
+  border-bottom: 1px solid var(--gris_claro);
+}
+
+#tabla td{
+  padding: 10px 0;
+}
+
+#tabla tr td:first-child{
+  display: flex;
+  align-items: center;
+  grid-gap: 12px;
+  padding-left: 6px;
+}
+
+
+#tabla td img{
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+#tabla tbody tr{
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#tabla tbody tr:hover{
+  background: var(--blanco);
+}
+
+p{
+  margin: 0px;
+
+}
+
+
+.divs-in-deuda{
+  background-color: #EFEFEF;
+  border-radius: var(--border-Radius);
+  display: flex;
+  flex-direction: column;
+  padding: var(--pading);
+  gap: 10px;
+
+}
+
+.divs-in-deuda div .data:hover{
+  background-color: white;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
 }

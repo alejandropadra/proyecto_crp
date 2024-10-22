@@ -43,7 +43,7 @@ class User(db.Model, UserMixin):
         return user
     
     @classmethod
-    def update_user(cls,rif,username,email,zona,nivel,codigo):
+    def update_user(cls,rif,username,email,zona,nivel,codigo,seller):
         user = User.get_by_rif(rif)
 
         if user is None:
@@ -55,6 +55,7 @@ class User(db.Model, UserMixin):
         user.zona = zona
         user.nivel = nivel
         user.codigo = codigo
+        user.seller = seller
 
         db.session.add(user)
         db.session.commit()
@@ -109,10 +110,6 @@ class User(db.Model, UserMixin):
         return User.query.filter_by(zona=zona)
 
 
-
-
-
-    
 class Cobranza(db.Model):
     __tablename__ = 'cobranzas'
 

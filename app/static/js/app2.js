@@ -23,6 +23,8 @@ if (typeof colocarReadOnlyFacturas === "function") {
 }
 
 let dif = 0;
+
+
 function reiniciarObservador() {
     monitorearActualizaciones(actualizarDiv, texto => {
         const match = texto.match(/(\d+(\.\d+)?)/);
@@ -58,20 +60,22 @@ function monitorearActualizaciones(elemento, callback) {
 }
 
 const actualizarTextoYResolver = () => {
-    return new Promise((resolve, reject) => {
-        // Aquí actualizamos directamente el valor de diferenciaActual y resolvemos la promesa.
-        const texto = actualizarDiv.textContent;
-        console.log("Texto actual en actualizarDiv:", texto);
-
-        const match = texto.match(/(\d+(\.\d+)?)/);
-        if (match) {
-            diferenciaActual = parseFloat(match[0]);
-            resolve(diferenciaActual); // Resolver la promesa con diferenciaActual
-        } else {
-            console.log("No se encontró un número válido en el texto:", texto);
-            reject("No se encontró un número válido");
-        }
-    });
+    if (actualizarDiv){
+        return new Promise((resolve, reject) => {
+            // Aquí actualizamos directamente el valor de diferenciaActual y resolvemos la promesa.
+            const texto = actualizarDiv.textContent;
+            console.log("Texto actual en actualizarDiv:", texto);
+    
+            const match = texto.match(/(\d+(\.\d+)?)/);
+            if (match) {
+                diferenciaActual = parseFloat(match[0]);
+                resolve(diferenciaActual); // Resolver la promesa con diferenciaActual
+            } else {
+                console.log("No se encontró un número válido en el texto:", texto);
+                reject("No se encontró un número válido");
+            }
+        });
+    }
 }
 
 function obtenerDiferenciaActual() {
@@ -278,10 +282,11 @@ function handleCheckChange(event, tipo) {
         const montodpp = estado.transaccion === "bs" ? "#montobsdpp" : "#Montodlrdpp";
         const montoNormal = estado.transaccion === "bs" ? "#montoBs" : "#Montodlr";
         const montoElements = obtenerElementosMonto(checkboxes, montodpp, montoNormal);
+
         casoDos.resultado = procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas, estado.transaccion);
         
         console.log( casoDos.resultado.facturasCompensadas.length);
-        
+        console.log(checkboxes.length)
         
         if (casoDos.resultado.facturasCompensadas.length == checkboxes.length) {
             // Actualizar manualmente actualizarDiv y resolver directamente la promesa
@@ -358,8 +363,11 @@ function casoTres(bancoReceptor, mensaje, monto, checkboxes, transaccion) {
     estado.setTransaccion(transaccion, null, 3);
     
     // Configuración inicial
-    bancoReceptor.removeAttribute('disabled');
-    bancoReceptor.value = '';
+    if(bancoReceptor){
+        bancoReceptor.removeAttribute('disabled');
+        bancoReceptor.value = '';
+    }
+
     mensaje.classList.add('d-none');
 
     // Asignar el event listener
@@ -387,7 +395,9 @@ function casoUnoTresInputHandler(event) {
         limpiarDivs('.texto-abono', 'abon');
         actualizarDiv.textContent = "";
         actualizarDiv2.textContent= "";
-        divInputmonto2.value= '';
+        if (divInputmonto2){
+            divInputmonto2.value= '';
+        }
         facturasCompensadas = [];
         console.log('Lista de facturas compensadas vaciada');
         return;
@@ -457,7 +467,7 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
     for (let i = 0; i < checkboxes.length; i++) {
         
         const checkbox = checkboxes[i];
-        const label = checkbox.parentNode;
+        const label = checkbox.closest('div.base-contenedor');;
         const montosElement = label.querySelector('.montos');
         montosElement.classList.add('evaluando');
         const elementoDiv = montoElements[i];
@@ -476,7 +486,7 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
         const blart = document.getElementById('blart' + (i + 1))?.textContent;
         console.log(blart)
         const dif = redondear(montoValue - sumaFacturas, 2); // Redondear a 2 decimales
-        console.log(vblen + 'de la ' + i)
+        console.log(vblen + 'de la ' + (i+1))
         console.log(checkboxes.length)
         
 
@@ -537,7 +547,7 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
                         label.classList.add('listo');
                         
                         limpiarDivs('.texto-faltante', 'facts', label);
-                        limpiarDivs('.texto-abono', 'abon', checkbox.parentNode);
+                        limpiarDivs('.texto-abono', 'abon', checkbox.closest('div.base-contenedor'));
                         diferenciass = redondear(montoValue-sumaFacturas, 2);
                         diferenciass = 0 // Actualizar dif correctamente
                         //console.log(diferenciass);
@@ -670,7 +680,7 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
         checkbox.removeEventListener('change', checkbox.changeHandler);
 
         checkbox.changeHandler = function() {
-            const label = this.parentNode;
+            const label = this.closest('div.base-contenedor');
             const montosElement = label.querySelector('.montos');
             if (this.checked) {
                 if (!checksSeleccionados.includes(this)) {
@@ -873,7 +883,7 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
     }
     facturasCompensadas = [];
 
-    
+    console.log(montoValue)
     if (estado.transaccion === "bs"){
         
         montoNormal="#montoBs";
@@ -896,14 +906,14 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
         }
         inputMonto2.value= montoValue;
     }
-
+    
     const checkboxesArray = Array.from(checkboxes);
 
     checkboxesArray.forEach(checkbox => {
         checkbox.removeEventListener('change', checkbox.changeHandler);
 
         checkbox.changeHandler = function() {
-            const label = this.parentNode;
+            const label = this.closest('div.base-contenedor');;
             const montosElement = label.querySelector('.montos');
             if (this.checked) {
                 if (!checksSeleccionados.includes(this)) {
@@ -913,10 +923,15 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                 if (montosElement) {
                     montosElement.classList.add('evaluando');
                 }
+
                 const elementoMonto = obtenerElementoMontoDos(this, montodpp, montoNormal);
-                const textoDelElemento = elementoMonto ? elementoMonto.textContent : '';
-                const valorSinSimbolo = textoDelElemento.slice(0, -2);
-                const valorNumerico = parseFloat(valorSinSimbolo.replace(',', ''));
+                if (!elementoMonto) {
+                    console.warn("No se encontró el elemento monto para el checkbox seleccionado.");
+                    return; // Si no hay elemento, salir de la función para evitar errores
+                }
+                const textoDelElemento = elementoMonto ? elementoMonto.textContent.trim() : '';
+                const valorLimpio = textoDelElemento.replace(/[^0-9.]/g, '')
+                const valorNumerico = parseFloat(valorLimpio);
                 const montoFactura = valorNumerico;
                 sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas + parseFloat(montoFactura)).toFixed(2));
                 label.classList.remove('listo');
@@ -932,7 +947,6 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                 if (dif < 0){
                     dif==0.00
                 }
-
                 const diferenciaInput = redondear(montoValue - (sumaFacturasSeleccionadas - montoFactura), 2)
                 ///actualizarDiv.textContent = `${parseFloat(dif).toFixed(2)} ` + transaccion; // Actualizar el contenido del div
                 console.log("Se seleccionó la factura: " + vblen + " con un monto de " + valorNumerico);
@@ -942,7 +956,7 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                 if (!abonoRealizado) {
 
                     
-
+                    console.log(montoValue)
                     if (sumaFacturasSeleccionadas <= montoValue) {
                         
                         gestionarInputs(label, montosElement, posicionArray, vblen, montoFactura, diferenciaInput, fkdat, belnr1, buzei, blart);
@@ -955,10 +969,14 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                         contador ++;
                         actualizarDiv2.textContent = contador;
                     } else {
+                            if (estado.transaccion == ""){
+                                estado.transaccion= transaccion;
+                            }
                             const montoFaltante = (sumaFacturasSeleccionadas - montoValue).toFixed(2);
                             console.log(`falta para compensar la factura  un total de ${montoFaltante}`)
                             if (estado.transaccion == "$"){
                                 if (montoFaltante <= parseFloat(betrsdiv.textContent) ){
+                                    console.log('si')
                                     console.log('entro en la tolerancia pa')
                                     gestionarInputs(label, montosElement, posicionArray, vblen, montoFactura, diferenciaInput, fkdat, belnr1, buzei, blart);
                                     console.log(transaccion)
@@ -972,6 +990,7 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                                     facturaParcial = posicionArray;
                                     colocarReadOnlyFacturasDos(facturaParcial)
                                 }else {
+                                    console.log('no')
                                     checkbox.checked= false;
                                     sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
                                     
@@ -983,7 +1002,9 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                                     
                                 }
                             }else if (estado.transaccion == "bs"){
+                                console.log(betrs)
                                 if (montoFaltante <= parseFloat(betrs.textContent) ){
+                                    
                                     console.log('entro en la tolerancia pa')
                                     gestionarInputs(label, montosElement, posicionArray, vblen, montoFactura, diferenciaInput, fkdat, belnr1, buzei, blart);
                                     console.log(transaccion)
@@ -997,6 +1018,7 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                                     facturaParcial = posicionArray;
                                     colocarReadOnlyFacturasDos(facturaParcial)
                                 }else {
+                                    console.log('no')
                                     checkbox.checked= false;
                                     sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
                                     
@@ -1086,20 +1108,29 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
     });
 }
 
-
+// Función mejorada para obtener el elemento del monto
 function obtenerElementoMontoDos(checkbox, montodpp, montoNormal) {
-    const label = checkbox.parentNode;
-    const montobsdppElement = label.querySelector(montodpp);
-    if (montobsdppElement) {
-        return montobsdppElement;
-    } else {
-        const montoBsElement = label.querySelector(montoNormal);
-        if (montoBsElement) {
-            return montoBsElement;
-        }
+    // Obtener el contenedor del checkbox
+    const label = checkbox.closest('div.base-contenedor');
+    console.log(label)
+
+    // Verificar si el label existe antes de proceder
+    if (!label) {
+        console.warn("El checkbox seleccionado no tiene un elemento padre (label) válido.");
+        return null;
     }
-    return null; // Devuelve null si no se encuentra ningún elemento de monto
+
+    // Intentar buscar el elemento de monto con los selectores dados
+    const montoElement = label.querySelector(montodpp) || label.querySelector(montoNormal);
+
+    // Si no se encuentra el elemento de monto, mostrar un mensaje de advertencia para facilitar la depuración
+    if (!montoElement) {
+        console.warn(`No se encontró un elemento de monto usando los selectores "${montodpp}" o "${montoNormal}" para el checkbox con ID: ${checkbox.id}`);
+    }
+
+    return montoElement; // Devuelve el elemento encontrado o null si no existe
 }
+
 
 
 
@@ -1200,7 +1231,7 @@ function colocarReadOnlyFacturastres(posicion) {
 function resetCheckbox(checkbox) {
     checkbox.checked = false;
     checkbox.disabled = true;
-    checkbox.parentNode.classList.remove('listo');
+    checkbox.closest('div.base-contenedor').classList.remove('listo');
 
     const textoFaltanteDiv = checkbox.parentNode.querySelector('.texto-faltante');
     textoFaltanteDiv.textContent = '';
@@ -1310,7 +1341,7 @@ function restablecerEstado(bancoReceptor, mensaje, monto, checkboxes) {
 function resetCheckboxDos(checkbox) {
     checkbox.checked = false;
     checkbox.disabled = true; // Añade disabled para evitar interacción
-    checkbox.parentNode.classList.remove('listo');
+    checkbox.closest('div.base-contenedor').classList.remove('listo');
 
     const textoFaltanteDiv = checkbox.parentNode.querySelector('.texto-faltante');
     if (textoFaltanteDiv) {
@@ -1520,6 +1551,26 @@ document.addEventListener('DOMContentLoaded', function() {//->Esto verifica si s
     }
 });
 
+
+document.addEventListener('DOMContentLoaded', function() {//->Esto verifica si se ha ingresado un monto para mostrar el mensaje de indicación
+    const monto = document.getElementById('monto_iva');
+    const atention = document.querySelector('.atention');
+    const mensajeDos = document.querySelector('.mensajeDos');
+
+    if (atention && mensajeDos) {  // Verificar si los elementos existen
+        atention.addEventListener('mouseover', function() {
+            if (monto && monto.value === '') {
+                mensajeDos.classList.add('d-block');
+                mensajeDos.classList.remove('d-none');
+            }
+        });
+
+        atention.addEventListener('mouseout', function() {
+            mensajeDos.classList.remove('d-block');
+            mensajeDos.classList.add('d-none');
+        });
+    }
+});
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -1861,9 +1912,15 @@ function showAlert(message) {
 }
 
 function validateMonto(input) {
+    // Verifica si el input es nulo o vacío
+    if (!input || input.value.trim() === "") {
+        console.warn('Input is empty or not defined');
+        return;
+    }
+
     const value = parseFloat(input.value);
 
-    if (value <= 0) {
+    if (isNaN(value) || value <= 0) {
         input.value = '';
         showAlert('El monto debe ser mayor a 0');
         return;
@@ -1873,4 +1930,52 @@ function validateMonto(input) {
         input.value = '';
         showAlert('Para colocar decimales utilice ".", no la ","');
     }
+
+    if (!/^\d*\.?\d*$/.test(input.value)) {
+        showAlert('Por favor, ingrese un valor numérico válido');
+        input.value = ''; 
+    }
 }
+
+
+/*
+
+procesarFacturasCasoTres(checkboxes, montoValue, montodpp, montoNormal, estado.transaccion);
+
+*/
+
+function iva() {
+    const bancoReceptor = document.getElementById('banco_receptor');
+    const mensaje = document.querySelector('.mensajeDos');
+    const monto = document.getElementById('monto_iva');
+    const checkboxes = document.querySelectorAll('.cheket');
+
+    // Configurar la transacción (por ejemplo, 'bs' o '$')
+    const transaccion = 'bs'; // Cambia este valor si deseas iniciar con otra transacción
+
+    // Llamar a casoTres con los elementos relevantes
+    casoTres(bancoReceptor, mensaje, monto, checkboxes, transaccion);
+}
+
+// Llamar a la función para inicializar
+
+const tituloIva = document.getElementById('titulo')
+if (tituloIva){
+    iva()
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    const fechaInput = document.getElementById('fecha_iva');
+    if (fechaInput) {
+
+        const today = new Date().toISOString().split('T')[0];
+
+        fechaInput.max = today;
+
+        fechaInput.addEventListener('focus', function() {
+            this.showPicker(); 
+        });
+    }
+});

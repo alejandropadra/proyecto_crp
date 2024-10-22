@@ -52,6 +52,12 @@
             <label for="zona" class="label">Ingrese Codigo del usuario</label>
             <div class="underline"></div>
           </div>
+        <!--VENDEDOR-->
+        <div class="input-container">
+          {{ render_field(form.seller, class ="entrada", id="seller") }}
+          <label for="seller" class="label">Asesor Comercial</label>
+          <div class="underline"></div>
+        </div>
         <!--NIVEL-->
         <div class="input-container">
           {{ render_field(form.password, class ="entrada", id="encrypted_password" ) }}

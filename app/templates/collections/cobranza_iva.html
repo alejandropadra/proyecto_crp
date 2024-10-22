@@ -5,69 +5,207 @@
 
 
 <main class="px-3">
-
+  <!-- 
+  <span class="" id="betrsdiv" > {{tolerancia['betrsdiv']}}</span>
+  <span class="d-none" id="betrs" > {{tolerancia['betrs']}}</span>-->
+  <span class="d-none" id="betrs" > {{tolerancia}}</span>
+  <span class="d-none" id="titulo" > {{titulo}}</span>
   <div class="container pt-3">
     <form class="form_main mt-3 " method = "POST" enctype="multipart/form-data" >
-      <div class="row d-flex gap-5">
+      <div class="d-flex flex-column w-100 p-0 m-0 gap-5">
+        <div class="row d-flex gap-5 w-100">
 
-        <div class="contenedor col-xl-5 col-md-5 col-lg-5 col-sm-12">
-          
-          <h5 class="etiqueta">RIF</h5>
-          <div class="inputContainer">
-            <i class="fa-solid fa-circle-user inputIcon"></i>
-            {{ render_field(form.rif, class="inputField", id="rif", value =current_user.rif, placeholder="Ingrese su numero de RIF") }}
+          <div class="contenedor col-xl-5 col-md-5 col-lg-5 col-sm-12">
+            
+            <h5 class="etiqueta">RIF</h5>
+            <div class="inputContainer">
+              <i class="fa-solid fa-circle-user inputIcon"></i>
+              {{ render_field(form.rif, class="inputField", id="rif", value =current_user.rif, placeholder="Ingrese su numero de RIF") }}
+            </div>
+  
+            <h5 class="etiqueta">Empresa</h5>
+            <div class="inputContainer">
+              <i class="fa-solid fa-building inputIcon"></i>
+              {{ render_field(form.empresa, class="inputField", id="empresa",value = current_user.username, placeholder="Nombre de la empresa") }}
+            </div>
+            
+            <h5 class="etiqueta">Empresa Beneficiaria del Pago</h5>
+            <div class="inputContainer">
+              <i class="fa-solid fa-building-columns inputIcon"></i>
+              {{ render_field(form.empresa_beneficiaria, class="inputField", id="empresa_beneficiaria", value="Corimon Pinturas, C.A.", readonly= readonly )}}
+            </div>
           </div>
+  
+          <!--onchange="javascript:seleccionar_empresa()"-->
+  
+          <div class="contenedor col-xl col-md col-lg col-sm-12">
+            <h5 class="etiqueta">Cuenta de banco a la cual se realizó el pago</h5>
+            <div class="inputContainer mt-3">
+              <i class="fa-solid fa-building-columns inputIcon"></i>
+              {{ render_field(form.banco_receptor, class="inputField ", id="banco_receptor", required= required ) }}
+            </div>
+  
+            <h5 class="etiqueta">Fecha de depósito</h5>
+            <div class="inputContainer">
+              <i class="fa-regular fa-calendar inputIcon"></i>
+              {{ render_field(form.fecha_deposito, class="inputField", id="fecha_iva", value=Fecha_pago, required= required  ) }}
+            </div>
+  
+  
+            
+  
+            <div class="inputContainer d-flex flex-column">
+              <h5 class="etiqueta">Ingrese el Número de Referencia del pago</h5>
+              <i class="fa-solid fa-book-bookmark inputIcon"></i>
+              {{ render_field(form.n_deposito, class ="inputField", id="ref", required="", label_attr={"class": "label", "for": "ref"}, value=algo) }}
+            </div>
 
-          <h5 class="etiqueta">Empresa</h5>
-          <div class="inputContainer">
-            <i class="fa-solid fa-building inputIcon"></i>
-            {{ render_field(form.empresa, class="inputField", id="empresa",value = current_user.username, placeholder="Nombre de la empresa") }}
-          </div>
-          
+            <h5 class="etiqueta">Monto pagado</h5>
+            <div class="inputContainer">
+              <i class="fa-solid fa-hand-holding-dollar inputIcon"></i>
+              {{ render_field(form.monto, class="inputField", id="monto_iva", required="", oninput="validateMonto(this)",  label_attr={"class": "label", "for": "monto"}) }}
+            </div>
 
-          
-          <h5 class="etiqueta">Empresa Beneficiaria del Pago</h5>
-          <div class="inputContainer">
-            <i class="fa-solid fa-building-columns inputIcon"></i>
-            {{ render_field(form.empresa_beneficiaria, class="inputField", id="empresa_beneficiaria", value="Corimon Pinturas, C.A.", readonly= readonly )}}
-          </div>
-        </div>
-
-        <!--onchange="javascript:seleccionar_empresa()"-->
+            <div class="d-flex w-100  justify-content-between position-relative">
+              <div id="alert" class="alert-container2 z-2 bg-warning">
+                <i class="bi bi-exclamation-circle h-100"></i>
+                <span id="alert-message"></span>
+              </div>
+            </div>
 
 
 
-        <div class="contenedor col-xl col-md col-lg col-sm-12">
-          
-        <h5 class="etiqueta">Cuenta de banco a la cual se realizó el pago</h5>
-        <div class="inputContainer mt-3">
-        
-          <i class="fa-solid fa-building-columns inputIcon"></i>
-          {{ render_field(form.banco_receptor, class="inputField ", id="banco_receptor", required= required ) }}
-        </div>
-
-        <h5 class="etiqueta">Fecha de depósito</h5>
-        <div class="inputContainer">
-          <i class="fa-regular fa-calendar inputIcon"></i>
-          {{ render_field(form.fecha_deposito, class="inputField", id="fecha", value=Fecha_pago, required= required  ) }}
-        </div>
-
-
-        <h5 class="etiqueta">Monto pagado</h5>
-        <div class="inputContainer">
-          <i class="fa-solid fa-hand-holding-dollar inputIcon"></i>
-          {{ render_field(form.monto, class="inputField", id="monto", required="", label_attr={"class": "label", "for": "monto"}) }}
-        </div>
-
-        <div class="inputContainer d-flex flex-column">
-          <h5 class="etiqueta">Ingrese el Número de Referencia del pago</h5>
-          <i class="fa-solid fa-book-bookmark inputIcon"></i>
-          {{ render_field(form.n_deposito, class ="inputField", id="ref", required="", label_attr={"class": "label", "for": "ref"}, value=algo) }}
         </div>
       </div>
 
+<!--/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////-->
+{% set nb = namespace(contador=1) %}
+<!--Si el abono para iva vuelve, colocar el row-->
+        <!-- 
+        {% if pago_iva|length > 0 %}
+        <div class="contenedor-2 col-xl-4 col-md-4 col-lg-4 col-sm-12 tope " >
+          
+          <div class="top px-2 pt-3" style="max-height: 320px; overflow-y:auto">
+            <h2 class="etiqueta text-center mb-4 mx-0" style="font-size: 16px !important;">Iva's Pagados</h2>
+          
+          {% for documento in pago_iva%}
+          <div class="Elegir w-100 d-flex flex-column tap">
+            <label class="check p-2 d-flex gap-2">
+            
+              {{ form.factura(class="divisa cheket", id="check5Ven", data_contador=nb.contador  ) }}
+              <div class="checkmark"></div>
+              <div class="d-flex texto-mid w-100 flex-column p-0 ">
+                <div class="factura mb-2 p-3 w-100 d-flex justify-content-center"> 
+                  <div class="row w-100">
+                    <div class="d-flex align-items-center justify-content-center col " id="factura_comparar">
+                      <h4 class="texto-mid w-100 text-center m-0 p-0"><strong>  Iva Pagado N°:</strong> {{documento['sgtxt']}}</h4>
+                      <span id="vbelnNV{{ nb.contador }}" class="d-none" name="fact[]">{{documento['vbeln'] }}  </span>
+                      <span id="fkdatNV{{ nb.contador }}" class="d-none">{{documento['fkdat'] }} </span>
+                      <span id="belnr1NV{{ nb.contador }}" class="d-none">{{documento['belnr1'] }} </span>
+                      <span id="buzeiNV{{ nb.contador }}" class="d-none">{{documento['buzei'] }} </span>
+                      <span id="blartNV{{ nb.contador }}" class="d-none">{{documento['blart'] }} </span>
+                    </div>
+                    <div class=" mx-1 texto-faltante d-flex align-items-center justify-content-center  text-center" style="width: 1px !important;"></div>
+                    <div class="mx-1 texto-abono d-flex align-items-center justify-content-center text-center" style="width: 1px !important;"></div>
+                  </div>
+                </div>
+                <div class="montos d-flex flex-column">
 
+
+                    <div class="col-xl col-lg-12 d-flex flex-column justify-content-center align-items-center px-1">
+                      <div class="row w-100">
+                        <div class="col-7 p-0" style="font-size: 13.5px;"><strong>Monto Total (bs):</strong></div>
+                        <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="Montobs">
+                          {{ "{:,.2f}".format(((documento['totfactbs']|float))) }}bs
+                        </div>
+                      </div>
+                    </div>
+
+
+                </div>
+              </div>
+            </label>
+            {% set nb.contador = nb.contador + 1 %}
+          </div>
+          {%endfor%}
+          {%endif%}
+        </div>
+        </div>-->
+
+
+        <div class="row d-flex gap-5 w-100">
+
+          <!--onchange="javascript:seleccionar_empresa()"-->
+  
+          <div class=" atention contenedor col-12 position-relative">
+            <div class="mensajeDos w-100"><p>Por favor, ingrese el monto</p></div>
+            <div class="header m-0 p-0 mb-3  ">
+              <div class="row w-100">
+                <div class="col d-flex">
+                  <h5 class="etiqueta">Monto disponible para abonar:</h5>
+                  <div class="flotante" id="actualizar"></div>
+                </div>
+                <div class="col d-flex">
+                  <h5 class="etiqueta">Documentos seleccionados</h5>
+                  <div class="flotante" id="actualizar2"></div>
+                </div>
+              </div>
+            </div>
+            {#Si el otro de abonos para iva vuelve, establecer este contador como se indica a continuacion {% set na.contador = nb.contador + na.contador%} #}
+            {% set na = namespace(contador=1) %}
+            <div class="top px-2 pt-2 d-flex flex-column gap-2 w-100 " style="max-height: 250px; overflow-y:auto">
+
+              {% for documento in iva_x_pagar%}
+  
+              <div class="Elegir w-100 d-flex base-contenedor" >
+                <label class="check p-2 d-flex w-100">
+                
+                  {{ form.factura(class="divisa cheket", id="check5Ven", data_contador=na.contador  ) }}
+                  <div class="checkmark"></div>
+                  <div class="row w-100">
+    
+                    <div class="col">
+                      <div class="factura mb-2 p-3 w-100 d-flex justify-content-center w-50"> 
+                        {{na.contador}}
+                        <div class="d-flex align-items-center justify-content-center col " id="factura_comparar">
+                          <h4 class="texto-mid w-100 text-center m-0 p-0"><strong>  Iva por pagar: </strong> {{documento['sgtxt']}}</h4>
+                          <span id="vbelnNV{{ na.contador }}" class="d-none" name="fact[]">{{documento['vbeln'] }}  </span>
+                          <span id="fkdatNV{{ na.contador }}" class="d-none">{{documento['fkdat'] }} </span>
+                          <span id="belnr1NV{{ na.contador }}" class="d-none">{{documento['belnr1'] }} </span>
+                          <span id="buzeiNV{{ na.contador }}" class="d-none">{{documento['buzei'] }} </span>
+                          <span id="blartNV{{ na.contador }}" class="d-none">{{documento['blart'] }} </span>
+                        </div>
+                          <div class=" mx-0 my-0 texto-faltante d-flex align-items-center justify-content-center  text-center" style="width: 1px !important;"></div>
+                          <div class="mx-0  my-0 texto-abono d-flex align-items-center justify-content-center text-center" style="width: 1px !important;"></div>
+    
+                      </div>
+                    </div>
+    
+                    <div class="col montos d-flex w-50">
+                      <div class="row w-100 px-3">
+                      
+                        <!--Para Bolivares-->
+                        <div class="col-xl col-lg-12 d-flex flex-column justify-content-center align-items-center px-1">
+                          <div class="row w-100 px-5">
+                            <div class="col-7 p-0" style="font-size: 13.5px;"><strong>Monto Total (bs):</strong></div>
+                            <div class=" col p-0 texto-mid d-flex align-items-center justify-content-center" id="montoBs">
+                              {{ "{:,.2f}".format(((documento['totfactbs']|float))) }}bs
+                            </div>
+                          </div>
+                        </div>
+                        <!--Hasta aquí los Bolivares-->
+                      </div>
+                    </div>
+    
+                  </div>
+                </label>
+                {% set na.contador = na.contador + 1 %}
+              </div>
+              {%endfor%}
+            </div>
+        </div>
       </div>
+
       <div class=" mb-2 w-100 d-flex justify-content-center" style="margin-top: 25px; padding-bottom: 100px;">
         <p>{{ valorJinja }}</p>
         <input type ="hidden" name = "csrf_token" value ="{{csrf_token()}}"/>
@@ -78,10 +216,7 @@
   </div>
 
 
-
-
 </main>
-
 
 
 {% endblock %}

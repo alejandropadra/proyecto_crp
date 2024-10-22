@@ -85,6 +85,7 @@ class EditForm(Form):
     zona = SelectField("",[validators.DataRequired()], choices = [("",""),("Occidente","Occidente"),("Oriente","Oriente"),("Centro","Centro"),("all","all"),("Capital","Capital")])
     nivel = SelectField("", choices=[("cliente","Cliente"),("corimon","Corimon"),("administrador","Administrador")])
     codigo = StringField("")
+    seller = StringField("")
     password = StringField("")
 
 class PerfilForm(Form):

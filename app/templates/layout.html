@@ -62,6 +62,7 @@
                       <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.cobranza_iva')}}" >Registrar Pago Iva</a></li>
                     </li>
                     <li class=""><a class="{% if titulo == 'Lista Cobranzas' %} active {% endif %}"  href="{{ url_for('.lista_cobranza')}}">Documentos Pendientes</a></li>
+                    <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.pagos_cobranza')}}" >Pagos Realizados</a></li>
                     <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.historial')}}" >Historial</a></li>
 
                   </ul>
@@ -163,7 +164,7 @@
 
 <div class="container">
 
-    <h1 class=" ui-tittle mt-4">{%if titulo == "Registrar Pago" or titulo =="Lista Cobranzas"%} Pagos / {{titulo}} {%else%} {{titulo}}  {%endif%}</h1>
+    <h1 class=" mt-4">{%if titulo == "Registrar Pago" or titulo =="Lista Cobranzas"%} Pagos / {{titulo}} {%else%} {{titulo}}  {%endif%}</h1>
     <div class="row position-relative">
   
       <div class="col-md-12 col-md-offset-1 flash position-absolute z-2">
@@ -248,6 +249,7 @@
               <li class=""><a class="{% if titulo == 'reporte pago' %} active {% endif %}"  href="{{ url_for('.cobranza')}}">Registrar Pago</a></li>
               <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.cobranza_iva')}}" >Registrar Pago Iva</a></li>            
             <li class=""><a class="{% if titulo == 'Lista Cobranzas' %} active {% endif %}"  href="{{ url_for('.lista_cobranza')}}">Documentos Pendientes</a></li>
+            <li class=""><a class="{% if titulo == 'Lista Cobranzas' %} active {% endif %}"  href="{{ url_for('.pagos_cobranza')}}">Pagos Realizados</a></li>
             <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.historial')}}" >Historial</a></li>
 
           </ul>
