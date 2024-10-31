@@ -162,8 +162,6 @@
                   {% if 'blart' in factura %}
                     {%  if factura['blart'] == 'RV' and factura['status']=='' %}
                     {% set na.contador = na.contador + 1 %}
-                  {% elif factura['blart'] == 'DA' and factura['status']=='' %}
-                  {% set na.contador = na.contador + 1 %}
                   {% endif %}
                 {% endif %}
             {% endfor %}

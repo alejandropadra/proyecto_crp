@@ -185,6 +185,7 @@ function handleCheckChange(event, tipo) {
         const monto = document.getElementById('monto');
         const checkboxes = document.querySelectorAll('#check5Ven, #check5');
         divInputmonto2.classList.add('d-none')
+
         
         estado.reset();
         [check1, check2, check3].forEach(check => check.disabled = false);
@@ -1328,11 +1329,42 @@ function restablecerEstado(bancoReceptor, mensaje, monto, checkboxes) {
     limpiarDivs('.texto-faltante', 'facts');
     limpiarDivs('.texto-abono', 'abon');
     desmarcarCheckboxes(checkboxes);
+    const baseContenedores = document.querySelectorAll('.base-contenedor');
+
+    baseContenedores.forEach(i => {
+        i.classList.remove('listo');
+    });
     const labels = document.querySelectorAll('label');
         labels.forEach(label => {
         label.classList.remove('listo');
     });
     actualizarDiv.textContent = ""; // Actualizar el contenido del div
+
+
+
+
+    const referenceriafValue = document.getElementById('referenceriafValue');
+    const fechaInmodal = document.getElementById('fechaInmodal');
+    const BancoInmodal = document.getElementById ('BancoInmodal');
+    const MontoInmodal = document.getElementById('MontoInmodal');
+    const referenciaInmodal = document.getElementById ('referenciaInmodal');
+    const disponibleInmodal = document.getElementById('disponibleInmodal');
+
+    referenceriafValue.textContent= '';
+    fechaInmodal.textContent = '';
+    BancoInmodal.textContent ='';
+    MontoInmodal.textContent ='';
+    referenciaInmodal.textContent = '';
+    disponibleInmodal.textContent ='';
+
+    const columnaFacturas = document.getElementById('columna-facturas');
+    const facturasCreadas = columnaFacturas.querySelectorAll('.factss');
+    facturasCreadas.forEach(div => div.remove());
+
+    const columnaMontos = document.getElementById('columna-montos');
+    const montosCreados = columnaMontos.querySelectorAll('.montoss');
+    montosCreados.forEach(div => div.remove());
+
 }
 
 
@@ -1911,6 +1943,9 @@ function showAlert(message) {
     }, 3000); // Ocultar después de 3 segundos
 }
 
+
+
+
 function validateMonto(input) {
     // Verifica si el input es nulo o vacío
     if (!input || input.value.trim() === "") {
@@ -1979,3 +2014,286 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+
+/*
+function showInputValue() {
+    const referencerif = document.getElementById('rif')?.value || '';
+    const fechaValor = document.getElementById("fecha")?.value || '';
+    const bancoValor = document.getElementById("banco_receptor")?.value || '';
+    const bancoDosValor = document.getElementById("banco_receptor_dolar")?.value || '';
+    const montoValor = document.getElementById('monto')?.value || document.getElementById('monto_iva')?.value || '';
+    const montoDescuentoValor = document.getElementById('monto-descuento')?.value || '';
+    const referenciaValor =document.getElementById('ref')?.value ||'';
+    const montoDisponibleValor = document.getElementById('actualizar')?.textContent || '';
+
+    const checkbs = document.getElementById('check3')?.checked || false;
+    const checkdolar = document.getElementById('check2')?.checked || false;
+    const checkeuro = document.getElementById('check1')?.checked || false;
+
+
+    document.getElementById('referenceriafValue').textContent = referencerif;
+    document.getElementById('fechaInmodal').textContent = fechaValor;
+    document.getElementById('referenciaInmodal').textContent = referenciaValor;
+    document.getElementById('disponibleInmodal').textContent = montoDisponibleValor;
+    let facturasListas = document.querySelectorAll('.listo');
+    let facturas = [];
+    let montos = [];
+    for (let i = 0; i < facturasListas.length; i++) {
+
+        const facturaListo = document.getElementById('inputFactura' + i)?.value || ''; 
+        const montoListo = document.getElementById('inputfacturaMonto' + i)?.value || '';
+        if (facturaListo) {
+            facturas.push(facturaListo); 
+        }
+        if (montoListo){
+            montos.push(montoListo); 
+        }
+    }
+    console.log(facturas)
+
+
+
+    document.getElementById('BancoInmodal').textContent = bancoValor || bancoDosValor;
+
+
+    let montoTexto = montoDescuentoValor || montoValor;
+    if (checkbs) {
+        montoTexto += ' Bs';
+    } else if (checkdolar || checkeuro) {
+        montoTexto += ' $';
+    } else{
+        montoTexto +=' Bs'
+    }
+    document.getElementById('MontoInmodal').textContent = montoTexto;
+
+
+
+    const columnaFacturas = document.getElementById('columna-facturas');
+
+    facturas.forEach(factura => {
+        
+        const divFactura = document.createElement('div');
+        divFactura.classList.add('factss'); 
+        divFactura.textContent = factura;   
+        console.log('sasd')
+
+        columnaFacturas.appendChild(divFactura);
+        console.log('sasd')
+    });
+
+
+
+const columnaMontos = document.getElementById('columna-montos');
+    montos.forEach(factura => {
+
+        const divFactura = document.createElement('div');
+        divFactura.classList.add('montoss'); 
+        divFactura.textContent = factura;   
+
+        columnaMontos.appendChild(divFactura);
+    });
+}*/
+
+function submitForm() {
+
+    const requiredFields = document.querySelectorAll("form .inputField[required]");
+    let allFilled = true;
+    let firstEmptyField = null;
+
+    requiredFields.forEach(field => {
+
+        let existingAlert = field.parentElement.querySelector(".field-alert");
+        if (existingAlert) existingAlert.remove();
+
+        if (!field.value.trim()) {
+            allFilled = false;
+            field.classList.add("border-danger");  
+            showFieldAlert(field, "Este campo es obligatorio");
+
+            if (!firstEmptyField) {
+                firstEmptyField = field;
+            }
+        } else {
+            field.classList.remove("border-danger");  
+        }
+    });
+
+    if (allFilled) {
+        document.querySelector("form").submit();
+    } else {
+
+        closeModal();
+
+        if (firstEmptyField) {
+            firstEmptyField.scrollIntoView({ behavior: "smooth", block: "center" });
+            firstEmptyField.focus();  
+        }
+    }
+}
+
+
+
+/*
+const modal = document.getElementById('myModal');
+modal.addEventListener('hidden.bs.modal', limpiarModal);*/
+
+function showFieldAlert(field, message) {
+
+    let existingAlert = field.parentElement.querySelector(".field-alert");
+    if (existingAlert) existingAlert.remove();
+
+
+    const alertDiv = document.createElement("div");
+    alertDiv.className = "field-alert bg-warning text-dark p-1 mt-1 rounded";
+    alertDiv.innerHTML = `
+        <i class="bi bi-exclamation-circle"></i> ${message}
+    `;
+
+
+    field.parentElement.appendChild(alertDiv);
+
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 10000);  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function openModal() {
+    console.log("Iniciando función openModal...");
+    document.getElementById('customModal').classList.remove('hidden');
+
+    let facturasListas = document.querySelectorAll('.cheket');
+
+    if (facturasListas.length === 0) {
+        console.log("No se encontraron elementos con la clase .cheket");
+    }
+
+    let facturasListasFiltradas = Array.from(facturasListas)
+        .map((element, index) => {
+            let baseContenedor = element.closest('.base-contenedor');
+            if (baseContenedor && baseContenedor.classList.contains('listo')) {
+                return { element, index };
+            }
+            return null;
+        })
+        .filter(item => item !== null); 
+
+    // Mostrar la información general del modal independientemente de facturas seleccionadas
+    const referencerif = document.getElementById('rif')?.value || '';
+    const fechaValor = document.getElementById("fecha")?.value || document.getElementById('fecha_iva')?.value || '';
+    const bancoValor = document.getElementById("banco_receptor")?.value || '';
+    const bancoDosValor = document.getElementById("banco_receptor_dolar")?.value || '';
+    const montoValor = document.getElementById('monto')?.value || document.getElementById('monto_iva')?.value || '';
+    const montoDescuentoValor = document.getElementById('monto-descuento')?.value || '';
+    const referenciaValor = document.getElementById('ref')?.value || '';
+    let montoDisponibleValor = document.getElementById('actualizar')?.textContent || '';
+
+    const checkbs = document.getElementById('check3')?.checked || false;
+    const checkdolar = document.getElementById('check2')?.checked || false;
+    const checkeuro = document.getElementById('check1')?.checked || false;
+
+    document.getElementById('referenceriafValue').textContent = referencerif;
+    document.getElementById('fechaInmodal').textContent = fechaValor;
+    document.getElementById('referenciaInmodal').textContent = referenciaValor;
+    montoDisponibleValor = montoDisponibleValor.replace(/b/g, ' B');
+    document.getElementById('disponibleInmodal').textContent = montoDisponibleValor;
+    document.getElementById('BancoInmodal').textContent = bancoValor || bancoDosValor;
+
+    let montoTexto = montoDescuentoValor || montoValor;
+    if (checkbs) {
+        montoTexto += ' Bs';
+    } else if (checkdolar || checkeuro) {
+        montoTexto += ' $';
+    } else {
+        montoTexto += ' Bs';
+    }
+    document.getElementById('MontoInmodal').textContent = montoTexto;
+
+    // Continuar solo si hay facturas filtradas
+    if (facturasListasFiltradas.length === 0) {
+        console.log("No se encontraron facturas con el estado listo");
+        return;
+    } else {
+        console.log("Se encontraron facturas con el estado listo");
+    }
+
+    let facturas = [];
+    let montos = [];
+
+    facturasListasFiltradas.forEach(({ element, index }) => {
+        let facturaListo;
+        if (tituloIva){
+            facturaListo = document.getElementById('sgtxt'+ (index +1))?.textContent || '';
+        }else{
+            facturaListo = document.getElementById('inputFactura' + index)?.value || '';
+        }
+
+        const montoListo = document.getElementById('inputfacturaMonto' + index)?.value || '';
+        
+        console.log(`Factura #${index}:`, facturaListo);
+        console.log(`Monto #${index}:`, montoListo);
+
+        if (facturaListo) {
+            facturas.push(facturaListo);
+        }
+        if (montoListo) {
+            montos.push(montoListo);
+        }
+    });
+
+    const columnaFacturas = document.getElementById('columna-facturas');
+    facturas.forEach(factura => {
+        const divFactura = document.createElement('div');
+        divFactura.classList.add('factss');
+        divFactura.textContent = factura;
+        columnaFacturas.appendChild(divFactura);
+    });
+
+    const columnaMontos = document.getElementById('columna-montos');
+    montos.forEach(monto => {
+        const divMonto = document.createElement('div');
+        divMonto.classList.add('montoss');
+        divMonto.textContent = monto;
+        columnaMontos.appendChild(divMonto);
+    });
+}
+
+
+
+
+
+function limpiarModal() {
+
+    const columnaFacturas = document.getElementById('columna-facturas');
+    const facturasCreadas = columnaFacturas.querySelectorAll('.factss');
+    facturasCreadas.forEach(div => div.remove());
+
+    const columnaMontos = document.getElementById('columna-montos');
+    const montosCreados = columnaMontos.querySelectorAll('.montoss');
+    montosCreados.forEach(div => div.remove());
+}
+
+function closeModal() {
+    document.getElementById('customModal').classList.add('hidden');
+    limpiarModal()
+}

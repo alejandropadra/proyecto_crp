@@ -467,23 +467,28 @@ def cobranza_iva():
         'CLIENTE':current_user.rif,
     }
     response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
-    if response.status_code == 200:
-        response_json = json.loads(response.content)
-        response_json = str(response_json)
-        response_json = response_json[1:]
-        response_json = response_json[:-1]
-        response_json = eval(response_json)
-        documentos = response_json
-        pago_iva = []
-        iva_x_pagar= []
+    
+    pago_iva = []
+    iva_x_pagar= []
+    try:
+        if response.status_code == 200:
+            response_json = json.loads(response.content)
+            response_json = str(response_json)
+            response_json = response_json[1:]
+            response_json = response_json[:-1]
+            response_json = eval(response_json)
+            documentos = response_json
 
-        if (documentos):
-            for documento in documentos:
-                if documento['status']=='':
-                    if documento['blart'] == 'DZ' and documento['pagaiva']== 'S':
-                        pago_iva.append(documento)
-                    elif documento['blart'] == 'DZ' and documento['dmbtr']>0:
-                        iva_x_pagar.append(documento)   
+
+            if (documentos):
+                for documento in documentos:
+                    if documento['status']=='':
+                        if documento['blart'] == 'DZ' and documento['pagaiva']== 'S':
+                            pago_iva.append(documento)
+                        elif documento['blart'] == 'DZ' and documento['dmbtr']>0:
+                            iva_x_pagar.append(documento)
+    except:
+        pass
 
 #---------------------------------IVAs pendientes-------------------------
     sap = ip_fuente+"/sap/bc/rest/zpasdeudoiva"
@@ -505,20 +510,24 @@ def cobranza_iva():
         'PAGAIVA':'X'
     }
     response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
-    if response.status_code == 200:
-        response_json = json.loads(response.content)
-        response_json = str(response_json)
-        response_json = response_json[1:]
-        response_json = response_json[:-1]
-        response_json = eval(response_json)
-        ivas = response_json
-        iva_x_pagar= []
+    
+    try:
+        if response.status_code == 200:
+            response_json = json.loads(response.content)
+            response_json = str(response_json)
+            response_json = response_json[1:]
+            response_json = response_json[:-1]
+            response_json = eval(response_json)
+            ivas = response_json
+            iva_x_pagar= []
 
-        if (ivas):
-            for iva in ivas:
-                if iva['statusiva']=='':
-                        iva_x_pagar.append(iva)  
-        #print(iva_x_pagar)
+            if (ivas):
+                for iva in ivas:
+                    if iva['statusiva']=='':
+                            iva_x_pagar.append(iva)  
+            #print(iva_x_pagar)
+    except:
+        pass
     #-----------------------------------Tolerancia----------------------------------
     
     #NO HAY TOLERANCIA EN IVA PA
@@ -550,6 +559,26 @@ def cobranza_iva():
         euro = control_form.euro.data
         factura= control_form.factura.data
         bolivares = control_form.bolivares.data
+
+
+        if  request.files['archivo']:
+            imagen = request.files['archivo']
+            nombre_imagen = secure_filename(current_user.username + '_' + str(n_deposito)+'_'+imagen.filename)
+            ruta_imagen = os.path.abspath(server_adj.format(nombre_imagen))
+            ruta_html = '{}'.format(nombre_imagen)
+            imagen.save(ruta_imagen)
+            if imagen.filename != '':
+                post_imagen = ruta_imagen
+                #print(post_imagen)
+            else:
+                post_imagen = ''
+                nombre_imagen = ''
+        else:
+            post_imagen = ""
+            nombre_imagen =''
+
+
+
 
         facturas_list = []
         montos_list=[]
@@ -651,8 +680,8 @@ def cobranza_iva():
                 'ABONOCTA':'',#ENVIAR
                 'PAGAIVA': 'S'
                 }
-                pago_iva_crm_mail(current_user,data)
-                pago_iva_mail(current_user,data)
+                pago_iva_crm_mail(current_user, pago = data,post_imagen=post_imagen,nombre_imagen=nombre_imagen, pagos =datos)
+                pago_iva_mail(current_user,data,datos)
                 #print("todo bien")
                 flash(PAGO_CREADO)
 
@@ -848,6 +877,12 @@ def dashboard():
             pass#print('Error en la peticion')
     except:
         response_json4 = []
+
+    ret_pendiente = []
+    for retencion in response_json4:
+        if retencion['status'] == 'P':
+            ret_pendiente.append(retencion)
+
     ret_pendiente = len(response_json4)
 
     #-----------------ivas pendientes por pagar---------------
@@ -860,20 +895,23 @@ def dashboard():
         'PAGAIVA':'X'
     }
     response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
-    if response.status_code == 200:
-        response_json5 = json.loads(response.content)
-        response_json5 = str(response_json5)
-        response_json5 = response_json5[1:]
-        response_json5 = response_json5[:-1]
-        response_json5 = eval(response_json5)
-        ivas = response_json5
-        iva_x_pagar= []
+    try:
+        if response.status_code == 200:
+            response_json5 = json.loads(response.content)
+            response_json5 = str(response_json5)
+            response_json5 = response_json5[1:]
+            response_json5 = response_json5[:-1]
+            response_json5 = eval(response_json5)
+            ivas = response_json5
+            iva_x_pagar= []
 
-        if (ivas):
-            for iva in ivas:
-                if iva['statusiva']=='P':
-                        iva_x_pagar.append(iva)  
-        iva_x_pagar = len(iva_x_pagar)
+            if (ivas):
+                for iva in ivas:
+                    if iva['statusiva']=='P':
+                            iva_x_pagar.append(iva)  
+            iva_x_pagar = len(iva_x_pagar)
+    except:
+        iva_x_pagar = 0
     return render_template("collections/dashboard.html", titulo = "Estado de cuenta", pagos=pagos, pago_t = pago_t,rate=0, no_vencido_dolar=response_json['tnovencdiv'],no_vencido_bs=response_json['tnovencbs'],total_deudas_dolares=response_json['tdeudadiv'],total_deudas_bs=response_json['tdeudabs'], total_saldo_dolar=response_json['tsaldofdiv'],total_saldo_bs=response_json['tsaldofbs'], total_bolos=response_json['totfactbs'],total_vencido_d=response_json['tvencdiv'],total_vencido_b=response_json['tvencbs'],vencido_130_d=response_json['tvenc130d'],vencido_130_b=response_json['tvenc130b'], vencido_3160_d=response_json['tvecc3160d'], vencido_3160_b=response_json['tvecc3160b'], vencido_60_d=response_json['tvec61masd'], vencido_60_b=response_json['tvec61masb'], facturas =response_json1, retenciones=response_json2,contador_fact = ret, deuda_dif_dolar=response_json['tdifedeudadiv'],deuda_dif_bs=response_json['tdifedeudabs'],favor_dif_dolar=response_json['tdifesaldofdiv'],favor_dif_bs=response_json['tdifesaldofbs'],ret_pendiente=ret_pendiente,iva_x_pagar=iva_x_pagar)
 
 
@@ -931,20 +969,23 @@ def lista_cobranza():
         'PAGAIVA':'X'
     }
     response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
-    if response.status_code == 200:
-        response_json5 = json.loads(response.content)
-        response_json5 = str(response_json5)
-        response_json5 = response_json5[1:]
-        response_json5 = response_json5[:-1]
-        response_json5 = eval(response_json5)
-        ivas = response_json5
-        iva_x_pagar= []
+    try:
+        if response.status_code == 200:
+            response_json5 = json.loads(response.content)
+            response_json5 = str(response_json5)
+            response_json5 = response_json5[1:]
+            response_json5 = response_json5[:-1]
+            response_json5 = eval(response_json5)
+            ivas = response_json5
+            iva_x_pagar= []
 
-        if (ivas):
-            for iva in ivas:
-                if iva['statusiva']=='P':
-                        iva_x_pagar.append(iva) 
-        #print(iva_x_pagar) 
+            if (ivas):
+                for iva in ivas:
+                    if iva['statusiva']=='P':
+                            iva_x_pagar.append(iva) 
+            #print(iva_x_pagar) 
+    except:
+        iva_x_pagar = []
     return render_template("collections/tabla_cobranza.html", titulo = "Documentos Pendientes", pagos=response_json, ivas = iva_x_pagar)
 
 @page.route("/pagos", methods=["GET","POST"])
@@ -1090,17 +1131,20 @@ def certificados_pendientes():
     #response_post = requests.post(url, data=json.dumps(payload), headers=headers)
     response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
     #time.sleep(5)
-    if response.status_code == 200:
-        response_json = json.loads(response.content)
-        response_json = str(response_json)
-        response_json = response_json[1:]
-        response_json = response_json[:-1]
-        response_json = eval(response_json)
-        #print(len(response_json))
-        #print("Exito en la peticion")
-    else:
-        pass
-        #print('Error en la peticion')
+    try:
+        if response.status_code == 200:
+            response_json = json.loads(response.content)
+            response_json = str(response_json)
+            response_json = response_json[1:]
+            response_json = response_json[:-1]
+            response_json = eval(response_json)
+            #print(len(response_json))
+            #print("Exito en la peticion")
+        else:
+            pass
+            #print('Error en la peticion')
+    except:
+        response_json = []
     return render_template("collections/certificados_pendientes.html", titulo = "Facturas Pendientes por Comprobantes",pagos=response_json)
 
 

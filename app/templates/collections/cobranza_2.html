@@ -6,6 +6,8 @@
 {% set ns = namespace(contador=1) %}
 {% set nt = namespace(contador=0) %}
 {% set nv = namespace(contador=0) %}
+
+
 <main class="px-3 " >
   <span class="d-none" id="betrsdiv" > {{tolerancia['betrsdiv']}}</span>
   <span class="d-none" id="betrs" > {{tolerancia['betrs']}}</span>
@@ -16,32 +18,32 @@
         <div class="contenedor col-xl-5 col-md-5 col-lg-5 col-sm-12 gap-1">
           
           <h5 class="etiqueta">RIF</h5>
-          <div class="inputContainer">
+          <div class="inputContainer position-relative">
             <i class="fa-solid fa-circle-user inputIcon"></i>
             {{ render_field(form.rif, class="inputField", id="rif", value =current_user.rif, placeholder="Ingrese su numero de RIF", readonly= readonly) }}
           </div>
 
           <h5 class="etiqueta">Empresa</h5>
-          <div class="inputContainer">
+          <div class="inputContainer position-relative">
             <i class="fa-solid fa-building inputIcon"></i>
             {{ render_field(form.empresa, class="inputField", id="empresa",value = current_user.username, placeholder="Nombre de la empresa", readonly= readonly) }}
           </div>
           
           <!--
           <h5 class="etiqueta">Banco Emisor</h5>
-          <div class="inputContainer">
+          <div class="inputContainer position-relative">
             <i class="fa-solid fa-money-bill-transfer inputIcon"></i>
             {{ render_field(form.banco_emisor, class="inputField", id="banco_emisor",placeholder="Por favor, ingrese el Banco Emisor", placeholder="Ingrese su numero de RIF" ) }}
           </div>
           -->
           
           <h5 class="etiqueta">Empresa Beneficiaria del Pago</h5>
-          <div class="inputContainer">
+          <div class="inputContainer position-relative">
             <i class="fa-solid fa-building-columns inputIcon"></i>
             {{ render_field(form.empresa_beneficiaria, class="inputField", id="empresa_beneficiaria", value="Corimon Pinturas, C.A.", readonly= readonly ) }}
           </div>
           <h5 class="etiqueta">Fecha de depósito</h5>
-        <div class="inputContainer">
+        <div class="inputContainer position-relative">
           <i class="fa-regular fa-calendar inputIcon"></i>
           {{ render_field(form.fecha_deposito, class="inputField", id="fecha", value=Fecha_pago, readonly=readonly  ) }}
         </div>
@@ -70,20 +72,20 @@
     </label>
         </div>
         <h5 class="etiqueta">Cuenta de banco a la cual se realizó el pago</h5>
-        <div class="inputContainer mt-3">
+        <div class="inputContainer position-relative mt-3">
           <div class="mensaje"><p>Por favor, seleccione un tipo de moneda para acceder a este campo</p></div>
           <i class="fa-solid fa-building-columns inputIcon"></i>
           {{ render_field(form.banco_receptor, class="inputField disabled", id="banco_receptor", disabled='disabled' ) }}
           {{ render_field(form.banco_receptor_dolar, class="inputField d-none", id="banco_receptor_dolar") }}
         </div>
 
-        <div class="inputContainer d-flex flex-column">
+        <div class="inputContainer position-relative d-flex flex-column">
           <h5 class="etiqueta">Ingrese el Número de Referencia del pago</h5>
           <i class="fa-solid fa-book-bookmark inputIcon"></i>
           {{ render_field(form.n_deposito, class ="inputField", id="ref", required="", label_attr={"class": "label", "for": "ref"}, value=algo) }}
         </div>
 
-        <div class="inputContainer d-flex flex-column">
+        <div class="inputContainer position-relative d-flex flex-column">
           <h5 class="etiqueta">Cargue el soporte del Pago</h5>
           <i class="fa-regular fa-credit-card inputIcon"></i>
           <input type="file" name="archivo" id ="archivo" class="inputField" style="max-width: 100%;" accept=".jpg,.jpeg,.png,.pdf" required>
@@ -92,7 +94,7 @@
         <div class="row w-100 gap-2">
           <div class="col p-0">
             <h5 class="etiqueta">Monto pagado</h5>
-            <div class="inputContainer z-1">
+            <div class="inputContainer position-relative z-1">
               <i class="bi bi-cash-stack inputIcon"></i>
               <!--
               <i class="fa-solid fa-hand-holding-dollar "></i>-->
@@ -103,7 +105,7 @@
           <div class="col d-none p-0" id="montoDescuento">
             <h5 class="etiqueta">Beneficio por pago en divisa ({{descuento_div}}%)</h5>
             <span id="descuento_div" class="d-none">{{descuento_div }} </span>
-            <div class="inputContainer z-1">
+            <div class="inputContainer position-relative z-1">
               <i class="bi bi-cash-stack inputIcon"></i>
               <!--
               <i class="fa-solid fa-hand-holding-dollar "></i>-->
@@ -344,7 +346,7 @@
         
         
         <div class="tabla-facturas dos w-100 mt-0 p-1" >
-          <div class="inputContainer flex-column mt-2 ">
+          <div class="inputContainer position-relative flex-column mt-2 ">
             
 
             {% set nt.contador = nt.contador + ns.contador%}
@@ -751,12 +753,88 @@
         </div>
       </div>
       </div>
-      <div class=" mb-2 w-100 d-flex justify-content-center" style="margin-top: 25px; padding-bottom: 100px;">
+      <!-- Botón para abrir el modal -->
+      <div class="mb-2 w-100 d-flex justify-content-center" style="margin-top: 25px; padding-bottom: 100px;">
         <p>{{ valorJinja }}</p>
-        <input type ="hidden" name = "csrf_token" value ="{{csrf_token()}}"/>
-        <button class="submit"> <span>Enviar</span>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <button type="button" class="submit"  onclick="openModal()">
+          <span>Enviar</span>
         </button>
       </div>
+
+
+
+      <div id="customModal" class="custom-modal hidden">
+        <div class="custom-modal-content">
+
+            <div class="modal-body">
+              <div class="d-flex align-items-center justify-content-between">
+                <h3 class="modal-title" id="modalLabel">Confirmación de Datos</h3>
+                <button class="cerrar" onclick="closeModal()"> </button>
+              </div>
+
+              <div class="col d-flex flex-column w-100  gap-1">
+      
+                <div class="dato d-flex align-items-center justify-content-start gap-2">
+                  <p class="fw-bold">Rif:</p>
+                  <p id="referenceriafValue"></p>
+                </div>
+                <div class="dato d-flex align-items-center justify-content-start gap-2">
+                  <p class="fw-bold">Fecha del Pago:</p>
+                  <p id="fechaInmodal"></p>
+                </div>
+
+                <div class="dato d-flex align-items-center justify-content-start gap-2">
+                  <p class="fw-bold">Cuenta de Banco:</p>
+                  <p id="BancoInmodal"></p>
+                </div>
+
+                <div class="dato d-flex align-items-center justify-content-start gap-2">
+                  <p class="fw-bold">Número de Referencia:</p>
+                  <p id="referenciaInmodal"></p>
+                </div>
+
+                <div class="dato d-flex align-items-center justify-content-start gap-2">
+                  <p class="fw-bold">Monto Depositado:</p>
+                  <p id="MontoInmodal"></p>
+                </div>
+
+                <div class="dato d-flex align-items-center justify-content-start gap-2">
+                  <p class="fw-bold">Monto Restante para Abono</p>
+                  <p id="disponibleInmodal"></p>
+                </div>
+
+              </div>
+
+
+              <div class="row gap-2 w-100" >
+                <h3 class="modal-title" id="modalLabel">Documentos Seleccionados</h3>
+                <div class="col d-flex align-items-center  gap-2 flex-column " id="columna-facturas">
+                  <h5 class="title fw-bold">Documento.</h5>
+                    <div class="factss">
+
+                    </div>
+                </div>
+
+                <div class="col d-flex align-items-center  gap-2 flex-column" id="columna-montos">
+                  <h5 class="title fw-bold w-100" style="text-align: right;">Monto</h5>
+                  <div class="montoss">
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div class="modalFooter">
+              <button type="button" class="btn btn-outline-secondary" onclick="closeModal()">Cancelar</button>
+              <button type="button" class="btn btn-primary" onclick="submitForm()">Confirmar</button>
+          </div>
+        </div>
+      </div>
+
+    
+
     </form>
   </div>
 
@@ -809,6 +887,7 @@ function validateFile() {
     }
     return true; // Permitir el envío del formulario
 }
+
 
 </script>
 

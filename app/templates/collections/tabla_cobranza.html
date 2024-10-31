@@ -30,7 +30,7 @@
                 
                 <td>{{ "{:,.2f}".format(pago['totfactbs']|abs) }}</td>
             <td style="text-align: center;">
-                <a href="" style="text-align: center;" class="btn {% if  pago['status'] == '' %} bg-secondary text-white {% elif  pago['status'] == 'P' %} bg-warning text-white {% endif %}" >{% if  pago['status'] == '' and pago['blart'] == 'RV' %} Pendiente por pagar {% elif  pago['status'] == 'P' %} Pendiente por validar {% elif pago['blart'] == 'DZ' and 0>pago['dmbtr'] and pago['pagaiva']!= 'S' %}Abono por conciliar{% elif pago['blart'] == 'AB' %}Abono por conciliar{% elif pago['blart'] == 'DA' %}Pendiente por pagar{% elif pago['blart'] == 'DZ' and pago['dmbtr']>0 %}Pendente por pagar {%elif pago['pagaiva']== 'S'  %} Iva por conciliar {% endif %}</a>                   
+                <a href="" style="text-align: center;" class="btn {% if  pago['status'] == '' %} bg-secondary text-white {% elif  pago['status'] == 'P' %} bg-warning text-white {% endif %}" >{% if  pago['status'] == '' and pago['blart'] == 'RV' %} Pendiente por pagar {% elif  pago['status'] == 'P' %} Pendiente por validar {% elif pago['blart'] == 'DZ' and 0>pago['dmbtr'] and pago['pagaiva']!= 'S' %}Abono por conciliar{% elif pago['blart'] == 'AB' %}Abono por conciliar{% elif pago['blart'] == 'DA' %}Pendiente por pagar{% elif pago['blart'] == 'DZ' and pago['dmbtr']>0 %}Pendiente por pagar {%elif pago['pagaiva']== 'S'  %} Iva por conciliar {% endif %}</a>                   
             </td>
         </tr>
             {% endif%}
