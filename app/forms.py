@@ -211,11 +211,11 @@ class RegistroPagoForm(Form):
     factura = BooleanField('Factura') 
     empresa_beneficiaria= StringField("", [validators.DataRequired()])
     """empresa_beneficiaria =SelectField("", [validators.DataRequired()], choices=[("","Seleccione una opción"), 
-                                                   ("CRP", "Corimon Pinturas"),
+                                                ("CRP", "Corimon Pinturas"),
                                                 ("PPV", "Puras Pinturas Venezolanas")])"""
     divisa = RadioField("", [validators.DataRequired()],  choices=[(" $"," $"),("Bs","Bs")])
     comprobante = SelectField("", [validators.DataRequired()], choices = [("",""),("Con Comprobante de Retención","Con Comprobante de Retención"),("Sin Comprobante de Retención","Sin Comprobante de Retención")])
-    monto = FloatField("", [validators.DataRequired()])
+    monto = FloatField("")
     estado = BooleanField("")
     observaciones = TextAreaField("", [validators.DataRequired()])
     imagen= FileField("Imagen")

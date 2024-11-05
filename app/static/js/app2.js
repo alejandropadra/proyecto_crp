@@ -2121,8 +2121,11 @@ function submitForm() {
 
     if (allFilled) {
         document.querySelector("form").submit();
-    } else {
+        console.log("Enviando papa")
 
+    } else {
+        console.log('faltan campos pa')
+        console.log(requiredFields)
         closeModal();
 
         if (firstEmptyField) {

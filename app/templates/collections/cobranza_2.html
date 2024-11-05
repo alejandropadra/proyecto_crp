@@ -109,7 +109,7 @@
               <i class="bi bi-cash-stack inputIcon"></i>
               <!--
               <i class="fa-solid fa-hand-holding-dollar "></i>-->
-              {{ render_field(form.monto, class="inputField", id="monto-descuento", required="", min="0.01", step="0.01" , oninput="validateMonto(this)" , label_attr={"class": "label", "for": "monto"}, readonly=readonly) }}
+              {{ render_field(form.monto, class="inputField", id="monto-descuento", min="0.01", step="0.01" , oninput="validateMonto(this)" , label_attr={"class": "label", "for": "monto"}, readonly=readonly) }}
             </div>
           </div>
         </div>
