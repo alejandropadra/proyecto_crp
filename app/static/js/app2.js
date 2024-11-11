@@ -775,7 +775,7 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
                                     contador ++;
                                     actualizarDiv2.textContent = contador;
                                     facturaParcial = posicionArray;
-                                    colocarReadOnlyFacturasDos(facturaParcial)
+                                    colocarReadOnlyFacturastres(facturaParcial)
                                 }else {
                                     checkbox.checked= false;
                                     sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
@@ -1911,6 +1911,21 @@ function maxLengthCheck(object)
 {
     if (object.value.length > object.maxLength)
         object.value = object.value.slice(0, object.maxLength)
+
+
+
+}
+
+function verifyInput() {
+    const nComprobante = document.getElementById('n_comprobante');
+    
+
+    if (nComprobante.value.length >= nComprobante.minLength) {
+        document.querySelector("form").submit();
+        console.log("Enviando papa");
+    } else {
+        showAlert("Debe ser mayor de 12 Dígitos");
+    }
 }
 
 /*

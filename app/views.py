@@ -334,7 +334,7 @@ def cobranza2():
             blart = request.form.get('inputblart' + str(i))
             if blart:
                 blart_list.append(blart)
-        """
+        """ 
         print(f"facturas: {facturas_list}")
         print('-------------')
         print(f"montos list: {montos_list}")
@@ -877,11 +877,13 @@ def dashboard():
             pass#print('Error en la peticion')
     except:
         response_json4 = []
-
-    ret_pendiente = []
-    for retencion in response_json4:
-        if retencion['status'] == 'P':
-            ret_pendiente.append(retencion)
+    try:
+        ret_pendiente = []
+        for retencion in response_json4:
+            if retencion['status'] == 'P':
+                ret_pendiente.append(retencion)
+    except:
+        response_json4 = [response_json4]
 
     ret_pendiente = len(response_json4)
 
@@ -1468,6 +1470,13 @@ def ret_enviadas():
             pass#print('Error en la peticion')
     except:
         response_json = []
+    try:
+        ret_pendiente = []
+        for retencion in response_json:
+            if retencion['status'] == 'P':
+                ret_pendiente.append(retencion)
+    except:
+        response_json = [response_json]
     return render_template("/collections/ret_enviadas.html",titulo = "Estado Retención", retenciones=response_json)
 
 @page.route("/registrar_retenciones", methods= ["GET", "POST"])

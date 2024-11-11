@@ -2236,3 +2236,76 @@ p{
   align-items: center; 
   gap: 12px;
 }
+
+.contenedor-modulos-grid {
+  background-color: #272727;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  padding: 12px;
+  top: 70px;
+  right: -150px;
+  width: 300px;
+  max-height: 0; 
+  opacity: 0; 
+  border-radius: 18px;
+  z-index: 99;
+  overflow: hidden; 
+  transition: all ease-in-out 0.2s; 
+}
+
+.contenedor-modulos-grid.active {
+  max-height: 300px; 
+  opacity: 1; 
+}
+
+
+#modulos-grid{
+  cursor: pointer;
+}
+
+.modulo{
+  cursor: pointer;
+  max-height: 70px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  text-align: center;
+  color: white !important;
+  padding: 7px 0px;
+  text-decoration: none;
+}
+
+.modulo i{
+  font-size: 35px;
+}
+
+.modulo:hover{
+  background-color: #272727;
+}
+
+
+.custom-scroll::-webkit-scrollbar {
+  width: 8px; 
+}
+
+.custom-scroll::-webkit-scrollbar-button {
+  display: none; 
+}
+
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #1a1919;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: #333; 
+  border-radius: 4px; /
+}
+
+
+.custom-scroll {
+  scrollbar-width: thin; 
+  scrollbar-color: #333 #1a1919; 
+}
+

@@ -87,6 +87,45 @@
                 
               </div>
             </li>
+
+            <li>
+              <div class="position-relative d-none">
+                <div id="modulos-grid" ><i class="bi bi-grid-fill"></i></div>
+              
+                <div class="contenedor-modulos-grid" id="contenedor-modulos-grid">
+                  <div class="row h-100 g-2 p-2 w-100 m-0 custom-scroll" style="background-color: #1a1919; border-radius: 16px; overflow-y:scroll">
+                    <!-- Columna 1 -->
+                    <a class="col-6 d-flex flex-column align-items-center modulo">
+                      <i class="fa-solid fa-money-bill d-flex align-items-center justify-content-center"></i>
+                      <p>Pagos</p>
+                    </a>
+              
+                    <!-- Columna 2 -->
+                    <a class="col-6 d-flex flex-column align-items-center modulo pe-none">
+                      <i class="fa-solid fa-truck-fast d-flex align-items-center justify-content-center"></i>
+                      <p>Pedidos</p>
+                    </a>
+
+                    <a class="col-6 d-flex flex-column align-items-center modulo pe-none">
+                      <i class="fa-solid fa-paint-roller d-flex align-items-center justify-content-center"></i>
+                      <p>Formulación</p>
+                    </a>
+
+                    <a class="col-6 d-flex flex-column align-items-center modulo pe-none">
+                      <i class="fa-solid fa-shirt d-flex align-items-center justify-content-center"></i>
+                      <p>Mercadeo</p>
+                    </a>
+
+                    <a class="col-6 d-flex flex-column align-items-center modulo pe-none">
+                      <i class="fa-solid fa-phone d-flex align-items-center justify-content-center"></i>
+                      <p>Soporte</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              
+
+            </li>
             <li class="">
               <a href="{{ url_for('.modulos')}} ">
                 <i class="fa fa-list-ul"></i>
@@ -357,9 +396,30 @@
         $('.responsive_nav').removeClass('active');
     });
 });
+
 </script>
 
 
+<script>
+  const modulos = document.getElementById('modulos-grid')
+  const contenedorModulos = document.getElementById('contenedor-modulos-grid')
+
+if (modulos) {
+    modulos.addEventListener('click', (event) => {
+        event.stopPropagation(); 
+        contenedorModulos.classList.toggle('active');
+    });
+
+
+    document.addEventListener('click', (event) => {
+        const isDropdownOpen = contenedorModulos.classList.contains('active');
+        
+        if (isDropdownOpen && !contenedorModulos.contains(event.target) && !modulos.contains(event.target)) {
+            contenedorModulos.classList.remove('active');
+        }
+    });
+}
+</script>
 {% block js%}
 
 {% endblock %}
