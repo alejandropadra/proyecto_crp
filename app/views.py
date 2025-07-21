@@ -215,6 +215,8 @@ def cobranza2():
         response_json = response_json[:-1]
         response_json = eval(response_json)
         datos= None
+        if isinstance(response_json, dict):
+            response_json = [response_json]
         for dic in response_json:
             if 'blart' in dic:
                 if dic['blart'] == 'RV':
