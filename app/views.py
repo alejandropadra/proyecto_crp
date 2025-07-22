@@ -1107,6 +1107,100 @@ def historial():
         # Manejar otros métodos HTTP (PUT, DELETE, etc.) si es necesario
         return jsonify({'error': 'Método HTTP no permitido'}), 405
     
+@page.route("/documento-historial/<n>-<i>")
+@login_required
+def doc_historial(n,i):
+    if request.method == 'GET':
+        # Obtener y procesar los datos necesarios para el template
+        sap = ip_fuente+"/sap/bc/rest/zcomdeudores"
+        tiempo, fecha = obtener_hora_minutos_segundos_fecha()
+        cadena = cadena_md5('1200', current_user.rif, tiempo, fecha)
+        headers = {
+            'Accept': 'application/json',
+            'Origin': '',
+            'BUKRS': '1200',
+            'KUNNR': current_user.rif,
+            'BUDAT': fecha,
+            'TIMLO': tiempo,
+            'CORIMON': cadena
+        }
+        args = {
+            'sap-client': '510',
+            'SOCIEDAD': '1200',
+            'CLIENTE': current_user.rif,
+            'MESES': '6'
+        }
+        response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
+        if response.status_code == 200:
+            try:
+                response_json = json.loads(response.content)
+                response_json = str(response_json)
+                response_json = response_json[1:]
+                response_json = response_json[:-1]
+                response_json = eval(response_json)
+                #print(response_json)
+                #print("Exito en la peticion")
+            except:
+                response_json = []
+
+    for dic in response_json:
+        if 'vbeln' in dic and dic['vbeln'] ==n and dic['buzei']==i:
+            datos = dic
+                #print(dic)
+    #print(datos['vbeln'] )
+    
+    return render_template("collections/info_factura.html", titulo = "Factura",datos=datos)
+
+@page.route('/verificar-factura/<factura_id>-<i>-<p>')
+def verificar_factura(factura_id,i,p):
+    try:
+        sap = ip_fuente+"/sap/bc/rest/zvistafactdigit"
+        tiempo, fecha = obtener_hora_minutos_segundos_fecha()
+        cadena = cadena_md5('1200',current_user.rif,tiempo,fecha)
+        headers = {
+        'Accept': 'application/json',
+        'Origin':'',
+        'BUKRS': '1200',
+        'KUNNR':current_user.rif,
+        'BUDAT':fecha,
+        'TIMLO':tiempo,
+        'CORIMON':cadena
+        }
+        args = {
+            'sap-client':'510',
+            'SOCIEDAD': '1200',
+            'FACTURA':factura_id,
+        }
+        response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=False)
+
+        response.raise_for_status()  # Lanza excepción para códigos 4XX/5XX
+        
+        data = response.json()
+        
+        # 2. Verificar si existe URL en la respuesta
+        if data.get('url'):  # Cambia 'url_factura' por el campo real
+            # 3. Redirigir a la URL externa
+            return redirect(data['url'], code=302)
+        else:
+            # 4. Redirigir a ruta interna alternativa
+            if p == "p":
+                return redirect(url_for('.documento',n=factura_id,i=i))
+            elif p =="h":
+                return redirect(url_for('.doc_historial',n=factura_id,i=i))
+            elif p=="c":
+                return redirect(url_for('.doc_certificado',n=factura_id,i=i))
+            
+    except requests.exceptions.RequestException as e:
+        try:
+            if p == "p":
+                return redirect(url_for('.documento',n=factura_id,i=i))
+            elif p =="h":
+                return redirect(url_for('.doc_historial',n=factura_id,i=i))
+            elif p=="c":
+                return redirect(url_for('.doc_certificado',n=factura_id,i=i))
+        except:
+            return "Información no disponible"
+
 @page.route("/certificados-pendientes")
 @login_required
 def certificados_pendientes():

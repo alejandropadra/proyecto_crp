@@ -21,7 +21,7 @@
             {% if pago['blart'] != 'AD' %}
             {% if pago['blart'] != 'ZD' %}
             {% if pago['blart'] != 'DA' %}
-            <tr onclick="location.href='{{ url_for('.documento',  n=pago['vbeln'], i=pago['buzei'] )}}'"; class="celda text-center"  style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Click para mas detalles">
+            <tr onclick="window.open('{{ url_for('.verificar_factura', factura_id=pago['vbeln'], i=pago['buzei'],p='p') }}', '_blank')"; class="celda text-center"  style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Click para mas detalles">
                 <td class="">{{pago['fkdat']}} </td>
                 <td>{{pago['fecvencr']}}</td>
                 <td>{% if pago['blart'] == 'DZ' and 0>pago['dmbtr'] and pago["pagaiva"]!='S' %}Abono{% elif pago['blart'] == 'DZ' and pago['dmbtr']>0 %}Iva por pagar{% elif pago['blart'] == 'DZ' and pago['pagaiva']=='S'%}Pago Iva{% elif pago['blart'] == 'RV' and pago['dmbtr']>0 %}Factura{% elif pago['blart'] == 'RV' and 0>pago['dmbtr'] %}Nota de Crédito {% elif pago['blart']=='AB' %}Abono{% endif %}</td>

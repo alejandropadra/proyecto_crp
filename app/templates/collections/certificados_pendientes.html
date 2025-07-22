@@ -17,7 +17,7 @@
         <tbody>
             {% for pago in pagos %}
                 
-            <tr class="celda text-center"  style="cursor:pointer;">
+            <tr onclick="window.open('{{ url_for('.verificar_factura', factura_id=pago['vbeln'], i='000',p='h') }}', '_blank')"; class="celda text-center"  style="cursor:pointer;" data-toggle="tooltip" data-placement="top" title="Click para mas detalles">
                 {% for clave, valor in pago.items() %}
                 {% if clave == 'vbeln'%}
                 <td>{{valor}}</td>

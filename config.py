@@ -1,4 +1,5 @@
 local= 'mysql://root:Di.IoT4.0@localhost/cobranza'
+#local= 'mysql://Di:DiIoT4.0@localhost/app_crp'
 server = 'mysql://apadra:Di.2824@localhost/app_crp'
 
 class Config:

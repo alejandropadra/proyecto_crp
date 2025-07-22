@@ -34,7 +34,7 @@
             {% if pago['blart'] !='AB'%}
             {% if pago['blart'] != 'ZD' %}
             {% if pago['blart'] != 'DA' %}
-            <tr class="celda text-center"  style="cursor:pointer;" >
+            <tr onclick="window.open('{{ url_for('.verificar_factura', factura_id=pago['vbeln'], i=pago['buzei'], p='h') }}', '_blank')"; class="celda text-center"  style="cursor:pointer;" >
                 <td >{{pago['vbeln']}}</td>
                 <td>{% if pago['blart'] == 'DZ' %}Abono{% elif pago['blart'] == 'RV' and pago['dmbtr']>0 %}Factura{% elif pago['blart'] == 'RV' and 0>pago['dmbtr'] %}Nota de Crédito{% else %}{{pago['blart']}}{% endif %}</td>
                 <td class="">{{pago['fkdat']}} </td>
