@@ -49,10 +49,21 @@
 
 {% block js%}
 <script>
-    // Eliminar las clases predeterminadas de los botones
-    $.fn.dataTable.Buttons.defaults.dom.button.className = '';
+
+     // Función para obtener el valor de 'filtro' de la URL
+    function getFilterFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('filtro');
+    }
     
     $(document).ready(function() {
+        // Obtener el valor de 'filtro' de la URL
+        var filterValue = getFilterFromUrl();
+        console.log(filterValue)
+    
+        // Eliminar las clases predeterminadas de los botones
+        $.fn.dataTable.Buttons.defaults.dom.button.className = '';
+    
         var table = $('#example').DataTable({
             lengthChange: false,
             buttons: [
@@ -76,9 +87,19 @@
             responsive: true
         });
     
+        // Aplicar el filtro de búsqueda después de que el DataTable esté inicializado
+        if (filterValue) {
+            table.search(filterValue).draw();
+        }
+    
         table.buttons().container()
-            .appendTo('#example_wrapper .col-md-6:eq(0)');
+        .appendTo('#example_wrapper .col-md-6:eq(0)');
     });
+    
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+
     
     
     </script>

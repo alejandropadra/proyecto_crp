@@ -175,7 +175,7 @@
                       <div class="factura mb-2 p-3 w-100 d-flex justify-content-center w-50"> 
                         {{na.contador}}
                         <div class="d-flex align-items-center justify-content-center col " id="factura_comparar">
-                          <h4 class="texto-mid w-100 text-center m-0 p-0"><strong>  Iva por pagar: </strong> {{documento['sgtxt']}}</h4>
+                          <h4 class="texto-mid w-100 text-center m-0 p-0"><strong>  IVA por pagar: </strong> {{documento['sgtxt']}}</h4>
                           <span id="vbelnNV{{ na.contador }}" class="d-none" name="fact[]">{{documento['vbeln'] }}  </span>
                           <span id="fkdatNV{{ na.contador }}" class="d-none">{{documento['fkdat'] }} </span>
                           <span id="belnr1NV{{ na.contador }}" class="d-none">{{documento['belnr1'] }} </span>
@@ -217,7 +217,7 @@
       <div class=" mb-2 w-100 d-flex justify-content-center" style="margin-top: 25px; padding-bottom: 100px;">
         <p>{{ valorJinja }}</p>
         <input type ="hidden" name = "csrf_token" value ="{{csrf_token()}}"/>
-        <button type="button" class="submit"  onclick="openModal()">
+        <button type="button" class="submit" id="buton_iva">
           <span>Enviar</span>
         </button>
       </div>

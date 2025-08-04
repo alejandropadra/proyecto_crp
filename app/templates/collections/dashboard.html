@@ -152,42 +152,52 @@
             <h3>Documentos</h3>
           </div>
           <div class="d-flex flex-column gap-2 pt-3 ">
-            <a class="elemento-dentro" href="{{ url_for('.lista_cobranza', filtro='Pendiente por pagar') }}"  style="cursor: pointer;"">
+            <a class="elemento-dentro" href="{{ url_for('.lista_cobranza', filtro='Pendiente por pagar') }}" style="cursor: pointer;">
               <div class="d-flex align-items-center gap-1">
-                <div class="icono azul_byk"> <p>  <i class="bi bi-cash"></i> </p></div>
+                <div class="icono azul_byk"> <p> <i class="bi bi-cash"></i> </p></div>
                 <h2 class="m-0">Por pagar</h2> 
               </div>
+
               {% set na = namespace(contador=0) %}
-                {% for factura in facturas %}
-                  {% if 'blart' in factura %}
-                    {%  if factura['blart'] == 'RV' and factura['status']=='' %}
+              {% for factura in facturas %}
+                {% if 'blart' in factura and 'dmbtr' in factura %}
+                  {% if (factura['blart'] == 'RV' and factura['status'] == '') 
+                        or factura['blart'] == 'DA' 
+                        or (factura['blart'] == 'DZ' and factura['dmbtr'] > 0) %}
                     {% set na.contador = na.contador + 1 %}
                   {% endif %}
                 {% endif %}
-            {% endfor %}
+              {% endfor %}
+
               <div class="d-flex justify-content-center align-items-center h-50">
-                  <p class="my-0 valor" id="cantidadfacts" style="margin-right: 14px;">{{ na.contador }}</p>
+                <p class="my-0 valor" id="cantidadfacts" style="margin-right: 14px;">{{ na.contador }}</p>
               </div>
             </a>
+
             
             <a class="elemento-dentro" href="{{ url_for('.lista_cobranza', filtro='Abono') }}">
               <div class="d-flex align-items-center gap-1">
                 <div class="icono amarillo_kbrn"> <p>  <i class="bi bi-piggy-bank"></i> </p></div>
                 <h2 class="m-0">Abono por conciliar</h2> 
               </div> 
-  
+
               {% set nb = namespace(contador=0) %}
               {% for factura in facturas %}
-                {% if 'blart' in factura %}
-                  {%  if (factura['blart'] == 'DZ' or factura['blart'] == 'AB') and factura['pagaiva']!='S' %}
-                      {% set nb.contador = nb.contador + 1 %}
+                {% if 'blart' in factura and 'dmbtr' in factura %}
+                  {% if (factura['blart'] == 'AB') 
+                        or (factura['blart'] == 'DZ' 
+                            and factura['dmbtr'] < 0 
+                            and factura['pagaiva'] != 'S') %}
+                    {% set nb.contador = nb.contador + 1 %}
                   {% endif %}
-                  {% endif %}
+                {% endif %}
               {% endfor %}
+
               <div class="d-flex justify-content-center align-items-center h-50">
-                  <p class="my-0 valor" id="cantidadfacts" style="margin-right: 14px;">{{ nb.contador }}</p>
+                <p class="my-0 valor" id="cantidadfacts" style="margin-right: 14px;">{{ nb.contador }}</p>
               </div>
             </a>
+
           </div>
         </div>
 
@@ -203,7 +213,7 @@
                 <div class="icono azul_byk "> <p>  <i class="bi bi-receipt"></i> </p></div>
                 <h2 class="m-0">Facturas</h2> 
               </div>
-              
+              <input type="hidden" name="" id="facturas" value="{{facturas}}">
               {% set nd = namespace(contador=0) %}
               {% for factura in facturas %}
                 {% if 'status' in factura %}
@@ -216,7 +226,7 @@
                   <p class="my-0 valor" id="cantidadfacts" style="margin-right: 14px;">{{ nd.contador }}</p>
               </div>
             </a>
-            
+
             <a class="elemento-dentro "  href="{{ url_for('.lista_cobranza', filtro='Iva validar') }}">
               <div class="d-flex align-items-center gap-1">
                 <div class="icono amarillo_kbrn"> <p>  <i class="bi bi-bank"></i> </p></div>
@@ -259,14 +269,14 @@
               </div>
             </a>
             
-            <a class="elemento-dentro "  href="{{ url_for('.ret_enviadas') }}">
+            <a class="elemento-dentro "  href="{{ url_for('.ret_enviadas', filtro='Pendiente') }}">
               <div class="d-flex align-items-center gap-1">
                 <div class="icono amarillo_kbrn"> <p>  <i class="bi bi-ui-checks"></i> </p></div>
                 <h2 class="m-0">Por verificar</h2> 
               </div>
   
               <div class="d-flex justify-content-center align-items-center h-50">
-                  <p class=" my-0 valor" id="cantidadfacts" style="margin-right: 14px;">{{ret_pendiente}}</p>
+                  <p class=" my-0 valor" id="cantidadfacts" style="margin-right: 14px;">{{contador_retenciones_pendientes}}</p>
               </div>
             </a>
           </div>

@@ -1,3 +1,4 @@
+
 // Declaración de elementos del DOM
 const check3 = document.getElementById('check3');
 const check2 = document.getElementById('check2');
@@ -34,6 +35,19 @@ function reiniciarObservador() {
         }
     });
 }
+
+function extraerMonto(texto) {
+    const soloNumeros = texto.replace(/[^\d.,-]/g, '');
+    const sinComas = soloNumeros.replace(/,/g, '');
+    const valorNumerico = parseFloat(sinComas);
+    if (!isNaN(valorNumerico)) {
+        return redondear(valorNumerico, 2);
+    }
+    
+    console.warn('No se pudo extraer el monto de:', texto);
+    return 0;
+}
+
 
 function monitorearActualizaciones(elemento, callback) { 
     if (!elemento) {
@@ -87,7 +101,7 @@ const estado = {
     transaccion: '',
     checkActivo: null,
     casoActivo: null,
-    setTransaccion(tipo, checkbox, caso) {  // Añadimos 'caso' como parámetro
+    setTransaccion(tipo, checkbox, caso) {  
         this.transaccion = tipo;
         this.checkActivo = checkbox;
         this.casoActivo = caso;
@@ -96,7 +110,7 @@ const estado = {
     reset() {
         this.transaccion = '';
         this.checkActivo = null;
-        removeCustomEventListeners(this.casoActivo);  // Pasamos el caso activo
+        removeCustomEventListeners(this.casoActivo);  
         this.casoActivo = null;
     }
 };
@@ -407,6 +421,7 @@ function casoUnoTresInputHandler(event) {
     // Lógica específica para cada caso
     if (estado.casoActivo === 1) {
         const montoElements = obtenerElementosMonto(checkboxes, montodpp, montoNormal);
+
         procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas, estado.transaccion);
     } else if (estado.casoActivo === 3) {
         actualizarDiv.textContent = `${montoValue} ${estado.transaccion}`;
@@ -418,8 +433,6 @@ function casoUnoTresInputHandler(event) {
 
 
 //----------------------> A partir de aquí se describen las funciones para procesar las facturas  
-
-
 
 
 function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , transaccion) {
@@ -472,11 +485,14 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
         const montosElement = label.querySelector('.montos');
         montosElement.classList.add('evaluando');
         const elementoDiv = montoElements[i];
-        const textoDelElemento = elementoDiv ? elementoDiv.textContent : '';
-        const valorSinSimbolo = textoDelElemento.slice(0, -2);
-        const valorNumerico = parseFloat(valorSinSimbolo.replace(',', ''));
-        const montoFactura = redondear(valorNumerico, 2); // Redondear a 2 decimales
+        console.log(elementoDiv)
 
+        const textoDelElemento = elementoDiv ? elementoDiv.textContent.trim() : '';
+        console.log(textoDelElemento);
+            
+        // Método mejorado para extraer el monto
+        const montoFactura = extraerMonto(textoDelElemento);
+        console.log(montoFactura);
         checkbox.checked = false;
         label.classList.remove('listo');
 
@@ -485,11 +501,8 @@ function procesarFacturas(checkboxes, montoElements, montoValue, sumaFacturas , 
         const belnr1 = document.getElementById('belnr1' + (i + 1))?.textContent;
         const buzei = document.getElementById('buzei' + (i + 1))?.textContent;
         const blart = document.getElementById('blart' + (i + 1))?.textContent;
-        console.log(blart)
+
         const dif = redondear(montoValue - sumaFacturas, 2); // Redondear a 2 decimales
-        console.log(vblen + 'de la ' + (i+1))
-        console.log(checkboxes.length)
-        
 
         if (sumaFacturas + montoFactura <= montoValue) {
             
@@ -661,8 +674,7 @@ function redondear(valor, decimales) {
 
 function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal, transaccion, variableConta) {
     console.log('se ejecuta el caso 2')
-    console.log(checkboxes)
-    console.log(montoValue)
+
     let betrsdiv = document.getElementById('betrsdiv');
     let betrs = document.getElementById('betrs');
     let posicionHastaAhora =0;
@@ -677,7 +689,7 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
     const checkboxesArray = Array.from(checkboxes);
 
     checkboxesArray.forEach(checkbox => {
-        console.log(checkbox)
+
         checkbox.removeEventListener('change', checkbox.changeHandler);
 
         checkbox.changeHandler = function() {
@@ -691,11 +703,17 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
                 if (montosElement) {
                     montosElement.classList.add('evaluando');
                 }
+            
+        // Método mejorado para extraer el monto
+
+        checkbox.checked = false;
+        label.classList.remove('listo');
                 const elementoMonto = obtenerElementoMontoDos(this, montodpp, montoNormal);
-                const textoDelElemento = elementoMonto ? elementoMonto.textContent : '';
-                const valorSinSimbolo = textoDelElemento.slice(0, -2);
-                const valorNumerico = parseFloat(valorSinSimbolo.replace(',', ''));
-                const montoFactura = valorNumerico;
+                const textoDelElemento = elementoMonto ? elementoMonto.textContent.trim() : '';
+
+                const montoFactura = extraerMonto(textoDelElemento);
+                console.log(montoFactura);
+                const valorNumerico = montoFactura
                 sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas + parseFloat(montoFactura)).toFixed(2));
                 label.classList.remove('listo');
             
@@ -733,6 +751,7 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
                         actualizarDiv2.textContent = contador;
                     } else {
                         console.log(betrsdiv.textContent)
+                        
                             const montoFaltante = (sumaFacturasSeleccionadas - montoValue).toFixed(2);
                             console.log(`falta para compensar la factura  un total de ${montoFaltante}`)
                             if (estado.transaccion == "$"){
@@ -751,6 +770,7 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
                                     facturaParcial = posicionArray;
                                     colocarReadOnlyFacturasDos(facturaParcial)
                                 }else {
+                                    showAlertGrandes('El monto de esta factura es mayor al monto disponible para abonar, por lo tanto no se puede seleccionar', 'error')
                                     checkbox.checked= false;
                                     sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
                                     
@@ -777,6 +797,7 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
                                     facturaParcial = posicionArray;
                                     colocarReadOnlyFacturastres(facturaParcial)
                                 }else {
+                                    showAlertGrandes('El monto de esta factura es mayor al monto disponible para abonar, por lo tanto no se puede seleccionar', 'error')
                                     checkbox.checked= false;
                                     sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
                                     
@@ -869,7 +890,6 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
 
 
 function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal, transaccion) {
-    console.log('sssssss')
     quitarReadOnlyYDisabledFacturas();
     const checksSeleccionados = [];
     let abonoRealizado = false;
@@ -931,9 +951,9 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                     return; // Si no hay elemento, salir de la función para evitar errores
                 }
                 const textoDelElemento = elementoMonto ? elementoMonto.textContent.trim() : '';
-                const valorLimpio = textoDelElemento.replace(/[^0-9.]/g, '')
-                const valorNumerico = parseFloat(valorLimpio);
-                const montoFactura = valorNumerico;
+                const montoFactura = extraerMonto(textoDelElemento);
+                console.log(montoFactura);
+                const valorNumerico = montoFactura
                 sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas + parseFloat(montoFactura)).toFixed(2));
                 label.classList.remove('listo');
             
@@ -970,6 +990,7 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                         contador ++;
                         actualizarDiv2.textContent = contador;
                     } else {
+                        
                             if (estado.transaccion == ""){
                                 estado.transaccion= transaccion;
                             }
@@ -990,7 +1011,9 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                                     actualizarDiv2.textContent = contador;
                                     facturaParcial = posicionArray;
                                     colocarReadOnlyFacturasDos(facturaParcial)
+                                    showAlertGrandes('Monto agotado, no podrá seleccionar más documentos', 'atencion')
                                 }else {
+                                    showAlertGrandes('El monto de esta factura es mayor al monto disponible para abonar, por lo tanto no se puede seleccionar', 'error')
                                     console.log('no')
                                     checkbox.checked= false;
                                     sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
@@ -1018,7 +1041,9 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                                     actualizarDiv2.textContent = contador;
                                     facturaParcial = posicionArray;
                                     colocarReadOnlyFacturasDos(facturaParcial)
+                                    showAlertGrandes('Monto agotado, no podrá seleccionar más documentos', 'atencion')
                                 }else {
+                                    showAlertGrandes('El monto de esta factura es mayor al monto disponible para abonar, por lo tanto no se puede seleccionar', 'error')
                                     console.log('no')
                                     checkbox.checked= false;
                                     sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
@@ -1278,7 +1303,10 @@ function obtenerElementosMonto(checkboxes, dpp, normal) {
     const montoElements = [];
     for (let i = 0; i < checkboxes.length; i++) {
         const label = checkboxes[i].parentNode;
-        const montobsdppElement = label.querySelector(dpp);
+        const montobsdppElement = label.querySelector(dpp);       
+
+
+
         if (montobsdppElement) {
             montoElements.push(montobsdppElement);
         } else {
@@ -1582,6 +1610,204 @@ document.addEventListener('DOMContentLoaded', function() {//->Esto verifica si s
         });
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function showAlertGrandes(message, category = 'success') {
+
+    const alertContainer = document.createElement('div');
+    alertContainer.className = 'contenedor-ShowAlert ';
+    alertContainer.style.zIndex = '100000';
+    alertContainer.style.left = '50%';
+    alertContainer.style.transform = 'translateX(-50%)';
+
+    if (category === 'error') {
+        alertContainer.classList.add('error');
+
+    } else if (category === 'atencion') {
+        alertContainer.classList.add('atencion');
+
+    } else {
+        alertContainer.classList.add('bien');
+    }
+    
+    const alertWrapper = document.createElement('div');
+    alertWrapper.className = 'd-flex flex-column gap-2';
+    alertWrapper.style.width = 'auto';
+    alertWrapper.style.maxWidth = '24rem'; 
+    alertWrapper.style.fontSize = '0.625rem'; 
+    
+
+    if (window.innerWidth >= 576) {
+        alertWrapper.style.maxWidth = '32rem'; 
+        alertWrapper.style.fontSize = '0.75rem'; 
+    }
+    
+    const alertBox = document.createElement('div');
+    alertBox.className = 'error-alert d-flex align-items-start w-100 rounded-3 px-2 py-3';
+    alertBox.style.cursor = 'default';
+    alertBox.style.minHeight = '3rem'; // min-h-12 (48px)
+    alertBox.style.backgroundColor = 'var(--azul-dark)'; // Mantener color personalizado
+    
+    // Media query para sm breakpoint
+    if (window.innerWidth >= 576) {
+        alertBox.style.minHeight = '3.5rem'; // min-h-14 (56px)
+    }
+    
+    const contentWrapper = document.createElement('div');
+    contentWrapper.className = 'd-flex gap-3 align-items-start justify-content-between w-100';
+    
+    // Contenedor del icono (fijo en la parte superior)
+    const iconContainer = document.createElement('div');
+    let iconClasses = 'flex-shrink-0 mt-1 p-1 rounded-2';
+    let iconStyles = 'background: rgba(255, 255, 255, 1); backdrop-filter: blur(12px);';
+    
+    if (category === 'error') {
+        iconContainer.className = iconClasses;
+        iconContainer.style.cssText = iconStyles + 'color: #d65563;';
+    } else if (category === 'atencion') {
+        iconContainer.className = iconClasses;
+        iconContainer.style.cssText = iconStyles + 'color: #ffc107;';
+    } else {
+        iconContainer.className = iconClasses;
+        iconContainer.style.cssText = iconStyles + 'color: #4caf50;';
+    }
+    
+    const iconSpan = document.createElement('span');
+    if (category === 'error') {
+        iconSpan.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-alert-icon lucide-circle-alert"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>`;
+    } else if (category === 'atencion') {
+        iconSpan.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert-icon lucide-triangle-alert"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>`;
+    } else {
+        iconSpan.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5"/></svg>`;
+    }
+    
+    // Contenido del mensaje (expandible)
+    const messageContainer = document.createElement('div');
+    messageContainer.className = 'd-flex flex-column flex-grow-1';
+    messageContainer.style.minWidth = '0';
+    
+    const titleDiv = document.createElement('div');
+    const titleText = document.createElement('h4');
+    titleText.className = 'text-white fw-medium mb-2';
+    
+    if (category === 'error') {
+        titleText.textContent = 'Error:';
+    } else if (category === 'atencion') {
+        titleText.textContent = 'Atención:';
+    } else {
+        titleText.textContent = 'Proceso Exitoso:';
+    }
+    
+    const messageDiv = document.createElement('div');
+    const messageText = document.createElement('p');
+    messageText.className = 'text-white';
+    messageText.style.fontSize = '0.875rem'; // text-sm
+    messageText.style.lineHeight = '1.625'; // leading-relaxed
+    messageText.style.whiteSpace = 'pre-line';
+    messageText.style.wordBreak = 'break-word';
+    messageText.textContent = message;
+    
+    // Botón de cerrar (fijo en la esquina superior)
+    const closeButton = document.createElement('button');
+    closeButton.className = 'd-flex close-btn flex-shrink-0 btn p-0 border-0 text-white';
+    
+    const closeIconContainer = document.createElement('div');
+    let closeIconClasses = 'p-1 rounded-2 text-white';
+    let closeIconStyles = 'background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); transition: background-color 0.15s ease-in-out;';
+    
+    if (category === 'error') {
+        closeIconContainer.className = closeIconClasses;
+        closeIconContainer.style.cssText = closeIconStyles + 'color: #d65563;';
+    } else if (category === 'atencion') {
+        closeIconContainer.className = closeIconClasses;
+        closeIconContainer.style.cssText = closeIconStyles + 'color: #ffc107;';
+    } else {
+        closeIconContainer.className = closeIconClasses;
+        closeIconContainer.style.cssText = closeIconStyles + 'color: #4caf50;';
+    }
+    
+    // Hover effect
+    closeIconContainer.addEventListener('mouseenter', () => {
+        closeIconContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+    });
+    closeIconContainer.addEventListener('mouseleave', () => {
+        closeIconContainer.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+    });
+    
+    const closeIconSpan = document.createElement('span');
+    closeIconSpan.className = 'material-symbols-rounded';
+    closeIconSpan.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+    
+    // Ensamblar los elementos
+    iconContainer.appendChild(iconSpan);
+    titleDiv.appendChild(titleText);
+    messageDiv.appendChild(messageText);
+    messageContainer.appendChild(titleDiv);
+    messageContainer.appendChild(messageDiv);
+    closeIconContainer.appendChild(closeIconSpan);
+    closeButton.appendChild(closeIconContainer);
+    
+    contentWrapper.appendChild(iconContainer);
+    contentWrapper.appendChild(messageContainer);
+    contentWrapper.appendChild(closeButton);
+    
+    alertBox.appendChild(contentWrapper);
+    alertWrapper.appendChild(alertBox);
+    alertContainer.appendChild(alertWrapper);
+    
+    // Agregar al DOM
+    document.body.appendChild(alertContainer);
+    
+    // Animación de entrada
+    alertContainer.style.opacity = '0';
+    alertContainer.style.transform = 'translateX(-50%) translateY(-20px)';
+    alertContainer.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
+    
+    setTimeout(() => {
+        alertContainer.style.opacity = '1';
+        alertContainer.style.transform = 'translateX(-50%) translateY(0)';
+    }, 10);
+    
+    // Event listener para cerrar
+    closeButton.addEventListener('click', () => {
+        alertContainer.style.opacity = '0';
+        alertContainer.style.transform = 'translateX(100%) translateY(0)';
+        setTimeout(() => {
+            if (document.body.contains(alertContainer)) {
+                document.body.removeChild(alertContainer);
+            }
+        }, 300);
+    });
+    
+    // Auto-cerrar después de 8 segundos (más tiempo para mensajes largos)
+    setTimeout(() => {
+        if (document.body.contains(alertContainer)) {
+            alertContainer.style.opacity = '0';
+            alertContainer.style.transform = 'translateX(-50%) translateY(-20px)';
+            setTimeout(() => {
+                if (document.body.contains(alertContainer)) {
+                    document.body.removeChild(alertContainer);
+                }
+            }, 300);
+        }
+    }, 8000);
+}
 
 
 document.addEventListener('DOMContentLoaded', function() {//->Esto verifica si se ha ingresado un monto para mostrar el mensaje de indicación
@@ -2005,14 +2231,32 @@ function iva() {
 
     // Llamar a casoTres con los elementos relevantes
     casoTres(bancoReceptor, mensaje, monto, checkboxes, transaccion);
+
 }
 
 // Llamar a la función para inicializar
 
-const tituloIva = document.getElementById('titulo')
-if (tituloIva){
-    iva()
-}
+const tituloIva = document.getElementById('titulo');
+document.addEventListener('DOMContentLoaded', function() {
+
+    if (tituloIva){
+        iva()
+        const buton_iva = document.getElementById('buton_iva');
+        buton_iva.addEventListener('click', (event)=>{
+            event.preventDefault()
+            const listos = document.querySelectorAll('.listo');
+            if (listos.length == 0){
+                showAlertGrandes("Debe seleccionar un IVA para poder continuar con el proceso", "atencion")
+                return;
+            }else{
+                openModal()
+            }
+        })
+    }
+
+
+})
+
 
 
 document.addEventListener('DOMContentLoaded', function() {

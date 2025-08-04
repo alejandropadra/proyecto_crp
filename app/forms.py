@@ -162,7 +162,6 @@ class RegistroPagoForm(Form):
                                         ("Deposito en efectivo","Deposito en efectivo"),]) 
     banco_receptor = SelectField("", choices = [("","Seleccione una opción"),("0108-0071-41-0100251970","BANCO PROVINCIAL, 0108-0071-41-0100251970"),
                                                ("0102-0234-52-0000049359","BANCO DE VENEZUELA, 0102-0234-52-0000049359"),
-                                               ("0102-0310-48-0000027559", "BANCO DE VENEZUELA , 0102-0310-48-0000027559"),
                                                ("0114-0172-41-1720022687 ","BANCARIBE, 0114-0172-41-1720022687 "),
                                                ("0134-0031-85-0311052683", "BANESCO, 0134-0031-85-0311052683"),
                                                ("0191-0050-22-2150018612", "BANCO NACIONAL DE CRÉDITO, 0191-0050-22-2150018612"),
@@ -183,7 +182,6 @@ class RegistroPagoForm(Form):
                                                 ("1120109001","MERCANTIL PANAMA")])
     banco_receptor_ppv = SelectField("",[validators.DataRequired()], choices = [("","Seleccione una opción"),("BANCO PROVINCIAL, 0108-0071-41-0100251970","BANCO PROVINCIAL, 0108-0071-41-0100251970"),
                                                ("BANCO DE VENEZUELA, 0102-0234-52-0000049359","BANCO DE VENEZUELA, 0102-0234-52-0000049359"),
-                                               ("BANCO DE VENEZUELA , 0102-0310-48-0000027559", "BANCO DE VENEZUELA , 0102-0310-48-0000027559"),
                                                ("BANCARIBE, 0114-0172-41-1720022687 ","BANCARIBE, 0114-0172-41-1720022687 "),
                                                ("BANESCO, 0134-0031-85-0311052683", "BANESCO, 0134-0031-85-0311052683"),
                                                ("BANCO NACIONAL DE CRÈDITO, 0191-0050-22-2150018612", "BANCO NACIONAL DE CRÈDITO, 0191-0050-22-2150018612"),

@@ -2309,3 +2309,30 @@ p{
   scrollbar-color: #333 #1a1919; 
 }
 
+.contenedor-ShowAlert{
+  position: fixed;
+  top: 0;
+  margin-top: 1rem;
+
+  border-radius: 16px;
+}
+
+
+.contenedor-ShowAlert.error{
+  background: -webkit-linear-gradient(to right, #f45c43, #eb3349);
+  background: linear-gradient(to right, #f45c43, #eb3349);
+    box-shadow: 0 0px 10px #de1c3280;
+}
+
+.contenedor-ShowAlert.atencion{
+
+    background: -webkit-linear-gradient(to right, #ff9a56, #ffcc02);
+    background: linear-gradient(to right, #ff9a56, #ffcc02);
+    box-shadow: 0 0px 10px #ff9a5680;
+}
+
+.contenedor-ShowAlert.bien{
+  background: -webkit-linear-gradient(to right, #56ab2f, #a8e6cf);
+  background: linear-gradient(to right, #56ab2f, #a8e6cf);
+  box-shadow: 0 0px 10px #56ab2f80;
+}

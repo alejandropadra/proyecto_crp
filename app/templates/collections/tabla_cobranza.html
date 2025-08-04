@@ -17,7 +17,9 @@
             </tr>
         </thead>
         <tbody>
+
             {% for pago in pagos %}
+
             {% if pago['blart'] != 'AD' %}
             {% if pago['blart'] != 'ZD' %}
             {% if pago['blart'] != 'DA' %}
@@ -29,10 +31,55 @@
                 <td>{{ "{:,.2f}".format(pago['dmbtr']|abs) }} </td>
                 
                 <td>{{ "{:,.2f}".format(pago['totfactbs']|abs) }}</td>
-            <td style="text-align: center;">
-                <a href="" style="text-align: center;" class="btn {% if  pago['status'] == '' %} bg-secondary text-white {% elif  pago['status'] == 'P' %} bg-warning text-white {% endif %}" >{% if  pago['status'] == '' and pago['blart'] == 'RV' %} Pendiente por pagar {% elif  pago['status'] == 'P' %} Pendiente por validar {% elif pago['blart'] == 'DZ' and 0>pago['dmbtr'] and pago['pagaiva']!= 'S' %}Abono por conciliar{% elif pago['blart'] == 'AB' %}Abono por conciliar{% elif pago['blart'] == 'DA' %}Pendiente por pagar{% elif pago['blart'] == 'DZ' and pago['dmbtr']>0 %}Pendiente por pagar {%elif pago['pagaiva']== 'S'  %} Iva por conciliar {% endif %}</a>                   
-            </td>
-        </tr>
+
+                <!-- estaba asi antes
+                <td style="text-align: center;">
+                    <a href="" style="text-align: center;" class="btn {% if  pago['status'] == '' %} bg-secondary text-white {% elif  pago['status'] == 'P' %} bg-warning text-white {% endif %}" >{% if  pago['status'] == '' and pago['blart'] == 'RV' %} Pendiente por pagar {% elif  pago['status'] == 'P' %} Pendiente por validar {% elif pago['blart'] == 'DZ' and 0>pago['dmbtr'] and pago['pagaiva']!= 'S' %}Abono por conciliar{% elif pago['blart'] == 'AB' %}Abono por conciliar{% elif pago['blart'] == 'DA' %}Pendiente por pagar{% elif pago['blart'] == 'DZ' and pago['dmbtr']>0 %}Pendiente por pagar {%elif pago['pagaiva']== 'S'  %} Iva por conciliar {% endif %}</a>                   
+                </td>-->
+                <td style="text-align: center;">
+
+                    <!--Cuando la etiqueta sea un documento por pagar, se cumple la siguiente condición-->
+                    {% set es_por_pagar = (pago['status'] == '' and pago['blart'] == 'RV') 
+                                            or (pago['blart'] == 'DA') 
+                                            or (pago['blart'] == 'DZ' and pago['dmbtr'] > 0) %}
+
+                    <!--Cuando la etiqueta sea que es un IVA Por validar-->
+                    {% set es_por_validar = pago['status'] == 'P' %}
+
+                    <!--Cuando es abono se cumple esta condición pa-->
+                    {% set es_abono = (pago['blart'] == 'AB') or (pago['blart'] == 'DZ' and pago['dmbtr'] < 0 and pago['pagaiva'] != 'S') %}
+                
+                    <!--Cuando la etiqueta sea que es un IVA Por conciliar-->
+                    {% set es_iva_por_conciliar = pago['pagaiva'] == 'S' %}
+
+                    <!--A continuacion los estilos para cada uno-->
+                    {% if es_por_validar %}
+                        {% set clase = 'bg-warning text-white' %}
+                    {% elif es_por_pagar %}
+                        {% set clase = 'bg-secondary text-white' %}
+                    {% elif es_abono %}
+                        {% set clase = 'bg-secondary text-white' %}
+                    {% elif es_iva_por_conciliar %}
+                        {% set clase = 'bg-danger text-white' %}
+                    {% else %}
+                        {% set clase = 'btn-outline-secondary' %}
+                    {% endif %}
+                    <!--Y aqui se ponen-->
+                    <a href="#" class="btn {{ clase }}">
+                        {% if es_por_pagar %}
+                        Pendiente por pagar
+                        {% elif es_por_validar %}
+                        Pendiente por validar
+                        {% elif es_abono %}
+                        Abono por conciliar
+                        {% elif es_iva_por_conciliar %}
+                        Iva por conciliar
+                        {% else %}
+                        Sin clasificar
+                        {% endif %}
+                    </a>
+                </td>
+            </tr>
             {% endif%}
             {% endif%}
             {% endif%}

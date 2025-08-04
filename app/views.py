@@ -11,9 +11,9 @@ from .email import welcome_mail, pago_crm_mail, pago_mail, comprobante_mail, com
 from flask import session
 from datetime import datetime
 #from .promo import participantes
-from .funciones import cadena_md5,obtener_hora_minutos_segundos_fecha,fecha_sap
+from .funciones import cadena_md5,obtener_hora_minutos_segundos_fecha,fecha_sap, consulta_basica_sap
 from requests.auth import HTTPBasicAuth
-
+from .servicios_consultas import ConsultasSAP
 import json
 import collections
 import random
@@ -205,7 +205,7 @@ def cobranza2():
         'CLIENTE':current_user.rif,
         'FEC_DEP': fecha_pago
     }
-    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=VERIFICACION_SSL)
     fecha = datetime.strptime(fecha_pago, "%Y%m%d")  # Usar el mismo formato
     fecha = fecha.strftime("%Y-%m-%d")  # Formato original
     if response.status_code == 200:
@@ -246,7 +246,7 @@ def cobranza2():
         'SOCIEDAD': '1200',
         'FEC_DEP': fecha_pago
     }
-    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=VERIFICACION_SSL)
     if response.status_code == 200:
         try:
             response_json_descuento = json.loads(response.content)
@@ -268,7 +268,7 @@ def cobranza2():
         'SOCIEDAD': '1200',
         'TOLERANCIA': 'X'
     }
-    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=VERIFICACION_SSL)
     if response.status_code == 200:
         try:
             response_json_tolerancia = json.loads(response.content)
@@ -405,7 +405,7 @@ def cobranza2():
         #print('cabecera:',data)
         #print('detalle:',datos)
         # Realizar la solicitud POST con los datos en formato JSON
-        response = requests.post(url, auth=HTTPBasicAuth(user_fuente, contra_fuente),json=datos,headers=headers,verify=True)
+        response = requests.post(url, auth=HTTPBasicAuth(user_fuente, contra_fuente),json=datos,headers=headers,verify=False)
         #print(response)
         # Verificar la respuesta
         if response.status_code == 200:
@@ -468,7 +468,7 @@ def cobranza_iva():
         'SOCIEDAD': '1200',
         'CLIENTE':current_user.rif,
     }
-    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=VERIFICACION_SSL)
     
     pago_iva = []
     iva_x_pagar= []
@@ -511,7 +511,7 @@ def cobranza_iva():
         'CLIENTE':current_user.rif,
         'PAGAIVA':'X'
     }
-    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=VERIFICACION_SSL)
     
     try:
         if response.status_code == 200:
@@ -656,7 +656,7 @@ def cobranza_iva():
 
         #print('cabecera:',data)
         #print('detalle:',datos)
-        response = requests.post(url, auth=HTTPBasicAuth(user_fuente, contra_fuente),json=datos,headers=headers,verify=True)
+        response = requests.post(url, auth=HTTPBasicAuth(user_fuente, contra_fuente),json=datos,headers=headers,verify=VERIFICACION_SSL)
         #print(response)
         # Verificar la respuesta
         if response.status_code == 200:
@@ -743,180 +743,92 @@ def modulos():
     return render_template("modulos.html", titulo = f"Bienvenido,  {current_user.username.title()}",donde="modulo")
 
 
+
+
 @page.route("/dashboard", methods=["GET"])
 @login_required
 def dashboard():
+
     pagos = Cobranza.get_pagos_order(current_user.rif)
     pago_t = pagos[:3]
     Fecha_pago =  fecha_sap()
 #------------------------------------
-    sap = ip_fuente+"/sap/bc/rest/zpasdeudores"
-    tiempo, fecha = obtener_hora_minutos_segundos_fecha()
-    cadena = cadena_md5('1200',current_user.rif,tiempo,fecha)
-    headers = {
-        'Accept': 'application/json',
-        'Origin':'',
-        'BUKRS': '1200',
-        'KUNNR':current_user.rif,
-        'BUDAT':fecha,
-        'TIMLO':tiempo,
-        'CORIMON':cadena
-    }
-    args = {
-        'sap-client':'510',
-        'SOCIEDAD': '1200',
-        'CLIENTE':current_user.rif,
-        'FEC_DEP': Fecha_pago
-    }
-    response1 = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args,headers=headers, verify=True)
-    if response1.status_code == 200:
-        try:
-            response_json1 = json.loads(response1.content)
-            response_json1 = str(response_json1)
-            response_json1 = response_json1[1:]
-            response_json1 = response_json1[:-1]
-            response_json1 = eval(response_json1)
-            """for dic in response_json1:
-                if 'blart' in dic:
-                    if dic['blart'] == 'RV':
-                        datos = dic"""
-            if isinstance(response_json1 , dict):
-                response_json1 = [response_json1]
-        except:
-            response_json1 = []
 
-    #---------------------------------------------------------
-    sap = ip_fuente+"/sap/bc/rest/zpasdeudores"
-    args = {
-        'sap-client':'510',
-        'SOCIEDAD': '1200',
-        'CLIENTE':current_user.rif,
-        'TOTALES':'X'
-    }
-    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args,headers=headers, verify=True)
-    if response.status_code == 200:
-        try:
-            response_json = json.loads(response.content)
-            response_json = str(response_json)
-            response_json = response_json[1:]
-            response_json = response_json[:-1]
-            response_json = eval(response_json)
-        except:
-            response_json=[]
-        """
-        print('Importe en moneda local($):',response_json['dmbtr'] )
-        print('Total facturas(Bs):' ,response_json['totfactbs'])
-        print(Fecha_pago)"""
-    #-----------------------------------retenciones----------------------------------------------
-    args = {
-        'sap-client':'510',
-        'ENVIO':'C',
-        'SOCIEDAD': '1200',
-        'CLIENTE':current_user.rif,
-    }
-    response_ret = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
-    if response_ret.status_code == 200:
-        try:
-            response_json2 = json.loads(response_ret.content)
-            response_json2 = str(response_json2)
-            response_json2 = response_json2[1:]
-            response_json2 = response_json2[:-1]
-            response_json2 = eval(response_json2)
-            #print("Exito en la peticion")
-        except:
-            response_json2 = []
-    else:
-        #print('Error en la peticion')
-        pass
-    #----------------------------------------------------------------------------------------------
+    #Inicializo el cliente de SAP
+    sap_client = ConsultasSAP(
+        user_fuente=user_fuente,
+        contra_fuente=contra_fuente,
+        ip_fuente=ip_fuente,
+        verificacion_ssl=VERIFICACION_SSL
+    )
 
-    #-----------------------------------Facturas pendietes por retencion---------------------------
-    sap = ip_fuente+"/sap/bc/rest/zcertrete"
-    args = {
-        'sap-client':'510',
-        'ENVIO':'D',
-        'SOCIEDAD': '1200',
-        'CLIENTE':current_user.rif,
-    }
     try:
-        response_fact = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
-        response_fact.raise_for_status()  # Esto lanzará una excepción para códigos de estado HTTP no exitosos
+        tiempo, fecha = obtener_hora_minutos_segundos_fecha()
+        cadena = cadena_md5('1200',current_user.rif,tiempo,fecha)
+        response_json1 = sap_client.consultar_deudores(
+            rif=current_user.rif,
+            fecha_pago=Fecha_pago,
+            tiempo=tiempo,
+            fecha_enc=fecha,
+            cadena=cadena
+        )
         
-        response_json3 = json.loads(response_fact.content)
-        # Considera reemplazar el uso de eval con una alternativa más segura si es posible
-        response_json3 = str(response_json3)[1:-1]
-        response_json3 = eval(response_json3) if response_json3 else None
-        #print("Exito en la peticion")
+        #-----------------------------------Consulta de deudores ResponseJson----------------------------------------------
+        response_json = sap_client.consultar_deudores_totales(
+            current_user.rif,
+            tiempo,
+            fecha, 
+            cadena
+        )
+
+        #-----------------------------------retenciones----------------------------------------------
+        response_json2 = sap_client.consultar_retenciones(
+            current_user.rif, tiempo, fecha, cadena
+        )
         
-        ret = len(response_json3) if response_json3 else 0
-        #for retencion in response_json3
-        #    if retencion
-        #print(response_json3)
-    except:
-        ret = 0
+        #-----------------------------------Facturas pendietes por retencion---------------------------
+        certificados_datos, ret = sap_client.consultar_facturas_pendietes_retencion(
+            current_user.rif,
+            tiempo,
+            fecha,
+            cadena
+        )
+        
+        #----------------------retenciones pendientes por validacion------------------------------------------------
+        retenciones_pendiente_validacion, contador_retenciones_pendientes = sap_client.consultar_retenciones_pendientes(
+            current_user.rif,
+            tiempo,
+            fecha,
+            cadena
+        )
     
+        #-----------------ivas pendientes por pagar---------------
+        ivas_pendientes, iva_x_pagar = sap_client.consultar_ivas_pendientes(
+            current_user.rif,
+            tiempo,
+            fecha,
+            cadena
+        )
 
-    #----------------------retenciones pendientes por validacion------------------------------------------------
-    sap = ip_fuente+"/sap/bc/rest/zcertrete"
+    finally:
+        # Cerrar sesión
+        sap_client.cerrar_sesion()
+    
+    return render_template("collections/dashboard.html", titulo = "Estado de cuenta", pagos=pagos, pago_t = pago_t,rate=0, no_vencido_dolar=response_json['tnovencdiv'],no_vencido_bs=response_json['tnovencbs'],total_deudas_dolares=response_json['tdeudadiv'],total_deudas_bs=response_json['tdeudabs'], total_saldo_dolar=response_json['tsaldofdiv'],total_saldo_bs=response_json['tsaldofbs'], total_bolos=response_json['totfactbs'],total_vencido_d=response_json['tvencdiv'],total_vencido_b=response_json['tvencbs'],vencido_130_d=response_json['tvenc130d'],vencido_130_b=response_json['tvenc130b'], vencido_3160_d=response_json['tvecc3160d'], vencido_3160_b=response_json['tvecc3160b'], vencido_60_d=response_json['tvec61masd'], vencido_60_b=response_json['tvec61masb'], facturas =response_json1, retenciones=response_json2,contador_fact = ret, deuda_dif_dolar=response_json['tdifedeudadiv'],deuda_dif_bs=response_json['tdifedeudabs'],favor_dif_dolar=response_json['tdifesaldofdiv'],favor_dif_bs=response_json['tdifesaldofbs'],contador_retenciones_pendientes=contador_retenciones_pendientes,iva_x_pagar=iva_x_pagar)
 
-    args = {
-        'sap-client':'510',
-        'ENVIO':'C',
-        'SOCIEDAD': '1200',
-        'CLIENTE':current_user.rif,
-    }
-    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
-    try:
-        if response.status_code == 200:
-            response_json4 = json.loads(response.content)
-            response_json4 = str(response_json4)
-            response_json4 = response_json4[1:]
-            response_json4 = response_json4[:-1]
-            response_json4 = eval(response_json4)
-            #print(response_json4)
-            #print("Exito en la peticion")
-        else:
-            pass#print('Error en la peticion')
-    except:
-        response_json4 = []
-    try:
-        ret_pendiente = []
-        for retencion in response_json4:
-            if retencion['status'] == 'P':
-                ret_pendiente.append(retencion)
-    except:
-        response_json4 = [response_json4]
 
-    ret_pendiente = len(response_json4)
 
-    #-----------------ivas pendientes por pagar---------------
-    sap = ip_fuente+"/sap/bc/rest/zpasdeudoiva"
 
-    args = {
-        'sap-client':'510',
-        'SOCIEDAD': '1200',
-        'CLIENTE':current_user.rif,
-        'PAGAIVA':'X'
-    }
-    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
-    try:
-        if response.status_code == 200:
-            response_json5 = json.loads(response.content)
-            response_json5 = str(response_json5)
-            response_json5 = response_json5[1:]
-            response_json5 = response_json5[:-1]
-            response_json5 = eval(response_json5)
-            ivas = response_json5
-            iva_x_pagar= []
 
-            if (ivas):
-                for iva in ivas:
-                    if iva['statusiva']=='P':
-                            iva_x_pagar.append(iva)  
-            iva_x_pagar = len(iva_x_pagar)
-    except:
-        iva_x_pagar = 0
-    return render_template("collections/dashboard.html", titulo = "Estado de cuenta", pagos=pagos, pago_t = pago_t,rate=0, no_vencido_dolar=response_json['tnovencdiv'],no_vencido_bs=response_json['tnovencbs'],total_deudas_dolares=response_json['tdeudadiv'],total_deudas_bs=response_json['tdeudabs'], total_saldo_dolar=response_json['tsaldofdiv'],total_saldo_bs=response_json['tsaldofbs'], total_bolos=response_json['totfactbs'],total_vencido_d=response_json['tvencdiv'],total_vencido_b=response_json['tvencbs'],vencido_130_d=response_json['tvenc130d'],vencido_130_b=response_json['tvenc130b'], vencido_3160_d=response_json['tvecc3160d'], vencido_3160_b=response_json['tvecc3160b'], vencido_60_d=response_json['tvec61masd'], vencido_60_b=response_json['tvec61masb'], facturas =response_json1, retenciones=response_json2,contador_fact = ret, deuda_dif_dolar=response_json['tdifedeudadiv'],deuda_dif_bs=response_json['tdifedeudabs'],favor_dif_dolar=response_json['tdifesaldofdiv'],favor_dif_bs=response_json['tdifesaldofbs'],ret_pendiente=ret_pendiente,iva_x_pagar=iva_x_pagar)
+
+
+
+
+
+
+
+
+
 
 
 @page.route("/lista", methods=["GET","POST"])
@@ -949,7 +861,7 @@ def lista_cobranza():
         'SOCIEDAD': '1200',
         'CLIENTE':current_user.rif,
     }
-    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente),params=args, headers=headers,verify=True)
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente),params=args, headers=headers,verify=VERIFICACION_SSL)
     if response.status_code == 200:
         try:
             response_json = json.loads(response.content)
@@ -972,7 +884,7 @@ def lista_cobranza():
         'CLIENTE':current_user.rif,
         'PAGAIVA':'X'
     }
-    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=VERIFICACION_SSL)
     try:
         if response.status_code == 200:
             response_json5 = json.loads(response.content)
@@ -1013,7 +925,7 @@ def pagos_cobranza():
         'SOCIEDAD': '1200',
         'CLIENTE':current_user.rif,
     }
-    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente),params=args, headers=headers,verify=True)
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente),params=args, headers=headers,verify=VERIFICACION_SSL)
     if response.status_code == 200:
         try:
             response_json = json.loads(response.content)
@@ -1088,7 +1000,7 @@ def historial():
             'CLIENTE': current_user.rif,
             'MESES': ''
         }
-        response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
+        response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=VERIFICACION_SSL)
         if response.status_code == 200:
             try:
                 response_json = json.loads(response.content)
@@ -1128,9 +1040,9 @@ def doc_historial(n,i):
             'sap-client': '510',
             'SOCIEDAD': '1200',
             'CLIENTE': current_user.rif,
-            'MESES': '6'
+            'MESES': '12'
         }
-        response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=True)
+        response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=VERIFICACION_SSL)
         if response.status_code == 200:
             try:
                 response_json = json.loads(response.content)
@@ -1149,7 +1061,7 @@ def doc_historial(n,i):
                 #print(dic)
     #print(datos['vbeln'] )
     
-    return render_template("collections/info_factura.html", titulo = "Factura",datos=datos)
+    return render_template("collections/info_factura.html", titulo = "",datos=datos)
 
 @page.route('/verificar-factura/<factura_id>-<i>-<p>')
 def verificar_factura(factura_id,i,p):
@@ -1227,7 +1139,7 @@ def certificados_pendientes():
     }
 
     #response_post = requests.post(url, data=json.dumps(payload), headers=headers)
-    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
+    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=VERIFICACION_SSL)
     #time.sleep(5)
     try:
         if response.status_code == 200:
@@ -1552,7 +1464,7 @@ def ret_enviadas():
         'SOCIEDAD': '1200',
         'CLIENTE':current_user.rif,
     }
-    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
+    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=VERIFICACION_SSL)
     try:
         if response.status_code == 200:
             response_json = json.loads(response.content)
@@ -1618,7 +1530,7 @@ def retenciones():
             'CLIENTE':current_user.rif,
             'C_RET':n_retencion
         }
-        response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
+        response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=VERIFICACION_SSL)
         if response.status_code == 200:
             #print("Exito en la peticion")
             flash(RET_REGISTRADA)
@@ -1655,7 +1567,7 @@ def dashboard2():
         'CLIENTE':current_user.rif,
         'FEC_DEP': Fecha_pago
     }
-    response1 = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args,headers=headers, verify=True)
+    response1 = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args,headers=headers, verify=VERIFICACION_SSL)
     #print(response.url)
     if response1.status_code == 200:
         response_json1 = json.loads(response1.content)
@@ -1679,7 +1591,7 @@ def dashboard2():
         'CLIENTE':current_user.rif,
         'TOTALES':'X'
     }
-    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args,headers=headers, verify=True)
+    response = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args,headers=headers, verify=VERIFICACION_SSL)
     if response.status_code == 200:
 
         response_json = json.loads(response.content)
@@ -1698,7 +1610,7 @@ def dashboard2():
         'SOCIEDAD': '1200',
         'CLIENTE':current_user.rif,
     }
-    response_ret = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
+    response_ret = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=VERIFICACION_SSL)
     if response_ret.status_code == 200:
         response_json2 = json.loads(response_ret.content)
         response_json2 = str(response_json2)
@@ -1718,7 +1630,7 @@ def dashboard2():
         'SOCIEDAD': '1200',
         'CLIENTE':current_user.rif,
     }
-    response_fact = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=True)
+    response_fact = requests.get(sap,auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers,verify=VERIFICACION_SSL)
     if response_fact.status_code == 200:
         response_json3 = json.loads(response_fact.content)
         response_json3 = str(response_json3)
