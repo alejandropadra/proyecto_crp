@@ -1,4 +1,4 @@
-
+console.log('SE HIZO')
 // Declaración de elementos del DOM
 const check3 = document.getElementById('check3');
 const check2 = document.getElementById('check2');
