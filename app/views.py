@@ -450,6 +450,7 @@ def cobranza2():
 @login_required
 def cobranza_iva(): 
     control_form = RegistroPagoForm(request.form)
+
 #---------------------------------Documentos pendientes-------------------------
     sap = ip_fuente+"/sap/bc/rest/zpasdeudores"
     tiempo, fecha_enc = obtener_hora_minutos_segundos_fecha()
@@ -484,8 +485,10 @@ def cobranza_iva():
 
             if (documentos):
                 for documento in documentos:
+
                     if documento['status']=='':
                         if documento['blart'] == 'DZ' and documento['pagaiva']== 'S':
+                            print(f"asdasdas {documento}")
                             pago_iva.append(documento)
                         elif documento['blart'] == 'DZ' and documento['dmbtr']>0:
                             iva_x_pagar.append(documento)
@@ -512,7 +515,7 @@ def cobranza_iva():
         'PAGAIVA':'X'
     }
     response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=VERIFICACION_SSL)
-    
+
     try:
         if response.status_code == 200:
             response_json = json.loads(response.content)
@@ -523,13 +526,25 @@ def cobranza_iva():
             ivas = response_json
             iva_x_pagar= []
 
-            if (ivas):
-                for iva in ivas:
-                    if iva['statusiva']=='':
+
+            if ivas:
+
+                if isinstance(ivas, dict):
+                    print(dict )
+                    if ivas['statusiva'] == '':
+                        iva_x_pagar.append(ivas)
+
+                elif isinstance(ivas, list):
+                    for iva in ivas:
+                        print(iva['vbeln'])
+                        print(iva['statusiva'])
+                        if iva['statusiva'] == '':
                             iva_x_pagar.append(iva)  
-            #print(iva_x_pagar)
+        print(iva_x_pagar)
+        
     except:
         pass
+
     #-----------------------------------Tolerancia----------------------------------
     
     #NO HAY TOLERANCIA EN IVA PA
@@ -688,6 +703,7 @@ def cobranza_iva():
                 flash(PAGO_CREADO)
 
                 return redirect(url_for('.dashboard'))
+
     return render_template("/collections/cobranza_iva.html",titulo = "Pago de Iva", form = control_form, iva_x_pagar=iva_x_pagar, tolerancia = 10)
 
 """@page.route("/Dashboard", methods=["GET","POST"])
