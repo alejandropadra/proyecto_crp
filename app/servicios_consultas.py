@@ -354,7 +354,6 @@ class ConsultasSAP:
                 else:
                     response_json = []
                 
-                # Contar retenciones pendientes (status = "P")
                 contador_pendientes = 0
                 for retencion in response_json:
                     if isinstance(retencion, dict) and retencion.get('status') == "P":
@@ -367,6 +366,136 @@ class ConsultasSAP:
                 return [], 0
         
         return [], 0
+    
+    
+    
+    def consulta_ivas_generico(self, rif: str, tiempo: str, fecha_enc: str, cadena: str) -> Any:
+        """
+        Consulta genérica de IVAs desde SAP
+        
+        Args:
+            rif: RIF del cliente
+            tiempo: Tiempo para header
+            fecha_enc: Fecha encriptada para header
+            cadena: Cadena MD5 para header
+            
+        Returns:
+            Datos procesados según el tipo de respuesta:
+            - Si es un diccionario único, retorna una lista con ese diccionario
+            - Si es una lista, la retorna tal cual
+            - Si es un string JSON, lo procesa y retorna
+            - En caso de error, retorna lista vacía
+        """
+        headers = {
+            'Accept': 'application/json',
+            'Origin': '',
+            'BUKRS': '1200',
+            'KUNNR': rif,
+            'BUDAT': fecha_enc,
+            'TIMLO': tiempo,
+            'CORIMON': cadena
+        }
+        
+        args = {
+            'sap-client': '510',
+            'SOCIEDAD': '1200',
+            'CLIENTE': rif,
+            'PAGAIVA': 'X'
+        }
+        
+        response_json = self._ejecutar_consulta("/sap/bc/rest/zpasdeudoiva", args, headers)
+        
+        if response_json:
+            try:
+                # Si es string, procesarlo
+                if isinstance(response_json, str):
+                    if response_json.startswith('[') and response_json.endswith(']'):
+                        response_json = response_json[1:-1]
+                    if response_json.strip():
+                        try:
+                            response_json = json.loads(response_json)
+                        except json.JSONDecodeError:
+                            response_json = eval(response_json)
+                    else:
+                        response_json = []
+                
+                # Si es un diccionario único, convertir a lista
+                if isinstance(response_json, dict):
+                    return response_json
+                
+                elif isinstance(response_json, list):
+                    return response_json
+                
+                else:
+                    print(f"Tipo de respuesta inesperado: {type(response_json)}")
+                    return []
+                    
+            except (json.JSONDecodeError, SyntaxError, TypeError) as e:
+                print(f"Error procesando respuesta de IVAs: {e}")
+                print(f"Respuesta original: {response_json}")
+                return []
+        
+        return []
+    
+    
+    def consultar_documentos(self, rif: str, tiempo: str, fecha_enc: str, cadena: str) -> Any:
+        """
+        Consulta documentos del cliente en SAP
+        
+        Args:
+            rif: RIF del cliente
+            tiempo: Tiempo para header
+            fecha_enc: Fecha encriptada para header
+            cadena: Cadena MD5 para header
+            
+        Returns:
+            Lista de documentos o lista vacía si hay error
+        """
+        headers = {
+            'Accept': 'application/json',
+            'Origin': '',
+            'BUKRS': '1200',
+            'KUNNR': rif,
+            'BUDAT': fecha_enc,
+            'TIMLO': tiempo,
+            'CORIMON': cadena
+        }
+        
+        args = {
+            'sap-client': '510',
+            'SOCIEDAD': '1200',
+            'CLIENTE': rif,
+        }
+        
+        response_json = self._ejecutar_consulta("/sap/bc/rest/zpasdeudores", args, headers)
+        
+        if response_json:
+            try:
+                # Si es string, procesarlo
+                if isinstance(response_json, str):
+                    if response_json.startswith('[') and response_json.endswith(']'):
+                        response_json = response_json[1:-1]
+                    response_json = json.loads(response_json) if response_json.strip() else []
+                
+                # Si es dict, convertir a lista
+                elif isinstance(response_json, dict):
+                    response_json = [response_json]
+                
+                # Si es lista, mantenerla
+                elif isinstance(response_json, list):
+                    pass
+                
+                else:
+                    response_json = []
+                    
+                return response_json
+                
+            except (json.JSONDecodeError, TypeError) as e:
+                print(f"Error procesando documentos: {e}")
+                return []
+        
+        return []
+        
 
     def consultar_ivas_pendientes(self, rif: str, tiempo: str, fecha_enc: str, cadena: str) -> tuple[list, int]:
         """

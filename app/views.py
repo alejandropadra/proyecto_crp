@@ -450,9 +450,65 @@ def cobranza2():
 @login_required
 def cobranza_iva(): 
     control_form = RegistroPagoForm(request.form)
+    
+    
+    
+    pago_iva = []
+    iva_x_pagar= []
+    Fecha_pago =  fecha_sap()
+#------------------------------------
+    tiempo, fecha_enc = obtener_hora_minutos_segundos_fecha()
+    cadena = cadena_md5('1200',current_user.rif,tiempo,fecha_enc)
+    #Inicializo el cliente de SAP
+    sap_client = ConsultasSAP(
+        user_fuente=user_fuente,
+        contra_fuente=contra_fuente,
+        ip_fuente=ip_fuente,
+        verificacion_ssl=VERIFICACION_SSL
+    )
+
+    try:
+
+        
+        #---------------------------------Documentos pendientes-------------------------
+        documentos = sap_client.consultar_documentos(
+            current_user.rif, 
+            tiempo, 
+            fecha_enc, 
+            cadena
+        )
+        print(documentos)
+        for documento in documentos:
+            
+            if documento['status']=='':
+                if documento['blart'] == 'DZ' and documento['pagaiva']== 'S':
+                    pago_iva.append(documento)
+                elif documento['blart'] == 'DZ' and documento['dmbtr']>0:
+                    iva_x_pagar.append(documento)
+
+        #print(iva_x_pagar)
+#---------------------------------IVAs pendientes-------------------------
+        ivas_completos = sap_client.consulta_ivas_generico(
+            current_user.rif, 
+            tiempo, 
+            fecha_enc, 
+            cadena
+        )
+        response_json = ivas_completos
+        iva_x_pagar=[]
+        
+        for iva in ivas_completos:
+            if iva['statusiva']=='':
+                iva_x_pagar.append(iva)
+        #print(f" Funcion de la clase realizada{ivas_completos}")
+        
+
+    finally:
+        # Cerrar sesión
+        sap_client.cerrar_sesion()
 
 #---------------------------------Documentos pendientes-------------------------
-    sap = ip_fuente+"/sap/bc/rest/zpasdeudores"
+    """sap = ip_fuente+"/sap/bc/rest/zpasdeudores"
     tiempo, fecha_enc = obtener_hora_minutos_segundos_fecha()
     cadena = cadena_md5('1200',current_user.rif,tiempo,fecha_enc)
     headers = {
@@ -482,7 +538,7 @@ def cobranza_iva():
             response_json = eval(response_json)
             documentos = response_json
 
-
+            print(f"Documentos por la funcion de alejandro {documentos}")
             if (documentos):
                 for documento in documentos:
 
@@ -493,7 +549,7 @@ def cobranza_iva():
                         elif documento['blart'] == 'DZ' and documento['dmbtr']>0:
                             iva_x_pagar.append(documento)
     except:
-        pass
+        pass"""
 
 #---------------------------------IVAs pendientes-------------------------
     sap = ip_fuente+"/sap/bc/rest/zpasdeudoiva"
@@ -516,7 +572,7 @@ def cobranza_iva():
     }
     response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=VERIFICACION_SSL)
 
-    try:
+    '''try:
         if response.status_code == 200:
             response_json = json.loads(response.content)
             response_json = str(response_json)
@@ -524,26 +580,23 @@ def cobranza_iva():
             response_json = response_json[:-1]
             response_json = eval(response_json)
             ivas = response_json
-            iva_x_pagar= []
-
+            
+            iva_x_pagar=[]
+            print(type(ivas))
 
             if ivas:
 
                 if isinstance(ivas, dict):
-                    print(dict )
-                    if ivas['statusiva'] == '':
-                        iva_x_pagar.append(ivas)
+                    iva_x_pagar.append(ivas)
 
                 elif isinstance(ivas, list):
                     for iva in ivas:
-                        print(iva['vbeln'])
-                        print(iva['statusiva'])
-                        if iva['statusiva'] == '':
-                            iva_x_pagar.append(iva)  
-        print(iva_x_pagar)
+                        #print(iva)
+                        iva_x_pagar.append(iva)  
+        #print(iva_x_pagar)
         
     except:
-        pass
+        pass'''
 
     #-----------------------------------Tolerancia----------------------------------
     
