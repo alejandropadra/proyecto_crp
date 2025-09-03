@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{titulo}}</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/Promocion_2.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/14.0.0/material-components-web.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.1/css/dataTables.material.css">
+</head>
+<body>
+    <header> 
+        <div class="pintura-diagonal"></div> 
+        <div class="contenedor animacionEntrada-Fade">
+            <img src="{{ url_for('static', filename = 'img/logo_promo.png') }}" alt="Carro">
+        </div>
+    </header>
+
+    <div id="datos" style="display:none;">{{ datos_limpios | tojson }}</div>
+
+    <div class="inicial">
+        
+        <div class="contenedor-tabla">
+            <div class="div" id="sortear">
+                <button>
+                    Sortear
+                    <div class="arrow-wrapper">
+                        <div class="arrow"></div>
+                
+                    </div>
+                </button>
+            </div>
+
+            
+            
+            <table id="example" class="mdl-data-table" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Email</th>
+                        <th>Cédula</th>
+                        <th>Factura</th>
+                        <th>Teléfono</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dato in datos_limpios %}
+                    <tr>
+                        <td>{{ dato["Fec. Factura"] }}</td>
+                        <td>{{ dato["Nombre"] }}</td>
+                        <td>{{ dato["Apellido"] }}</td>
+                        <td>{{ dato["Email"] }}</td>
+                        <td>{{ dato["Cédula"] }}</td>
+                        <td>{{ dato["# Factura"] }}</td>
+                        <td>{{ dato["Tel."] }}</td>
+                        <td>{{ dato["Estado"] }}</td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+        </div>
+
+
+        <div class="contenedor_respuesta" id="contenedor_respuesta">
+
+        </div>
+
+
+    </div>
+    <div class="loader" id="loader"></div>
+
+
+
+    <main id="section-cubrir">
+        <div class="centro">
+            <div class="div" id="backButton">
+                <button>
+                    <span class="material-symbols-outlined">
+                        arrow_back
+                    </span>
+                    Back
+                </button>
+            </div>
+
+            <div class="div" id="siguenteButton">
+                <button>
+                    <span class="material-symbols-outlined">
+                        arrow_forward
+                    </span>
+                    Ver Ganadores
+                </button>
+            </div>
+
+
+
+            <div class="centrar">
+                <button class="animated-button" id="SortearElbeta">
+                    <span>Sortear</span>
+                    <span></span>
+                </button>
+            </div>
+
+            <div class="grid-container" style="display: none;">
+                <div class="grid-item" id="activar_botonRC">
+                    <div id="capital" style="display: none;">Capital</div>
+                    <h2>Gandores Región Capital</h2>
+                    <p>Mostrar Ganador </p>
+                </div>
+                <!--
+                <div class="grid-item" id="activar_botonRCentro">
+                    <div id="centro" style="display: none;">Centro</div>
+                    <h2>Ganadores Región Centro</h2>
+                    <p>Mostrar Ganador </p>
+                </div>
+                <div class="grid-item" id="activar_botonRCentOccidente">
+                    <div id="centroOccidente" style="display: none;">Centro Occidente</div>
+                    <h2>Ganadores Región Centro-Occidente</h2>
+                    <p>Mostrar Ganador </p>
+                </div>
+                <div class="grid-item" id="activar_botonROccidente">
+                    <div id="occidente" style="display: none;">Occidente</div>
+                    <h2>Ganadores Región Occidente + Andes</h2>
+                    <p>Mostrar Ganador </p>
+                </div>
+                <!-- 
+                <div class="grid-item" id="activar_botonROccidenteAndes">
+                    <div id="occidenteAndes" style="display: none;">Occidente Andes</div>
+                    <h2>Ganadores Región Occidente Andes</h2>
+                    <p>Mostrar Ganador </p>
+                </div>
+                <div class="grid-item" id="activar_botonROrienteCent">
+                    <div id="orienteCentro" style="display: none;">Oriente Centro</div>
+                    <h2>Ganadores Oriente Centro</h2>
+                    <p>Mostrar Ganador </p>
+                </div>
+                <div class="grid-item" id="activar_botonROrientenort">
+                    <div id="orienteNorte" style="display: none;">Oriente Norte</div>
+                    <h2>Ganadores Oriente Norte Norte y sur</h2>
+                    <p>Mostrar Ganador </p>
+                </div>
+                <!-- 
+                <div class="grid-item" id="activar_botonROrientesur">
+                    <div id="orienteSur" style="display: none;">Oriente Sur</div>
+                    <h2>Ganadores Oriente Sur</h2>
+                    <p>Mostrar Ganador </p>
+                </div>
+                <div class="grid-item" id="activar_botonROrienteInsular">
+                    <div id="orienteInsular" style="display: none;">Oriente Insular</div>
+                    <h2>Ganadores Oriente Insular</h2>
+                    <p>Mostrar Ganador </p>
+                </div>-->
+            </div>
+
+            <!--- 
+            <div class="flex-carro animacionEntrada-Fade activar" id="activar_boton_carro" >
+                <div id="carro" style="display: none;">carro</div>
+                <img src="{{ url_for('static', filename = 'img/premio_carro.png') }}" alt="Carro">
+                <div class="descripcion">
+                    <h1>1</h1>
+                    <p>Changan - New Alsvin <br> Sincrónico 2024 Sedan</p>
+                </div>
+                <div class="texto">
+                    <p style="font-size: 40px;"> Mostrar Ganador</p>
+                </div>
+            </div>-->
+        </div>
+        
+        
+
+        <!-- 
+        <div class="flex-demas">
+            <div class="columna animacionEntrada-Fade activar" id="activar_boton_aiwa" >
+                <div id="aiwa" style="display: none;">AIWA</div>
+                <img src="{{ url_for('static', filename = 'img/premio_aiwa.png') }}" alt="Carro">
+                <div class="descripcion-col"><h1>10</h1> <P>AIWA 32" HD<br> Smart TV</P></div>                 
+                <div class="texto"> <p style="font-size: 40px;"> Mostrar Ganador</p></div>
+            </div>
+
+            <div class="columna animacionEntrada-Fade activar" id="activar_boton_tablet">
+                <div id="tablet" style="display: none;">tablet</div>
+                <img src="{{ url_for('static', filename = 'img/premio_tableta.png') }}" alt="Carro">
+                <div class="descripcion-col"><h1>10</h1> <P>Samsung Galaxy <br> Tab A7Lite</P></div>                 
+                <div class="texto"> <p style="font-size: 40px;"> Mostrar Ganador</p></div>
+            </div>
+            <div class="columna animacionEntrada-Fade activar" id="activar_boton_telefono">
+                <div id="telefono" style="display: none;">telefono</div>
+                <img src="{{ url_for('static', filename = 'img/premio_telefono.png') }}" alt=""> 
+                <div class="descripcion-col"><h1>10</h1> <P>Samsung Galaxy A15<br> 6GB/128GB</P></div>                 
+                <div class="texto"> <p style="font-size: 40px;"> Mostrar Ganador</p></div>
+            </div>
+
+            <div class="columna animacionEntrada-Fade activar" id="activar_boton_jvc">
+                <div id="jvc" style="display: none;">jvc</div>
+                <img src="{{ url_for('static', filename = 'img/premio_jvc.png') }}" alt="Carro">
+                <div class="descripcion-col"><h1>8</h1> <P>JVC 32" HD<br> Smart TV</P></div>                 
+                <div class="texto"> <p style="font-size: 40px;"> Mostrar Ganador</p></div>
+            </div>
+        </div>
+-->
+
+        
+        
+    </main>
+
+
+
+
+    <section id="tabla_ganadores" style="padding-bottom: 100px !important;">
+        <div class="div" id="backButton">
+            <button>
+                <span class="material-symbols-outlined">arrow_back</span>
+                Back
+            </button>
+        </div>
+
+        <div class="div" id="descargar">
+            <button id="downloadBtn">
+                <span class="material-symbols-outlined">
+                    download
+                </span>
+                Ver Ganadores
+            </button>
+        </div>
+        <div class="tabla_ganadores__container" style="padding-bottom: 150px !important; margin-top:20px">
+            <!-- Primera tabla -->
+            
+            <!-- Segunda tabla -->
+            <div class="tabla_ganadores animacionEntrada-Fade2" id="tablacapital" style="background: transparent !important; padding-bottom:120px">
+                <div class="tabla_ganadores__title" style="background: linear-gradient(135deg, #FF6A00, #FFBB33);">Ganadores</div>
+                <table class="tabla_ganadores__table">
+                    <thead>
+                        <tr>
+                            <th>Nombre y Apellido</th>
+                            <th>Cédula</th>
+                            <th>#Factura</th>
+                            <th>Tienda</th>
+                            <th>estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>John Doe</td>
+                            <td>2025-01-15</td>
+                            <td>Yes</td>
+                            <th>carabobo</th>
+
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Jane Smith</td>
+                            <td>2025-01-14</td>
+                            <td>No</td>
+                            <td>No</td>
+
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Sam Wilson</td>
+                            <td>2025-01-13</td>
+                            <td>Yes</td>
+                            <th>carabobo</th>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 
+            <div class="tabla_ganadores animacionEntrada-Fade2" id="tablaCentro">
+                <div class="tabla_ganadores__title">Ganadores Región Centro</div>
+                <table class="tabla_ganadores__table">
+                    <thead>
+                        <tr>
+                            <th>Nombre y Apellido</th>
+                            <th>Cédula</th>
+                            <th>#Factura</th>
+                            <th>Tienda</th>
+                            <th>estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>John Doe</td>
+                            <td>2025-01-15</td>
+                            <td>Yes</td>
+                            <th>carabobo</th>
+
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Jane Smith</td>
+                            <td>2025-01-14</td>
+                            <td>No</td>
+                            <td>No</td>
+
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Sam Wilson</td>
+                            <td>2025-01-13</td>
+                            <td>Yes</td>
+                            <th>carabobo</th>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="tabla_ganadores animacionEntrada-Fade2" id="tablaCentroOccidente">
+                <div class="tabla_ganadores__title">Ganadores Región Centro Occidente</div>
+                <table class="tabla_ganadores__table">
+                    <thead>
+                        <tr>
+                            <th>Nombre y Apellido</th>
+                            <th>Cédula</th>
+                            <th>#Factura</th>
+                            <th>Tienda</th>
+                            <th>estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>John Doe</td>
+                            <td>2025-01-15</td>
+                            <td>Yes</td>
+                            <th>carabobo</th>
+
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Jane Smith</td>
+                            <td>2025-01-14</td>
+                            <td>No</td>
+                            <td>No</td>
+
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Sam Wilson</td>
+                            <td>2025-01-13</td>
+                            <td>Yes</td>
+                            <th>carabobo</th>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="tabla_ganadores animacionEntrada-Fade2" id="tablaOccidente">
+                <div class="tabla_ganadores__title">Ganadores Región Occidente"</div>
+                <table class="tabla_ganadores__table">
+                    <thead>
+                        <tr>
+                            <th>Nombre y Apellido</th>
+                            <th>Cédula</th>
+                            <th>#Factura</th>
+                            <th>Tienda</th>
+                            <th>estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>John Doe</td>
+                            <td>2025-01-15</td>
+                            <td>Yes</td>
+                            <th>carabobo</th>
+                            
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Jane Smith</td>
+                            <td>2025-01-14</td>
+                            <td>No</td>
+                            <td>No</td>
+
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Sam Wilson</td>
+                            <td>2025-01-13</td>
+                            <td>Yes</td>
+                            <th>carabobo</th>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="tabla_ganadores animacionEntrada-Fade2" id="tablaOrienteCentro">
+                <div class="tabla_ganadores__title">Ganadores Oriente Centro</div>
+                <table class="tabla_ganadores__table">
+                    <thead>
+                        <tr>
+                            <th>Nombre y Apellido</th>
+                            <th>Cédula</th>
+                            <th>#Factura</th>
+                            <th>Tienda</th>
+                            <th>estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>John Doe</td>
+                            <td>2025-01-15</td>
+                            <td>Yes</td>
+                            <th>carabobo</th>
+                            
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Jane Smith</td>
+                            <td>2025-01-14</td>
+                            <td>No</td>
+                            <td>No</td>
+
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Sam Wilson</td>
+                            <td>2025-01-13</td>
+                            <td>Yes</td>
+                            <th>carabobo</th>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tabla_ganadores animacionEntrada-Fade2" id="OrienteNorte">
+                <div class="tabla_ganadores__title">Ganadores Oriente Norte</div>
+                <table class="tabla_ganadores__table">
+                    <thead>
+                        <tr>
+                            <th>Nombre y Apellido</th>
+                            <th>Cédula</th>
+                            <th>#Factura</th>
+                            <th>Tienda</th>
+                            <th>estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>John Doe</td>
+                            <td>2025-01-15</td>
+                            <td>Yes</td>
+                            <th>carabobo</th>
+                            
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Jane Smith</td>
+                            <td>2025-01-14</td>
+                            <td>No</td>
+                            <td>No</td>
+
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Sam Wilson</td>
+                            <td>2025-01-13</td>
+                            <td>Yes</td>
+                            <th>carabobo</th>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="tabla_ganadores animacionEntrada-Fade2" id="tablaOrienteInsular" style="background: transparent !important; padding-bottom:120px"  >
+                <div class="tabla_ganadores__title" style="background: linear-gradient(135deg, #FF6A00, #FFBB33);">Oriente Insular</div>
+                <table class="tabla_ganadores__table porsia" >
+                    <thead>
+                        <tr>
+                            <th>Nombre y Apellido</th>
+                            <th>Cédula</th>
+                            <th>#Factura</th>
+                            <th>Tienda</th>
+                            <th>estado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="porsia">
+                        <tr>
+                            <td>1</td>
+                            <td>John Doe</td>
+                            <td>2025-01-15</td>
+                            <td>Yes</td>
+                            <th>carabobo</th>
+
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Jane Smith</td>
+                            <td>2025-01-14</td>
+                            <td>No</td>
+                            <td>No</td>
+
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Sam Wilson</td>
+                            <td>2025-01-13</td>
+                            <td>Yes</td>
+                            <th>carabobo</th>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            -->
+            
+        </div>
+    </section>
+    
+
+
+    <div class="modal-resultados" id="modal">
+        <div class="confetti">
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+        </div>
+        <div class="modal-contenido">
+            <h1 id="modalTittle" style="text-align: center; padding:5px">¡Ganador Mostrado!</h1>
+            <div class="contenedor_tarjetas">
+
+                <div class="card">
+                    <section class="icon-container">
+
+                    <svg viewBox="0 0 15 15" class="icon">
+                        <path d="M7.5 0.875C5.49797 0.875 3.875 2.49797 3.875 4.5C3.875 6.15288 4.98124 7.54738 6.49373 7.98351C5.2997 8.12901 4.27557 8.55134 3.50407 9.31167C2.52216 10.2794 2.02502 11.72 2.02502 13.5999C2.02502 13.8623 2.23769 14.0749 2.50002 14.0749C2.76236 14.0749 2.97502 13.8623 2.97502 13.5999C2.97502 11.8799 3.42786 10.7206 4.17091 9.9883C4.91536 9.25463 6.02674 8.87499 7.49995 8.87499C8.97317 8.87499 10.0846 9.25463 10.8291 9.98831C11.5721 10.7206 12.025 11.8799 12.025 13.5999C12.025 13.8623 12.2376 14.0749 12.5 14.0749C12.7623 14.075 12.975 13.8623 12.975 13.6C12.975 11.72 12.4778 10.2794 11.4959 9.31166C10.7244 8.55135 9.70025 8.12903 8.50625 7.98352C10.0187 7.5474 11.125 6.15289 11.125 4.5C11.125 2.49797 9.50203 0.875 7.5 0.875ZM4.825 4.5C4.825 3.02264 6.02264 1.825 7.5 1.825C8.97736 1.825 10.175 3.02264 10.175 4.5C10.175 5.97736 8.97736 7.175 7.5 7.175C6.02264 7.175 4.825 5.97736 4.825 4.5Z"></path>
+                    </svg>
+                    </section>
+
+                    <section class="content">
+                    <div class="info">
+                        <h3 class="name"> Jose Jose</h3>
+                        <h3 class="role"><strong>Factura N°</strong>#########</h3>
+                    </div>
+    
+                    </section>
+                </div>
+
+            </div>
+
+            <button class="cerrar-modal" id="cerrarModal">Cerrar</button>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="{{ url_for('static', filename='js/Promocion.js') }}"></script>  
+    
+
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/14.0.0/material-components-web.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.1/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.2.1/js/dataTables.material.js"></script>
+
+    
+    <script>
+        $(document).ready(function() {
+            $('#example').DataTable();
+        });
+
+        $(document).ready(function() {
+            $('#example2').DataTable();
+        });
+        
+    </script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        document.getElementById("downloadBtn").addEventListener("click", async () => {
+            const { jsPDF } = window.jspdf;
+
+            const doc = new jsPDF();
+
+            const tables = document.querySelectorAll(".tabla_ganadores");
+            let currentY = 10; 
+            tables.forEach((table, index) => {
+                const title = table.querySelector(".tabla_ganadores__title").innerText;
+                const tableElement = table.querySelector(".tabla_ganadores__table");
+
+                doc.setFontSize(14);
+                doc.text(title, 10, currentY);
+
+                doc.autoTable({
+                    html: tableElement,
+                    startY: currentY + 10, 
+                    styles: { fontSize: 10 },
+                    headStyles: { fillColor: [41, 128, 185] },
+                    margin: { top: 10 },
+                });
+                currentY = doc.lastAutoTable.finalY + 10;
+            });
+
+            // Descargar el archivo PDF
+            doc.save("tablas_ganadores.pdf");
+        });
+    </script>
+
+    </script>
+
+    
+
+</body>
+</html>

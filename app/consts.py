@@ -19,10 +19,14 @@ ERROR_500 = 'Error en consulta de origen de datos.'
 
 VALIDATE_FORM = 'Seleccione tipo de moneda'
 
-VERIFICACION_SSL = False
-#VERIFICACION_SSL = True
 
-#---------------------------
+
+
+#------- VERIFICACION DE SSL ----
+VERIFICACION_SSL = True
+#-------------------------------------
+
+#-----------Usuario Prodcutivo y Calidad----------------
 #Urfuser
 U_FUENTE ='000-020'
 C_FUENTE = 'C0r1mon.202502$$'#QA
@@ -30,51 +34,10 @@ C_FUENTE = 'C0r1mon.202502$$'#QA
 
 
 
-"""  
-------------------------------
-#Usuario de antes
-U_FUENTE ='700-010'
-C_FUENTE = 'Corimon.2501$'#QAss
--------------------------------
-"""
 
-
-#C_FUENTE = 'Corimon.2412'#pr
-#URL_FUENTE = 'https://10.207.4.68:8000'
-#URL_FUENTE = 'https://10.207.4.68:44300'
-#URL_FUENTE = 'https://qa.grupocorimon.com:8443'
+#-------- ---   RUTAS  -------------
+#URL_FUENTE = 'https://qa.grupocorimon.com:8443' #CALIDAD
 URL_FUENTE = 'https://grupocorimon.com:9443'#pr
+#--------------------------------------------
 
 
-#U_FUENTE ='RFCUSER'
-#C_FUENTE = 'C0rimon.0724$'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-
-#---------------------------
-U_FUENTE ='000-020'
-#C_FUENTE = 'Corimon.2408'#QA
-C_FUENTE = 'C0r1mon.202502$$'#pr
-#URL_FUENTE = 'https://10.207.4.68:44300'
-URL_FUENTE = 'https://qa.grupocorimon.com:8443'
-#URL_FUENTE = 'https://grupocorimon.com:9443'
-
-
-#U_FUENTE ='RFCUSER'
-#C_FUENTE = 'C0rimon.0724$'
-
-#------------------
-"""

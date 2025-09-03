@@ -552,7 +552,7 @@ def cobranza_iva():
         pass"""
 
 #---------------------------------IVAs pendientes-------------------------
-    sap = ip_fuente+"/sap/bc/rest/zpasdeudoiva"
+    """sap = ip_fuente+"/sap/bc/rest/zpasdeudoiva"
     tiempo, fecha_enc = obtener_hora_minutos_segundos_fecha()
     cadena = cadena_md5('1200',current_user.rif,tiempo,fecha_enc)
     headers = {
@@ -571,7 +571,7 @@ def cobranza_iva():
         'PAGAIVA':'X'
     }
     response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=VERIFICACION_SSL)
-
+    """
     '''try:
         if response.status_code == 200:
             response_json = json.loads(response.content)
@@ -757,7 +757,7 @@ def cobranza_iva():
 
                 return redirect(url_for('.dashboard'))
 
-    return render_template("/collections/cobranza_iva.html",titulo = "Pago de Iva", form = control_form, iva_x_pagar=iva_x_pagar, tolerancia = 10)
+    return render_template("/collections/cobranza_iva.html", titulo = "Pago de Iva", form = control_form, iva_x_pagar=iva_x_pagar, tolerancia = 10)
 
 """@page.route("/Dashboard", methods=["GET","POST"])
 @login_required

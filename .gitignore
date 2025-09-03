@@ -8,3 +8,5 @@ test_connect
 rif.txt
 app/promo.py
 fun.py
+config.py
+
