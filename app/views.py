@@ -9,6 +9,7 @@ from . import login_manager
 from .consts import *
 from .email import welcome_mail, pago_crm_mail, pago_mail, comprobante_mail, comprobante_crm_mail, pago_iva_mail,pago_iva_crm_mail
 from flask import session
+from flask import send_file
 from datetime import datetime
 #from .promo import participantes
 from .funciones import cadena_md5,obtener_hora_minutos_segundos_fecha,fecha_sap, consulta_basica_sap
@@ -1320,6 +1321,93 @@ def index():
 
     return render_template("/landing/index.html",titulo = "Inicio")
 
+
+
+
+local_consultoria = 'app\\static\\consultoria_tecnica\\{}'
+server_consultoria = 'app/static/consultoria_tecnica/{}'
+
+# Lista blanca de archivos
+ARCHIVOS_MOSTRAR = {
+    'folleto-productos-industriales.pdf': 'Folleto de los Productos Industriales y Marinos.pdf',
+    'libro-resistencias-quimicas-epomon-epoxi.pdf':'Libro de Resistencias Químicas del Epomon Epoxi Fenólico.pdf',
+    'manual-hojas-tecnicas-MIM.pdf':'Manual de Hojas Técnica MIM.pdf',
+    'manual-hojas-tecnicas-ARQ.pdf': 'Manual de Hojas Técnicas ARQ.pdf'
+
+}
+
+@page.route("/consultoria_tecnica")
+def consultria_tecnica():
+    files_info = []
+    
+    for file_key, display_name in ARCHIVOS_MOSTRAR.items():
+        # Intentar con ruta local primero, luego servidor
+        try:
+            file_path = local_consultoria.format(display_name)
+            print(file_path)
+            if os.path.exists(file_path):
+                file_size = os.path.getsize(file_path)
+                files_info.append({
+                    'key': file_key,
+                    'name': display_name,
+                    'size': format_file_size(file_size)
+                })
+            else:
+                # Probar con ruta de servidor
+                file_path = server_consultoria.format(display_name)
+                print(file_path)
+                if os.path.exists(file_path):
+                    file_size = os.path.getsize(file_path)
+                    files_info.append({
+                        'key': file_key,
+                        'name': display_name,
+                        'size': format_file_size(file_size)
+                    })
+        except OSError:
+            continue  
+        
+        print(files_info)
+    
+    return render_template("/landing/material_apoyo.html",  titulo="Material de Apoyo", files=files_info)
+
+@page.route("/download/<file_key>")
+def download_file(file_key):
+
+    if file_key not in ARCHIVOS_MOSTRAR:
+        abort(404)
+    
+    
+    filename = ARCHIVOS_MOSTRAR[file_key]
+    
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(base_dir, 'static', 'consultoria_tecnica', filename)
+    
+    if not os.path.exists(file_path):
+        print(f"File not found: {filename}")
+        abort(404)
+    
+    try:
+        return send_file(
+            file_path,
+            as_attachment=True,
+            download_name=filename,
+            mimetype='application/pdf'
+        )
+    except FileNotFoundError:
+        abort(404)
+        
+        
+def format_file_size(bytes_size):
+    """Convertir bytes a formato legible"""
+    if bytes_size < 1024:
+        return f"{bytes_size} B"
+    elif bytes_size < 1024**2:
+        return f"{bytes_size/1024:.1f} KB"
+    else:
+        return f"{bytes_size/(1024**2):.1f} MB"
+    
+    
 @page.route("/nosotros")
 def nosotros():
 

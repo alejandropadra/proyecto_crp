@@ -1834,4 +1834,292 @@ button.submit {
   }
 }
 
+    .title_mm {
+        letter-spacing: -1px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding-left: 30px;
+        text-align: center;
+        font-family: var(--Oswald);
+        font-weight: 600;
+        font-size: 30px;
+    }
 
+
+    .title_mm::before,.title_mm::after {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+        left: 0px;
+        background-color: var(--rojo_hover);
+    }
+
+    .title_mm::before {
+        width: 18px;
+        height: 18px;
+        background-color: var(--rojo_hover);
+    }
+
+    .title_mm::after {
+        width: 18px;
+        height: 18px;
+        animation: pulse 1s linear infinite;
+    }
+
+    @keyframes shine {
+        0% {
+            left: -100px;
+        }
+
+        60% {
+            left: 100%;
+        }
+
+        to {
+            left: 100%;
+        }
+        }
+
+
+
+    @keyframes pulse {
+        from {
+            transform: scale(0.9);
+            opacity: 1;
+        }
+
+        to {
+            transform: scale(1.8);
+            opacity: 0;
+        }
+    }
+
+
+
+  .folder-row {
+      font-weight: bold;
+      color: var(--rojo_hover); /* morado carpeta */
+      position: relative;
+      background-color: #f1f1f1;
+    }
+
+    .file-row {
+      position: relative;
+    }
+
+
+
+
+    /* Línea horizontal que conecta la vertical con el icono de archivo */
+    .file-icon::before {
+      content: "";
+      position: absolute;
+      left: -16px;
+      top: 50%;
+      width: 30px;
+      height: 2px;
+      background: #ccc;
+    }
+
+    .file-icon {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-right: 6px;
+      color: #272727;
+      cursor: pointer;
+      gap: 5px;
+      padding: 7px;
+
+    }
+
+    .icono-subfile{
+      padding: 7px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      min-width: 40px;
+      min-height: 40px;
+    }
+
+    .file-icon:hover{
+      color: var(--gris_oscuro);
+      background-color:#f5f5f5;
+      border-radius: 15px;
+    }
+    
+    .table td {
+      vertical-align: middle;
+    }
+
+
+.sub-archivos {
+  position: relative;
+  margin-left: 15px; /* para alinear con la carpeta */
+  padding-left: 20px;
+}
+
+.sub-archivos::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;   
+  width: 2px;
+  background: #ccc;
+}
+
+
+
+
+
+
+.contact-container {
+  margin-top: 30px;
+  /*background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);*/
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  }
+
+.contact-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+ /* background: linear-gradient(90deg, #FF6B6B, var(--rojo_hover));*/
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.contact-header {
+  text-align: left;
+  padding: 40px 40px 20px;
+  color: #333;
+}
+
+.contact-header p {
+    font-size: 1.1rem;
+    color: var(--gris_oscuro);
+    font-weight: 500;
+}
+
+.contact-content {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    padding: 40px;
+    align-items: center;
+}
+
+.contact-list {
+    list-style: none;
+}
+
+.contact-item {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 15px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.5s;
+}
+
+.contact-item:hover::before {
+    left: 100%;
+}
+
+.contact-item:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border-color: var(--rojo_hover);
+}
+
+.contact-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.contact-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, var(--gris_claro) 0%, var(--gris_hover) 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.contact-item:hover .contact-icon {
+    transform: rotate(15deg) scale(1.1);
+}
+
+.contact-details h3 {
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.contact-details a {
+    color: var(--main-color);
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.contact-details a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    transition: width 0.3s ease;
+}
+
+  .contact-details a:hover::after {
+      width: 100%;
+  }
+
+  .contact-details a:hover {
+      color: #764ba2;
+  }
+
+  .mascot-container {
+      position: relative;
+  }
+
+        

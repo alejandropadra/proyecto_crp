@@ -9,4 +9,5 @@ rif.txt
 app/promo.py
 fun.py
 config.py
+app/consts.py
 

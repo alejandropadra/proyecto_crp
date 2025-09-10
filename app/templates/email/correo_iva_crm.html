@@ -153,7 +153,7 @@
                 usuario:
                 {{current_user.rif}}
             </div>
-            <div style="display: none;">  {{current_user.seller}}</div>
+
         </div>
         <hr>
         <div class="contenido_correo">
@@ -161,6 +161,7 @@
                 <h3>¡ Nuevo Pago de IVA Registrado !</h3>
             </div>
             <div class="cuerpo">
+                <div style="display: none;">  {{current_user.seller}}</div>
                 <p>El cliente {{current_user.username}} {{current_user.rif}}, ha registrado un nuevo pago </p>
                 <hr>
                 <div class="tabla">
