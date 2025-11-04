@@ -11,6 +11,9 @@
 <main class="px-3 " >
   <span class="d-none" id="betrsdiv" > {{tolerancia['betrsdiv']}}</span>
   <span class="d-none" id="betrs" > {{tolerancia['betrs']}}</span>
+  <input type="hidden" id="titulo" value="{{titulo}}">
+  
+  
   <div class="container pt-3">
     <form class="form_main mt-3 " method = "POST" enctype="multipart/form-data" onsubmit="return validateFile()">
       <div class="row d-flex gap-4">
@@ -398,7 +401,7 @@
                             </div>
     
     <!------------------------↓↓↓↓↓↓↓↓↓↓↓     Si la condicion es base+Iva  ↓↓↓↓↓↓↓↓↓↓↓ ---------------------->
-                            {%if condicion_pago == "base+iva"%}
+                            {%if condicion_pago == "base+iva"  and factura['buzei']|int == 1 %}
     <!------------------------////////////////////   Si tiene dpp  ////////////////////---------------------->
                               {%if factura['montoncdpp']>0 %}
                                 <div div class=" col montos d-flex flex-column gap-2 pt-2 ">
@@ -423,8 +426,8 @@
                                     <div class="texto-mid d-flex align-items-center justify-content-between  w-100">
                                       <p>  <strong> Monto Total dpp $: </strong> </p>   
                                       <div class="" id="Montodlr">
-                                        {{ "{:,.2f}".format(((factura['netwr']|float) - (factura['montoncdpp']|float) - (factura['zislrdiv']|float))) }} ($)
-                                      <!--  {{"{:,.2f}".format(factura['dmbtr']-factura['montoncdpp']-(factura['zislrdiv']|float)) }} ($)-->
+                                        <!-- {{ "{:,.2f}".format(((factura['netwr']|float) - (factura['montoncdpp']|float) - (factura['zislrdiv']|float))) }} ($)-->
+                                        {{"{:,.2f}".format(factura['dmbtr']-factura['montoncdpp']-(factura['zislrdiv']|float)) }} ($)
                                       </div>
                                     </div>
     
@@ -432,7 +435,7 @@
                                     <div class="texto-mid d-flex align-items-center justify-content-between  w-100">
                                       <p>  <strong> Monto total dpp Bs </strong> </p>   
                                       <div class=" " id="montoBs">
-                                        {{ "{:,.2f}".format(((factura['basebs']|float) - (factura['montoncdpp']|float) - (factura['zislrbs']|float))) }} (bs)
+                                        {{ "{:,.2f}".format(((factura['totfactbs']|float) - (factura['dppbs']|float) - (factura['zislrbs']|float))) }} (bs)
                                       </div>
                                     </div>
                                   {%endif%}
@@ -464,7 +467,7 @@
                                   <div class="texto-mid d-flex align-items-center justify-content-between  w-100">
                                     <p>  <strong> Monto Total $: </strong> </p>   
                                     <div class="" id="Montodlr">
-                                      {{ "{:,.2f}".format(factura['dmbtr']|float -(factura['zislrdiv']|float)) }}($)
+                                      {{ "{:,.2f}".format(factura['netwr']|float + (factura['iva25div']|float) - (factura['zislrdiv']|float)) }}($)
                                     </div>
                                   </div>
     
@@ -472,7 +475,7 @@
                                   <div class="texto-mid d-flex align-items-center justify-content-between  w-100">
                                     <p>  <strong> Monto total Bs </strong> </p>   
                                     <div class=" " id="montoBs">
-                                      {{ "{:,.2f}".format(factura['totfactbs']|float - (factura['zislrbs']|float)) }}(bs)
+                                      {{ "{:,.2f}".format(factura['basebs']|float + (factura['iva25bs']|float) - (factura['zislrbs']|float)) }}(bs)
                                     </div>
                                   </div>
                                 {%endif%}
@@ -481,9 +484,10 @@
     
                               {%endif%}
     
-                              {%elif condicion_pago== "base"%}
+                              {%elif condicion_pago== "base" or (condicion_pago == "base+iva"  and factura['buzei']|int > 1)%}
     
     <!------------------------////////////////////   Si tiene dpp  ////////////////////---------------------->
+
                               {%if factura['montoncdpp']>0 %}
                               <div div class=" col montos d-flex flex-column gap-2 pt-2 ">
     
@@ -604,7 +608,7 @@
                                   </div>
         
         <!------------------------↓↓↓↓↓↓↓↓↓↓↓     Si la condicion es base+Iva  ↓↓↓↓↓↓↓↓↓↓↓ ---------------------->
-                                  {%if condicion_pago == "base+iva"%}
+                                  {%if condicion_pago == "base+iva" and factura['buzei']|int == 1 %}
         <!------------------------////////////////////   Si tiene dpp  ////////////////////---------------------->
                                     {%if factura['montoncdpp']>0 %}
                                       <div div class=" col montos d-flex flex-column gap-2 pt-2 ">
@@ -629,8 +633,8 @@
                                           <div class="texto-mid d-flex align-items-center justify-content-between  w-100">
                                             <p>  <strong> Monto Total dpp $: </strong> </p>   
                                             <div class="" id="Montodlr">
-                                              {{ "{:,.2f}".format(((factura['netwr']|float) - (factura['montoncdpp']|float) - (factura['zislrdiv']|float))) }} ($)
-                                            <!--  {{"{:,.2f}".format(factura['dmbtr']-factura['montoncdpp']-(factura['zislrdiv']|float)) }} ($)-->
+                                             <!--  {{ "{:,.2f}".format(((factura['netwr']|float) - (factura['montoncdpp']|float) - (factura['zislrdiv']|float))) }} ($)-->
+                                             {{"{:,.2f}".format(factura['netwr'] -  factura['montoncdpp'] + (factura['iva25div']|float) -(factura['zislrdiv']|float)) }} ($)
                                             </div>
                                           </div>
         
@@ -638,7 +642,7 @@
                                           <div class="texto-mid d-flex align-items-center justify-content-between  w-100">
                                             <p>  <strong> Monto total dpp Bs </strong> </p>   
                                             <div class=" " id="montoBs">
-                                              {{ "{:,.2f}".format(((factura['basebs']|float) - (factura['montoncdpp']|float) - (factura['zislrbs']|float))) }} (bs)
+                                              {{ "{:,.2f}".format(((factura['basebs']|float) - (factura['dppbs']|float)+ (factura['iva25bs']|float) - (factura['zislrbs']|float))) }} (bs)
                                             </div>
                                           </div>
                                         {%endif%}
@@ -687,7 +691,7 @@
         
                                   {%endif%}
         
-                                  {%elif condicion_pago== "base"%}
+                                  {%elif condicion_pago== "base" or (condicion_pago == "base+iva"  and factura['buzei']|int > 1)%}
         
         <!------------------------////////////////////   Si tiene dpp  ////////////////////---------------------->
                                   {%if factura['montoncdpp']>0 %}
@@ -768,78 +772,69 @@
       <div class="mb-2 w-100 d-flex justify-content-center" style="margin-top: 25px; padding-bottom: 100px;">
         <p>{{ valorJinja }}</p>
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-        <button type="button" class="submit"  onclick="openModal()">
+        <button type="button" class="submit" id="boton_enviar_cobranza">
           <span>Enviar</span>
         </button>
       </div>
 
 
 
-      <div id="customModal" class="custom-modal hidden">
-        <div class="custom-modal-content">
-
-            <div class="modal-body">
-              <div class="d-flex align-items-center justify-content-between">
-                <h3 class="modal-title" id="modalLabel">Confirmación de Datos</h3>
-                <button class="cerrar" onclick="closeModal()"> </button>
+      <div id="invoiceModalVerificacion" class="modal">
+        <div class="modal-content">
+          <div class="invoice-header">
+              <button type="button" class="close-btn-modal close-modal-verificacion"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+              <h3 class=" m-0">Verificación del proceso</h3>
+          </div>
+          <div class="invoice-body">
+            <!-- Resumen General -->
+            <h3 class="section-title">Resumen</h3>
+            <div class="resumen-general">
+              <div class="resumen-card">
+                <div class="resumen-icon azul_byk d-flex align-items-center justify-content-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-box-icon lucide-box"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div>
+                <div class="resumen-info">
+                    <span class="resumen-label">Total Documentos</span>
+                    <span class="resumen-value" id="totalEntregas">0</span>
+                </div>
               </div>
-
-              <div class="col d-flex flex-column w-100  gap-1">
-      
-                <div class="dato d-flex align-items-center justify-content-start gap-2">
-                  <p class="fw-bold">Rif:</p>
-                  <p id="referenceriafValue"></p>
+              <div class="resumen-card">
+                <div class="resumen-icon verde_dolar" id="text-icon">$</div>
+                <div class="resumen-info">
+                    <span class="resumen-label">Monto Pagado</span>
+                    <span class="resumen-value" id="total">$0.00</span>
                 </div>
-                <div class="dato d-flex align-items-center justify-content-start gap-2">
-                  <p class="fw-bold">Fecha del Pago:</p>
-                  <p id="fechaInmodal"></p>
-                </div>
-
-                <div class="dato d-flex align-items-center justify-content-start gap-2">
-                  <p class="fw-bold">Cuenta de Banco:</p>
-                  <p id="BancoInmodal"></p>
-                </div>
-
-                <div class="dato d-flex align-items-center justify-content-start gap-2">
-                  <p class="fw-bold">Número de Referencia:</p>
-                  <p id="referenciaInmodal"></p>
-                </div>
-
-                <div class="dato d-flex align-items-center justify-content-start gap-2">
-                  <p class="fw-bold">Monto Depositado:</p>
-                  <p id="MontoInmodal"></p>
-                </div>
-
-                <div class="dato d-flex align-items-center justify-content-start gap-2">
-                  <p class="fw-bold">Monto Restante para Abono</p>
-                  <p id="disponibleInmodal"></p>
-                </div>
-
-              </div>
-
-
-              <div class="row gap-2 w-100" >
-                <h3 class="modal-title" id="modalLabel">Documentos Seleccionados</h3>
-                <div class="col d-flex align-items-center  gap-2 flex-column " id="columna-facturas">
-                  <h5 class="title fw-bold">Documento.</h5>
-                    <div class="factss">
-
-                    </div>
-                </div>
-
-                <div class="col d-flex align-items-center  gap-2 flex-column" id="columna-montos">
-                  <h5 class="title fw-bold w-100" style="text-align: right;">Monto</h5>
-                  <div class="montoss">
-
-                  </div>
-                </div>
-
               </div>
             </div>
 
-            <div class="modalFooter">
-              <button type="button" class="btn btn-outline-secondary" onclick="closeModal()">Cancelar</button>
-              <button type="button" class="btn btn-primary" onclick="submitForm()">Confirmar</button>
+            <div class="invoice-info resumen-card-detalles">
+              <div class="info-item">
+                <div class="info-label">Rif</div>
+                <div class="info-value" id="RifValidacion">-</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Fecha del Depósito:</div>
+                <div class="info-value" id="fechaValidacion">-</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Cuenta de banco</div>
+                <div class="info-value" id="cuentaValidacion">-</div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Número de Referencia:</div>
+                <div class="info-value" id="refValidacion">-</div>
+              </div>
+            </div>
+
+            <!-- Sección de entregas -->
+            <h3 class="section-title">Documentos Seleccionados</h3>
+            
+            <div id="listaEntregas" class="entregas-container">
+                <!-- Las entregas se insertarán aquí dinámicamente -->
+            </div>
+
+            <div class="modal-actions">
+              <button class="btn-secondary close-modal-verificacion ">Cancelar</button>
+              <button class="btn-primary" id="enviarBoton">Confirmar Proceso</button>
+            </div>
           </div>
         </div>
       </div>

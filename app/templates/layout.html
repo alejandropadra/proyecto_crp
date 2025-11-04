@@ -38,9 +38,143 @@
 {% endblock%}
 
 
+
 {% endblock %}
 {% block body %}
 {% block navbar %}
+
+<style>
+  /* Estilos del modal mejorado */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    
+    .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .modal-dialog-custom {
+
+        max-width: 650px;
+        width: 90%;
+        transform: translateY(-100px) scale(0.7);
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .modal-overlay.active .modal-dialog-custom {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    
+    .badge-version {
+        display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+    }
+    
+    .icon-circle {
+        width: 90px;
+        height: 90px;
+        background: linear-gradient(135deg, #D50000 0%, #b10505 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        box-shadow: 0 8px 16px rgba(220, 53, 69, 0.3);
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% {
+            box-shadow: 0 8px 16px rgba(220, 53, 69, 0.3);
+        }
+        50% {
+            box-shadow: 0 8px 24px rgba(220, 53, 69, 0.5);
+        }
+    }
+    
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #212529 0%, #343a40 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    
+    .btn-close-custom {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: none;
+        background-color: transparent;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .btn-close-custom:hover {
+        background-color: #dc3545;
+        transform: rotate(90deg);
+    }
+    
+    .btn-close-custom:hover svg {
+        stroke: white;
+    }
+    
+    .modal-content-custom {
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        border: none;
+        overflow: hidden;
+    }
+    
+    .modal-header-gradient {
+
+        padding: 1rem;
+    }
+    
+    .feature-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 1.25rem;
+        transition: all 0.3s;
+        border: 2px solid transparent;
+    }
+    
+    .feature-card:hover {
+        border-color: #dc3545;
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15);
+        transform: translateY(-2px);
+    }
+</style>
 <header>
   <nav>
       
@@ -58,9 +192,9 @@
               <div class="dropdown-cont">
                 <div class="dropdown">
                   <ul class="list-unstyled mb-0 ">
-                      <li class=""><a class="{% if titulo == 'reporte pago' %} active {% endif %}"  href="{{ url_for('.cobranza')}}">Registrar Pago</a>
-                      <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.cobranza_iva')}}" >Registrar Pago Iva</a></li>
-                    </li>
+                    <li class=""><a class="{% if titulo == 'reporte pago' %} active {% endif %}"  href="{{ url_for('.cobranza')}}">Registrar Pago</a></li>
+                    <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.cobranza_iva')}}" >Registrar Pago Iva</a></li>
+                    <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.prepago')}}" >Registrar Prepago</a></li>
                     <li class=""><a class="{% if titulo == 'Lista Cobranzas' %} active {% endif %}"  href="{{ url_for('.lista_cobranza')}}">Documentos Pendientes</a></li>
                     <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.pagos_cobranza')}}" >Pagos Realizados</a></li>
                     <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.historial')}}" >Historial</a></li>
@@ -163,10 +297,17 @@
                   <h3 class="fs-5">{{current_user.username}}</h3>
               </div>
               <hr>
-              {% if current_user.nivel != "cliente"%}
+              {% if current_user.nivel == "administrador" %}
               <a href="{{ url_for('.usuarios')}}" class="sub-menu-link">
                   <i class="bi bi-pencil-square"></i>
                   <p>Gestión de usuario</p>
+                  <span>></span>
+              </a>
+              {% endif %}
+              {% if current_user.nivel == "administrador" or current_user.nivel == "corimon"%}
+              <a href="{{ url_for('.panel')}}" class="sub-menu-link">
+                  <i class="bi bi-pencil-square"></i>
+                  <p>Archivos</p>
                   <span>></span>
               </a>
               {% endif %}
@@ -231,7 +372,90 @@
                 <div class="error__close">
                 <button type="button" class="btn-close p-1" data-bs-dismiss="alert" aria-label="Close"></button></div>
               </div>
-            {% else %}
+            {% elif  category == 'modal'%}
+
+            <!-- Modal Mejorado -->
+              <div id="modalNotificación" class="modal-overlay" >
+                  <div class="modal-dialog-custom" >
+                      <div class="modal-content-custom bg-white">
+                          <!-- Header -->
+                          <div class="modal-header-gradient position-relative text-center">
+                              <button class="btn-close-custom position-absolute top-0 end-0 m-3" 
+                                      onclick="cerrarModalVerificacion()">
+                                  <svg width="24" height="24" fill="none" stroke="#212529" viewBox="0 0 24 24">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                                  </svg>
+                              </button>
+                              
+                              <div class="icon-circle">
+                                  <svg class="text-white" width="45" height="45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                                  </svg>
+                              </div>
+
+                              <div class="badge-version mb-3">v1.2.0.0</div>
+                              <h2 class="h3 fw-bold text-dark mb-2">¡Nuevas Actualizaciones!</h2>
+                              <p class="text-muted mb-0">Descubre las nuevas características</p>
+                          </div>
+
+                          <!-- Body -->
+                          <div class="p-4">
+                              <div class="d-flex flex-column gap-3">
+                                  <!-- Feature 1 
+                                  <div class="feature-card">
+                                      <div class="d-flex align-items-start gap-3">
+                                          <div class="feature-icon text-white">
+                                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-plus-icon lucide-shield-plus"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M9 12h6"/><path d="M12 9v6"/></svg>
+                                          </div>
+                                          <div class="flex-grow-1">
+                                              <h3 class="fw-bold text-dark mb-2 fs-6">
+                                                  Reestructuración de la ventana de verificación de Pagos
+                                              </h3>
+                                              <p class="text-muted small mb-0" style="line-height: 1.6;">
+                                                  Ahora en los modulos de pagos, a la hora de verificar el registro de pago, hay un nuevo menú 
+                                                  con la información reestructurada para una mejor visualización de los datos del pago realizado.
+                                              </p>
+                                          </div>
+                                      </div>
+                                  </div>-->
+
+                                  <!-- Feature 2 -->
+                                  <div class="feature-card">
+                                      <div class="d-flex align-items-start gap-3">
+                                          <div class="feature-icon text-white">
+                                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-plus-icon lucide-shield-plus"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M9 12h6"/><path d="M12 9v6"/></svg>
+                                          </div>
+                                          <div class="flex-grow-1">
+                                              <h3 class="fw-bold text-dark mb-2 fs-6">
+                                                  Funcionalidad de registro de Pre-Pagos
+                                              </h3>
+                                              <p class="text-muted small mb-0" style="line-height: 1.6;">
+                                                  Se ha añadido la funcionalidad de registrar Pre-Pagos en el módulo de Pagos, 
+                                                  permitiendo a los usuarios registrar pagos anticipados y gestionarlos de manera eficiente.
+                                                  <strong> Para utilizar esta funcionalidad, dirígete a la sección de "Pagos" y selecciona "Registrar Pre-Pago".</strong>
+                                              </p>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+
+                              <!-- Footer Button -->
+                              <div class="text-center mt-4">
+                                  <button class="btn btn-danger btn-lg px-5 rounded-pill fw-semibold" 
+                                          onclick="cerrarModalVerificacion()"
+                                          style="box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);">
+                                      <i class="fa-solid fa-check me-2"></i>Entendido
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+            {%else%}
+
+
+
             <div class="alert mensaje_flash  alert-dismissible succes " role="alert">
               <div class="error__icon">
                 <i class="bi bi-check-circle-fill" style="color: #fff" > </i>
@@ -285,8 +509,9 @@
         <!--Otra columna-->
         <div class="dropdown-in-responsive">
           <ul class="list-unstyled mb-0 ">
-              <li class=""><a class="{% if titulo == 'reporte pago' %} active {% endif %}"  href="{{ url_for('.cobranza')}}">Registrar Pago</a></li>
-              <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.cobranza_iva')}}" >Registrar Pago Iva</a></li>            
+            <li class=""><a class="{% if titulo == 'reporte pago' %} active {% endif %}"  href="{{ url_for('.cobranza')}}">Registrar Pago</a></li>
+            <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.cobranza_iva')}}" >Registrar Pago Iva</a></li>     
+            <li class=""><a class="{% if titulo == 'reporte pago' %} active {% endif %}"  href="{{ url_for('.prepago')}}">Registrar Prepago</a></li>       
             <li class=""><a class="{% if titulo == 'Lista Cobranzas' %} active {% endif %}"  href="{{ url_for('.lista_cobranza')}}">Documentos Pendientes</a></li>
             <li class=""><a class="{% if titulo == 'Lista Cobranzas' %} active {% endif %}"  href="{{ url_for('.pagos_cobranza')}}">Pagos Realizados</a></li>
             <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.historial')}}" >Historial</a></li>
@@ -379,8 +604,10 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
 
+{% if not excluir_app_js %}
 <!-- Incluye tus propios scripts -->
 <script src="{{ url_for('static', filename='js/app2.js') }}"></script>
+{% endif %}
 
 <script>
   $(document).ready(function() {
@@ -397,6 +624,47 @@
     });
 });
 
+</script>
+
+
+
+<script>
+    
+
+window.addEventListener('load', function() {
+    
+    const modal = document.getElementById('modalNotificación');
+    if (!modal) {
+        console.error("Error: El elemento #modalNotificación no se encontró en el DOM.");
+        return; 
+    }
+    setTimeout(function() {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }, 1000);
+
+
+    function cerrarModalVerificacion() {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            cerrarModalVerificacion();
+        }
+    });
+
+
+    document.addEventListener('keydown', function(e) {
+
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            cerrarModalVerificacion();
+        }
+    });
+
+});
 </script>
 
 

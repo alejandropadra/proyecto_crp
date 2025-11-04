@@ -1,16 +1,19 @@
 {% extends 'layout.html' %}
 {% from 'helpers/_forms.html' import render_field %}
 {% block main %}
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename = 'css/estilos_prepago.css') }}">
+<style>
+    
+</style>
+{% endblock%}
 
-
-<main class="position-relative mt-4 px-3 "  >
-
-    <div class="courses-container z-0 container p-3 " >
+<main class="mt-4 px-3 vh-100">
+    <div class="courses-container z-0 container p-3">
         <div class="cont-Fila w-100 d-flex flex-column">
-        <div class="row d-flex mb-4 gap-4 " >
-
-                <a class="base-contenedor w-100 col-xl p-4 d-flex flex-column no-style " href="{{ url_for('.dashboard') }}">
-                    <div class="titulo_saldo d-flex align-items-center justify-content-center w-100 h-50 ">
+            <div class="row d-flex mb-4 gap-4">
+                <a class="base-contenedor w-100 col-xl p-4 d-flex flex-column no-style" href="{{ url_for('.dashboard') }}">
+                    <div class="titulo_saldo d-flex align-items-center justify-content-center w-100 h-50">
                         <div class="icono_modulo d-flex align-items-center justify-content-center">
                             <i class="fa-solid fa-money-bill d-flex align-items-center justify-content-center"></i>
                         </div>
@@ -20,42 +23,41 @@
                     </div>
                 </a>
             
-                <a class="base-contenedor w-100 col-xl p-4 d-flex flex-column no-style" >
-                    <div class="titulo_saldo d-flex align-items-center justify-content-center w-100 h-50 ">
+                <a class="base-contenedor w-100 col-xl p-4 d-flex flex-column no-style">
+                    <div class="titulo_saldo d-flex align-items-center justify-content-center w-100 h-50">
                         <div class="icono_modulo d-flex align-items-center justify-content-center">
                             <i class="fa-solid fa-truck-fast d-flex align-items-center justify-content-center"></i>
                         </div>
                     </div>
                     <div class="d-flex justify-content-center w-100 h-50">
-                        <p class="etiqueta-size"> Pedidos</p>
+                        <p class="etiqueta-size">Pedidos</p>
                     </div>
                 </a>
 
-
-
-                <a class="base-contenedor w-100 col-xl p-4 d-flex flex-column no-style" >
-                    <div class="titulo_saldo d-flex align-items-center justify-content-center w-100 h-50 ">
+                <a class="base-contenedor w-100 col-xl p-4 d-flex flex-column no-style">
+                    <div class="titulo_saldo d-flex align-items-center justify-content-center w-100 h-50">
                         <div class="icono_modulo d-flex align-items-center justify-content-center">
                             <i class="fa-solid fa-paint-roller d-flex align-items-center justify-content-center"></i>
                         </div>
                     </div>
                     <div class="d-flex justify-content-center w-100 h-50">
-                        <p class="etiqueta-size"> Formulación</p>
+                        <p class="etiqueta-size">Formulación</p>
                     </div>
                 </a>
-                <a class="base-contenedor w-100 col-xl p-4 d-flex flex-column no-style" >
-                    <div class="titulo_saldo d-flex align-items-center justify-content-center w-100 h-50 ">
+
+                <a class="base-contenedor w-100 col-xl p-4 d-flex flex-column no-style">
+                    <div class="titulo_saldo d-flex align-items-center justify-content-center w-100 h-50">
                         <div class="icono_modulo d-flex align-items-center justify-content-center">
                             <i class="fa-solid fa-shirt d-flex align-items-center justify-content-center"></i>
                         </div>
                     </div>
                     <div class="d-flex justify-content-center w-100 h-50">
-                        <p class="etiqueta-size"> Mercadeo</p>
+                        <p class="etiqueta-size">Mercadeo</p>
                     </div>
                 </a>
 
-                <a class="base-contenedor w-100 col-xl p-4 d-flex flex-column no-style" >
-                    <div class="titulo_saldo d-flex align-items-center justify-content-center w-100 h-50 ">
+                <a class="base-contenedor w-100 col-xl p-4 d-flex flex-column no-style">
+                    <div class="titulo_saldo d-flex align-items-center justify-content-center w-100 h-50">
                         <div class="icono_modulo d-flex align-items-center justify-content-center">
                             <i class="fa-solid fa-phone d-flex align-items-center justify-content-center"></i>
                         </div>
@@ -64,16 +66,89 @@
                         <p class="etiqueta-size">Soporte</p>
                     </div>
                 </a>
-                    
+            </div>
         </div>
     </div>
-
- 
-
-    </div>
 </main>
-    
-    
+
+<!-- Modal Mejorado 
+<div id="invoiceModalVerificacion" class="modal-overlay" >
+    <div class="modal-dialog-custom" >
+        <div class="modal-content-custom bg-white">
+
+            <div class="modal-header-gradient position-relative text-center">
+                <button class="btn-close-custom position-absolute top-0 end-0 m-3" 
+                        onclick="cerrarModalVerificacion()">
+                    <svg width="24" height="24" fill="none" stroke="#212529" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+                
+                <div class="icon-circle">
+                    <svg class="text-white" width="45" height="45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                    </svg>
+                </div>
+
+                <div class="badge-version mb-3">v1.2.0.0</div>
+                <h2 class="h3 fw-bold text-dark mb-2">¡Nuevas Actualizaciones!</h2>
+                <p class="text-muted mb-0">Descubre las nuevas características</p>
+            </div>
+
+
+            <div class="p-4">
+                <div class="d-flex flex-column gap-3">
+
+                    <div class="feature-card">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="feature-icon text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-plus-icon lucide-shield-plus"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M9 12h6"/><path d="M12 9v6"/></svg>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h3 class="fw-bold text-dark mb-2 fs-6">
+                                    Reestructuración de la ventana de verificación de Pagos
+                                </h3>
+                                <p class="text-muted small mb-0" style="line-height: 1.6;">
+                                    Ahora en los modulos de pagos, a la hora de verificar el registro de pago, hay un nuevo menú 
+                                    con la información reestructurada para una mejor visualización de los datos del pago realizado.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="feature-card">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="feature-icon">
+                                <svg class="text-white" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                </svg>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h3 class="fw-bold text-dark mb-2 fs-6">
+                                    Funcionalidad de registro de Pre-Pagos
+                                </h3>
+                                <p class="text-muted small mb-0" style="line-height: 1.6;">
+                                    Se ha añadido la funcionalidad de registrar Pre-Pagos en el módulo de Pagos, 
+                                    permitiendo a los usuarios registrar pagos anticipados y gestionarlos de manera eficiente.
+                                    <strong> Para utilizar esta funcionalidad, dirígete a la sección de "Pagos" y selecciona "Registrar Pre-Pago".</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button class="btn btn-danger btn-lg px-5 rounded-pill fw-semibold" 
+                            onclick="cerrarModalVerificacion()"
+                            style="box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);">
+                        <i class="fa-solid fa-check me-2"></i>Entendido
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+
 
 {% endblock %}
-

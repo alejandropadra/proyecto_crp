@@ -1901,7 +1901,7 @@ button.submit {
 
   .folder-row {
       font-weight: bold;
-      color: var(--rojo_hover); /* morado carpeta */
+      color: var(--rojo_hover); 
       position: relative;
       background-color: #f1f1f1;
     }

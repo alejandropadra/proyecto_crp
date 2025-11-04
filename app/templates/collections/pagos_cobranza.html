@@ -10,6 +10,7 @@
             <tr>
                 <th>Fecha de pago</th>
                 <th>N° de Referencia</th>
+                <th>Tipo Pago</th>
                 <th>Tipo Moneda</th>
                 <th>Monto</th>
                 <th>Cta Banco</th>
@@ -22,6 +23,7 @@
             <tr  class="celda text-center"   >
                 <td class="">{{pago['bldat']}} </td>
                 <td>{{pago['xblnr']}}</td>
+                <td>{% if pago['entrega']== '' %} Crédito {% else %} Prepagado {% endif %}</td>
                 <td>{% if pago['tipopago'] == 'B' %}Bs{% elif pago['tipopago'] == 'D'  %}${% endif %}</td>
                 <td>{{ "{:,.2f}".format(pago['wrbtr']|abs) }} </td>
                 <td >{{pago['ctabanco']}}</td>
@@ -37,6 +39,7 @@
             <tr>
                 <th>Fecha de pago</th>
                 <th>N° de Referencia</th>
+                <th>Tipo Pago</th>
                 <th>Tipo Moneda</th>
                 <th>Monto</th>
                 <th>Cta Banco</th>

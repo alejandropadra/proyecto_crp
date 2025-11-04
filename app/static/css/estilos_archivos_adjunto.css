@@ -1,0 +1,145 @@
+.title_mm {
+    letter-spacing: -1px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: 30px;
+    text-align: center;
+    font-family: var(--Oswald);
+    font-weight: 600;
+    font-size: 30px;
+}
+
+
+.pagination-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem 0;
+}
+.title_mm::before,.title_mm::after {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    left: 0px;
+    background-color: var(--rojo_hover);
+}
+
+.title_mm::before {
+    width: 18px;
+    height: 18px;
+    background-color: var(--rojo_hover);
+}
+
+.title_mm::after {
+    width: 18px;
+    height: 18px;
+    animation: pulse 1s linear infinite;
+}
+
+@keyframes shine {
+    0% {
+        left: -100px;
+    }
+
+    60% {
+        left: 100%;
+    }
+
+    to {
+        left: 100%;
+    }
+    }
+
+
+
+@keyframes pulse {
+    from {
+        transform: scale(0.9);
+        opacity: 1;
+    }
+
+    to {
+        transform: scale(1.8);
+        opacity: 0;
+    }
+}
+
+
+
+.folder-row {
+    font-weight: bold;
+    color: var(--rojo_hover); 
+    position: relative;
+    background-color: #f1f1f1;
+}
+
+.file-row {
+    position: relative;
+}
+
+
+
+
+/* Línea horizontal que conecta la vertical con el icono de archivo */
+.file-icon::before {
+    content: "";
+    position: absolute;
+    left: -16px;
+    top: 50%;
+    width: 30px;
+    height: 2px;
+    background: #ccc;
+}
+
+.file-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-right: 6px;
+    color: #272727;
+    cursor: pointer;
+    gap: 5px;
+    padding: 7px;
+
+}
+
+.icono-subfile{
+    padding: 7px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    min-width: 40px;
+    min-height: 40px;
+}
+
+.file-icon:hover{
+    color: var(--gris_oscuro);
+    background-color:#f5f5f5;
+    border-radius: 15px;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+
+.sub-archivos {
+position: relative;
+margin-left: 15px; 
+padding-left: 20px;
+}
+
+.sub-archivos::before {
+content: "";
+position: absolute;
+left: 0;
+top: 0;
+bottom: 0;   
+width: 2px;
+background: #ccc;
+}

@@ -1,0 +1,119 @@
+{% extends 'layout.html' %}
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename = 'css/estilos_archivos_adjunto.css') }}">
+
+{% endblock%}
+
+{% block main %}
+<input type="hidden" name="" value='{{ files | tojson }}' id="filesData">
+<main class="main_contacto min-vh-100">
+    <div class="min-vh-100 w-100 container p-3">
+        <!-- <h1 class="title_mm">Material de apoyo</h1>-->
+        
+        <div class="contenedor-tabla border shadow-sm bg-white p-4 rounded-4">
+            <h3 class="sub-titulo" style="font-size: 25px !important;">Archivos</h3>
+            
+            <div class="mb-4">
+                <div class="d-flex align-items-center">
+                    <div class="col-md-10 gap-2">
+                        <div class="row w-100 justify-content-between">
+                            <div class="col-5">
+                                <span class="text-muted">Buscar:</span>
+                                <input type="text" id="searchInput" class="form-control w-100" placeholder=" Buscar archivo..." autocomplete="off">
+                            </div>
+
+                            <div class="col-5">
+                                <span class="text-muted">Filtrar por fecha:</span>
+                                <input id="datepicker" class="form-control w-100"/>
+                            </div>
+
+                            <div class="col d-flex flex-column align-items-center ">
+                                <span class="text-muted">Cantidad a mostrar:</span>
+                                <select id="perPageSelect" class="form-select w-100">
+                                    <option value="10">10 por página</option>
+                                    <option value="25">25 por página</option>
+                                    <option value="50">50 por página</option>
+                                    <option value="100">100 por página</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="pagination-info">
+                <small class="text-muted" id="resultsInfo">
+                    Mostrando <span id="showingCount">0</span> de <span id="totalCount">0</span> archivos
+                </small>
+                <small class="text-muted" id="pageInfo">
+                    Página <span id="currentPage">1</span> de <span id="totalPages">1</span>
+                </small>
+            </div>
+
+
+            <div class="container d-flex flex-column">
+                <div class="folder-row border border-end-0 border-start-0 font-weight-bold p-2">
+                    📁 Consultoría Técnica
+                </div>
+                <div class="sub-archivos" id="filesContainer">
+                    <!-- Los archivos se cargan aquí con JS -->
+                </div>
+                
+
+                <div id="noResults" class="text-center py-5" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-search text-muted mb-3" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                    <p class="text-muted">No se encontraron archivos con ese nombre</p>
+                </div>
+            </div>
+
+
+            <nav class="mt-4" id="paginationNav">
+                <ul class="pagination justify-content-center" id="pagination">
+                    <!-- Se genera con JS -->
+                </ul>
+            </nav>
+        </div>
+    </div>
+</main>
+
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+    // Convertir a JavaScript vanilla
+    document.addEventListener('DOMContentLoaded', function() {
+        const user = document.querySelector('.user');
+        const activadorNav = document.querySelector('.activador_de_nav');
+        const desactivadorNav = document.querySelector('.desactivador_de_nav');
+        const subMenuWrap = document.querySelector('.sub-menu-wrap');
+        const responsiveNav = document.querySelector('.responsive_nav');
+
+        if (user && subMenuWrap) {
+            user.addEventListener('click', function() {
+                subMenuWrap.classList.toggle('active');
+            });
+        }
+
+        if (activadorNav && responsiveNav) {
+            activadorNav.addEventListener('click', function() {
+                responsiveNav.classList.add('active');
+            });
+        }
+
+        if (desactivadorNav && responsiveNav) {
+            desactivadorNav.addEventListener('click', function() {
+                responsiveNav.classList.remove('active');
+            });
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.1/dist/index.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/panel.js') }}"></script>
+
+{% endblock %}

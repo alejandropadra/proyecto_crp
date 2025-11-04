@@ -7,7 +7,7 @@ from .forms import LoginForm, RegisterForm, RegistroPagoForm,EditForm,PerfilForm
 from .models import User, Cobranza
 from . import login_manager
 from .consts import *
-from .email import welcome_mail, pago_crm_mail, pago_mail, comprobante_mail, comprobante_crm_mail, pago_iva_mail,pago_iva_crm_mail
+from .email import welcome_mail, pago_crm_mail, pago_mail, comprobante_mail, comprobante_crm_mail, pago_iva_mail,pago_iva_crm_mail, prepago_crm_mail, prepago_mail
 from flask import session
 from flask import send_file
 from datetime import datetime
@@ -69,10 +69,74 @@ def login():
         if user and user.verify_password(clave):
             login_user(user)
             flash(LOGIN)
-            return redirect(url_for('.modulos'))
+            flash("modal", "modal")
+            if user.nivel == "corimon":
+                return  redirect(url_for('.panel'))
+            else:
+                return redirect(url_for('.modulos'))
         else:
             flash(ERROR_USER_PASSWORD ,'error')
     return render_template("auth/login.html", form = login_form, titulo = "Login")
+
+import os
+from datetime import datetime
+
+@page.route("/panel", methods=["GET"])
+def panel():
+    files_info = []
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    adj_folder = os.path.join(base_dir, 'static', 'adj')
+    
+    try:
+        if os.path.exists(adj_folder):
+            for filename in os.listdir(adj_folder):
+                file_path = os.path.join(adj_folder, filename)
+                if os.path.isfile(file_path) and not filename.endswith('.json'):
+                    try:
+                        file_size = os.path.getsize(file_path)
+                        file_stats = os.stat(file_path)
+                        created_time = datetime.fromtimestamp(file_stats.st_ctime)
+                        modified_time = datetime.fromtimestamp(file_stats.st_mtime)
+                        
+                        files_info.append({
+                            'key': filename,  
+                            'name': filename,
+                            'size': format_file_size(file_size),
+                            'created': created_time.strftime('%d/%m/%Y %H:%M'),  
+
+                            'created_timestamp': file_stats.st_ctime,
+                            'modified_timestamp': file_stats.st_mtime
+                        })
+                    except OSError:
+                        continue
+    except OSError:
+        pass
+
+    files_info.sort(key=lambda x: x['modified_timestamp'], reverse=True)
+    
+    return render_template("auth/panel.html", titulo="Panel administrador", files=files_info)
+
+
+@page.route("/download_panel/<file_key>")
+def download_panel_file(file_key):
+    print('asdasdasdas')
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(base_dir, 'static', 'adj', file_key)
+    print(file_path)
+    if not os.path.exists(file_path) or file_key.endswith('.json'):
+        print(f"File not found or forbidden: {file_key}")   
+        redirect(url_for('.modulos'))
+    
+    try:
+        return send_file(
+            file_path,
+            as_attachment=True,
+            download_name=file_key,
+            mimetype='application/pdf'
+        )
+    except FileNotFoundError:
+        redirect(url_for('.modulos'))
+
 
 @page.route("/registro", methods = ["GET", "POST"])
 @login_required
@@ -180,7 +244,7 @@ def cobranza():
     return render_template("collections/cobranza.html",form = control_form,titulo = 'Registrar Pago')
 
 
-@page.route("/reporte-pago2", methods=["GET","POST"])
+@page.route("/reportarPago", methods=["GET","POST"])
 @login_required
 def cobranza2():
   
@@ -442,12 +506,14 @@ def cobranza2():
         else:
             #print("Error en la solicitud, no se envio los detalles del pago")
             flash(ERROR_PAGO,'error')
+
+    print(facturas_NOvencidas)
             #print(response.status_code)
 #------------------------------------------------------------------------------------------------------------------------
     
     return render_template("collections/cobranza_2.html",form = control_form,titulo = 'Registrar Pago', facturas = facturas, datos = datos, Fecha_pago=fecha, facturas_vencidas= facturas_vencidas, facturas_NOvencidas=facturas_NOvencidas, condicion_pago =  condicion_pago, abonos_nc= abonos_nc, descuento_div = descuento_div, tolerancia = response_json_tolerancia)
 
-@page.route("/cobranza_iva", methods= ["GET", "POST"])
+@page.route("/cobranza_ivas", methods= ["GET", "POST"])
 @login_required
 def cobranza_iva(): 
     control_form = RegistroPagoForm(request.form)
@@ -1800,3 +1866,336 @@ def dashboard2():
     ret = len(response_json3)
     return render_template("collections/dashboard2.html", titulo = "Estado de cuenta", pagos=pagos, pago_t = pago_t,rate=0,total_dolares=response_json['dmbtr'],total_bolos=response_json['totfactbs'],total_vencido_d=response_json['tvencdiv'],total_vencido_b=response_json['tvencbs'],vencido_130_d=response_json['tvenc130d'],vencido_130_b=response_json['tvenc130b'], vencido_3160_d=response_json['tvecc3160d'], vencido_3160_b=response_json['tvecc3160b'], vencido_60_d=response_json['tvec61masd'], vencido_60_b=response_json['tvec61masb'], facturas =response_json1, retenciones=response_json2,contador_fact = ret)
 
+
+
+
+
+
+
+@page.route("/prepago", methods= ["GET", "POST"])
+def prepago():
+    prepago_form = RegistroPagoForm(request.form)
+
+    #---------------------------------------------------------------
+    sap = ip_fuente+"/sap/bc/rest/zentregas"
+    tiempo, fecha_enc = obtener_hora_minutos_segundos_fecha()
+    cadena = cadena_md5('1200',current_user.rif,tiempo,fecha_enc)
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin':'',
+        'BUKRS': '1200',
+        'KUNNR':current_user.rif,
+        'BUDAT':fecha_enc,
+        'TIMLO':tiempo,
+        'CORIMON':cadena
+    }
+    args = {
+        'sap-client':'510',
+        'SOCIEDAD': '1200',
+        'CLIENTE':current_user.rif
+    }
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=VERIFICACION_SSL)
+
+    if response.status_code == 200:
+        try:
+            data = response.json()
+            
+            if not data or not isinstance(data, list):
+                return jsonify({'error': 'Se esperaba un array JSON'}), 400
+            
+            resultados = []
+            print('=========================================================================================')
+            print(data)
+            print("================================================================================")
+            
+            # Validar si los datos están vacíos
+            def es_entrega_vacia(entrega):
+                """Verifica si una entrega está vacía o con datos por defecto"""
+                return (
+                    not entrega.get('entrega') or entrega.get('entrega') == '' or
+                    entrega.get('fechaem') == '0000-00-00' or
+                    (entrega.get('montodiv') == 0.0 and entrega.get('montobs') == 0.0)
+                )
+
+            for entrega in data:
+                if es_entrega_vacia(entrega):
+                    resultado_vacio = {
+                        'encabezado': {
+                            'numero_entrega': '',
+                            'numero_pedido': '',
+                            'fecha_emision': '',
+                            'monto_dolares': 0.0,
+                            'iva_dolares': 0.0,
+                            'monto_bolivares': 0.0,
+                            'iva_bolivares': 0.0,
+                            'tasa_cambio': 0.0,
+                            'total_dolares': 0.0,
+                            'total_bolivares': 0.0,
+                            'termino_pago': '',
+                            'moneda': '',
+                            'monto_abonado_bolivares': 0.0,
+                            'monto_abonado_dolares': 0.0
+                        },
+                        'detalle': {
+                            'total_items': 0,
+                            'monto_total_detalle': 0.0,
+                            'items': [],
+                            'cantidad_items': 0
+                        },
+                        'vacio': True  
+                    }
+                    resultados.append(resultado_vacio)
+                else:
+                    resultado_entrega = procesar_entrega_individual(entrega)
+                    resultado_entrega['vacio'] = False
+                    resultados.append(resultado_entrega)
+            """return jsonify({
+                'total_entregas': len(resultados),
+                'entregas_procesadas': resultados
+            })"""
+
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+        print(resultados)
+        
+    fecha_pago = datetime.today().strftime("%Y%m%d")
+    #--------Porcentaje descuento pag en $--------------------------------------
+    sap = ip_fuente + "/sap/bc/rest/zobdecesp"
+    args = {
+        'sap-client':'510',
+        'SOCIEDAD': '1200',
+        'FEC_DEP': fecha_pago
+    }
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=VERIFICACION_SSL)
+    if response.status_code == 200:
+        try:
+            response_json_descuento = json.loads(response.content)
+            response_json_descuento = str(response_json_descuento)
+            response_json_descuento = response_json_descuento[1:]
+            response_json_descuento = response_json_descuento[:-1]
+            response_json_descuento = eval(response_json_descuento)
+            descuento_div = response_json_descuento['descesp']
+        except:
+            response_json_descuento=[]
+            descuento_div = 0
+    else:
+        descuento_div = 0
+    #----------------------- Tolerancia-----------------------------------------------
+    sap = ip_fuente + "/sap/bc/rest/zobdecesp"
+    args = {
+        'sap-client':'510',
+        'SOCIEDAD': '1200',
+        'TOLERANCIA': 'X'
+    }
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=VERIFICACION_SSL)
+    if response.status_code == 200:
+        try:
+            response_json_tolerancia = json.loads(response.content)
+            response_json_tolerancia = str(response_json_tolerancia)
+            response_json_tolerancia = response_json_tolerancia[1:]
+            response_json_tolerancia = response_json_tolerancia[:-1]
+            response_json_tolerancia = eval(response_json_tolerancia)
+        except:
+            response_json_tolerancia=[]
+    else:
+        response_json_tolerancia=[]
+    return render_template("collections/prepago.html", titulo = "Prepago", resultado = resultados, form = prepago_form, resultados = resultados, excluir_app_js=True, tolerancia = response_json_tolerancia, descuento_div = descuento_div)
+
+
+@page.route("/prepagoPost", methods=['POST'])
+def prepagoPost():
+    try:
+        datos_json = request.form.get('data')
+        if datos_json:
+            datos = json.loads(datos_json)
+        else:
+            datos = {}
+        
+        archivo = request.files.get('soporte_pago')
+        n_deposito= datos.get('ref')
+        rif = datos.get('rif')
+        banco_receptor= datos.get('banco_receptor')
+        fecha = datos.get('fecha')
+        dt = datetime.strptime(fecha, "%Y-%m-%d")
+        fecha_pago = dt.strftime("%Y%m%d")
+        tipoPago = datos.get('tipoPago')
+        monto = datos.get('monto')
+        divisa = "D" if  tipoPago == "$" else "B"
+        
+        seleccionada = datos.get("facturasSeleccionadas", [])
+        print(datos)
+        data = [
+            {
+                'BUKRS': '1200',
+                'XBLNR': n_deposito,
+                'KUNNR': rif,
+                'BLDAT': fecha_pago,
+                'TIPOPAGO': divisa,
+                'WRBTR': monto,
+                'CTABANCO': banco_receptor,
+                'PROCESADO': '',
+                "BELNR1": entrega["encabezado"]["numero_pedido"],       
+                "VBELN": entrega["encabezado"]["numero_entrega"],       
+                "BUZEI": "010",                           
+                "BLDATF": entrega["encabezado"]['fecha_emision'],
+                "MONTOPG": entrega["encabezado"]['monto_abonado'] if entrega["encabezado"]['monto_abonado']else (entrega["encabezado"]["total_dolares"] if divisa == "D" else entrega["encabezado"]["total_bolivares"]),
+                "ENTREGA": entrega["encabezado"]["numero_entrega"],
+                'PREPAGO': "X"
+            }
+            for entrega in seleccionada
+        ]
+        print(data)
+
+        if  archivo:
+            nombre_imagen = secure_filename(current_user.username + '_' + str(n_deposito)+'_'+archivo.filename)
+            ruta_imagen = os.path.abspath(server_adj.format(nombre_imagen))
+            ruta_html = '{}'.format(nombre_imagen)
+            archivo.save(ruta_imagen)
+            if archivo.filename != '':
+                post_imagen = ruta_imagen
+                #print(post_imagen)
+            else:
+                post_imagen = ''
+                nombre_imagen = ''
+        else:
+            post_imagen = ""
+            nombre_imagen =''
+            
+
+
+        
+        
+        
+        url = ip_fuente+'/sap/bc/rest/zrecdepo?sap-client=510&ENVIO=C'
+        tiempo, fecha_enc = obtener_hora_minutos_segundos_fecha()
+        cadena = cadena_md5('1200',current_user.rif,tiempo,fecha_enc)
+        headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Origin':'',
+            'BUKRS': '1200',
+            'KUNNR':current_user.rif,
+            'BUDAT':fecha_enc,
+            'TIMLO':tiempo,
+            'CORIMON':cadena
+        }
+        args = {
+            'sap-client':'510',
+            'SOCIEDAD': '1200',
+            'CLIENTE':current_user.rif
+        }
+        
+        print(data)
+        response = requests.post(
+            url, 
+            auth=HTTPBasicAuth(user_fuente, contra_fuente),
+            json=data,
+            headers=headers,
+            verify=VERIFICACION_SSL)
+
+        print(f"El estatus fué:{response.status_code}")
+        print(f"Response: {response.text[:500]}")
+        
+        if response.status_code == 200:
+
+            respuesta = response.content.decode('utf-8')
+
+            if respuesta == "Deposito Enviado Anteriormente por favor Verificar.":
+                print("deposito repetido")
+                return jsonify({
+                    "success": False,
+                    "message": respuesta
+                }), 200
+
+            elif respuesta == "Actualizacion de deposito Satisfactoria":
+                #print("todo bien")
+                flash(PAGO_CREADO)
+                prepago_crm_mail(current_user, datos, post_imagen,nombre_imagen)
+                prepago_mail(current_user, datos )
+                return jsonify({
+                    "success": True,
+                    "message": "Pago creado exitosamente",
+                    "redirect": url_for('.dashboard')  # Envía la URL como JSON
+                }), 200
+            
+            else:
+                print('anad')
+
+        else:
+            print(respuesta)
+            print('aqui')
+            return jsonify({
+                "success": False,
+                "message": f"Error en la respuesta del servidor: {response.status_code}"
+            }), response.status_code
+            
+    except Exception as e:
+        flash("Ocurrió un error", "error")
+        print(f"Error: {str(e)}")
+        return jsonify({
+            "success": False,
+            "message": f"Error inesperado: {str(e)}"
+        }), 500
+
+
+def procesar_entrega_individual(entrega):
+    """Procesa una entrega individual con su detalle"""
+    
+    # Extraer datos principales
+    datos_principales = {
+        'numero_entrega': entrega.get('entrega'),
+        'numero_pedido': entrega.get('pedido'),
+        'fecha_emision': entrega.get('fechaem'),
+        'monto_dolares': entrega.get('montodiv'),
+        'iva_dolares': entrega.get('ivadiv'),
+        'monto_bolivares': entrega.get('montobs'),
+        'iva_bolivares': entrega.get('ivabs'),
+        'tasa_cambio': entrega.get('tasa'),
+        'total_dolares': entrega.get('dppdiv') if entrega.get('dppdiv') >0 else float(entrega.get('montodiv'))+float(entrega.get('ivadiv')) ,
+        'total_bolivares': entrega.get('dppbs') if entrega.get('dppbs') >0 else float(entrega.get('montobs'))+float(entrega.get('ivabs')),
+        'termino_pago': entrega.get('zterm'),
+        'moneda': entrega.get('moneda'),
+        'monto_abonado_bolivares': entrega.get('montpgbs') or 0,
+        'monto_abonado_dolares': entrega.get('montpgdiv') or 0,
+        'TieneDPP': True if entrega.get('dppdiv') >0 or entrega.get('dppbs') >0 else False,
+        'base_bono_sin_dpp': entrega.get('bsepbonp') or 0,
+        'base_bono_dpp': entrega.get('bbonpdpp') or 0,
+        'condicion_pago': f" {entrega.get('zterm')}-{entrega.get('text1')} ",
+        'bonificacion_pago_divisa_sindpp': entrega.get('montbono') or 0,
+        'bonificacion_pago_divisa_condpp': entrega.get('mbonodpp') or 0
+        
+    }
+
+
+    # Procesar el detalle anidado
+    detalle = entrega.get('detalle', [])
+    items_procesados = []
+    total_items = 0
+    monto_total_detalle = 0
+    
+    for item in detalle:
+        item_procesado = {
+            'posicion': item.get('posicion'),
+            'material': item.get('material'),
+            'descripcion': item.get('descripcion'),
+            'cantidad': float(item.get('total', 0)),
+            'precio': float(item.get('precio', 0)),
+            'precio_unitario': float(item.get('preunitario', 0)),
+            'descuento': float(item.get('descuento', 0)),
+            'monto_total_item': float(item.get('montototal', 0))
+        }
+        
+        items_procesados.append(item_procesado)
+        total_items += item_procesado['cantidad']
+        monto_total_detalle += item_procesado['monto_total_item']
+    
+    return {
+        'encabezado': datos_principales,
+        'detalle': {
+            'total_items': total_items,
+            'monto_total_detalle': monto_total_detalle,
+            'items': items_procesados,
+            'cantidad_items': len(items_procesados)
+        }
+    }

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Correo de Pago CRM</title>
+    <style>
+        body {
+            background-color: #E0E0E0;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .card {
+            background-color: #fff;
+            width: 90%;
+            max-width: 800px;
+            margin: 3% auto;
+            border-radius: 13px;
+            padding: 30px;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .Encabezado {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .usuario {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .titulo h3 {
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            color: #333;
+            margin: 20px 0;
+        }
+
+        .resumen-pago {
+            background-color: #fff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        .resumen-pago p {
+            margin: 5px 0;
+            font-size: 14px;
+            line-height: 1.7;
+            text-align: center;
+            width: 100%;
+        }
+
+        .resumen-pago strong {
+            color: #333;
+            font-weight: 600;
+
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .info-table {
+            background-color: #fff;
+        }
+
+        .info-table th {
+            background-color: #f8f9fa;
+            color: #333;
+            font-weight: 600;
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid #640505;
+            font-size: 13px;
+        }
+
+        .info-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+        }
+
+        .info-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin: 25px 0 15px 0;
+            padding-left: 7px;
+            border-left: 4px solid #640505;
+        }
+
+        h5{
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            margin: 25px 0 15px 0;
+            padding-left: 15px;
+        }
+
+        .factura-container {
+            margin-bottom: 25px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #fff;
+        }
+
+        .factura-header table {
+            background-color: #fff;
+            margin: 0;
+        }
+
+        .factura-header th {
+            padding: 10px;
+            font-size: 12px;
+            color: #333;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-align: left;
+        }
+
+        .factura-header td {
+            padding: 10px;
+            font-size: 13px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .items-table {
+            margin: 0;
+            background-color: #fff;
+        }
+
+        .items-table thead {
+            background-color: #640505;
+        }
+
+        .items-table th {
+            color: #fff;
+            padding: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .items-table td {
+            padding: 10px;
+            font-size: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .items-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .totales-footer {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-top: 2px solid #ddd;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .total-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .total-value {
+            font-weight: 700;
+            color: #333;
+        }
+
+        .abono-row {
+            padding: 5px 2px;
+            background-color: #c3e6cb;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .abono-row .total-value {
+            color: #155724;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 20px 0;
+        }
+
+        footer {
+            background: #535151;
+            padding: 20px;
+            text-align: center;
+            color: #ccc;
+            font-size: 12px;
+            line-height: 1.6;
+            border-radius: 0 0 13px 13px;
+            margin: -30px -30px -30px -30px;
+        }
+
+        footer p {
+            margin: 8px 0;
+        }
+
+        footer a {
+            color: #ccc;
+            text-decoration: none;
+        }
+
+        footer hr {
+            border-top: 1px solid #666;
+            margin: 10px 0;
+        }
+
+        @media only screen and (max-width: 768px) {
+        .card {
+            width: 95%;
+            padding: 15px;
+            margin: 2% auto;
+        }
+
+        .Encabezado {
+            flex-direction: column;
+            gap: 10px;
+            text-align: center;
+        }
+
+        .titulo h3 {
+            font-size: 18px;
+        }
+
+        h4 {
+            font-size: 14px;
+        }
+
+        h5 {
+            font-size: 13px;
+        }
+
+        tr td{
+            font-size: 10px !important;
+        }
+
+        tr th{
+            font-size: 10px !important;
+        }
+    }
+
+
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="Encabezado">
+            <div class="logo">
+                <img src="https://raw.githubusercontent.com/EliezerChirino/imagenes/main/CRP_LOGO.png" alt="Logo Corimon">
+            </div>
+            <div class="usuario">
+                Usuario: {{current_user.rif}}
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="titulo">
+            <h3>Nuevo Pago Registrado</h3>
+        </div>
+
+        <div class="resumen-pago">
+            <p>El cliente <strong>{{current_user.username}}</strong> (RIF: <strong>{{current_user.rif}}</strong>) ha registrado un nuevo pago por un monto de <strong>{{ "{:,.2f}".format(datos['monto']|float) }} {% if datos['tipoPago'] == 'bs' %}Bs{% else %}${% endif %}</strong> el día <strong>{{datos['fecha']}}</strong>.</p>
+            <div style="display: none;">  {{current_user.seller}}</div>
+        </div>
+
+        <h4>Información General del Pago</h4>
+        <table class="info-table">
+            <thead>
+                <tr>
+                    <th>Concepto</th>
+                    <th>Detalle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>RIF del Cliente</strong></td>
+                    <td>{{current_user.rif}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Fecha del Pago</strong></td>
+                    <td>{{datos['fecha']}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Monto del pago</strong></td>
+                    <td style="font-weight: 600; color: #333;">{{ "{:,.2f}".format(datos['monto']|float) }} {% if datos['tipoPago'] == 'bs' %}Bs{% else %}${% endif %}</td>
+                </tr>
+                <tr>
+                    <td><strong>Referencia</strong></td>
+                    <td>{{datos['ref']}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Banco Receptor</strong></td>
+                    <td>{{datos['banco_receptor']}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h4>Entregas Aplicadas al Pago</h4>
+
+        {% for factura in datos['facturasSeleccionadas'] %}
+        <div class="factura-container">
+            <div class="factura-header">
+                <table>
+                    <thead>
+                        <h5>Resumen de la entrega</h5>
+                        <tr>
+                            <th>N° Pedido</th>
+                            <th>N° Entrega</th>
+                            <th>Fecha Emisión</th>
+                            <th>Tasa de Cambio</th>
+                            <th>Condición de Pago</th>
+                            {% if factura["encabezado"]['monto_abonado'] > 0 %}
+                            <th>Monto Abonado</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ factura["encabezado"]['numero_pedido'] }}</td>
+                            <td>{{ factura["encabezado"]['numero_entrega'] }}</td>
+                            <td>{{ factura["encabezado"]['fecha_emision'] }}</td>
+                            <td>{{ "{:,.2f}".format(factura["encabezado"]['tasa_cambio']|float) }} Bs/$</td>
+                            <td>{{ factura["encabezado"]['condicion_pago'] }}</td>
+                            {% if factura["encabezado"]['monto_abonado'] > 0 %}
+                            <td style="font-weight: 600; color: #28a745;">
+                                {% if factura["encabezado"]['tipo_moneda_abono'] == 'bs' %}Bs{% else %}${% endif %}
+                                {{ "{:,.2f}".format(factura["encabezado"]['monto_abonado']|float) }} 
+                            </td>
+                            {% endif %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            
+
+            <table class="items-table">
+                <h5>Detalle de la entrega</h5>
+                <thead>
+                    
+                    <tr>
+                        <th>Material</th>
+                        <th class="text-center">Cant.</th>
+                        <!--<th class="text-right">Precio Unit.</th>-->
+                        <!--<th class="text-right">Desc.</th>-->
+                        <th class="text-right">Precio Final</th>
+                        <th class="text-right">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in factura['items'] %}
+                    <tr>
+                        <td><strong>{{ item['material'] }}</strong></td>
+
+                        <td class="text-center">{{ item['cantidad'] }}</td>
+                        <!--<td class="text-right">${{ "{:,.2f}".format(item['precio']|float) }}</td>-->
+                        <!--<td class="text-right">${{ "{:,.2f}".format(item['descuento']|float) }}</td>-->
+                        <td class="text-right">${{ "{:,.2f}".format(item['precio_unitario']|float) }}</td>
+                        <td class="text-right"><strong>${{ "{:,.2f}".format(item['monto_total_item']|float) }}</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="totales-footer">
+                <div class="total-row">
+                    <span class="total-label">Subtotal USD:</span>
+                    <span class="total-value">${{ "{:,.2f}".format(factura["encabezado"]['monto_dolares']|float) }}</span>
+                </div>
+
+                {% if factura["encabezado"]['iva_dolares'] > 0 %}
+                <div class="total-row">
+                    <span class="total-label">IVA USD:</span>
+                    <span class="total-value">${{ "{:,.2f}".format(factura["encabezado"]['iva_dolares']|float) }}</span>
+                </div>
+                {% endif %}
+
+                <div class="total-row">
+                    <span class="total-label">Total USD:</span>
+                    <span class="total-value">${{ "{:,.2f}".format(factura["encabezado"]['total_dolares']|float) }}</span>
+                </div>
+
+                <hr style="margin: 10px 0;">
+
+                <div class="total-row">
+                    <span class="total-label">Total Bs (Tasa {{ "{:,.2f}".format(factura["encabezado"]['tasa_cambio']|float) }}):</span>
+                    <span class="total-value">Bs {{ "{:,.2f}".format(factura["encabezado"]['total_bolivares']|float) }}</span>
+                </div>
+
+                {% if factura["encabezado"]['monto_abonado'] > 0 %}
+                <div class="total-row abono-row">
+                    <span class="total-label">Monto Abonado en esta entrega:</span>
+                    <span class="total-value">
+                        {% if factura["encabezado"]['tipo_moneda_abono'] == 'bs' %}Bs{% else %}${% endif %}
+                        {{ "{:,.2f}".format(factura["encabezado"]['monto_abonado']|float) }}
+                    </span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <footer>
+            <p style="font-weight: bolder; text-align: center;">Corimon Pinturas C.A. RIF. J-00029572-7</p>
+            <hr style="margin-top: 0;">
+            <p style="text-align: center;">Av. Hans Neumann, Urb. Industrial El Bosque, Valencia, Edo. Carabobo</p>
+            <p style="text-align: center;" ><a style="color: #ccc; text-align: center;" href="http://corimonpinturas.net">www.corimonpinturas.net</a></p>
+            <p style="text-align: center;">Le Comunicamos que la dirección a través de la cual usted está recibiendo el presente e-mail será utilizada únicamente para el servicio de notificaciones. Le agradecemos no responder a este correo.
+                Gracias por su confianza. En caso de dudas, contacte con soporte técnico al número de teléfono: +58 241 613 17 99</p>
+            <p style="text-align: center;">Correo electrónico: soporteb2b@corimon.com</p></p>
+        </footer>
+    </div>
+</body>
+</html>

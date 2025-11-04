@@ -32,7 +32,7 @@ def comprobante_mail(user,comprobante):
 def pago_mail(user, pago, pagos):
     message = Message('Pago Registrado Referencia'+' '+ pago['XBLNR'],
                     sender=current_app.config['MAIL_USERNAME'],
-                    recipients=[user.email])#[user.email])
+                    recipients=[user.email])#[])
 
     message.html = render_template('email/registro_pago.html', user=user, pago=pago, pagos = pagos)
 
@@ -56,7 +56,7 @@ def comprobante_crm_mail(user,comprobante, post_imagen, nombre_imagen):
 def pago_crm_mail(user, pago,post_imagen,nombre_imagen, pagos):
     message = Message('Pago Registrado Referencia'+' '+ pago['XBLNR'],
                     sender=current_app.config['MAIL_USERNAME'],
-                    recipients=['credito_cobranza@corimon.com'])#credito_cobranza@corimon.com
+                    recipients=['credito_cobranza@corimon.com'])#m
     message.html = render_template('email/registro_pago_crm.html', user=user, pago=pago, pagos=pagos)
     try:
         with app.open_resource(post_imagen) as adjunto:
@@ -65,12 +65,37 @@ def pago_crm_mail(user, pago,post_imagen,nombre_imagen, pagos):
         pass
     thread = Thread(target=send_async_mail, args=[message])
     thread.start()
+    
+    
+def prepago_crm_mail(user, datos,post_imagen,nombre_imagen):
+    message = Message('Pago Registrado Referencia'+' '+ datos.get('ref'),
+                    sender=current_app.config['MAIL_USERNAME'],
+                    recipients=['credito_cobranza@corimon.com'])#
+    message.html = render_template('email/registro_prepago_crm.html', user=user, datos= datos, )
+    try:
+        with app.open_resource(post_imagen) as adjunto:
+            message.attach(nombre_imagen,'application/pdf', adjunto.read())
+    except:
+        pass
+    thread = Thread(target=send_async_mail, args=[message])
+    thread.start()
+    
+
+def prepago_mail(user, datos):
+    message = Message('Pago Registrado Referencia'+' '+ datos.get('ref'),
+                    sender=current_app.config['MAIL_USERNAME'],
+                    recipients=[user.email])#
+    message.html = render_template('email/registro_prepago_crm.html', user=user, datos= datos, )
+    thread = Thread(target=send_async_mail, args=[message])
+    thread.start()
+    
+    
+    
 
 def pago_iva_mail(user, pago, pagos):
     message = Message('Pago Registrado Referencia'+' '+ pago['XBLNR'],
                     sender=current_app.config['MAIL_USERNAME'],
                     recipients=[user.email])#[user.email]
-
     message.html = render_template('email/correo_iva_cliente.html', user=user, pago=pago, pagos = pagos)
 
     thread = Thread(target=send_async_mail, args=[message])
@@ -79,7 +104,7 @@ def pago_iva_mail(user, pago, pagos):
 def pago_iva_crm_mail(user, pago, post_imagen, nombre_imagen, pagos):
     message = Message('Pago Iva Registrado Referencia'+' '+ pago['XBLNR'],
                     sender=current_app.config['MAIL_USERNAME'],
-                    recipients=["credito_cobranza@corimon.com"])
+                    recipients=["credito_cobranza@corimon.com"])#"credito_cobranza@corimon.com"
 
     message.html = render_template('email/correo_iva_crm.html', user=user, pago=pago, pagos = pagos)
 

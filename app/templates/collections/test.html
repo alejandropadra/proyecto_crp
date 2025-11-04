@@ -393,3 +393,154 @@
 </label>
 {% set nt.contador = nt.contador + 1 %}
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="factura my-3" data-invoice="{{entregas['encabezado']|tojson}}">
+                <div class="invoice-content w-100 d-flex align-items-center">
+                        <div class="custom-checkbox me-3">
+                            <input type="checkbox" class="factura-check" id="factura-{{loop.index}}">
+                            <div class="checkbox-design"></div>
+                        </div>
+                      
+                  <div class="factura-info d-flex flex-column w-100 p-3 gap-3">
+
+                    <div class=" row g-3 w-100 d-flex justify-content-start">
+                      <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="d-flex align-items-center gap-2 ">
+                          <h3 class="m-0">Número de Entrega:</h3>
+                          <p class="valorInfoPrepago">{{entregas['encabezado'].numero_entrega}}</p>
+                        </div>
+                      </div>
+
+                      <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="d-flex align-items-center gap-2 ">
+                          <h3 class="m-0">Número de Pedido:</h3>
+                          <p class="valorInfoPrepago">{{entregas['encabezado'].numero_pedido}}</p>
+                        </div>
+                      </div>
+
+                      <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="d-flex align-items-center gap-2 ">
+                          <h3 class="m-0">Fecha de Emisión:</h3>
+                          <p class="valorInfoPrepago">{{entregas['encabezado'].fecha_emision}}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="factura-montos row g-3 w-100 d-flex justify-content-start">
+                      <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="d-flex align-items-center gap-2 ">
+                          <h3 class="m-0">Monto Bs:</h3>
+                          <p class="valorInfoPrepago">{{entregas['encabezado'].total_bolivares}}</p>
+                        </div>
+                      </div>
+
+                      <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="d-flex align-items-center gap-2 ">
+                          <h3 class="m-0">Monto $:</h3>
+                          <p class="valorInfoPrepago">{{entregas['encabezado'].total_dolares}}</p>
+                        </div>
+                      </div>
+
+                    </div>
+
+                  </div>
+                  
+                  </div>
+              </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              
+              <div class="factura" data-invoice="{{entregas['encabezado']|tojson}}">
+                <div class="invoice-content w-100">
+                  <div class="custom-checkbox">
+                    <input type="checkbox" class="factura-check" >
+                    <div class="checkbox-design"></div>
+                  </div>
+
+                  <div class="row w-100 d-flex p-2">
+                    <div class="col-12 col-sm-6 col-lg-7 ">
+
+                      <div class="factura-info d-flex justify-content-start py-2 gap-2">
+                        <div class="col-12 col-sm-6 col-lg-4 m-0">
+                          <div class="d-flex flex-column align-items-center gap-2 ">
+                            <h3 class="m-0">Número de Entrega:</h3>
+                            <p class="valorInfoPrepago">{{entregas['encabezado'].numero_entrega}}</p>
+                          </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-lg-4 m-0">
+                          <div class="d-flex flex-column align-items-center gap-2 ">
+                            <h3 class="m-0">Número de Pedido:</h3>
+                            <p class="valorInfoPrepago">{{entregas['encabezado'].numero_pedido}}</p>
+                          </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-lg-4 m-0">
+                          <div class="d-flex flex-column align-items-center gap-2 ">
+                            <h3 class="m-0">Fecha de Emisión:</h3>
+                            <p class="valorInfoPrepago">{{entregas['encabezado'].fecha_emision}}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="col-12 col-sm-6 col-lg  rounded-2 py-1">
+                      <h3 class=" text-center h3info"> Monto:</h3>
+
+                      <div class="d-flex gap-4 w-100 justify-content-around ">
+                        <div class=" data "> <div class="icono rojo_mmg"> <p>Bs</p> </div> <div class="d-flex align-items-center pr-2"><p class="montosInformacion">{{"{:,.2f}".format(entregas['encabezado'].total_bolivares|float|abs)}}</p> </div> </div>
+                        <div class=" data "> <div class="icono verde_dolar"> <p> <i class="bi bi-currency-dollar"></i> </p> </div> <div class="d-flex align-items-center pr-2"><p class="montosInformacion">{{"{:,.2f}".format(entregas['encabezado'].total_dolares|float|abs)}}</p> </div></div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class=" d-flex align-items-center elboton " style="min-width: 120px;">
+                    <span class=""><i class="bi bi-eye"></i></span>
+                    <button class=" border-0 d-flex bg-transparent " type="button">Ver Detalles</button>
+                  </div>
+
+                  </div>
+              </div>

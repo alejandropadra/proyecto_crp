@@ -1,4 +1,3 @@
-console.log('SE HIZO')
 // Declaración de elementos del DOM
 const check3 = document.getElementById('check3');
 const check2 = document.getElementById('check2');
@@ -11,6 +10,7 @@ let betrsdiv = document.getElementById('betrsdiv');
 let betrs = document.getElementById('betrs');
 
 
+(function(){const s=document.createElement('style');s.textContent=`.loader-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;justify-content:center;align-items:center;z-index:99999;opacity:0;visibility:hidden;transition:all .3s}.loader-overlay.active{opacity:1;visibility:visible}.loader-container{text-align:center;animation:fadeInUp .5s}.loader{width:64px;height:64px;border-radius:50%;position:relative;animation:rotate 1s linear infinite;margin:0 auto 24px}.loader::before,.loader::after{content:"";box-sizing:border-box;position:absolute;inset:0;border-radius:50%;border:5px solid #FFF;animation:prixClipFix 2s linear infinite}.loader::after{transform:rotate3d(90,90,0,180deg);border-color:#c53030}.loader-text{color:#fff;font-size:20px;font-weight:600;margin:0 0 8px}.loader-subtext{color:rgba(255,255,255,.7);font-size:14px;margin:0}@keyframes rotate{to{transform:rotate(360deg)}}@keyframes prixClipFix{0%{clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)}50%{clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}75%,to{clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}}@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}.btn-primary.enviando,.btn-primary:disabled,.btn-secondary:disabled{opacity:.7;cursor:not-allowed;pointer-events:none}`;document.head.appendChild(s)})();
 
 
 let detenerObservador;
@@ -25,6 +25,22 @@ if (typeof colocarReadOnlyFacturas === "function") {
 
 let dif = 0;
 
+document.addEventListener('DOMContentLoaded', function() {
+    const fechaInput = document.getElementById('fecha_iva');
+    if (fechaInput) {
+
+        const today = new Date().toISOString().split('T')[0];
+
+        fechaInput.max = today;
+    }
+});
+
+document.querySelectorAll('input[type="date"]').forEach(input => {
+    input.addEventListener('click', () => {
+
+        input.showPicker?.(); 
+    });
+});
 
 function reiniciarObservador() {
     monitorearActualizaciones(actualizarDiv, texto => {
@@ -810,36 +826,6 @@ function procesarFacturasCasoDos(checkboxes, montoValue,  montodpp, montoNormal,
                                 }
                             }
                             
-                        //checkbox.checked= false;
-                        /*sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
-                        
-                        actualizarDiv.textContent = `${(montoValue - sumaFacturasSeleccionadas).toFixed(2)} ` + transaccion; // Actualizar el contenido del div
-                        console.log("La selección de esta factura hace que la suma exceda el monto permitido. La suma se ha anulado.");
-                        console.log(sumaFacturasSeleccionadas)
-                        facturaParcial = posicionArray;
-                        colocarReadOnlyFacturastres(facturaParcial)
-                        contador--;
-                        if (contador < 0 ){
-                            actualizarDiv2.textContent = "0";
-                        }else{
-                            actualizarDiv2.textContent = contador;
-                        }*/
-                        
-                        /*
-                        
-                        const montoFaltante = (sumaFacturasSeleccionadas - montoValue).toFixed(2);
-                        const montoAbono = (montoValue - (sumaFacturasSeleccionadas - montoFactura)).toFixed(2);
-                        const textoFaltanteDiv = label.querySelector('.texto-faltante');
-                        textoFaltanteDiv.textContent = `Monto pendiente: ${montoFaltante} `+ transaccion;
-                        const textoAbonoDiv = checkbox.parentNode.querySelector('.texto-abono');
-                        textoAbonoDiv.textContent = `Monto abonado: ${montoAbono} `+ transaccion;
-                        actualizarDiv.textContent = `${0.00} ` + transaccion; // Actualizar el contenido del div
-                        ///textoFaltanteDiv.classList.add('facts');->Comentado para los abonos
-                        ///textoAbonoDiv.classList.add('abon'); ->Comentado para los abonos
-                        abonoRealizado = true;
-
-                        facturaParcial = posicionArray;
-                        colocarReadOnlyFacturasDos(facturaParcial)*/
                     }
                 } else {
                     colocarReadOnlyFacturasDos(facturaParcial)
@@ -904,7 +890,6 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
     }
     facturasCompensadas = [];
 
-    console.log(montoValue)
     if (estado.transaccion === "bs"){
         
         montoNormal="#montoBs";
@@ -981,7 +966,6 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                     if (sumaFacturasSeleccionadas <= montoValue) {
                         
                         gestionarInputs(label, montosElement, posicionArray, vblen, montoFactura, diferenciaInput, fkdat, belnr1, buzei, blart);
-                        console.log(transaccion)
                         checkbox.checked = true;
                         label.classList.add('listo');
                         limpiarDivs('.texto-faltante', 'facts', label);
@@ -1053,46 +1037,8 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
                                     console.log(sumaFacturasSeleccionadas)
                                     facturaParcial = posicionArray;
                                     colocarReadOnlyFacturastres(facturaParcial)
-                                    
                                 }
                             }
-                            
-                            
-                            
-                            
-                            
-                            
-                     
-                        //checkbox.checked= false;
-                        /*sumaFacturasSeleccionadas = parseFloat((sumaFacturasSeleccionadas - montoFactura).toFixed(2));
-                        
-                        actualizarDiv.textContent = `${(montoValue - sumaFacturasSeleccionadas).toFixed(2)} ` + transaccion; // Actualizar el contenido del div
-                        console.log("La selección de esta factura hace que la suma exceda el monto permitido. La suma se ha anulado.");
-                        console.log(sumaFacturasSeleccionadas)
-                        facturaParcial = posicionArray;
-                        colocarReadOnlyFacturastres(facturaParcial)
-                        contador--;
-                        if (contador < 0 ){
-                            actualizarDiv2.textContent = "0";
-                        }else{
-                            actualizarDiv2.textContent = contador;
-                        }*/
-                        
-                        /*
-                        
-                        const montoFaltante = (sumaFacturasSeleccionadas - montoValue).toFixed(2);
-                        const montoAbono = (montoValue - (sumaFacturasSeleccionadas - montoFactura)).toFixed(2);
-                        const textoFaltanteDiv = label.querySelector('.texto-faltante');
-                        textoFaltanteDiv.textContent = `Monto pendiente: ${montoFaltante} `+ transaccion;
-                        const textoAbonoDiv = checkbox.parentNode.querySelector('.texto-abono');
-                        textoAbonoDiv.textContent = `Monto abonado: ${montoAbono} `+ transaccion;
-                        actualizarDiv.textContent = `${0.00} ` + transaccion; // Actualizar el contenido del div
-                        ///textoFaltanteDiv.classList.add('facts');->Comentado para los abonos
-                        ///textoAbonoDiv.classList.add('abon'); ->Comentado para los abonos
-                        abonoRealizado = true;
-
-                        facturaParcial = posicionArray;
-                        colocarReadOnlyFacturasDos(facturaParcial)*/
                     }
                 } else {
                     colocarReadOnlyFacturasDos(facturaParcial)
@@ -1138,8 +1084,6 @@ function procesarFacturasCasoTres(checkboxes, montoValue,  montodpp, montoNormal
 function obtenerElementoMontoDos(checkbox, montodpp, montoNormal) {
     // Obtener el contenedor del checkbox
     const label = checkbox.closest('div.base-contenedor');
-    console.log(label)
-
     // Verificar si el label existe antes de proceder
     if (!label) {
         console.warn("El checkbox seleccionado no tiene un elemento padre (label) válido.");
@@ -1610,20 +1554,6 @@ document.addEventListener('DOMContentLoaded', function() {//->Esto verifica si s
         });
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2137,15 +2067,11 @@ function maxLengthCheck(object)
 {
     if (object.value.length > object.maxLength)
         object.value = object.value.slice(0, object.maxLength)
-
-
-
 }
 
 function verifyInput() {
     const nComprobante = document.getElementById('n_comprobante');
     
-
     if (nComprobante.value.length >= nComprobante.minLength) {
         document.querySelector("form").submit();
         console.log("Enviando papa");
@@ -2153,24 +2079,6 @@ function verifyInput() {
         showAlert("Debe ser mayor de 12 Dígitos");
     }
 }
-
-/*
-document.addEventListener('DOMContentLoaded', function() {
-    const downdos = document.querySelector('.downdos');
-    let hoverTimeout;
-
-    downdos.addEventListener('mouseenter', function() {
-        clearTimeout(hoverTimeout);
-        downdos.classList.add('hovered');
-    });
-
-    downdos.addEventListener('mouseleave', function() {
-        hoverTimeout = setTimeout(function() {
-            downdos.classList.remove('hovered');
-        }, 300); // Ajusta el tiempo en milisegundos según sea necesario
-    });
-});*/
-
 
 
 
@@ -2183,9 +2091,6 @@ function showAlert(message) {
         alertContainer.style.display = 'none';
     }, 3000); // Ocultar después de 3 segundos
 }
-
-
-
 
 function validateMonto(input) {
     // Verifica si el input es nulo o vacío
@@ -2226,7 +2131,6 @@ function iva() {
     const monto = document.getElementById('monto_iva');
     const checkboxes = document.querySelectorAll('.cheket');
 
-    // Configurar la transacción (por ejemplo, 'bs' o '$')
     const transaccion = 'bs'; // Cambia este valor si deseas iniciar con otra transacción
 
     // Llamar a casoTres con los elementos relevantes
@@ -2236,218 +2140,153 @@ function iva() {
 
 // Llamar a la función para inicializar
 
-const tituloIva = document.getElementById('titulo');
+let tituloIva = false;
 document.addEventListener('DOMContentLoaded', function() {
-
-    if (tituloIva){
-        iva()
-        const buton_iva = document.getElementById('buton_iva');
-        buton_iva.addEventListener('click', (event)=>{
-            event.preventDefault()
-            const listos = document.querySelectorAll('.listo');
-            if (listos.length == 0){
-                showAlertGrandes("Debe seleccionar un IVA para poder continuar con el proceso", "atencion")
-                return;
-            }else{
-                openModal()
+    const tituloInput = document.getElementById('titulo');
+    if (tituloInput){
+        const titulo = tituloInput.value;
+            if (titulo === "Pago de Iva"){
+                tituloIva = true;
+                console.log('estituloIva')
+                iva()
+                const buton_iva = document.getElementById('buton_iva');
+                buton_iva.addEventListener('click', (event)=>{
+                    event.preventDefault()
+                    const listos = document.querySelectorAll('.listo');
+                    if (listos.length == 0){
+                        showAlertGrandes("Debe seleccionar un IVA para poder continuar con el proceso", "atencion")
+                        return;
+                    }else{
+                        if (!validarCampos()) {
+                            return; 
+                        }
+                        modalVerificacion()
+                    }
+                })
             }
-        })
+        else if (titulo === "Registrar Pago"){
+            console.log('estituloPago')
+            const boton_enviar_cobranza = document.getElementById('boton_enviar_cobranza');
+            boton_enviar_cobranza.addEventListener('click', (Event)=>{
+                Event.preventDefault()
+                if (!validarCampos()) {
+                    return; 
+                }
+                modalVerificacion()
+                
+            })
+        }
     }
-
-
+    
 })
 
 
+let formEnviando = false;
+
+function submitForm() {
+    if (formEnviando) {
+        return;
+    }
+    const form = document.querySelector("form");
+    if (!form.checkValidity()) {
+        showAlertGrandes('Error al procesar el formulario', 'error');
+        return;
+    }
+    formEnviando = true;
+    mostrarLoader();
+    const botonEnviar = document.getElementById('enviarBoton');
+    if (botonEnviar) {
+        botonEnviar.disabled = true;
+        botonEnviar.classList.add('enviando');
+    }
+    
+    // Deshabilitar botones de cancelar
+    const botonesCancelar = document.querySelectorAll('.close-modal-verificacion');
+    botonesCancelar.forEach(btn => btn.disabled = true);
+    
+    // Bloquear cierre del modal por click fuera
+    const modal = document.getElementById('invoiceModalVerificacion');
+    if (modal) {
+        modal.style.pointerEvents = 'none';
+    }
+    // Enviar formulario
+    form.submit();
+}
+
+function mostrarLoader() {
+    let loaderOverlay = document.getElementById('loaderOverlay');
+    
+    if (!loaderOverlay) {
+        loaderOverlay = document.createElement('div');
+        loaderOverlay.id = 'loaderOverlay';
+        loaderOverlay.className = 'loader-overlay';
+        loaderOverlay.innerHTML = `
+            <div class="loader-container">
+                <div class="loader"></div>
+                <p class="loader-text">Procesando pago...</p>
+                <p class="loader-subtext">Por favor espere, no cierre esta ventana</p>
+            </div>
+        `;
+        document.body.appendChild(loaderOverlay);
+    }
+    
+
+    setTimeout(() => {
+        loaderOverlay.classList.add('active');
+    }, 10);
+}
+
+function ocultarLoader() {
+    const loaderOverlay = document.getElementById('loaderOverlay');
+    if (loaderOverlay) {
+        loaderOverlay.classList.remove('active');
+        setTimeout(() => {
+            loaderOverlay.remove();
+        }, 300);
+    }
+    
+    formEnviando = false;
+    
+    const botonEnviar = document.getElementById('enviarBoton');
+    if (botonEnviar) {
+        botonEnviar.disabled = false;
+        botonEnviar.classList.remove('enviando');
+    }
+    const botonesCancelar = document.querySelectorAll('.close-modal-verificacion');
+    botonesCancelar.forEach(btn => btn.disabled = false);
+    
+    const modal = document.getElementById('invoiceModalVerificacion');
+    if (modal) {
+        modal.style.pointerEvents = 'auto';
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', function() {
-
-    const fechaInput = document.getElementById('fecha_iva');
-    if (fechaInput) {
-
-        const today = new Date().toISOString().split('T')[0];
-
-        fechaInput.max = today;
-
-        fechaInput.addEventListener('focus', function() {
-            this.showPicker(); 
+    const botonEnviar = document.getElementById('enviarBoton');
+    if (botonEnviar) {
+        botonEnviar.addEventListener('click', function(e) {
+            e.preventDefault();
+            submitForm();
         });
     }
 });
 
 
-/*
-function showInputValue() {
-    const referencerif = document.getElementById('rif')?.value || '';
-    const fechaValor = document.getElementById("fecha")?.value || '';
-    const bancoValor = document.getElementById("banco_receptor")?.value || '';
-    const bancoDosValor = document.getElementById("banco_receptor_dolar")?.value || '';
-    const montoValor = document.getElementById('monto')?.value || document.getElementById('monto_iva')?.value || '';
-    const montoDescuentoValor = document.getElementById('monto-descuento')?.value || '';
-    const referenciaValor =document.getElementById('ref')?.value ||'';
-    const montoDisponibleValor = document.getElementById('actualizar')?.textContent || '';
-
-    const checkbs = document.getElementById('check3')?.checked || false;
-    const checkdolar = document.getElementById('check2')?.checked || false;
-    const checkeuro = document.getElementById('check1')?.checked || false;
-
-
-    document.getElementById('referenceriafValue').textContent = referencerif;
-    document.getElementById('fechaInmodal').textContent = fechaValor;
-    document.getElementById('referenciaInmodal').textContent = referenciaValor;
-    document.getElementById('disponibleInmodal').textContent = montoDisponibleValor;
-    let facturasListas = document.querySelectorAll('.listo');
-    let facturas = [];
-    let montos = [];
-    for (let i = 0; i < facturasListas.length; i++) {
-
-        const facturaListo = document.getElementById('inputFactura' + i)?.value || ''; 
-        const montoListo = document.getElementById('inputfacturaMonto' + i)?.value || '';
-        if (facturaListo) {
-            facturas.push(facturaListo); 
-        }
-        if (montoListo){
-            montos.push(montoListo); 
-        }
-    }
-    console.log(facturas)
-
-
-
-    document.getElementById('BancoInmodal').textContent = bancoValor || bancoDosValor;
-
-
-    let montoTexto = montoDescuentoValor || montoValor;
-    if (checkbs) {
-        montoTexto += ' Bs';
-    } else if (checkdolar || checkeuro) {
-        montoTexto += ' $';
-    } else{
-        montoTexto +=' Bs'
-    }
-    document.getElementById('MontoInmodal').textContent = montoTexto;
-
-
-
-    const columnaFacturas = document.getElementById('columna-facturas');
-
-    facturas.forEach(factura => {
-        
-        const divFactura = document.createElement('div');
-        divFactura.classList.add('factss'); 
-        divFactura.textContent = factura;   
-        console.log('sasd')
-
-        columnaFacturas.appendChild(divFactura);
-        console.log('sasd')
-    });
-
-
-
-const columnaMontos = document.getElementById('columna-montos');
-    montos.forEach(factura => {
-
-        const divFactura = document.createElement('div');
-        divFactura.classList.add('montoss'); 
-        divFactura.textContent = factura;   
-
-        columnaMontos.appendChild(divFactura);
-    });
-}*/
-
-function submitForm() {
-
-    const requiredFields = document.querySelectorAll("form .inputField[required]");
-    let allFilled = true;
-    let firstEmptyField = null;
-
-    requiredFields.forEach(field => {
-
-        let existingAlert = field.parentElement.querySelector(".field-alert");
-        if (existingAlert) existingAlert.remove();
-
-        if (!field.value.trim()) {
-            allFilled = false;
-            field.classList.add("border-danger");  
-            showFieldAlert(field, "Este campo es obligatorio");
-
-            if (!firstEmptyField) {
-                firstEmptyField = field;
-            }
-        } else {
-            field.classList.remove("border-danger");  
-        }
-    });
-
-    if (allFilled) {
-        document.querySelector("form").submit();
-        console.log("Enviando papa")
-
-    } else {
-        console.log('faltan campos pa')
-        console.log(requiredFields)
-        closeModal();
-
-        if (firstEmptyField) {
-            firstEmptyField.scrollIntoView({ behavior: "smooth", block: "center" });
-            firstEmptyField.focus();  
-        }
-    }
-}
-
-
-
-/*
-const modal = document.getElementById('myModal');
-modal.addEventListener('hidden.bs.modal', limpiarModal);*/
-
-function showFieldAlert(field, message) {
-
-    let existingAlert = field.parentElement.querySelector(".field-alert");
-    if (existingAlert) existingAlert.remove();
-
-
-    const alertDiv = document.createElement("div");
-    alertDiv.className = "field-alert bg-warning text-dark p-1 mt-1 rounded";
-    alertDiv.innerHTML = `
-        <i class="bi bi-exclamation-circle"></i> ${message}
-    `;
-
-
-    field.parentElement.appendChild(alertDiv);
-
-    setTimeout(() => {
-        alertDiv.remove();
-    }, 10000);  
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function openModal() {
-    console.log("Iniciando función openModal...");
-    document.getElementById('customModal').classList.remove('hidden');
-
+function modalVerificacion(){
+    const modal = document.getElementById('invoiceModalVerificacion');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
     let facturasListas = document.querySelectorAll('.cheket');
+    let montoDisponibleValor = document.getElementById('actualizar')?.textContent || '';
+    let montoString = montoDisponibleValor.replace(/[^\d.,]/g, '');
+    montoString = montoString.replace(/,/g, '');
+    let monto = parseFloat(montoString) || 0;
 
+    
     if (facturasListas.length === 0) {
         console.log("No se encontraron elementos con la clase .cheket");
+        return;
     }
 
     let facturasListasFiltradas = Array.from(facturasListas)
@@ -2459,103 +2298,224 @@ function openModal() {
             return null;
         })
         .filter(item => item !== null); 
+    
 
-    // Mostrar la información general del modal independientemente de facturas seleccionadas
-    const referencerif = document.getElementById('rif')?.value || '';
-    const fechaValor = document.getElementById("fecha")?.value || document.getElementById('fecha_iva')?.value || '';
-    const bancoValor = document.getElementById("banco_receptor")?.value || '';
-    const bancoDosValor = document.getElementById("banco_receptor_dolar")?.value || '';
-    const montoValor = document.getElementById('monto')?.value || document.getElementById('monto_iva')?.value || '';
-    const montoDescuentoValor = document.getElementById('monto-descuento')?.value || '';
-    const referenciaValor = document.getElementById('ref')?.value || '';
-    let montoDisponibleValor = document.getElementById('actualizar')?.textContent || '';
-
-    const checkbs = document.getElementById('check3')?.checked || false;
-    const checkdolar = document.getElementById('check2')?.checked || false;
-    const checkeuro = document.getElementById('check1')?.checked || false;
-
-    document.getElementById('referenceriafValue').textContent = referencerif;
-    document.getElementById('fechaInmodal').textContent = fechaValor;
-    document.getElementById('referenciaInmodal').textContent = referenciaValor;
-    montoDisponibleValor = montoDisponibleValor.replace(/b/g, ' B');
-    document.getElementById('disponibleInmodal').textContent = montoDisponibleValor;
-    document.getElementById('BancoInmodal').textContent = bancoValor || bancoDosValor;
-
-    let montoTexto = montoDescuentoValor || montoValor;
-    if (checkbs) {
-        montoTexto += ' Bs';
-    } else if (checkdolar || checkeuro) {
-        montoTexto += ' $';
-    } else {
-        montoTexto += ' Bs';
-    }
-    document.getElementById('MontoInmodal').textContent = montoTexto;
-
-    // Continuar solo si hay facturas filtradas
-    if (facturasListasFiltradas.length === 0) {
-        console.log("No se encontraron facturas con el estado listo");
-        return;
-    } else {
-        console.log("Se encontraron facturas con el estado listo");
-    }
-
-    let facturas = [];
-    let montos = [];
-
+    const facturasData = [];
+    let totalGeneral = 0;
+    
     facturasListasFiltradas.forEach(({ element, index }) => {
-        let facturaListo;
+        let documento;
         if (tituloIva){
-            facturaListo = document.getElementById('sgtxt'+ (index +1))?.textContent || '';
-        }else{
-            facturaListo = document.getElementById('inputFactura' + index)?.value || '';
+            documento = document.getElementById('sgtxt'+ (index +1))?.textContent || '';
+        } else {
+            documento = document.getElementById('inputFactura' + index)?.value || '';
         }
 
-        const montoListo = document.getElementById('inputfacturaMonto' + index)?.value || '';
+        const monto = parseFloat(document.getElementById('inputfacturaMonto' + index)?.value) || 0;
         
-        console.log(`Factura #${index}:`, facturaListo);
-        console.log(`Monto #${index}:`, montoListo);
-
-        if (facturaListo) {
-            facturas.push(facturaListo);
-        }
-        if (montoListo) {
-            montos.push(montoListo);
+        if (documento && monto) {
+            facturasData.push({ documento, monto });
+            totalGeneral += monto;
         }
     });
 
-    const columnaFacturas = document.getElementById('columna-facturas');
-    facturas.forEach(factura => {
-        const divFactura = document.createElement('div');
-        divFactura.classList.add('factss');
-        divFactura.textContent = factura;
-        columnaFacturas.appendChild(divFactura);
+
+    renderizarFacturasSimple(facturasData, totalGeneral, monto);
+    actualizarResumenGeneral(facturasListasFiltradas);
+}
+
+function renderizarFacturasSimple(facturas, total, montodisponible) {
+    console.log(montodisponible)
+    const transaccion_verificacion = estado.transaccion == "bs"? "Bs": "$";
+    const container = document.getElementById('listaEntregas');
+    container.innerHTML = `
+        <div class="tabla-facturas-modal">
+            <div class="tabla-header">
+                <div class="columna-doc">Documento</div>
+                <div class="columna-monto">Monto</div>
+            </div>
+            <div class="tabla-body">
+                ${facturas.map(f => `
+                    <div class="fila-factura">
+                        <div class="columna-doc">${f.documento}</div>
+                        <div class="columna-monto">${formatearMonto(f.monto)} ${transaccion_verificacion} </div>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="tabla-footer">
+                <div class="columna-doc"><strong>Total</strong></div>
+                <div class="columna-monto"><strong>${formatearMonto(total)} ${transaccion_verificacion} </strong></div>
+            </div>
+            <div class="tabla-footer abonado">
+                <div class="columna-doc"><strong>Monto disponible para abonar</strong></div>
+                <div class="columna-monto"><strong>${formatearMonto(montodisponible)}${transaccion_verificacion}  </strong></div>
+            </div>
+        </div>
+    `;
+}
+
+
+function actualizarResumenGeneral(facturas) {
+    const totalEntregas = facturas.length;
+    const rifinput = document.getElementById('rif').value;
+    const fechaValor = document.getElementById("fecha")?.value || document.getElementById('fecha_iva')?.value || '';
+    const cuentaInput = estado.transaccion == "bs" 
+    ? document.getElementById('banco_receptor').value 
+    : document.getElementById('banco_receptor_dolar').value;
+    const referenciaInput = document.getElementById('ref').value
+    let montoValor = document.getElementById('monto')?.value || document.getElementById('monto_iva')?.value || '';
+    const transaccion = estado.transaccion == "bs"? "Bs": "$";
+    document.getElementById('totalEntregas').textContent = totalEntregas;
+    document.getElementById('RifValidacion').textContent = rifinput;
+    document.getElementById('fechaValidacion').textContent = fechaValor;
+    document.getElementById('cuentaValidacion').textContent = cuentaInput;
+    document.getElementById('refValidacion').textContent = referenciaInput
+    document.getElementById('text-icon').textContent = transaccion;
+    document.getElementById('total').textContent = `${formatearMonto(montoValor)}`;
+    
+}
+
+const formatearMonto = (monto) => {
+    const numero = Number(monto);
+    
+    if (isNaN(numero)) {
+        return '0,00';
+    }
+    
+    try {
+        return numero.toLocaleString('es-VE', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+        });
+    } catch (e) {
+        return numero.toFixed(2).replace('.', ',');
+    }
+};
+
+function validarCampos() {
+
+    limpiarAlertas();
+    
+    const campos = [
+        { id: 'rif', nombre: 'RIF' },
+        { id: 'empresa', nombre: 'Empresa' },
+        { id: 'empresa_beneficiaria', nombre: 'Empresa Beneficiaria' },
+        { id: tituloIva ? 'fecha_iva' : 'fecha', nombre: 'Fecha' },
+        { id: 'ref', nombre: 'Referencia' },
+        { id: tituloIva ? 'monto_iva': 'monto', nombre: 'Monto' },
+        { id: 'archivo', nombre: 'Archivo de soporte', esArchivo: true }
+    ];
+
+    const bancoReceptorId = estado.transaccion === "bs" ? 'banco_receptor' : 'banco_receptor_dolar';
+    campos.push({ id: bancoReceptorId, nombre: 'Banco Receptor' });
+
+    let primerCampoVacio = null;
+    let hayErrores = false;
+
+    for (let campo of campos) {
+        const elemento = document.getElementById(campo.id);
+        
+        if (!elemento) {
+            console.warn(`Campo con ID '${campo.id}' no encontrado`);
+            continue;
+        }
+
+        let valor;
+        
+        if (campo.esArchivo) {
+            valor = elemento.files && elemento.files.length > 0;
+        } else {
+            valor = elemento.value.trim();
+        }
+
+        if (!valor) {
+            hayErrores = true;
+            const contenedorAlerta = document.createElement('div');
+            contenedorAlerta.className = 'alertaRequired';
+            contenedorAlerta.textContent = `El campo ${campo.nombre} es obligatorio`;
+            elemento.classList.add('campo-error');
+            elemento.parentElement.appendChild(contenedorAlerta);
+            if (!primerCampoVacio) {
+                primerCampoVacio = elemento;
+            }
+        }
+    }
+
+    if (hayErrores) {
+        if (primerCampoVacio) {
+            primerCampoVacio.focus();
+            if (primerCampoVacio.type === 'file') {
+                primerCampoVacio.click();
+            }
+        }
+        showAlertGrandes('Por favor completa todos los campos obligatorios', 'atencion');
+        
+        return false;
+    }
+
+    return true;
+}
+
+function limpiarAlertas() {
+    // Remover las alertas
+    const alertasExistentes = document.querySelectorAll('.alertaRequired');
+    alertasExistentes.forEach(alerta => alerta.remove());
+    
+    // Remover la clase de error de los campos
+    const camposConError = document.querySelectorAll('.campo-error');
+    camposConError.forEach(campo => campo.classList.remove('campo-error'));
+}
+
+function cerrarModalVerificacion() {
+    const modal = document.getElementById('invoiceModalVerificacion');
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+function animateTableRows() {
+        const rows = document.querySelectorAll('.items-table tbody tr');
+        rows.forEach((row, index) => {
+            row.style.opacity = '0';
+            row.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                row.style.transition = 'all 0.6s ease';
+                row.style.opacity = '1';
+                row.style.transform = 'translateY(0)';
+            }, 200 + (index * 100));
+        });
+    }
+
+    const invoiceModalVerificacion = document.getElementById('invoiceModalVerificacion')
+    if (invoiceModalVerificacion){
+        invoiceModalVerificacion.addEventListener('click', function(e) {
+            if (e.target === this) {
+                cerrarModalVerificacion();
+            }
+        });
+
+        // Cerrar modal con la tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('invoiceModalVerificacion');
+                if (modal.classList.contains('active')) {
+                    cerrarModalVerificacion();
+                }
+            }
+        });
+    }
+
+
+const cerrarModales = document.querySelectorAll('.close-modal-verificacion');
+if (cerrarModales.length >0){
+        cerrarModales.forEach(boton => {
+        boton.addEventListener('click', (e) => {
+            e.preventDefault();
+            cerrarModalVerificacion();
+        })
     });
-
-    const columnaMontos = document.getElementById('columna-montos');
-    montos.forEach(monto => {
-        const divMonto = document.createElement('div');
-        divMonto.classList.add('montoss');
-        divMonto.textContent = monto;
-        columnaMontos.appendChild(divMonto);
-    });
 }
 
 
 
 
-
-function limpiarModal() {
-
-    const columnaFacturas = document.getElementById('columna-facturas');
-    const facturasCreadas = columnaFacturas.querySelectorAll('.factss');
-    facturasCreadas.forEach(div => div.remove());
-
-    const columnaMontos = document.getElementById('columna-montos');
-    const montosCreados = columnaMontos.querySelectorAll('.montoss');
-    montosCreados.forEach(div => div.remove());
-}
-
-function closeModal() {
-    document.getElementById('customModal').classList.add('hidden');
-    limpiarModal()
-}
