@@ -381,7 +381,7 @@
                           <!-- Header -->
                           <div class="modal-header-gradient position-relative text-center">
                               <button class="btn-close-custom position-absolute top-0 end-0 m-3" 
-                                      onclick="cerrarModalVerificacion()">
+                                      onclick="cerrarModalNotificacion()">
                                   <svg width="24" height="24" fill="none" stroke="#212529" viewBox="0 0 24 24">
                                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
                                   </svg>
@@ -442,7 +442,7 @@
                               <!-- Footer Button -->
                               <div class="text-center mt-4">
                                   <button class="btn btn-danger btn-lg px-5 rounded-pill fw-semibold" 
-                                          onclick="cerrarModalVerificacion()"
+                                          onclick="cerrarModalNotificacion()"
                                           style="box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);">
                                       <i class="fa-solid fa-check me-2"></i>Entendido
                                   </button>
@@ -627,46 +627,46 @@
 </script>
 
 
-
 <script>
-    
-
-window.addEventListener('load', function() {
-    
+// Definir la función en el ámbito global
+function cerrarModalNotificacion() {
     const modal = document.getElementById('modalNotificación');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Ejecutar cuando la página cargue
+window.addEventListener('load', function() {
+    const modal = document.getElementById('modalNotificación');
+    
     if (!modal) {
         console.error("Error: El elemento #modalNotificación no se encontró en el DOM.");
         return; 
     }
+    
+    // Mostrar el modal después de 1 segundo
     setTimeout(function() {
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
     }, 1000);
 
-
-    function cerrarModalVerificacion() {
-        modal.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    }
-
-
+    // Cerrar al hacer clic fuera del modal
     modal.addEventListener('click', function(e) {
         if (e.target === this) {
-            cerrarModalVerificacion();
+            cerrarModalNotificacion();
         }
     });
 
-
+    // Cerrar con la tecla ESC
     document.addEventListener('keydown', function(e) {
-
         if (e.key === 'Escape' && modal.classList.contains('active')) {
-            cerrarModalVerificacion();
+            cerrarModalNotificacion();
         }
     });
-
 });
 </script>
-
 
 <script>
   const modulos = document.getElementById('modulos-grid')
