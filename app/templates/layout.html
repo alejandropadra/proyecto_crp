@@ -18,7 +18,8 @@
 <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
 
 <!-- Estilos personalizados -->
-<link rel="stylesheet" href="{{ url_for('static', filename = 'css/estilos.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css', v=APP_VERSION) }}">
+
 
 <!-- Estilos de DataTables -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
@@ -606,7 +607,7 @@
 
 {% if not excluir_app_js %}
 <!-- Incluye tus propios scripts -->
-<script src="{{ url_for('static', filename='js/app2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app2.js', v=APP_VERSION) }}"></script>
 {% endif %}
 
 <script>
