@@ -502,8 +502,8 @@ def cobranza2():
                 'ABONOCTA':'',#ENVIAR
                 'PBASE': condicion_pago_pivote
                 }
-                #pago_crm_mail(current_user, pago = data,post_imagen=post_imagen,nombre_imagen=nombre_imagen, pagos =datos)
-                #pago_mail(current_user, data, datos)
+                pago_crm_mail(current_user, pago = data,post_imagen=post_imagen,nombre_imagen=nombre_imagen, pagos =datos)
+                pago_mail(current_user, data, datos)
                 return redirect(url_for('.dashboard'))
             #print(response.json())
 
