@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 from flask import jsonify
 from flask_login import login_user,logout_user,login_required, current_user
 from .forms import LoginForm, RegisterForm, RegistroPagoForm,EditForm,PerfilForm,ContactForm, Retenciones
-from .models import User, Cobranza, Formula
+from .models import User, Cobranza # , Formula
 from . import login_manager
 from .consts import *
 from .email import welcome_mail, pago_crm_mail, pago_mail, comprobante_mail, comprobante_crm_mail, pago_iva_mail,pago_iva_crm_mail, prepago_crm_mail, prepago_mail, letra_cambio_mail
