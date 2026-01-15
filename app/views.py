@@ -25,7 +25,7 @@ from bs4 import BeautifulSoup
 import os
 local_adj = 'app\\static\\adj\\{}'
 server_adj = 'app/static/adj/{}'
-APP_VERSION = "20251104_1"
+APP_VERSION = "20260115"
 user_fuente = U_FUENTE
 contra_fuente = C_FUENTE
 ip_fuente = URL_FUENTE
