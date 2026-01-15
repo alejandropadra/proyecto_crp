@@ -1,0 +1,298 @@
+{% extends 'layout.html' %}
+{% from 'helpers/_forms.html' import render_field %}
+{% block main %}
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename = 'css/estilos_letras_cambio.css') }}">
+{% endblock%}
+
+
+
+<main class="px-3 py-5">
+
+    <div class="container">
+
+        <form class="form_main mt-3 " method = "POST" enctype="multipart/form-data" onsubmit="return validateFile()">
+            <div class="row d-flex gap-4">
+
+                <div class="contenedor col-xl-5 col-md-5 col-lg-5 col-sm-12 gap-1">
+                
+                    <h5 class="etiqueta">RIF</h5>
+                    <div class="inputContainer position-relative">
+                        <i class="fa-solid fa-circle-user inputIcon"></i>
+                        {{ render_field(form.rif, class="inputField", id="rif", value =current_user.rif, placeholder="Ingrese su numero de RIF", readonly= readonly) }}
+                        
+                    </div>
+
+                    <h5 class="etiqueta">Empresa</h5>
+                    <div class="inputContainer position-relative">
+                        <i class="fa-solid fa-building inputIcon"></i>
+                        {{ render_field(form.empresa, class="inputField", id="empresa",value = current_user.username, placeholder="Nombre de la empresa", readonly= readonly) }}
+                    </div>
+
+                    <h5 class="etiqueta">Empresa Beneficiaria del Pago</h5>
+                    <div class="inputContainer position-relative">
+                        <i class="fa-solid fa-building-columns inputIcon"></i>
+                        {{ render_field(form.empresa_beneficiaria, class="inputField", id="empresa_beneficiaria", value="Corimon Pinturas, C.A.", readonly= readonly ) }}
+                    </div>
+
+                    <h5 class="etiqueta">Fecha de depósito</h5>
+                    <div class="inputContainer position-relative">
+                        <i class="fa-regular fa-calendar inputIcon"></i>
+                        {{ render_field(form.fecha_deposito, class="inputField", id="fecha" ) }}
+                    </div>
+
+                </div>
+                <!--onchange="javascript:seleccionar_empresa()"-->
+                <div class="contenedor col-xl col-md col-lg col-sm-12">
+                    <h5 class="etiqueta">Seleccione el tipo de moneda</h5>
+                    <div class="d-flex justify-content-center gap-5 p-3">
+                        <label class="check">
+                            <p class="m-0 p-0">bs</p>
+                            {{ form.bolivares(class="divisa", id="check3", disabled=disabled) }}
+                            <div class="checkmark"></div>
+                        </label>
+
+                        <label class="check">
+                            <p class="m-0 p-0">$</p>
+                            {{ form.dolares(class="divisa", id="check2", disabled=disabled) }}
+                            <div class="checkmark"></div>
+                        </label>
+
+                        <label class="check">
+                            <p class="m-0 p-0">€</p>
+                            {{ form.euro(class="divisa", id="check1", disabled=disabled) }}
+                            <div class="checkmark"></div>
+                        </label>
+                    </div>
+
+                    <h5 class="etiqueta">Cuenta de banco a la cual se realizó el pago</h5>
+                    <div class="inputContainer position-relative mt-3">
+                        <div class="mensaje"><p>Por favor, seleccione un tipo de moneda para acceder a este campo</p></div>
+                        <i class="fa-solid fa-building-columns inputIcon"></i>
+                        {{ render_field(form.banco_receptor, class="inputField disabled", id="banco_receptor", disabled='disabled' ) }}
+                        {{ render_field(form.banco_receptor_dolar, class="inputField d-none", id="banco_receptor_dolar") }}
+                    </div>
+
+                    <div class="inputContainer position-relative d-flex flex-column">
+                        <h5 class="etiqueta">Ingrese el Número de Referencia del pago</h5>
+                        <i class="fa-solid fa-book-bookmark inputIcon"></i>
+                        {{ render_field(form.n_deposito, placeholder="Ingrese el número de referencia", class ="inputField", id="ref", required="", label_attr={"class": "label", "for": "ref"}, value=algo) }}
+                    </div>
+
+                    <div class="inputContainer position-relative d-flex flex-column">
+                        <h5 class="etiqueta">Cargue el soporte del Pago</h5>
+                        <i class="fa-regular fa-credit-card inputIcon"></i>
+                        <input type="file" name="archivo" id ="archivo" class="inputField" style="max-width: 100%;" accept=".jpg,.jpeg,.png,.pdf" required>
+                    </div>
+
+                    <div class="inputContainer position-relative d-flex flex-column">
+                        <h5 class="etiqueta">Indique el monto del pago</h5>
+                        <i class="bi bi-cash-stack inputIcon"></i>
+                        <!--
+                        <i class="fa-solid fa-hand-holding-dollar "></i>-->
+                        {{ render_field(form.monto, class="inputField", id="monto", required="", min="0.01", step="0.01" , label_attr={"class": "label", "for": "monto"}) }}
+                    </div>
+                    <div class="d-flex w-100  justify-content-between position-relative">
+                        <div id="alert" class="alert-container2 z-2 bg-warning">
+                        <i class="bi bi-exclamation-circle h-100"></i>
+                        <span id="alert-message"></span>
+                        </div>
+                    </div>
+                </div>        
+            </div>
+
+
+            <div class="col-12 bg-white contenedor lista-prepago mt-4">
+                <!-- Header fijo fuera del área de scroll -->
+                <div class="list-header">
+                    <div class="titulo d-flex gap-2">
+                        Cantidad de elementos seleccionados
+                        <p id="contadorElementos"></p>
+                    </div>
+                    <div class="titulo d-flex gap-2">
+                        Monto restante por abonar
+                        <p id="montoRestante">0.00</p>
+                        <span id="moneda"></span>
+                    </div>
+                </div>
+
+            {% set vacio = false %}
+            {% if letras_cambio|length == 0 %}
+                {% set vacio = true %}
+            {% endif %}
+
+                <!-- Contenedor con scroll para las facturas -->
+                <div class="facturas-contenedor px-2 py-2">
+                    {% if vacio == false %}
+                        {% for documento in letras_cambio %}
+                        <div class="custom-checkbox-container checkbox-variant-2 factura w-100" data-encabezado='{{documento|tojson}}'>
+                            <input type="checkbox" class="hidden-checkbox " style="display: none;" />
+                            <div class="checkbox-visual"></div>
+                            <div class="contenido-factura position-relative">
+                                <div class="d-flex justify-content-center w-100 align-items-center elemento-dentro p-2 my-3">
+                                    <div class="d-flex align-items-center gap-1 valorFactura w-100 justify-content-center">
+                                    <h3 class="m-0">Fecha de Emisión:</h3>
+                                    <p class="">{{documento.fechadoc}}</p>
+                                    </div>
+                                </div>
+
+                                <div class="row d-flex w-100 gap-2 align-items-center">
+                                    <div class="col-12 col-lg-4 m-0  flex-grow-1 d-flex flex-column gap-2 px-1">
+                                        <div class="d-flex align-items-center gap-1 valorFactura w-100">
+                                            <h3 class="m-0">Número de documento:</h3>
+                                            <p class="">{{documento.documento}}</p>
+                                        </div>
+
+                                        <div class="d-flex align-items-center gap-1 valorFactura w-100">
+                                            <h3 class="m-0"> Fecha de vencimiento:</h3>
+                                            <p class="">{{documento.fechavenc}}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-lg-3 m-0 p-0 flex-grow-1 d-flex flex-column gap-2 px-1" >
+                                        <div class="d-flex align-items-center gap-1 valorFactura w-100 ">
+                                            <h3 class="m-0  {%if documento.autopagobs == ''%}  text-decoration-line-through text-muted mb-0 {%endif%} ">  Monto (Bs): </h3>
+                                            <p class="  {%if documento.autopagobs == ''%}  text-decoration-line-through text-muted mb-0 {%endif%} ">{{"{:,.2f}".format(documento.mbsautor)}}</p>
+                                        
+                                        </div>
+
+                                        <div class="d-flex align-items-center gap-1 valorFactura w-100">
+                                            <h3 class="m-0">  Monto ($):   </h3>
+                                            <p class=" textoMostrarDivisas"> {{"{:,.2f}".format(documento.montodoc)}}</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-lg-3 p-0">
+
+                                        <div class=" d-flex align-items-center gap-3">
+                                            <div class="divisas-badge">
+                                                {% if documento.autopagobs == '' %}
+                                                    <span class="badge badge-usd">
+                                                        <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                                        </svg>
+                                                        Solo USD
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge badge-multi">
+                                                        <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                                        </svg>
+                                                        Bs permitido
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="CasoAbonado flex-column d-none valorFactura ">
+                                                <h3 class="m-0">  Monto a Abonar:   </h3>
+                                                <p class="ValorAbonado textoMostrarDivisas " style="font-size: 13px;"> </p>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="d-flex align-items-center gap-1 valorFactura w-100">
+                                            <h3 class="m-0">  Observación:   </h3>
+                                            <p class=" textoMostrarDivisas"> {{documento.sgtxt}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+
+                    {% elif vacio == true %}
+                    <div class="alert alert-warning d-flex align-items-center" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <div>
+                        No hay entregas disponibles para prepago en este momento.
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="mb-2 w-100 d-flex justify-content-center" style="margin-top: 25px; padding-bottom: 100px;">
+                <input type="hidden" id="csrf" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="button" class="submit" id="activarModal" >
+                    <span>Enviar</span>
+                </button>
+            </div>
+        </form>
+
+
+        <div id="invoiceModalVerificacion" class="modal">
+            <div class="modal-content">
+                <div class="invoice-header">
+                    <button class="close-btn-modal close-modal-verificacion"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+                    <h3 class=" m-0">Verificación del proceso</h3>
+                </div>
+                <div class="invoice-body">
+                    <!-- Resumen General -->
+                    <h3 class="section-title">Resumen</h3>
+                    <div class="resumen-general">
+                    <div class="resumen-card">
+                        <div class="resumen-icon azul_byk d-flex align-items-center justify-content-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-box-icon lucide-box"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div>
+                        <div class="resumen-info">
+                            <span class="resumen-label">Total Documentos</span>
+                            <span class="resumen-value" id="totalDocumentos">0</span>
+                        </div>
+                    </div>
+                    <div class="resumen-card">
+                        <div class="resumen-icon verde_dolar" id="text-icon">$</div>
+                        <div class="resumen-info">
+                            <span class="resumen-label">Monto Pagado</span>
+                            <span class="resumen-value" id="total">$0.00</span>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="invoice-info resumen-card-detalles">
+                    <div class="info-item">
+                        <div class="info-label">Rif</div>
+                        <div class="info-value" id="RifValidacion">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Fecha del Depósito:</div>
+                        <div class="info-value" id="fechaValidacion">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Cuenta de banco</div>
+                        <div class="info-value" id="cuentaValidacion">-</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Número de Referencia:</div>
+                        <div class="info-value" id="refValidacion">-</div>
+                    </div>
+                    </div>
+
+                    <!-- Sección de entregas -->
+                    <h3 class="section-title">Letras de cambio Seleccionadas</h3>
+                    
+                    <div id="listaEntregas" class="entregas-container">
+                        <!-- Las entregas se insertarán aquí dinámicamente -->
+                    </div>
+
+                    <div class="modal-actions">
+                    <button class="btn-secondary close-modal-verificacion ">Cancelar</button>
+                    <button class="btn-primary" id="enviarBoton">Confirmar Proceso</button>
+                    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+<!--id="enviarBoton" -->
+</main>
+
+
+{% endblock %}
+
+{% block js%}
+<script src="{{ url_for('static', filename='js/letra_cambio.js') }}"></script>
+    
+{% endblock %}
+

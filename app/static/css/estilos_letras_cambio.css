@@ -1176,3 +1176,76 @@ box-shadow: 0 0 0 3px rgba(197, 48, 48, 0.2) !important;
     padding: 7px;
     border-radius: 8px;
 }
+
+
+.factura-item {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: box-shadow 0.2s ease;
+}
+
+.factura-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.factura-header {
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+
+.factura-item .detalle-item {
+    background: #fff !important;
+}
+
+.factura-abonada {
+    border-left: 4px solid #ffc107;
+    background: #fefde8;
+}
+
+.factura-numero {
+    color: #2c3e50;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.detalle-item {
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.detalle-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.detalle-value {
+    font-size: 0.875rem;
+    color: #212529;
+    font-weight: 500;
+}
+
+.abono-destacado {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+}
+
+.monto-abonado {
+    color: #856404;
+    font-size: 1rem;
+}
+
+.saldo-pendiente {
+    background: #fee8e8;
+    border: 1px solid #f5c6cb;
+}
+

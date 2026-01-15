@@ -45,7 +45,6 @@
 {% block navbar %}
 
 <style>
-  /* Estilos del modal mejorado */
     .modal-overlay {
         position: fixed;
         top: 0;
@@ -196,6 +195,7 @@
                     <li class=""><a class="{% if titulo == 'reporte pago' %} active {% endif %}"  href="{{ url_for('.cobranza')}}">Registrar Pago</a></li>
                     <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.cobranza_iva')}}" >Registrar Pago Iva</a></li>
                     <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.prepago')}}" >Registrar Prepago</a></li>
+                    <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.otras_deudas')}}" >Otras Deudas</a></li>
                     <li class=""><a class="{% if titulo == 'Lista Cobranzas' %} active {% endif %}"  href="{{ url_for('.lista_cobranza')}}">Documentos Pendientes</a></li>
                     <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.pagos_cobranza')}}" >Pagos Realizados</a></li>
                     <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.historial')}}" >Historial</a></li>
@@ -512,7 +512,8 @@
           <ul class="list-unstyled mb-0 ">
             <li class=""><a class="{% if titulo == 'reporte pago' %} active {% endif %}"  href="{{ url_for('.cobranza')}}">Registrar Pago</a></li>
             <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.cobranza_iva')}}" >Registrar Pago Iva</a></li>     
-            <li class=""><a class="{% if titulo == 'reporte pago' %} active {% endif %}"  href="{{ url_for('.prepago')}}">Registrar Prepago</a></li>       
+            <li class=""><a class="{% if titulo == 'reporte pago' %} active {% endif %}"  href="{{ url_for('.prepago')}}">Registrar Prepago</a></li>  
+            <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.cobranza_iva')}}" >Otras Deudas</a></li>     
             <li class=""><a class="{% if titulo == 'Lista Cobranzas' %} active {% endif %}"  href="{{ url_for('.lista_cobranza')}}">Documentos Pendientes</a></li>
             <li class=""><a class="{% if titulo == 'Lista Cobranzas' %} active {% endif %}"  href="{{ url_for('.pagos_cobranza')}}">Pagos Realizados</a></li>
             <li class=""><a  class="{% if titulo == 'Pedidos' %} active {% endif %}" href="{{ url_for('.historial')}}" >Historial</a></li>
@@ -629,7 +630,7 @@
 
 
 <script>
-// Definir la función en el ámbito global
+
 function cerrarModalNotificacion() {
     const modal = document.getElementById('modalNotificación');
     if (modal) {
@@ -643,7 +644,6 @@ window.addEventListener('load', function() {
     const modal = document.getElementById('modalNotificación');
     
     if (!modal) {
-        console.error("Error: El elemento #modalNotificación no se encontró en el DOM.");
         return; 
     }
     

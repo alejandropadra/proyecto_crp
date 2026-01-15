@@ -89,6 +89,14 @@ def prepago_mail(user, datos):
     thread = Thread(target=send_async_mail, args=[message])
     thread.start()
     
+def letra_cambio_mail(user, datos):
+    message = Message('Pago de letra de cambio registrado. Referencia'+' '+ datos.get('ref'),
+                    sender=current_app.config['MAIL_USERNAME'],
+                    recipients=[user.email, "gabriela_briceno@corimon.com", "credito_cobranza@corimon.com"])#
+    message.html = render_template('email/letra_cambio_cliente.html', user=user, datos= datos, )
+    thread = Thread(target=send_async_mail, args=[message])
+    thread.start()
+    
     
     
 

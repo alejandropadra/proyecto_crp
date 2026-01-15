@@ -1,0 +1,96 @@
+{% extends 'nuevo_landing/base_landing.html' %}
+{% block title %}Corimon Pinturas - Colores que Dan Vida{% endblock %}
+
+{% block content %}
+
+<article id="hero">
+    <section class="hero-section">
+        <div class="hero-contenedor">
+        
+            <div class="hero-content hero-content-inicial">
+                <div class="hero-texto">
+                    <!-- Título principal -->
+                    <div class="Titulo Principal">
+                        <h1 class="posicionamiento">Corimon <span> Pinturas </span></h1>
+                        <h1 class="hero-titulo">
+                            <span class="hero-titulo-linea">Transformando tus</span>
+                            <span class="hero-titulo-linea hero-titulo-destacado">Espacios</span>
+                            <span class="hero-titulo-linea">con Color</span>
+                        </h1>
+                    </div>
+
+
+                    <!-- Subtítulo -->
+                    <p class="hero-subtitulo">
+                        <Strong>Corimon Pinturas</Strong> es una empresa con más de <strong>75 años</strong> de trayectoria brindando soluciones de pintura profesional 
+                        para hogares industrias a lo largo del territorio venezolano.
+                    </p>
+
+                    <!-- CTAs -->
+                    <div class="hero-ctas">
+                        <a href="#productos" class="btn btn-primary btn-hero">
+                            Ver Productos
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                        <a href="#contacto" class="btn btn-secondary btn-hero-secondary">
+                            Contactar Ahora
+                        </a>
+                    </div>
+                </div>
+
+                <div class="hero-imagen">
+                    <img src="{{ url_for('static', filename='static_landing/img/heroPinturas.avif') }}" alt="Productos Corimon Pinturas">
+                </div>
+            </div>
+
+            <!-- ============================================
+                CONTENIDO NUEVO (aparece al hacer scroll)
+            ============================================ -->
+            <div class="hero-content hero-content-nuevo">
+
+                <div class="hero-imagen">
+                    <img src="{{ url_for('static', filename='static_landing/img/pintandoImagen.avif') }}" alt="Calidad Corimon">
+                </div>
+                <div class="hero-texto">
+                    <!-- Título nuevo -->
+                    <div class="Titulo Principal apareciendo-texto">
+                        <h1 class="posicionamiento sobreRojo">Calidad <span> Profesional </span></h1>
+                        <h1 class="hero-titulo apareciendo-texto">
+                            <span class="hero-titulo-linea">Más de</span>
+                            <span class="hero-titulo-linea hero-titulo-destacado" >75 Años</span>
+                            <span class="hero-titulo-linea">de Experiencia</span>
+                        </h1>
+                    </div>
+
+                    <!-- Subtítulo nuevo -->
+                    <p class="hero-subtitulo">
+                        Respaldados por una larga y reconocida trayectoria, somos líderes en la industria venezolana. Combinamos tecnología de punta con un servicio excepcional para ofrecerte soluciones de alta calidad en áreas arquitectónicas, madera, tráfico y mantenimiento industria
+                    </p>
+
+                    <!-- CTAs nuevos (opcional) -->
+                    <div class="hero-ctas">
+                        <a href="#historia" class="btn btn-primary btn-hero" style="background-color: #Fefefe !important; color: #E50914 !important; border-color: #Fefefe !important;">
+                            Nuestra Historia
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </section>
+</article>
+{% endblock %}
+
+{% block extra_js %}
+
+    <script src="{{ url_for('static', filename='static_landing/js/cursor.js') }}"></script>
+{% endblock %}
+
+

@@ -1,0 +1,368 @@
+{% extends 'layout.html' %}
+
+{% block estilos %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/formy.css') }}">
+
+
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/monolith.min.css"/> 
+{% endblock %}
+
+{% block main %}
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<main class="main-formy">
+    <div class="container">
+        <!-- Fila de filtros -->
+        <div class="filters-row">
+            <!-- Sistema de Tabs -->
+            <div class="filters-tabs">
+                <button class="tab-button active" data-tab="tab-select">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                    </svg>
+                    Buscar por Nombre
+                </button>
+                <button class="tab-button" data-tab="tab-color">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+                    </svg>
+                    Filtrar por Color
+                </button>
+            </div>
+
+            <!-- Tab Content 1: Select Dropdown -->
+            <div class="tab-content active" id="tab-select">
+                <div class="filter-group">
+                    <label for="filter-category" class="filter-label">
+                        <svg class="filter-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                        </svg>
+                        Buscar color en especifico 
+                    </label>
+                    <select id="filter-category" class="" disabled>
+                        <option value="">Cargando colores...</option>
+                    </select>
+                </div>
+
+                <div class="btn-buscar">
+                    
+                    <button id="btn-buscar">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+                        Buscar
+                    </button>
+                </div>
+                <div class="filter-group">
+                    <button type="button" class="btn-clear-filters" id="btnClearFilters">
+                        <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Limpiar filtros
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Tab Content 2: -->
+            <div class="tab-content" id="tab-color">
+                <div class="color-filter-steps">
+                    
+                    <!-- Step 1: Selección de Color -->
+                    <div class="filter-step active" data-step="1">
+                        <div class="step-header">
+                            <div class="step-number">1</div>
+                            <div class="step-title">Color Base</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="color-picker-wrapper" id="color-picker-wrapper">
+                                <!-- Fondo que cambiará de color -->
+                                <div class="color-background" id="color-background"></div>
+                                
+                                <!-- Botón visual personalizado (no es Pickr) -->
+                                <div class="color-preview-large" id="custom-color-button">
+                                    <span class="click-hint">Toca para cambiar</span>
+                                </div>
+                                
+                                <!-- Pickr oculto (invisible) -->
+                                <div class="pickr-hidden" id="color-base-display"></div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Ajuste de Tolerancia -->
+                    <div class="filter-step" data-step="2">
+                        <div class="step-header">
+                            <div class="step-number">2</div>
+                            <div class="step-title">Tolerancia</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="tolerance-control">
+                                <div class="tolerance-value-display">
+                                    <span id="tolerance-value">52</span>%
+                                </div>
+                                
+                                <!-- SLIDER AGREGADO AQUÍ -->
+                                <input 
+                                    type="range" 
+                                    class="tolerance-slider" 
+                                    id="tolerance-slider"
+                                    min="0" 
+                                    max="100" 
+                                    value="52" 
+                                    step="1"
+                                >
+                                
+                                <div class="slider-labels">
+                                    <span>Preciso</span>
+                                    <span>Amplio</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Vista Previa -->
+                    <div class="filter-step" data-step="3">
+                        <div class="step-header">
+                            <div class="step-number">3</div>
+                            <div class="step-title">Rangos RGB</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="preview-grid">
+                                <div class="preview-card">
+                                    <div class="mini-swatch" id="preview-min" style="background: rgb(40,0,0)"></div>
+                                    <span class="mini-label">Min</span>
+                                </div>
+                                <div class="preview-card">
+                                    <div class="mini-swatch" id="preview-base" style="background: rgb(104,34,34)"></div>
+                                    <span class="mini-label">Base</span>
+                                </div>
+                                <div class="preview-card">
+                                    <div class="mini-swatch" id="preview-max" style="background: rgb(255,100,100)"></div>
+                                    <span class="mini-label">Max</span>
+                                </div>
+                            </div>
+                            <div class="rgb-details">
+                                <div class="rgb-row">
+                                    <span class="channel-name">R</span>
+                                    <span class="channel-val" id="r-range">40 - 255</span>
+                                </div>
+                                <div class="rgb-row">
+                                    <span class="channel-name">G</span>
+                                    <span class="channel-val" id="g-range">0 - 100</span>
+                                </div>
+                                <div class="rgb-row">
+                                    <span class="channel-name">B</span>
+                                    <span class="channel-val" id="b-range">0 - 100</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Acciones -->
+                    <div class="filter-step" data-step="4">
+                        <div class="step-header">
+                            <div class="step-number">4</div>
+                            <div class="step-title">Confirmar</div>
+                        </div>
+                        <div class="step-content">
+                            <div class="action-buttons">
+                                <button class="btn btn-apply" >
+                                    <svg class="icon" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                    Aplicar Filtro
+                                </button>
+                                <button class="btn btn-clear" onclick="limpiarFiltro()">
+                                    <svg class="icon" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                                    Reiniciar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Información de paginación -->
+        <div class="pagination-info">
+            <p>
+                Mostrando grupos <span id="range-start">{{ ((page - 1) * 10) + 1 }}</span> - 
+                <span id="range-end">{{ ((page - 1) * 10) + formulas_agrupadas|length }}</span> 
+                de <span id="total-grupos">{{ total_grupos }}</span> grupos de colores
+                | <span id="total">{{ total_registros }}</span> fórmulas totales
+            </p>
+        </div>
+
+        <!-- Grid de grupos de colores -->
+        <div class="productos-grid" id="productos-container">
+            {% for grupo in formulas_agrupadas %}
+            <div class="grupo-color">
+                <!-- Tarjeta del color -->
+                <div class="tarjeta-color" 
+                    data-nombre="{{ grupo.name_color }}"
+                    data-r="{{ grupo.rgb.r }}" 
+                    data-g="{{ grupo.rgb.g }}" 
+                    data-b="{{ grupo.rgb.b }}"
+                    data-datos='{{ grupo | tojson }}'>
+                    <div class="color" 
+                        data-r="{{ grupo.rgb.r }}" 
+                        data-g="{{ grupo.rgb.g }}" 
+                        data-b="{{ grupo.rgb.b }}"
+                        style="background: rgb({{ grupo.rgb.r }}, {{ grupo.rgb.g }}, {{ grupo.rgb.b }});">
+                    </div>
+                    <div class="color-info">
+                        {{ grupo.name_color }}
+                    </div>
+                </div>
+                <!-- Lista de productos con este color (colapsable) -->
+                <div class="productos-list" style="display: none;">
+                    {% for producto in grupo.datos %}
+                    <div class="producto-item">
+                        <strong>{{ producto.name_product }}</strong>
+                        <span>{{ producto.name_color }}</span>
+                        <span class="base">Base: {{ producto.name_base }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Loading spinner -->
+        <div id="loading-spinner" style="display: none;">
+            <figure class="loader-formulacion">
+                <div class="dot white"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </figure>
+        </div>
+
+        <!-- Controles de paginación -->
+        <div class="pagination-controls">
+            <button id="btn-prev" class="btn-pagination" {% if page == 1 %}disabled{% endif %}>
+                ← Anterior
+            </button>
+
+            <div class="page-numbers" id="page-numbers">
+                <!-- JavaScript llenará esto -->
+            </div>
+
+            <button id="btn-next" class="btn-pagination" {% if page == total_paginas %}disabled{% endif %}>
+                Siguiente →
+            </button>
+        </div>
+    </div>
+</main>
+
+
+<!-- Modal para detalles del color -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <div class="modal-title-section">
+                <h2 class="modal-title" id="modalColorName">Sistema de Formulación Tiendas Montana, C.A.</h2>
+            </div>
+            <button class="modal-close" id="modalClose">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <!-- Columna izquierda: Preview del color -->
+            <div class="contenedor-color">
+                <div class="color-preview-card">
+                    <div class="modal-color-preview" id="modalColorPreview"></div>
+                    <div class="color-details">
+                        <h3 class="color-name" id="colorNameDisplay">Nombre del Color</h3>
+                        <p class="color-code" id="colorCodeDisplay">108G 72/069</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna derecha: Selección de producto y fórmula -->
+            <div class="formulacion-section">
+                <div class="modal-section">
+                    <h3 class="modal-section-title">
+                        <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                        Seleccione el producto
+                    </h3>
+                    
+                    <div class="filter-group inmodal">
+                        <select id="filterProductos" class="filter-select">
+                        </select>
+
+                        <select id="filterGalon" class="filter-select">
+                            <option value="1">1 Gal</option>
+                            <option value="0.25">1/4 Gal</option>
+                            <option value="4">4 Gal</option>
+                            <option value="5">5 Gal</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sección de Fórmula -->
+                <div class="formula-display" id="formulaDisplay">
+                    <h3 class="formula-title">
+                        <svg class="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                        </svg>
+                        Fórmula
+                    </h3>
+
+                    <!-- Grid de tintas -->
+                    <div class="tintas-grid" id="tintasGrid">
+                        <div class="formula-empty-state" style="grid-column: 1 / -1;">
+                            <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <p class="empty-state-text">Seleccione un producto para ver la fórmula</p>
+                        </div>
+
+                    </div>
+
+                    <!-- Base -->
+                    <div class="base-section">
+                        <div class="base-card">
+                            <div class="base-color">
+                                <span class="base-label">BASE</span>
+                            </div>
+                            <div class="base-info">
+                                <span class="base-name">285-010 Base Pastel</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Costo sugerido -->
+                    <div class="costo-section">
+                        <label class="costo-label">Costo sugerido USD</label>
+                        <input type="number" class="costo-input" id="costoInput" placeholder="0.00" step="0.01">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="mi-paginacion" data-pagination-data='{{ {
+    "currentPage": page,
+    "totalPages": total_paginas,
+    "totalGroups": total_grupos,
+    "totalRecords": total_registros
+} | tojson }}'>
+</div>
+{% endblock %}
+
+{% block js %}
+
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+<script src="{{ url_for('static', filename='js/formy.js') }}"></script>
+{% endblock %}

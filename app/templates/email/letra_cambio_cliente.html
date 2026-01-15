@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Correo de Confirmación de Pago</title>
+    <style>
+        body {
+            background-color: #E0E0E0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .usuario{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            background-color: #fff;
+            width: 80%;
+            max-width: 600px;
+            margin: 5% auto;
+            border-radius: 13px;
+            padding: 20px 30px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+        .logo img {
+            height: 40;
+            width: 200px;
+        }
+        .Encabezado {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .titulo h3 {
+            font-size: 20px;
+            font-weight: 800;
+            text-align: center;
+        }
+        .cuerpo {
+            font-size: 13px;
+            text-align: center;
+            line-height: 23px;
+        }
+        
+        /* Estilos para la tabla de datos del pago */
+        .tabla-datos-pago {
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .tabla-datos-pago table{
+            background-color: white;
+            text-align: left;
+            border-collapse: collapse;
+            width: 100%;
+            border-radius: 16px;
+        }
+        .tabla-datos-pago th, .tabla-datos-pago td{
+            padding: 10px;
+        }
+        
+        .tabla-datos-pago thead{
+            background-color: #ffffff;
+            border-bottom: solid 5px #640505;
+            color: black;
+        }
+        .tabla-datos-pago tr:nth-child(even){
+            background-color: #ddd;
+        }
+
+        /* Estilos para las entregas seleccionadas */
+        .entregas-section {
+            margin: 30px 0;
+        }
+
+        .entregas-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: left;
+            padding-left: 5px;
+            border-left: 4px solid #640505;
+        }
+
+        .entrega-card {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .entrega-card.completa {
+            border-left: 4px solid #28a745;
+            background-color: #f8fff9;
+        }
+
+        .entrega-card.parcial {
+            border-left: 4px solid #ffc107;
+            background-color: #fffef5;
+        }
+
+        .entrega-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .entrega-documento {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .entrega-estado {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        .estado-completa {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .estado-parcial {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        a.button {
+            width: 150px;
+            height: auto;
+            background-color: #ff0000;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            padding: 10px 0;
+            border-radius: 16px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            margin: 20px auto -5px auto;
+        }
+        .boton{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        a.button:hover {
+            background-color: #cccccc;
+        }
+        
+        footer {
+            bottom: 0;
+            padding: 20px;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            color: #ccc;
+            background: rgb(83, 81, 81);
+        }
+        
+        p{
+            font-size: 14px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="Encabezado">
+            <div class="logo">
+                <img src="https://www.corimon.com/wp-content/uploads/2019/04/logocorimon-.png" alt="Corimon Pinturas">
+            </div>
+            <div class="usuario">
+                usuario: {{datos.rif}}
+            </div>
+        </div>
+        <hr>
+        
+        <div class="contenido_correo">
+            <div class="titulo">
+                <h3>¡Pago Registrado exitosamente!</h3>
+            </div>
+            
+            <div class="cuerpo">
+                <p>Nos complace informarte que el pago correspondiente a los siguientes datos ha sido registrado</p>
+                <hr>
+                
+                <!-- Tabla de datos del pago -->
+                <div class="tabla-datos-pago">
+                    <table width="100%">
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style=" border-bottom:1px solid #ddd">
+                                <td>Empresa</td>
+                                <td>{{datos.empresa}}</td>
+                            </tr>
+                            <tr style=" border-bottom:1px solid #ddd">
+                                <td>RIF</td>
+                                <td>{{datos.rif}}</td>
+                            </tr>
+                            <tr style=" border-bottom:1px solid #ddd">
+                                <td>Fecha</td>
+                                <td>{{datos.fecha}}</td>
+                            </tr>
+                            <tr style=" border-bottom:1px solid #ddd">
+                                <td>Monto Total</td>
+                                <td>{{datos.tipoPago}} {{ "{:,.2f}".format(datos.monto|float) }}</td>
+                            </tr>
+                            <tr style=" border-bottom:1px solid #ddd">
+                                <td>Referencia</td>
+                                <td>{{datos.ref}}</td>
+                            </tr>
+                            <tr style=" border-bottom:1px solid #ddd">
+                                <td>Banco Receptor</td>
+                                <td>{{datos.banco_receptor}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sección de entregas seleccionadas 
+                <hr>
+
+
+                <div class="entregas-section" style="display: none;">
+                    <div class="entregas-title">Documentos Seleccionados</div>
+
+                    {% for factura in datos.facturasSeleccionadas %}
+                        {% if factura.documento %}
+                            {% set esAbono = factura.esAbono or False %}
+                            <div class="entrega-card {% if esAbono %}parcial{% else %}completa{% endif %}">
+                                <div class="entrega-header">
+                                    <div class="entrega-documento">
+                                        📄 Documento: {{ factura.documento }}
+                                    </div>
+                                    <div class="entrega-estado {% if esAbono %}estado-parcial{% else %}estado-completa{% endif %}">
+                                        {% if esAbono %}Abono Parcial{% else %}Completa{% endif %}
+                                    </div>
+                                </div>
+                                
+                                <table width="100%" cellpadding="5" cellspacing="0" style="margin-top: 15px; border-collapse: collapse;">
+
+                                    <tr>
+                                        <td width="33%" style="vertical-align: top; text-align: center; padding: 8px; background-color: #f8f9fa; border-radius: 4px;">
+                                            <div style="font-weight: 600; color: #666; font-size: 10px; text-transform: uppercase; margin-bottom: 5px;">Fecha</div>
+                                            <div style="font-weight: 600; color: #333; font-size: 13px;">{{ factura.fechadoc }}</div>
+                                        </td>
+                                        <td width="33%" style="vertical-align: top; text-align: center; padding: 8px; background-color: #f8f9fa; border-radius: 4px;">
+                                            <div style="font-weight: 600; color: #666; font-size: 10px; text-transform: uppercase; margin-bottom: 5px;">Vencimiento</div>
+                                            <div style="font-weight: 600; color: #333; font-size: 13px;">{{ factura.fechavenc }}</div>
+                                        </td>
+                                        <td width="33%" style="vertical-align: top; text-align: center; padding: 8px; background-color: #f8f9fa; border-radius: 4px;">
+                                            <div style="font-weight: 600; color: #666; font-size: 10px; text-transform: uppercase; margin-bottom: 5px;">Moneda</div>
+                                            <div style="font-weight: 600; color: #333; font-size: 13px;">{{ factura.moneda }}</div>
+                                        </td>
+                                    </tr>
+         
+                                    <tr>
+                                        {% if datos.tipoPago != "$" %}
+                                            <td colspan="3" style="padding-top: 15px;">
+                                                <table width="100%" cellpadding="0" cellspacing="0">
+                                                    <tr>
+                                                        <td style="text-align: center;">
+                                                            <div style="background-color: #fff9e6; border: 2px solid #ffc107; padding: 12px; border-radius: 8px; display: inline-block; min-width: 200px;">
+                                                                <div style="font-weight: 600; color: #856404; font-size: 11px; text-transform: uppercase; margin-bottom: 5px;">Monto</div>
+                                                                <div style="font-weight: 700; color: #333; font-size: 18px;">{{ datos.tipoPago }} {{ "{:,.2f}".format(factura.mbsautor|float) }}</div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        {% else %}
+                                            {% if esAbono %}
+                                                <td width="40%" style="padding-top: 15px; vertical-align: top; text-align: center;">
+                                                    <div style="background-color: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #dee2e6;">
+                                                        <div style="font-weight: 600; color: #666; font-size: 10px; text-transform: uppercase; margin-bottom: 5px;">Monto Original</div>
+                                                        <div style="font-weight: 600; color: #333; font-size: 14px;">$ {{ "{:,.2f}".format(factura.montodocOriginal|float) }}</div>
+                                                    </div>
+                                                </td>
+                                                <td width="60%" colspan="2" style="padding-top: 15px; text-align: center;">
+                                                    <div style="background-color: #fff9e6; border: 2px solid #ffc107; padding: 12px; border-radius: 8px; display: inline-block; min-width: 180px;">
+                                                        <div style="font-weight: 600; color: #856404; font-size: 11px; text-transform: uppercase; margin-bottom: 5px;">Monto Abonado</div>
+                                                        <div style="font-weight: 700; color: #333; font-size: 18px;">{{ datos.tipoPago }} {{ "{:,.2f}".format(factura.montodoc|float) }}</div>
+                                                    </div>
+                                                </td>
+                                            {% else %}
+                                                <td colspan="3" style="padding-top: 15px;">
+                                                    <table width="100%" cellpadding="0" cellspacing="0">
+                                                        <tr>
+                                                            <td style="text-align: center;">
+                                                                <div style="background-color: #e6ffe6; border: 2px solid #28a745; padding: 12px; border-radius: 8px; display: inline-block; min-width: 200px;">
+                                                                    <div style="font-weight: 600; color: #138504; font-size: 11px; text-transform: uppercase; margin-bottom: 5px;">Monto de la Factura</div>
+                                                                    <div style="font-weight: 700; color: #333; font-size: 18px;">{{ datos.tipoPago }} {{ "{:,.2f}".format(factura.montodoc|float) }}</div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            {% endif %}
+                                        {% endif %}
+                                    </tr>
+                                </table>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>-->
+
+
+                
+            </div>
+        </div>
+
+        <hr>
+        <footer>
+            <p style="font-weight: bolder; text-align: center;">Corimon Pinturas C.A. RIF. J-00029572-7</p>
+            <hr style="margin-top: 0;">
+            <p style="text-align: center;">Av. Hans Neumann, Urb. Industrial El Bosque, Valencia, Edo. Carabobo</p>
+            <p style="text-align: center;" ><a style="color: #ccc; text-align: center;" href="http://corimonpinturas.net">www.corimonpinturas.net</a></p>
+            <p style="text-align: center;">Le Comunicamos que la dirección a través de la cual usted está recibiendo el presente e-mail será utilizada únicamente para el servicio de notificaciones. Le agradecemos no responder a este correo.
+                Gracias por su confianza. En caso de dudas, contacte con soporte técnico al número de teléfono: +58 241 613 17 99</p>
+            <p style="text-align: center;">Correo electrónico: soporteb2b@corimon.com</p>
+        </footer>
+    </div>
+</body>
+</html>

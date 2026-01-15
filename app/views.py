@@ -4,10 +4,10 @@ from werkzeug.utils import secure_filename
 from flask import jsonify
 from flask_login import login_user,logout_user,login_required, current_user
 from .forms import LoginForm, RegisterForm, RegistroPagoForm,EditForm,PerfilForm,ContactForm, Retenciones
-from .models import User, Cobranza
+from .models import User, Cobranza, Formula
 from . import login_manager
 from .consts import *
-from .email import welcome_mail, pago_crm_mail, pago_mail, comprobante_mail, comprobante_crm_mail, pago_iva_mail,pago_iva_crm_mail, prepago_crm_mail, prepago_mail
+from .email import welcome_mail, pago_crm_mail, pago_mail, comprobante_mail, comprobante_crm_mail, pago_iva_mail,pago_iva_crm_mail, prepago_crm_mail, prepago_mail, letra_cambio_mail
 from flask import session
 from flask import send_file
 from datetime import datetime
@@ -85,6 +85,9 @@ def login():
 import os
 from datetime import datetime
 
+
+
+
 @page.route("/panel", methods=["GET"])
 def panel():
     files_info = []
@@ -140,6 +143,9 @@ def download_panel_file(file_key):
         )
     except FileNotFoundError:
         redirect(url_for('.modulos'))
+        
+        
+        
 
 
 @page.route("/registro", methods = ["GET", "POST"])
@@ -204,6 +210,13 @@ def usuarios():
         return redirect(url_for('.dashboard'))
     users = User.query.all()
     return render_template("auth/list_users.html",titulo="Lista usuarios",users=users)
+
+
+@page.route("/landing_dos")
+def landing_dos():
+    Formula.migrate_from_sqlite()
+    
+    return render_template("nuevo_landing/index.html",titulo="landingDos")
 
 @page.route("/usuario/<rif>", methods = ["GET","POST"])
 @login_required
@@ -893,7 +906,6 @@ def dashboard():
     pago_t = pagos[:3]
     Fecha_pago =  fecha_sap()
 #------------------------------------
-
     #Inicializo el cliente de SAP
     sap_client = ConsultasSAP(
         user_fuente=user_fuente,
@@ -1498,7 +1510,7 @@ def Promocion():
     ganadores_cel = []
 
     # Abre el archivo JSON
-    with open("participantes.json", encoding="utf-8-sig") as f:
+    with open("Data.json", encoding="utf-8-sig") as f:
         participantes = json.load(f)
 
     # Calcula la dimensión del JSON
@@ -1909,7 +1921,7 @@ def prepago():
                 return jsonify({'error': 'Se esperaba un array JSON'}), 400
             
             resultados = []
-            print('=========================================================================================')
+            print('=====================================RESULTADOS EN CRUDO====================================================')
             print(data)
             print("================================================================================")
             
@@ -1924,6 +1936,7 @@ def prepago():
 
             for entrega in data:
                 if es_entrega_vacia(entrega):
+                    print('asdasdasdasdasdasd')
                     resultado_vacio = {
                         'encabezado': {
                             'numero_entrega': '',
@@ -2007,6 +2020,7 @@ def prepago():
     return render_template("collections/prepago.html", titulo = "Prepago", resultado = resultados, form = prepago_form, resultados = resultados, excluir_app_js=True, tolerancia = response_json_tolerancia, descuento_div = descuento_div)
 
 
+
 @page.route("/prepagoPost", methods=['POST'])
 def prepagoPost():
     try:
@@ -2067,9 +2081,6 @@ def prepagoPost():
             nombre_imagen =''
             
 
-
-        
-        
         
         url = ip_fuente+'/sap/bc/rest/zrecdepo?sap-client=510&ENVIO=C'
         tiempo, fecha_enc = obtener_hora_minutos_segundos_fecha()
@@ -2203,3 +2214,447 @@ def procesar_entrega_individual(entrega):
             'cantidad_items': len(items_procesados)
         }
     }
+
+
+
+@page.route("/otras_deudas", methods= ["GET", "POST"])
+def otras_deudas():
+    letra_cambio_form = RegistroPagoForm(request.form)
+    #---------------------------------------------------------------
+
+    sap = ip_fuente+"/sap/bc/rest/zlccp_b2b"
+    tiempo, fecha_enc = obtener_hora_minutos_segundos_fecha()
+    cadena = cadena_md5('1200',current_user.rif,tiempo,fecha_enc)
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Origin':'',
+        'BUKRS': '1200',
+        'KUNNR':current_user.rif,
+        'BUDAT':fecha_enc,
+        'TIMLO':tiempo,
+        'CORIMON':cadena
+    }
+    args = {
+        'sap-client':'510',
+        'SOCIEDAD': '1200',
+        'CLIENTE': current_user.rif  #current_user.rif
+    }
+    response = requests.get(sap, auth=HTTPBasicAuth(user_fuente, contra_fuente), params=args, headers=headers, verify=VERIFICACION_SSL)
+    if response.status_code == 200:
+        try:
+            data = response.json()
+            print(data)
+            resultados = []
+            if not data or not isinstance(data, list):
+                resultados = data
+            
+
+            print('=========================================================================================')
+            print(data)
+            print("=========================================================================================")
+            
+            datos_filtrados=[]
+            for dato in data:
+                print(dato)
+                if float(dato['montodoc']) >=1 :
+                    print('asdas')
+                    datos_filtrados.append(dato)
+            if isinstance(data, list):
+                resultados= datos_filtrados
+            
+            # Ordenar por fecha de vencimiento
+            resultados = sorted(resultados, key=lambda x: x['fechavenc'])
+
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+        print(resultados)
+        
+    
+    return render_template("collections/letras_cambio.html", titulo = "Otras Deudas", excluir_app_js=True, letras_cambio = resultados, form = letra_cambio_form)
+
+
+
+    
+@page.route("/letra_cambio_post", methods=['POST'])
+def letra_cambio_post():
+    try:
+        datos_json = request.form.get('data')
+        if datos_json:
+            datos = json.loads(datos_json)
+        else:
+            datos = {}
+        
+        archivo = request.files.get('soporte_pago')
+        n_deposito= datos.get('ref')
+        rif = datos.get('rif')
+        banco_receptor= datos.get('banco_receptor')
+        fecha = datos.get('fecha')
+        dt = datetime.strptime(fecha, "%Y-%m-%d")
+        fecha_pago = dt.strftime("%Y%m%d")
+        tipoPago = datos.get('tipoPago')
+        monto = datos.get('monto')
+        divisa = "D" if  tipoPago == "$" else "B"
+        
+        seleccionada = datos.get("facturasSeleccionadas", [])
+        
+        
+        data = [
+            {
+                'BUKRS': '1200',
+                'XBLNR': n_deposito,
+                'KUNNR': rif,
+                'BLDAT': fecha_pago,
+                'TIPOPAGO': divisa,
+                'WRBTR': monto,
+                'CTABANCO': banco_receptor,
+                'PROCESADO': '',
+                "BELNR1": documento["documento"],       
+                "VBELN": documento["documento"],       
+                "BUZEI": documento["item"],                           
+                "BLDATF": documento["fechadoc"],
+                "MONTOPG": documento["montodoc"],
+                "ENTREGA": "",
+                'PREPAGO': "",
+                'LCCP': "X"
+            }
+            for documento in seleccionada
+        ]
+        print(datos)
+
+        url = ip_fuente+'/sap/bc/rest/zrecdepo?sap-client=510&ENVIO=C'
+        tiempo, fecha_enc = obtener_hora_minutos_segundos_fecha()
+        cadena = cadena_md5('1200',current_user.rif,tiempo,fecha_enc)
+        headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Origin':'',
+            'BUKRS': '1200',
+            'KUNNR':current_user.rif,
+            'BUDAT':fecha_enc,
+            'TIMLO':tiempo,
+            'CORIMON':cadena
+        }
+        args = {
+            'sap-client':'510',
+            'SOCIEDAD': '1200',
+            'CLIENTE':current_user.rif
+        }
+        
+
+        response = requests.post(
+            url, 
+            auth=HTTPBasicAuth(user_fuente, contra_fuente),
+            json=data,
+            headers=headers,
+            verify=VERIFICACION_SSL)
+
+        print(f"El estatus fué:{response.status_code}")
+        print(f"Response: {response.text[:500]}")
+        
+        if response.status_code == 200:
+
+            respuesta = response.content.decode('utf-8')
+
+            if respuesta == "Deposito Enviado Anteriormente por favor Verificar.":
+                print("deposito repetido")
+                return jsonify({
+                    "success": False,
+                    "message": respuesta
+                }), 200
+
+            elif respuesta == "Actualizacion de deposito Satisfactoria":
+                #print("todo bien")
+                flash(PAGO_CREADO)
+                letra_cambio_mail(current_user, datos )
+                
+                return jsonify({
+                    "success": True,
+                    "message": "Pago creado exitosamente",
+                    "redirect": url_for('.dashboard')  
+                }), 200
+            
+            else:
+                print('anad')
+
+        else:
+            print(respuesta)
+            print('aqui')
+            return jsonify({
+                "success": False,
+                "message": f"Error en la respuesta del servidor: {response.status_code}"
+            }), response.status_code
+    except Exception as e:
+        flash("Ocurrió un error", "error")
+        print(f"Error: {str(e)}")
+        return jsonify({
+            "success": False,
+            "message": f"Error inesperado: {str(e)}"
+        }), 500
+
+"""
+
+@page.route("/formulacion", methods=["GET", "POST"])
+def formy():
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        print('asda')
+        page = request.args.get('page', 1, type=int)
+        per_page = 18  # 18 GRUPOS por página (no registros)
+        
+        # Obtener grupos paginados
+        formulas_agrupadas, total_grupos = Formula.get_rgb_groups_paginated(
+            page=page, 
+            per_page=per_page
+        )
+        
+        # Calcular totales
+        total_registros = Formula.get_count()
+        total_colores_unicos = Formula.get_unique_colors_count()
+        total_paginas = (total_grupos + per_page - 1) // per_page
+        
+        return jsonify({
+            'grupos': formulas_agrupadas,
+            'page': page,
+            'total_paginas': total_paginas,
+            'total_grupos': total_grupos,  
+            'total_registros': total_registros,
+            'total_colores_unicos': total_colores_unicos
+        })
+    
+    # Carga inicial
+    page = 1
+    per_page = 18
+    formulas_agrupadas, total_grupos = Formula.get_rgb_groups_paginated(
+        page=page, 
+        per_page=per_page
+    )
+    
+
+    
+    total_registros = Formula.get_count()
+    total_colores_unicos = Formula.get_unique_colors_count()
+    total_paginas = (total_grupos + per_page - 1) // per_page
+
+    
+
+    
+    return render_template(
+        "collections/formy.html", 
+        titulo="Formulación", 
+        formulas_agrupadas=formulas_agrupadas,
+        page=page,
+        total_paginas=total_paginas,
+        total_grupos=total_grupos,
+        total_registros=total_registros,
+        total_colores_unicos=total_colores_unicos,
+    )
+
+@page.route("/formyPost", methods=["POST"])
+def formyPost():
+    try:
+        datos_json = request.form.get('data')
+        
+        if datos_json:
+            datos = json.loads(datos_json)
+        else:
+            datos = {}
+        print("=============")
+        print(datos['producto'])
+        
+        name_product = datos['producto']['name_product']
+        name_color = datos['producto']['name_color']
+        colores = Formula.obtener_ingredientes(name_color, name_product)
+        presentacion = float(datos['presentacion'])  
+        print(colores)
+        for color in colores:
+            cantidad = color['cantidad']
+            calculo = getLineFrom(cantidad, presentacion)
+            color['medida_calculada'] = calculo
+            print(f"  {color['codigo']}: {cantidad} x {presentacion} = {calculo}")
+        
+        datos_producto = datos['producto']
+        return jsonify({
+            "success": True,
+            "message": "Datos recibidos correctamente",
+            "colores": colores,
+            "datos": datos_producto
+        }), 200
+    
+    except Exception as e:
+        import traceback
+        error_msg = f"Error inesperado: {str(e)}"
+        print("ERROR EN formyPost:")
+        print(traceback.format_exc())
+        return jsonify({
+            "success": False,
+            "message": error_msg
+        }), 500
+
+def getLineFrom(amt, mult):
+    if amt is None or amt == "" or amt == " ":
+        return {
+            "texto_completo": "0",
+            "onzas": 0,
+            "partes_64": 0,
+            "partes_128": 0
+        }
+    
+    try:
+        float_amt = float(str(amt).replace(" ", ""))
+        total = float_amt * mult
+        
+        onzas = 0
+        partes_64 = 0
+        partes_128 = 0
+        texto_lineas = []
+
+        if total >= 1.0:
+            # HAY ONZAS COMPLETAS
+            onzas = int(total)
+            decimal_part = total - onzas
+            
+            if onzas > 0:
+                texto_lineas.append(f"{onzas} Onzas")
+            
+            # Convertir decimales a partes de 1/64
+            if decimal_part > 0:
+                partes_64_float = decimal_part * 64
+                partes_64 = int(partes_64_float)
+                
+                if partes_64 >= 1:
+                    texto_lineas.append(f"{partes_64} Partes (1/64)")
+                
+                # Convertir decimales sobrantes a partes de 1/128
+                decimal_64 = partes_64_float - partes_64
+                if decimal_64 > 0:
+                    partes_128 = int(decimal_64 * 2)
+                    if partes_128 > 0:
+                        texto_lineas.append(f"{partes_128} Partes (1/128)")
+        else:
+            # SOLO HAY FRACCIONES
+            partes_64_float = total * 64
+            partes_64 = int(partes_64_float)
+            
+            if partes_64 >= 1:
+                texto_lineas.append(f"{partes_64} Partes (1/64)")
+            
+            # Convertir decimales sobrantes a partes de 1/128
+            decimal_64 = partes_64_float - partes_64
+            if decimal_64 > 0:
+                partes_128 = int(decimal_64 * 2)
+                if partes_128 > 0:
+                    texto_lineas.append(f"{partes_128} Partes (1/128)")
+        
+        # Retornar estructura con todos los datos
+        return {
+            "texto_completo": "\n".join(texto_lineas) if texto_lineas else "0",
+            "onzas": onzas,
+            "partes_64": partes_64,
+            "partes_128": partes_128
+        }
+    
+    except Exception as e:
+        print(f"ERROR en getLineFrom con amt={amt}, mult={mult}: {e}")
+        return {
+            "texto_completo": "Error",
+            "onzas": 0,
+            "partes_64": 0,
+            "partes_128": 0
+        }
+        
+
+@page.route("/api/colores")
+def get_colores_api():
+    nombres = Formula.get_unique_color_names()
+    return jsonify(nombres)
+
+@page.route("/api/filtrarNombre", methods=["POST"])
+def filtrar_nombre():
+    try:
+        data = json.loads(request.form.get('data'))
+        nombre_color = data.get('nombreColor')
+        
+        if not nombre_color:
+            return jsonify({
+                'success': False,
+                'message': 'Nombre de color no proporcionado'
+            }), 400
+        
+        resultado = Formula.get_formulas_by_color_name(nombre_color)
+        
+        if resultado is None:
+            return jsonify({
+                'success': True,
+                'data': {
+                    'name_color': nombre_color,
+                    'rgb': {'r': 0, 'g': 0, 'b': 0},
+                    'rgb_string': 'rgb(0, 0, 0)',
+                    'productos': []
+                }
+            })
+        
+        return jsonify({
+            'success': True,
+            'data': {
+                'name_color': resultado['name_color'],
+                'rgb': resultado['rgb'],
+                'rgb_string': resultado['rgb_string'],
+                'base_color': resultado['productos'][0]['name_base'] if resultado['productos'] else 'Sin base',
+                'productos': resultado['productos']
+            }
+        })
+        
+    except Exception as e:
+        print(f"Error en filtrar_nombre: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 500
+
+
+@page.route('/api/filtrarRango', methods=['POST'])
+def filtrar_por_rango_color():
+
+    try:
+        data = json.loads(request.form.get('data'))
+        
+        # Extraer parámetros
+        r_min = int(data.get('r_min', 0))
+        r_max = int(data.get('r_max', 255))
+        g_min = int(data.get('g_min', 0))
+        g_max = int(data.get('g_max', 255))
+        b_min = int(data.get('b_min', 0))
+        b_max = int(data.get('b_max', 255))
+        page = int(data.get('page', 1))
+        per_page = int(data.get('per_page', 50))
+        
+        print(f"Filtrando colores - R:{r_min}-{r_max}, G:{g_min}-{g_max}, B:{b_min}-{b_max}")
+        
+        # Consultar base de datos
+        grupos, total = Formula.get_rgb_groups_by_range(
+            r_min, r_max, g_min, g_max, b_min, b_max,
+            page, per_page
+        )
+        
+        print(f" Encontrados {total} grupos, mostrando {len(grupos)} en página {page}")
+        
+        return jsonify({
+            'success': True,
+            'grupos': grupos,
+            'total': total,
+            'page': page,
+            'per_page': per_page,
+            'total_pages': (total + per_page - 1) // per_page if total > 0 else 0,
+            'filtro_aplicado': {
+                'r': f'{r_min}-{r_max}',
+                'g': f'{g_min}-{g_max}',
+                'b': f'{b_min}-{b_max}'
+            }
+        })
+        
+    except Exception as e:
+        print(f" Error en filtrar_por_rango_color: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': str(e)
+        }), 500"""

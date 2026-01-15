@@ -951,7 +951,7 @@ function cerrarModalVerificacion() {
 
         return true;
 }
-    let formEnviando = false;
+let formEnviando = false;
 const enviarBoton = document.getElementById('enviarBoton');
 const csrf = document.getElementById('csrf').value;
 

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}Landing page profesional{% endblock %}">
+    <title>{% block title %}Mi Landing Page{% endblock %}</title>
+    
+    <!-- Fuentes locales -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/fonts.css') }}">
+    
+    <!-- CSS Principal -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/animation.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/splash-effect.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/responsividad.css') }}">
+    {% block extra_css %}{% endblock %}
+    
+    
+</head>
+<body>
+    
+<header>
+        <nav class="navbar">
+            <div class="container">
+                <!-- Logo -->
+                <div class="navbar-brand">
+                    <a href="#inicio">
+                        <img src="{{ url_for('static', filename='static_landing/img/CRP.png') }}" alt="Corimon Pinturas Logo">
+                    </a>
+                </div>
+                
+                <!-- Menú Desktop -->
+                <ul class="navbar-menu menu-xls">
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#features">¿Quiénes Somos?</a></li>
+                    <li><a href="#testimonios">Productos</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+                
+                <!-- CTA Desktop -->
+                <div class="navbar-cta menu-xls">
+                    <a href="#contacto" class="btn btn-primary">Portal Clientes</a>
+                </div>
+
+                <!-- Botón Hamburguesa (Solo Móvil) -->
+                <div class="menu-sm">
+                    <button class="hamburger">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu-icon lucide-menu"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
+                    </button>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- Contenido Principal -->
+    <main>
+        {% block content %}
+        <!-- Aquí va el contenido de cada página -->
+        {% endblock %}
+    </main>
+    
+    <!-- GSAP Core -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <!-- ScrollTrigger Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+    
+    <!-- JavaScript Principal -->
+    <script src="{{ url_for('static', filename='static_landing/js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='static_landing/js/animation.js') }}"></script>
+    
+    <!-- JS Extra por página -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
