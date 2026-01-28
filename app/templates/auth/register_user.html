@@ -1,9 +1,116 @@
 
 {% extends 'layout.html' %}
 {% from 'helpers/_forms.html' import render_field %}
+
+
+{% block estilos %}
+    <!-- CSS Custom -->
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/list_users.css') }}">
+    
+
+    {% endblock%}
 {% block container %}
 
 <main>
+
+  <div class="  container d-flex justify-content-center align-items-center my-4">
+    <div class="card-ui d-flex flex-column gap-2" style="width: 650px;" >
+      <form class="form" >
+        <h1 >Formulario de Registro de Usuario</h1>
+
+        <div class="contenedorRif d-flex flex-column gap-1 ">
+          <p class="labelRif">Rif del usuario</p>
+            <div class="inputRif">
+              <div class="input_container">
+                {{ render_field(form.rif, class ="input_field", id="person") }}
+              </div>
+
+              <div class="input_container">
+                {{ render_field(form.n_rif, class ="input_field", id="usuario", placeholder="Ingrese el numero de identidad" ) }}
+              </div>
+            </div>
+        </div>
+
+        <div class="input_container">
+          <label for="username" class="input_label">Nombre de Usuario</label>
+          <input id="username" class="input_field" type="text" name="input-name" title="Inpit title" placeholder="Enter your full name">
+        </div>
+
+        <div class="input_container">
+          <label for="email" class="input_label">Email</label>
+          <input id="email" class="input_field" type="email" name="input-email" title="Input title" placeholder="Enter your email">
+        </div>
+
+        <div class="div-mitad">
+          <div class="input_container">
+            <label for="password" class="input_label">Contraseña</label>
+            <input id="password" class="input_field" type="password" name="input-password" title="Input title" placeholder="Enter your password">
+          </div>
+
+          <div class="input_container">
+            <label for="confirmar" class="input_label">Confirmar Contraseña</label>
+            <input id="confirmar" class="input_field" type="password" name="input-password-confirm" title="Input title" placeholder="Confirm your password">
+          </div>
+        </div>
+
+        <div class="div-mitad">
+          <div class="input_container">
+            <label for="zona" class="input_label">Zona</label>
+            <input id="zona" class="input_field" type="text" name="input-zona" title="Input title" placeholder="Ingrese la zona del usuario">
+          </div>
+
+          <div class="input_container">
+            <label for="nivel" class="input_label">Nivel</label>
+            <input id="nivel" class="input_field" type="text" name="input-nivel" title="Input title" placeholder="Ingrese el nivel del usuario">
+          </div>
+        </div>
+
+        <div class="div-mitad">
+          <div class="input_container">
+            <label for="codigo" class="input_label">Codigo SAP</label>
+            <input id="codigo" class="input_field" type="text" name="input-codigo" title="Input title" placeholder="Ingrese el codigo del usuario">
+          </div>
+
+          <div class="input_container">
+            <label for="seller" class="input_label">Vendedor</label>
+            <input id="seller" class="input_field" type="text" name="input-seller" title="Input title" placeholder="Ingrese el vendedor del usuario">
+          </div>
+        </div>
+
+
+
+
+
+
+      
+
+
+      </form>
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <section class="d-flex justify-content-center my-4">
 
       <div class="contenedor_form">

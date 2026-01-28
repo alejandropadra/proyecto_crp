@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 from flask import jsonify
 from flask_login import login_user,logout_user,login_required, current_user
 from .forms import LoginForm, RegisterForm, RegistroPagoForm,EditForm,PerfilForm,ContactForm, Retenciones
-from .models import User, Cobranza # , Formula
+from .models import User, Cobranza #, Formula
 from . import login_manager
 from .consts import *
 from .email import welcome_mail, pago_crm_mail, pago_mail, comprobante_mail, comprobante_crm_mail, pago_iva_mail,pago_iva_crm_mail, prepago_crm_mail, prepago_mail, letra_cambio_mail
@@ -18,6 +18,8 @@ from .servicios_consultas import ConsultasSAP
 import json
 import collections
 import random
+import traceback
+from sqlalchemy.exc import IntegrityError
 
 import requests
 from bs4 import BeautifulSoup
@@ -25,7 +27,7 @@ from bs4 import BeautifulSoup
 import os
 local_adj = 'app\\static\\adj\\{}'
 server_adj = 'app/static/adj/{}'
-APP_VERSION = "20260115"
+APP_VERSION = "20260128"
 user_fuente = U_FUENTE
 contra_fuente = C_FUENTE
 ip_fuente = URL_FUENTE
@@ -203,27 +205,65 @@ def perfil():
 
     return render_template("auth/perfil.html",titulo="Cambiar clave",form = form) 
 
-@page.route("/usuarios")
+@page.route("/usuarios",  methods=["GET","POST"])
 @login_required
 def usuarios():
+    
+
     if current_user.nivel == "Cliente":
         return redirect(url_for('.dashboard'))
-    users = User.query.all()
-    return render_template("auth/list_users.html",titulo="Lista usuarios",users=users)
-
-
-@page.route("/landing_dos")
-def landing_dos():
-    Formula.migrate_from_sqlite()
     
-    return render_template("nuevo_landing/index.html",titulo="landingDos")
+    registro_form = RegisterForm(request.form)
+    # Si piden los datos en JSON
+    if request.args.get('get_data') == 'true':
+        users = User.query.all()
+
+        return jsonify(users=[{
+            'rif': user.rif,
+            'username': user.username,
+            'email': user.email,
+            'creado_en': user.created_at.strftime('%d/%m/%Y'),
+            'pago': user.pago,
+            'zona': user.zona,
+            'nivel': user.nivel,
+            'codigo': user.codigo,
+            'seller': user.seller,
+            'tipo': user.tipo
+        } for user in users])
+        
+
+    if request.method == "POST" and registro_form.validate():
+        rif = registro_form.rif.data
+        n_rif = registro_form.n_rif.data
+        empresa = registro_form.username.data
+        correo = registro_form.email.data
+        password = registro_form.password.data
+        zona = registro_form.zona.data
+        nivel = registro_form.nivel.data
+        codigo = registro_form.codigo.data
+        vendedor = registro_form.vendedor.data
+        argumentos = (rif+""+n_rif,empresa, password,correo,zona)
+        #print(argumentos)
+        registro = User.create_element(rif+""+n_rif,empresa, password,correo,zona,nivel,codigo,vendedor)
+    
+    # Si no, renderizar HTML normal
+    return render_template("auth/list_users.html", titulo="Lista de Usuarios", form=registro_form)
+
 
 @page.route("/usuario/<rif>", methods = ["GET","POST"])
 @login_required
-def usuario(rif):
-    datos = User.get_by_rif(rif)
-    edit_form = EditForm(request.form,obj=datos)
+def usuario_perfil(rif):
+    user = User.get_by_rif(rif)
+    if not user:
+        abort(404)
+    letra_rif= user.rif[0]
+    digito_rif= user.rif[1:]
+    edit_form = EditForm(request.form,obj=user)
+    edit_form.rif.data = digito_rif
+
+
     if request.method == "POST" and edit_form.validate():
+        rif_completo = request.form.get('rifCompleto')
         rif = edit_form.rif.data
         empresa = edit_form.username.data
         correo = edit_form.email.data
@@ -232,14 +272,101 @@ def usuario(rif):
         codigo = edit_form.codigo.data
         vendedor = edit_form.seller.data
         password = edit_form.password.data
-        edit = User.update_user(rif,empresa,correo,zona,nivel,codigo,vendedor)
+        
+        print(correo)
+        edit = User.update_user(rif_completo,empresa,correo,zona,nivel,codigo,vendedor)
+        print(edit)
         if password:
-            update = User.update_password(rif,password)
+            update = User.update_password(rif_completo,password)
             flash("Contraseña actualizada")
         mensaje = USER_EDIT
         flash(mensaje)
-    return render_template("auth/edit_user.html",titulo="Info usuario", form=edit_form)
+        return redirect(url_for('page.usuario_perfil', rif=rif_completo))
+    return render_template("auth/edit_user.html", form = edit_form, digito_rif=digito_rif, letra_rif=letra_rif, titulo="Editar Usuario", user=user)
 
+@page.route("/landing_dos")
+def landing_dos():
+    
+    return render_template("nuevo_landing/index.html",titulo="landingDos")
+
+@page.route("/usuarioPost", methods = ["GET","POST"])
+@login_required
+def usuario():
+    try:
+        datos_json = request.form.get('data')
+        
+        if datos_json:
+            datos = json.loads(datos_json)
+        else:
+            datos = {}
+        print(datos)
+        letra_rif= datos.get('rif')
+        rif = datos.get('n_rif')
+        username= datos.get('username')
+        password = datos.get('password')
+        zona = datos.get('zona')
+        email = datos.get('email')  
+        nivel = datos.get('nivel')
+        codigo = datos.get('codigo')
+        vendedor = datos.get('vendedor')
+        existe_email=User.get_by_email(email)
+        rif_completo = f"{letra_rif}{rif}"
+        if (existe_email):
+            mensaje = f"El Email que ingresó  ya está registrado en el sistema"
+            return jsonify({
+                "success": False,
+                "message": mensaje,
+                "error_type": "integrity_error"
+            }), 400
+        """registro = User.create_element(letra_rif+""+rif,username, password,email,zona,nivel,codigo,vendedor)
+            print(registro)"""
+        
+        return jsonify({
+            "success": True,
+            "message": "Usuario creado exitosamente",
+            "data": {
+                "rif": rif_completo,
+                "username": username
+            }
+        }), 200
+    except IntegrityError as e:
+        print(traceback.format_exc())
+        error_str = str(e.orig) 
+        if "Duplicate entry" in error_str and "PRIMARY" in error_str:
+            mensaje = f"El RIF '{letra_rif}{rif}' ya está registrado en el sistema"
+        elif "Duplicate entry" in error_str and "username" in error_str:
+            mensaje = f"El nombre de usuario '{username}' ya está en uso"
+        elif "Duplicate entry" in error_str and "email" in error_str:
+            # Error: Email duplicado
+            mensaje = f"El email '{email}' ya está registrado"
+        else:
+            mensaje = "Ya existe un registro con estos datos. Verifique RIF, usuario o email"
+        
+        return jsonify({
+            "success": False,
+            "message": mensaje,
+            "error_type": "integrity_error"
+        }), 400
+    
+    except Exception as e:
+        print("============= ERROR INESPERADO =============")
+        print(traceback.format_exc())
+        error_msg = str(e)
+        
+        if "connection" in error_msg.lower():
+            mensaje = "Error de conexión con la base de datos. Intente nuevamente"
+        elif "timeout" in error_msg.lower():
+            mensaje = "Tiempo de espera agotado. Intente nuevamente"
+        else:
+            mensaje = f"Error al procesar el usuario: {error_msg}"
+        
+        return jsonify({
+            "success": False,
+            "message": mensaje,
+            "error_type": "general_error"
+        }), 500
+        
+        
 @page.route("/reporte-pago", methods=["GET","POST"])
 @login_required
 def cobranza():
@@ -264,7 +391,6 @@ def cobranza():
 @page.route("/reportarPago", methods=["GET","POST"])
 @login_required
 def cobranza2():
-  
     control_form = RegistroPagoForm(request.form)
     fecha_pago =  session.get('fecha_pago')
     condicion_pago = session.get('condicion_pago')
@@ -1509,30 +1635,21 @@ def Promocion():
     ganadores_tv = []
     ganadores_cel = []
 
-    # Abre el archivo JSON
-    with open("Data.json", encoding="utf-8-sig") as f:
+    json_path = os.path.join(os.path.dirname(__file__), "promo_TMO_150126.json")
+    
+    with open(json_path, encoding="utf-8-sig") as f:
         participantes = json.load(f)
 
-    # Calcula la dimensión del JSON
     dimension = len(participantes)
-    #print("Cantidad de participantes total: ", dimension )
-    #print("----------------------------------------------------------------------------------------------------------")
-    # Lista de ganadores
+
     ganadores = 12
 
-    # Cuenta el número de eventos de cada participante
-    #veces_participado = collections.Counter([participante["Cédula"] for participante in participantes])
-
-    """# Imprime el resultado
-    for nombre, veces in veces_participado.items():
-        if  veces > 3:
-            print(f"{nombre}: {veces}")
-        else:
-            participantes_limpio.append(veces_participado)"""
+    
     
 
     # Recorre los participantes
-    for participante in participantes:
+    for participante in participantes["data"]:
+        print(participante)
         # Asigna el participante a la lista correspondiente
         state = participante["Estado"]
         if state == "Monagas" or state=="Bolívar":
@@ -1662,6 +1779,22 @@ def Promocion():
 
     return render_template("/Promos/Promocion.html",titulo = "Promocion", participantes=participantes, ganadores_motos =ganadores_motos, ganadores_tv=ganadores_tv, ganadores_cel=ganadores_cel)
 
+
+
+
+@page.route("/Promocion2",  methods=["GET","POST"])
+def Promocion2():
+    # Si piden los datos en JSON
+    if request.args.get('get_data') == 'true':
+        json_path = os.path.join(os.path.dirname(__file__), "promo_TMO_190126.json")
+        with open(json_path, encoding="utf-8-sig") as f:
+            participantes = json.load(f)
+
+        return jsonify(participantes['data'])
+    
+    # Si no, renderizar HTML normal
+    return render_template("/Promos/promocion_final.html", titulo="Promocion")
+
 @page.route("/soon")
 def soon():
 
@@ -1780,7 +1913,7 @@ def retenciones():
             flash("Error al registrar",'error')
             #print('Error en la peticion')
         
-    return render_template("/collections/registrar_retenciones.html",titulo = "Registrar Comprobante de Retención", form = control_form)
+    return render_template("/collections/registrar_retenciones.html", pagina="registrar_retenciones", titulo = "Registrar Comprobante de Retención", form = control_form)
 
 @page.route("/dashboard2", methods= ["GET", "POST"])
 def dashboard2():
@@ -2392,9 +2525,9 @@ def letra_cambio_post():
             "message": f"Error inesperado: {str(e)}"
         }), 500
 
-"""
 
-@page.route("/formulacion", methods=["GET", "POST"])
+
+"""@page.route("/formulacion", methods=["GET", "POST"])
 def formy():
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         print('asda')

@@ -31,7 +31,7 @@ class ContactForm(Form):
                                                 ("Empleo", "Quiero unirme a su equipo de trabajo")])
 
 class RegisterForm(Form):
-    rif = SelectField("", choices=[("J","J"),("G","G"),("V","V")])
+    rif = SelectField("", choices=[("",""),("J","J"),("G","G"),("V","V")])
     n_rif = StringField("",[ validators.length(min=5,max=10),
                             validators.DataRequired()])
     username = StringField("",[ validators.length(min=2,max=50),
@@ -50,7 +50,7 @@ class RegisterForm(Form):
         validators.DataRequired()
     ])'''
     zona = SelectField("",[validators.DataRequired()], choices = [("",""),("Occidente","Occidente"),("Oriente","Oriente"),("Centro","Centro"),("all","all"),("Capital","Capital")])
-    nivel = SelectField("", choices=[("cliente","Cliente"),("corimon","Corimon"),("administrador","Administrador")])
+    nivel = SelectField("", choices=[("",""),("cliente","Cliente"),("corimon","Corimon"),("administrador","Administrador")])
     codigo = StringField("",[validators.DataRequired('El codigo es requerido.')])
     vendedor = StringField("",[validators.DataRequired('El vendedor es requerido.')])
     
@@ -74,6 +74,7 @@ class RegisterForm(Form):
         return True
     
 class EditForm(Form):
+    
     rif = StringField("")
     username = StringField("",[ validators.length(min=2,max=50),
                             validators.DataRequired()])
@@ -86,7 +87,10 @@ class EditForm(Form):
     nivel = SelectField("", choices=[("cliente","Cliente"),("corimon","Corimon"),("administrador","Administrador")])
     codigo = StringField("")
     seller = StringField("")
-    password = StringField("")
+    password = PasswordField('', [
+        validators.EqualTo('confirm_password', message='La contraseña no coincide.')
+    ])
+    confirm_password = PasswordField('')
 
 class PerfilForm(Form):
     password = PasswordField('', [

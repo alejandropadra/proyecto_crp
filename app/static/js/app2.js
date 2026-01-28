@@ -2138,7 +2138,7 @@ function iva() {
 
 }
 
-// Llamar a la función para inicializar
+
 
 let tituloIva = false;
 document.addEventListener('DOMContentLoaded', function() {
@@ -2393,8 +2393,8 @@ const formatearMonto = (monto) => {
 };
 
 function validarCampos() {
-
     limpiarAlertas();
+    limpiarErroresCampos(); 
     
     const campos = [
         { id: 'rif', nombre: 'RIF' },
@@ -2430,11 +2430,7 @@ function validarCampos() {
 
         if (!valor) {
             hayErrores = true;
-            const contenedorAlerta = document.createElement('div');
-            contenedorAlerta.className = 'alertaRequired';
-            contenedorAlerta.textContent = `El campo ${campo.nombre} es obligatorio`;
-            elemento.classList.add('campo-error');
-            elemento.parentElement.appendChild(contenedorAlerta);
+            agregarError(elemento, `El campo ${campo.nombre} es obligatorio`); // Usa la función auxiliar
             if (!primerCampoVacio) {
                 primerCampoVacio = elemento;
             }
@@ -2449,11 +2445,48 @@ function validarCampos() {
             }
         }
         showAlertGrandes('Por favor completa todos los campos obligatorios', 'atencion');
-        
         return false;
     }
 
     return true;
+}
+
+
+function agregarError(elemento, mensaje) {
+    if (!elemento) return;
+    
+
+    if (elemento.classList.contains('campo-error')) return;
+    
+    elemento.classList.add('campo-error');
+    
+    const contenedorAlerta = document.createElement('div');
+    contenedorAlerta.className = 'alertaRequired';
+    contenedorAlerta.textContent = mensaje;
+    elemento.parentElement.appendChild(contenedorAlerta);
+}
+
+
+function removerError(elemento) {
+    if (!elemento) return;
+    
+    elemento.classList.remove('campo-error');
+    const alerta = elemento.parentElement.querySelector('.alertaRequired');
+    if (alerta) {
+        alerta.remove();
+    }
+}
+
+function limpiarErroresCampos() {
+    const camposConError = document.querySelectorAll('.campo-error');
+    camposConError.forEach(campo => {
+        campo.classList.remove('campo-error');
+    });
+    
+    const alertas = document.querySelectorAll('.alertaRequired');
+    alertas.forEach(alerta => {
+        alerta.remove();
+    });
 }
 
 function limpiarAlertas() {
@@ -2515,6 +2548,62 @@ if (cerrarModales.length >0){
         })
     });
 }
+
+
+
+/*FUNCIONES PEQUEÑAS PARA PAGINAS ESPECIFICAS (COMO POR EJEMPLO LO DE RETENCIONES) */
+let pagina;
+document.addEventListener('DOMContentLoaded', function() {
+
+    const paginaInput = document.getElementById('pagina');  
+
+    if (!paginaInput) {
+        return;
+    }
+    const paginaInputValue = paginaInput.value;
+    if (paginaInputValue == "registrar_retenciones") {
+        console.warn('asd')
+        const n_comprobante = document.getElementById('n_comprobante');
+        const maxLength = 14;
+        const minLength = 14;
+        
+        n_comprobante.addEventListener('input', function() {
+            if (n_comprobante.value.length > maxLength) {
+                n_comprobante.value = n_comprobante.value.slice(0, maxLength);
+            }
+            
+            if (n_comprobante.value.length === minLength) {
+                removerError(n_comprobante);
+            }
+        });
+        
+        n_comprobante.addEventListener('blur', function() {
+            if (n_comprobante.value.length > 0 && n_comprobante.value.length < minLength) {
+                agregarError(n_comprobante, `El número de comprobante debe tener exactamente ${minLength} caracteres`);
+            } else if (n_comprobante.value.length === minLength) {
+                removerError(n_comprobante);
+            }
+        });
+        
+
+        const form = document.getElementById('formularioRetenciones');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                if (n_comprobante.value.length !== minLength) {
+                    e.preventDefault();
+                    showAlertGrandes(`El número de comprobante debe tener exactamente ${minLength} caracteres`, 'error');
+                    agregarError(n_comprobante, `El número de comprobante debe tener exactamente ${minLength} caracteres`);
+                    n_comprobante.focus();
+                    return false;
+                }
+            });
+        }
+    }
+});
+
+
+
+
 
 
 
