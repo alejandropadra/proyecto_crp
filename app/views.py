@@ -254,6 +254,7 @@ def usuarios():
 @login_required
 def usuario_perfil(rif):
     user = User.get_by_rif(rif)
+    usuario= current_user
     if not user:
         abort(404)
     letra_rif= user.rif[0]
@@ -282,7 +283,7 @@ def usuario_perfil(rif):
         mensaje = USER_EDIT
         flash(mensaje)
         return redirect(url_for('page.usuario_perfil', rif=rif_completo))
-    return render_template("auth/edit_user.html", form = edit_form, digito_rif=digito_rif, letra_rif=letra_rif, titulo="Editar Usuario", user=user)
+    return render_template("auth/edit_user.html", current_user=current_user, form = edit_form, digito_rif=digito_rif, letra_rif=letra_rif, titulo="Editar Usuario", user=user)
 
 @page.route("/landing_dos")
 def landing_dos():
@@ -318,9 +319,8 @@ def usuario():
                 "message": mensaje,
                 "error_type": "integrity_error"
             }), 400
-        """registro = User.create_element(letra_rif+""+rif,username, password,email,zona,nivel,codigo,vendedor)
-            print(registro)"""
-        
+        registro = User.create_element(letra_rif+""+rif,username, password,email,zona,nivel,codigo,vendedor)
+        print(registro)
         return jsonify({
             "success": True,
             "message": "Usuario creado exitosamente",

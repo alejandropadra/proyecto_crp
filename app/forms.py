@@ -49,7 +49,7 @@ class RegisterForm(Form):
     '''accept = BooleanField('', [
         validators.DataRequired()
     ])'''
-    zona = SelectField("",[validators.DataRequired()], choices = [("",""),("Occidente","Occidente"),("Oriente","Oriente"),("Centro","Centro"),("all","all"),("Capital","Capital")])
+    zona = SelectField("",[validators.DataRequired()], choices = [("",""),("key account","key account"),("Occidente","Occidente"),("Oriente","Oriente"),("Centro","Centro"),("all","all"),("Capital","Capital")])
     nivel = SelectField("", choices=[("",""),("cliente","Cliente"),("corimon","Corimon"),("administrador","Administrador")])
     codigo = StringField("",[validators.DataRequired('El codigo es requerido.')])
     vendedor = StringField("",[validators.DataRequired('El vendedor es requerido.')])
