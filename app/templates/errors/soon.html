@@ -1,12 +1,96 @@
-{% if current_user %}
-  {% extends 'layout.html' %}
-{% else %}
-  {% extends 'layout_landings.html' %}
-{% endif %}
+
+{% extends 'layout_landings.html' %}
+
 {% block content %}
+
+<style>
+
+.error .contenedor_genericos {
+    display: flex;
+    justify-content: center;
+
+}
+
+.error .contenedor_genericos > .row {
+    gap: 2rem;
+    align-items: flex-start;  
+}
+
+.texto_error {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2.5rem 2.5rem 2rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
+    border-top: 4px solid #c0392b;
+    margin-top: auto;       
+    margin-bottom: auto;
+}
+
+.texto_error h6 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #c0392b;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+}
+
+.texto_error .prox {
+    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+}
+
+.texto_error p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 0;
+}
+
+.texto_error p a {
+    color: #c0392b;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1.5px solid transparent;
+    transition: border-color 0.25s ease;
+}
+
+.texto_error p a:hover {
+    border-bottom-color: #c0392b;
+}
+
+.imagen_construccion {
+    align-self: flex-start; 
+    padding-top: 0;
+    margin-top: 98px;       
+}
+.imagen_construccion img {
+    max-width: 600px;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1));
+}
+
+@media (max-width: 768px) {
+    .error .contenedor_genericos > .row {
+        flex-direction: column-reverse;
+        text-align: center;
+    }
+
+    .texto_error {
+        padding: 2rem 1.5rem 1.5rem;
+    }
+
+    .imagen_construccion img {
+        max-width: 200px;
+    }
+}
+</style>
 <div class="error">
 
-    <div class="container contenedor_genericos ">
+    <div class="container contenedor_genericos " style="min-height: 85vh;">
         <div class="row d-flex justify-content-center align-items-center col">
 
             <div class="texto_error text-center col">
@@ -14,8 +98,8 @@
                 <h2 class="prox">Disponible próximamente</h2>
                 <p>Ponte en contacto con nosotros <a href="/contacto">aquí</a></p>
             </div>
-            <div class="imagen_construccion d-flex justify-content-center align-items-center col" >
-                <img src="static/img/4montana-removebg-preview.png" alt="">
+            <div class="imagen_construccion col">
+                <img src="static/img/montanito.png" alt="">
             </div>
         </div>
 
