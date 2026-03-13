@@ -1024,6 +1024,8 @@ def modulos():
 
 
 
+"""
+
 @page.route("/dashboard", methods=["GET"])
 @login_required
 def dashboard():
@@ -1094,7 +1096,131 @@ def dashboard():
     
     return render_template("collections/dashboard.html", titulo = "Estado de cuenta", pagos=pagos, pago_t = pago_t,rate=0, no_vencido_dolar=response_json['tnovencdiv'],no_vencido_bs=response_json['tnovencbs'],total_deudas_dolares=response_json['tdeudadiv'],total_deudas_bs=response_json['tdeudabs'], total_saldo_dolar=response_json['tsaldofdiv'],total_saldo_bs=response_json['tsaldofbs'], total_bolos=response_json['totfactbs'],total_vencido_d=response_json['tvencdiv'],total_vencido_b=response_json['tvencbs'],vencido_130_d=response_json['tvenc130d'],vencido_130_b=response_json['tvenc130b'], vencido_3160_d=response_json['tvecc3160d'], vencido_3160_b=response_json['tvecc3160b'], vencido_60_d=response_json['tvec61masd'], vencido_60_b=response_json['tvec61masb'], facturas =response_json1, retenciones=response_json2,contador_fact = ret, deuda_dif_dolar=response_json['tdifedeudadiv'],deuda_dif_bs=response_json['tdifedeudabs'],favor_dif_dolar=response_json['tdifesaldofdiv'],favor_dif_bs=response_json['tdifesaldofbs'],contador_retenciones_pendientes=contador_retenciones_pendientes,iva_x_pagar=iva_x_pagar)
 
+"""
 
+
+"""NUEVA FORMA DE CARGAR EL DASHBOARD CON SKELETON LOADING"""
+
+def _crear_sap():
+    return ConsultasSAP(
+        user_fuente=user_fuente,
+        contra_fuente=contra_fuente,
+        ip_fuente=ip_fuente,
+        verificacion_ssl=VERIFICACION_SSL
+    )
+
+def _auth_params():
+    tiempo, fecha = obtener_hora_minutos_segundos_fecha()
+    cadena = cadena_md5('1200', current_user.rif, tiempo, fecha)
+    return tiempo, fecha, cadena
+
+@page.route("/dashboard", methods=["GET"])
+@login_required
+def dashboard():
+    pagos  = Cobranza.get_pagos_order(current_user.rif)
+    pago_t = pagos[:3]
+    return render_template("collections/dashboard.html", titulo="Estado de cuenta", pagos=pagos, pago_t=pago_t)
+
+@page.route("/api/sap/resumen", methods=["GET"])
+@login_required
+def api_sap_resumen():
+    sap = _crear_sap()
+    try:
+        tiempo, fecha, cadena = _auth_params()
+        data = sap.consultar_deudores_totales(current_user.rif, tiempo, fecha, cadena)
+        if data is None:
+            return jsonify({'error': 'Sin respuesta de SAP'}), 503
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        sap.cerrar_sesion()
+        
+@page.route("/api/sap/sap_facturas", methods=["GET"])
+@login_required
+def api_sap_facturas():
+    sap = _crear_sap()
+    try:
+        tiempo, fecha, cadena = _auth_params()
+        facturas = sap.consultar_deudores(
+            rif=current_user.rif,
+            fecha_pago=fecha_sap(),
+            tiempo=tiempo,
+            fecha_enc=fecha,
+            cadena=cadena
+        )
+        if facturas is None:
+            return jsonify({'error': 'Sin respuesta de SAP'}), 503
+
+        por_pagar         = 0
+        abono_conciliar   = 0
+        facturas_verificar = 0
+        tabla_descuentos  = []
+
+        for f in facturas:
+            if 'blart' not in f:
+                continue
+            blart  = f.get('blart', '')
+            dmbtr  = f.get('dmbtr', 0)
+            status = f.get('status', '')
+
+            if (blart == 'RV' and status == '') or blart == 'DA' or (blart == 'DZ' and dmbtr > 0):
+                por_pagar += 1
+
+            if blart == 'AB' or (blart == 'DZ' and dmbtr < 0 and f.get('pagaiva') != 'S'):
+                abono_conciliar += 1
+
+            if status == 'P':
+                facturas_verificar += 1
+
+            if blart == 'RV' and f.get('dppbs', 0) > 0:
+                tabla_descuentos.append({
+                    'fkdat':      f.get('fkdat'),
+                    'vbeln':      f.get('vbeln'),
+                    'totfactbs':  f.get('totfactbs', 0),
+                    'dppbs':      f.get('dppbs', 0),
+                    'dmbtr':      dmbtr,
+                    'montoncdpp': f.get('montoncdpp', 0),
+                })
+
+        return jsonify({
+            'por_pagar':           por_pagar,
+            'abono_conciliar':     abono_conciliar,
+            'facturas_verificar':  facturas_verificar,
+            'tabla_descuentos':    tabla_descuentos,
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        sap.cerrar_sesion()
+
+
+
+@page.route("/api/sap/contadores", methods=["GET"])
+@login_required
+def api_sap_contadores():
+    sap = _crear_sap()
+    try:
+        tiempo, fecha, cadena = _auth_params()
+        _, contador_fact       = sap.consultar_facturas_pendietes_retencion(
+            current_user.rif, tiempo, fecha, cadena
+        )
+        _, contador_ret_pend   = sap.consultar_retenciones_pendientes(
+            current_user.rif, tiempo, fecha, cadena
+        )
+        _, iva_x_pagar         = sap.consultar_ivas_pendientes(
+            current_user.rif, tiempo, fecha, cadena
+        )
+
+        return jsonify({
+            'contador_fact':                   contador_fact,
+            'contador_retenciones_pendientes': contador_ret_pend,
+            'iva_x_pagar':                     iva_x_pagar,
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    finally:
+        sap.cerrar_sesion()
 
 
 
@@ -1540,8 +1666,9 @@ ARCHIVOS_MOSTRAR = {
     'folleto-productos-industriales.pdf': 'Folleto de los Productos Industriales y Marinos.pdf',
     'libro-resistencias-quimicas-epomon-epoxi.pdf':'Libro de Resistencias Químicas del Epomon Epoxi Fenólico.pdf',
     'manual-hojas-tecnicas-MIM.pdf':'Manual de Hojas Técnica MIM.pdf',
-    'manual-hojas-tecnicas-ARQ.pdf': 'Manual de Hojas Técnicas ARQ.pdf'
-
+    'manual-hojas-tecnicas-ARQ.pdf': 'Manual de Hojas Técnicas ARQ.pdf',
+    'Manual de Hojas de Seguridad (MSDS) MIM.pdf': 'Manual de Hojas de Seguridad (MSDS) MIM.pdf',
+    'Manual de Hojas de Seguridad (MSDS) ARQ.pdf': 'Manual de Hojas de Seguridad (MSDS) ARQ.pdf'
 }
 
 @page.route("/consultoria_tecnica")
