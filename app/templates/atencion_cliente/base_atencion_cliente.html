@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>{% block title %}{{titulo}}{% endblock %}</title>
+
+    <!-- Fuentes locales -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/fonts.css') }}">
+    <!-- CSS Principal -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/atencion_cliente/base_atencion_cliente.css') }}">
+    <!-- ICONO DE LA PAGINA-->
+    <link rel='icon'  href="{{ url_for('static', filename = 'img/crp_logo_icon.svg') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+
+{% set active_module = active_module|default('pagos') %}
+
+<div class="cm-app">
+
+    <aside class="v1-shell">
+
+        <!-- Rail oscuro de módulos --------------------------------- -->
+        <div class="v1-rail">
+            <div class="v1-logo">
+                <img src="{{ url_for('static', filename='img/crp_logo_svg.svg') }}" alt="Corimon Pinturas">
+            </div>
+
+            <span class="v1-rail-label" style="margin: 10px 0px;">Modulos</span>
+            <nav class="v1-rail-nav">
+                <button class="v1-rail-item {% if modulo == 'pagos' %}is-active{% endif %}" data-module="pagos"  title="Pagos">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/><path d="M16 14h.01"/><path d="M21 11V7a2 2 0 0 0-2-2H6"/></svg>
+                    <span class="v1-rail-label">Pagos</span>
+                </button>
+                <button class="v1-rail-item {% if modulo== 'formulacion' %}is-active{% endif %}" data-module="formulacion"  title="Formulación">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v6l4 9a3 3 0 0 1-3 4H8a3 3 0 0 1-3-4l4-9V3Z"/><path d="M5 12h14"/></svg>
+                    <span class="v1-rail-label">Formulación</span>
+                </button>
+                <button class="v1-rail-item {% if modulo== 'pedidos' %}is-active{% endif %}" data-module="pedidos" title="Pedidos">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5V8Z"/><path d="m3 8 9 5 9-5M12 13v8"/></svg>
+                    <span class="v1-rail-label">Pedidos</span>
+                </button>
+                <button class="v1-rail-item {% if modulo == 'Atencion al cliente' %}is-active{% endif %}" data-module="atencion_cliente" title="Atención al Cliente">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-headset-icon lucide-headset"><path d="M3 11h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5Zm0 0a9 9 0 1 1 18 0m0 0v5a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3Z"/><path d="M21 16v2a4 4 0 0 1-4 4h-5"/></svg>
+                    <span class="v1-rail-label">Soporte</span>
+                </button>
+            </nav>
+
+            <div class="v1-rail-foot">
+                <button class="v1-rail-item" title="Ayuda">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                </button>
+                <button class="v1-rail-item" title="Configuración">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5h0a1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8v0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Sidebar contextual -------------------------------------- -->
+        <div class="v1-side" id="sideContextual">
+
+            <div class="v1-side-head">
+                <div class="v1-side-mod">
+                    <span id="sideModIcon"></span>   
+                    <span id="sideModLabel"></span> 
+                </div>
+                <button class="v1-pin" id="sidePin" title="Fijar abierto">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v8M8 14h8l-2-4H10l-2 4ZM12 14v8"/></svg>
+                </button>
+            </div>
+
+            <div class="v1-side-body scroll-fino" id="sideBody">
+            </div>
+
+            <!-- ── PAGOS ──────────────────────────────────────────────── -->
+                <template id="ctx-pagos">
+                    <div class="v1-section">
+                        <button class="v1-item {% if titulo == 'Estado de cuenta' %} is-active {% endif %}" data-href="{{ url_for('.dashboard') }}">
+                            <span class="v1-item-icon">
+                                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1v-9.5Z"/></svg>
+                            </span>
+                            <span class="v1-item-label">Resumen</span>
+                            {% if titulo == 'Estado de cuenta' %}
+                                <span class="v1-item-glow"></span>
+                            {% endif %}
+                        </button>
+                    </div>
+                    <div class="v1-section">
+                        <div class="v1-sec-title">Registrar Pagos</div>
+                        <a class="v1-item {% if titulo == 'Registrar Pago' %} is-active {% endif %}" href="{{ url_for('.cobranza')}}">
+                            <span class="v1-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
+                            <span class="v1-item-label">Registrar pago</span>
+                            {% if titulo == 'Registrar Pago' %}
+                                <span class="v1-item-glow"></span>
+                            {% endif %}
+                        </a>
+                        <a class="v1-item {% if titulo == 'Pago de Iva' %} is-active {% endif %}" href="{{ url_for('.cobranza_iva')}}">
+                            <span class="v1-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-2-3 2-3-2-3 2-2-2V3Z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span>
+                            <span class="v1-item-label">Registrar pago IVA</span>
+                            {% if titulo == 'Pago de Iva' %}
+                                <span class="v1-item-glow"></span>
+                            {% endif %}
+                        </a>
+                        <a class="v1-item {% if titulo == 'Prepago' %} is-active {% endif %}" href="{{ url_for('.prepago')}}">
+                            <span class="v1-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
+                            <span class="v1-item-label">Registrar prepago</span>
+                            {% if titulo == 'Prepago' %}
+                                <span class="v1-item-glow"></span>
+                            {% endif %}
+                        </a>
+                        <a class="v1-item {% if titulo == 'Otras Deudas' %} is-active {% endif %}" href="{{ url_for('.otras_deudas')}}">
+                            <span class="v1-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></span>
+                            <span class="v1-item-label">Otras deudas</span>
+                            {% if titulo == 'Otras Deudas' %}
+                                <span class="v1-item-glow"></span>
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div class="v1-section">
+                        <div class="v1-sec-title">Seguimiento</div>
+                        <a class="v1-item {% if titulo == 'Documentos Pendientes' %} is-active {% endif %}" href="{{ url_for('.lista_cobranza') }}">
+                            <span class="v1-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9l-6-6Z"/><path d="M14 3v6h6"/><circle cx="12" cy="15" r="3"/><path d="M12 14v1.5l1 .8"/></svg></span>
+                            <span class="v1-item-label">Documentos pendientes</span>
+                            {% if titulo == 'Documentos Pendientes' %}
+                                <span class="v1-item-glow"></span>
+                            {% endif %}
+                        </a>
+                        <a class="v1-item {% if titulo == 'Pagos Realizados' %} is-active {% endif %}" href="{{ url_for('.pagos_cobranza') }}">
+                            <span class="v1-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-2-3 2-3-2-3 2-2-2V3Z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span>
+                            <span class="v1-item-label">Pagos realizados</span>
+                            {% if titulo == 'Pagos Realizados' %}
+                                <span class="v1-item-glow"></span>
+                            {% endif %}
+                        </a>
+                        <a class="v1-item {% if titulo == 'Historial de documentos verificados' %} is-active {% endif %}" href="{{ url_for('.historial') }}">
+                            <span class="v1-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg></span>
+                            <span class="v1-item-label">Historial</span>
+                            {% if titulo == 'Historial de documentos verificados' %}
+                                <span class="v1-item-glow"></span>
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div class="v1-section">
+                        <div class="v1-sec-title">Comprobantes de Retención</div>
+                        <a class="v1-item {% if titulo == 'registrar_retenciones' %} is-active {% endif %}" href="{{ url_for('.retenciones')}}">
+                            <span class="v1-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
+                            <span class="v1-item-label">Registrar Comprobante</span>
+                            {% if titulo == 'registrar_retenciones' %}
+                                <span class="v1-item-glow"></span>
+                            {% endif %}
+                        </a>
+                        <a class="v1-item {% if titulo == 'Facturas Pendientes por Comprobantes' %} is-active {% endif %}" href="{{ url_for('.certificados_pendientes')}}">
+                            <span class="v1-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18l-3-2-3 2-3-2-3 2-2-2V3Z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg></span>
+                            <span class="v1-item-label">Facturas Pendientes</span>
+                            {% if titulo == 'Facturas Pendientes por Comprobantes' %}
+                                <span class="v1-item-glow"></span>
+                            {% endif %}
+                        </a>
+                        <a class="v1-item {% if titulo == 'Estado Retención' %} is-active {% endif %}" href="{{ url_for('.ret_enviadas')}}">
+                            <span class="v1-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg></span>
+                            <span class="v1-item-label">Comprobantes Enviados</span>
+                            {% if titulo == 'Estado Retención' %}
+                                <span class="v1-item-glow"></span>
+                            {% endif %}
+                        </a>
+                    </div>
+                </template>
+
+                <!-- ── FORMULACIÓN ────────────────────────────────────────── -->
+                <template id="ctx-formulacion">
+                    <div class="v1-section">
+                        <div class="v1-sec-title">Fórmulas</div>
+                        <button class="v1-item" data-href="/formulacion/nueva">
+                            <span class="v1-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
+                            <span class="v1-item-label">Nueva fórmula</span>
+                        </button>
+                        <button class="v1-item" data-href="/formulacion/buscar">
+                            <span class="v1-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+                            <span class="v1-item-label">Buscar fórmula</span>
+                        </button>
+                    </div>
+                </template>
+
+                <!-- ── PEDIDOS ────────────────────────────────────────────── -->
+                <template id="ctx-pedidos">
+                    <div class="v1-section">
+                        <div class="v1-sec-title">Pedidos</div>
+                        <button class="v1-item" data-href="/pedidos/nuevo">
+                            <span class="v1-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span>
+                            <span class="v1-item-label">Nuevo pedido</span>
+                        </button>
+                        <button class="v1-item" data-href="/pedidos/seguimiento">
+                            <span class="v1-item-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg></span>
+                            <span class="v1-item-label">Seguimiento</span>
+                        </button>
+                    </div>
+                </template>
+
+                <!-- ── Atencion_cliente ────────────────────────────────────────────── -->
+                <template id="ctx-atencion-cliente">
+
+                    <div class="v1-section">
+                        <a class="v1-item {% if titulo == 'lista_solicitudes' %} is-active {% endif %}" href="">
+                            <span class="v1-item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scroll-text-icon lucide-scroll-text"><path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"/></svg></span>
+                            <span class="v1-item-label">Lista de Solicitudes</span>
+                            {% if titulo == 'lista_solicitudes' %}
+                                <span class="v1-item-glow"></span>
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div class="v1-section">
+                        <div class="v1-sec-title">Atención al Cliente</div>
+                        <a class="v1-item {% if titulo == 'Color Matching' %} is-active {% endif %}" href="{{ url_for('.crear_color_matching') }}">
+                            <span class="v1-item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-paint-bucket-icon lucide-paint-bucket"><path d="M11 7 6 2"/><path d="M18.992 12H2.041"/><path d="M21.145 18.38A3.34 3.34 0 0 1 20 16.5a3.3 3.3 0 0 1-1.145 1.88c-.575.46-.855 1.02-.855 1.595A2 2 0 0 0 20 22a2 2 0 0 0 2-2.025c0-.58-.285-1.13-.855-1.595"/><path d="m8.5 4.5 2.148-2.148a1.205 1.205 0 0 1 1.704 0l7.296 7.296a1.205 1.205 0 0 1 0 1.704l-7.592 7.592a3.615 3.615 0 0 1-5.112 0l-3.888-3.888a3.615 3.615 0 0 1 0-5.112L5.67 7.33"/></svg></span>
+                            <span class="v1-item-label">Color Matching</span>
+                            {% if titulo == 'Color Matching' %}
+                                <span class="v1-item-glow"></span>
+                            {% endif %}
+                        </a>
+                        <button class="v1-item" data-href="/atencion-cliente/seguimiento">
+                            <span class="v1-item-icon"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plane-takeoff-icon lucide-plane-takeoff"><path d="M2 22h20"/><path d="M6.36 17.4 4 17l-2-4 1.1-.55a2 2 0 0 1 1.8 0l.17.1a2 2 0 0 0 1.8 0L8 12 5 6l.9-.45a2 2 0 0 1 2.09.2l4.02 3a2 2 0 0 0 2.1.2l4.19-2.06a2.41 2.41 0 0 1 1.73-.17L21 7a1.4 1.4 0 0 1 .87 1.99l-.38.76c-.23.46-.6.84-1.07 1.08L7.58 17.2a2 2 0 0 1-1.22.18Z"/></svg></span>
+                            <span class="v1-item-label">Master Pallet</span>
+                        </button>
+                    </div>
+                </template>
+
+            <div class="v1-side-foot">
+                <div class="v1-foot-card">
+                    <div class="v1-foot-spark">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 1.7 4.6L18 9.3l-4.3 1.7L12 15l-1.7-4.6L6 9.3l4.6-1.7L12 3Z"/><path d="M19 14v3M19 19v3M17 17h2M21 17h2"/></svg>
+                    </div>
+                    <div class="v1-foot-meta">
+                        <div class="v1-foot-t">¿Necesitas ayuda?</div>
+                        <div class="v1-foot-s">Habla con un asesor</div>
+                    </div>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="cm-mobile-backdrop" id="mobileBackdrop" aria-hidden="true"></div>
+
+    <!-- ============================================================
+        MAIN
+        ============================================================ -->
+    <div class="cm-main">
+
+        <!-- TOPBAR ------------------------------------------------- -->
+        <header class="cm-topbar">
+            <div class="cm-topbar-left">
+                <button class="cm-mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir menú" type="button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="4" y1="6" x2="20" y2="6"/>
+                        <line x1="4" y1="12" x2="20" y2="12"/>
+                        <line x1="4" y1="18" x2="20" y2="18"/>
+                    </svg>
+                </button>
+                <nav class="cm-breadcrumbs" aria-label="Breadcrumb">
+                    <span class="cm-bc-item cm-bc-muted">{% block module_label %}{{modulo}}{% endblock %}</span>
+                    <span class="cm-bc-sep">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+                    </span>
+                    <span class="cm-bc-item cm-bc-current">{% block page_label %}{{titulo}}{% endblock %}</span>
+                </nav>
+            </div>
+            <div class="cm-topbar-right">
+                {#}
+                <button class="cm-search-trigger">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                    <span>Buscar</span>
+                    <kbd>⌘K</kbd>
+                </button>#}
+
+                {#}
+                <div class="cm-pop" id="notifPop">
+                    <button class="cm-iconbtn cm-bell" id="notifBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a2 2 0 0 0 3.4 0"/></svg>
+                        <span class="cm-notif-dot"></span>
+                    </button>
+                    <div class="cm-dropdown cm-notif-dropdown" id="notifDropdown" hidden>
+                        <div class="cm-notif-head">
+                            <span>Notificaciones</span>
+                            <button class="cm-link">Marcar como leídas</button>
+                        </div>
+                        <div class="cm-notif-item">
+                            <span class="cm-notif-tag cm-notif-success"></span>
+                            <div>
+                                <div class="cm-notif-t">Pago aprobado</div>
+                                <div class="cm-notif-s">Tu pago de Bs. 12.450 fue confirmado</div>
+                                <div class="cm-notif-time">hace 2 min</div>
+                            </div>
+                        </div>
+                        <div class="cm-notif-item">
+                            <span class="cm-notif-tag cm-notif-warning"></span>
+                            <div>
+                                <div class="cm-notif-t">Documento por vencer</div>
+                                <div class="cm-notif-s">Factura F-2024-1023 vence en 3 días</div>
+                                <div class="cm-notif-time">hace 1 h</div>
+                            </div>
+                        </div>
+                        <div class="cm-notif-item">
+                            <span class="cm-notif-tag cm-notif-info"></span>
+                            <div>
+                                <div class="cm-notif-t">Pedido enviado</div>
+                                <div class="cm-notif-s">PED-89231 salió del almacén</div>
+                                <div class="cm-notif-time">ayer</div>
+                            </div>
+                        </div>
+                        <div class="cm-notif-foot">
+                            <button class="cm-link">Ver todas</button>
+                        </div>
+                    </div>
+                </div>#}
+
+                <div class="cm-pop" id="profilePop">
+                    <button class="cm-profile-trigger" id="profileBtn">
+                        <span class="cm-avatar" id="avatarSmall" style="width:30px;height:30px;font-size:11.4px"></span>
+                        <span class="cm-profile-meta">
+                            <span class="cm-profile-name">{{current_user.username}}</span>
+                            <span class="cm-profile-role">{{current_user.nivel}} · {{current_user.zona}}</span>
+                        </span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    
+                    <div class="cm-dropdown cm-dropdown--atmospheric" id="profileDropdown" hidden>
+                        <div class="cm-dd-header">
+                            <span class="cm-avatar" id="avatarLarge" style="width:44px;height:44px;font-size:16.7px"></span>
+                            <div>
+                                <div class="cm-dd-name">{{current_user.username}}</div>
+                                <div class="cm-dd-mail">{{current_user.email}}</div>
+                                <div class="cm-dd-tags">
+                                    <span class="cm-tag cm-tag-red">{{current_user.nivel}}</span>
+                                    <span class="cm-tag cm-tag-gray">{{current_user.zona}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cm-dd-section">
+                            <button class="cm-dd-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 11.5-5.3"/><circle cx="18" cy="16" r="3"/></svg>
+                                <span>Gestión de usuario</span>
+                                <svg class="cm-dd-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+                            </button>
+                            <button class="cm-dd-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+                                <span>Logs de actividad</span>
+                                <svg class="cm-dd-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+                            </button>
+                            <button class="cm-dd-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 3h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>
+                                <span>Archivos</span>
+                                <svg class="cm-dd-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+                            </button>
+                            <button class="cm-dd-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                                <span>Perfil</span>
+                                <svg class="cm-dd-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
+                            </button>
+                        </div>
+                        <div class="cm-dd-divider"></div>
+                        <div class="cm-dd-section">
+                            <button class="cm-dd-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                                <span>Ayuda y soporte</span>
+                                <kbd>?</kbd>
+                            </button>
+                            <button class="cm-dd-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1Z"/></svg>
+                                <span>Preferencias</span>
+                            </button>
+                        </div>
+                        <div class="cm-dd-divider"></div>
+                        <div class="cm-dd-section">
+                            <a class="cm-dd-item is-danger" href="{{ url_for('.logout') }}">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg>
+                                <span>Cerrar sesión</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- PÁGINA ------------------------------------------------- -->
+        <main class="cm-page scroll-fino-light">
+            <div class="cm-page-head">
+                <div class="cm-page-head-left">
+                    {% block volver %}{% endblock %}
+                    <div>
+                        <h1 class="cm-page-title">{% block page_title %}{{titulo}}{% endblock %}</h1>
+                        <div class="cm-page-sub">{% block page_subtitle %}{% endblock %}</div>
+                    </div>
+                </div>
+                <div style="display:flex; gap:8px">
+                    {% block page_actions %}{% endblock %}
+                </div>
+            </div>
+            {# Mensajes flash #}
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    <div class="flash-stack">
+                        {% for category, message in messages %}
+                            {% if category == 'error' %}
+                                {% set flash_class = 'flash--error' %}
+                                {% set flash_titulo = 'Ha ocurrido un error' %}
+                            {% elif category == 'warning' %}
+                                {% set flash_class = 'flash--warning' %}
+                                {% set flash_titulo = 'Atención' %}
+                            {% elif category == 'info' %}
+                                {% set flash_class = 'flash--info' %}
+                                {% set flash_titulo = 'Información' %}
+                            {% else %}
+                                {% set flash_class = 'flash--success' %}
+                                {% set flash_titulo = 'Proceso exitoso' %}
+                            {% endif %}
+
+                            <div class="flash {{ flash_class }}" role="alert" data-duration="5000">
+                                <div class="flash-main">
+                                    <div class="flash-icon">
+                                        {% if category == 'error' %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <line x1="15" y1="9" x2="9" y2="15"/>
+                                                <line x1="9" y1="9" x2="15" y2="15"/>
+                                            </svg>
+                                        {% elif category == 'warning' %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                                                <line x1="12" y1="9" x2="12" y2="13"/>
+                                                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                            </svg>
+                                        {% elif category == 'info' %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <line x1="12" y1="16" x2="12" y2="12"/>
+                                                <line x1="12" y1="8" x2="12.01" y2="8"/>
+                                            </svg>
+                                        {% else %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <polyline points="16 10 11 15 8 12"/>
+                                            </svg>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="flash-content">
+                                        <h3 class="flash-title">{{ flash_titulo }}</h3>
+                                        <p class="flash-body">{{ message }}</p>
+                                    </div>
+
+                                    <button class="flash-close" type="button" aria-label="Cerrar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M18 6 6 18"/>
+                                            <path d="m6 6 12 12"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div class="flash-footer">
+                                    <div class="flash-progress-track">
+                                        <div class="flash-progress-fill"></div>
+                                    </div>
+                                    <p class="flash-countdown">
+                                        <span class="flash-countdown-text">El mensaje se cerrará en <span class="flash-seconds">5</span> segundos.</span>
+                                        <span class="flash-countdown-action">Pasa el cursor para detener.</span>
+                                        <span class="flash-countdown-paused">Pausado mientras el cursor esté encima.</span>
+                                    </p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block modulo_contenido %}
+            {% endblock %}
+        </main>
+
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/atencion_cliente/base_atencion_cliente.js') }}"></script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

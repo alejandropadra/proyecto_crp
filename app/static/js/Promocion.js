@@ -38,6 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
             sectionInicial.style.display = "none"; // Ocultar inicial
             sectionCubrir.classList.add("active"); // Mostrar section-cubrir
         }, 1000);
+        activarTodosLosBotonesYNotificar();
+
     });
 
     // Volver a la vista inicial desde `section-cubrir`
@@ -117,6 +119,8 @@ function seleccionarGanadores(participantes, numGanadores) {
 
     return copiaParticipantes.slice(0, numGanadores);
 }
+
+
 
 
 
@@ -269,12 +273,12 @@ function setupButtonAction(buttonId, inputId) {
             todosLosGanadores = [
                 ...ganadoresOccidente,
             ];
-        } /*else if (parametro === "Occidente Andes"){
+        } else if (parametro === "Occidente Andes"){
             let ganadoresOccidenteAndes = seleccionarGanadores(participantesEnAndes, 2);
             todosLosGanadores = [
                 ...ganadoresOccidenteAndes,
             ];
-        }*/ else if (parametro === "Oriente Centro"){
+        } else if (parametro === "Oriente Centro"){
             let ganadoresOrienteCentro = seleccionarGanadores(participantesEnOrienteCentro, 3);
             todosLosGanadores = [
                 ...ganadoresOrienteCentro,
@@ -284,12 +288,12 @@ function setupButtonAction(buttonId, inputId) {
             todosLosGanadores = [
                 ...ganadoresOrienteNorte,
             ];
-        }/*else if (parametro === "Oriente Sur"){
+        } else if (parametro === "Oriente Sur"){
             let ganadoresOrienteSur = seleccionarGanadores(participantesEnOrienteSur, 3);
             todosLosGanadores = [
                 ...ganadoresOrienteSur,
             ];
-        }*/ else if (parametro === "Oriente Insular"){
+        } else if (parametro === "Oriente Insular"){
             let ganadoresOrienteInsular = seleccionarGanadores(participantesEnOrienteInsular, 4);
             todosLosGanadores = [
                 ...ganadoresOrienteInsular,
@@ -298,7 +302,7 @@ function setupButtonAction(buttonId, inputId) {
         
         
         
-        /*else if (parametro === "jvc") {
+        else if (parametro === "jvc") {
             let ganadoresCapital = seleccionarGanadores(participantesEnCapital, 2);
             let ganadoresCentro = seleccionarGanadores(participantesEnCentro, 2);
             let ganadoresOccidente = seleccionarGanadores(participantesEnOccidente, 2);
@@ -316,7 +320,7 @@ function setupButtonAction(buttonId, inputId) {
             todosLosGanadores = [
                 ...ganadoresCarro
             ];
-        }*/
+        }
 
         if (todosLosGanadores.length > 0) {
             //mostrarGanadoresEnModal(todosLosGanadores, parametroEnviar);
@@ -443,6 +447,7 @@ function mostrarGanadoresEnTabla(ganadores, parametro) {
     });
 }
 async function activarTodosLosBotonesYNotificar() {
+    console.log("Activando todos los botones...");
     const tablaId = "tablacapital";
     const tabla = document.getElementById(tablaId).querySelector('.tabla_ganadores__table tbody');
     const loader = document.getElementById("loader");
@@ -456,14 +461,14 @@ async function activarTodosLosBotonesYNotificar() {
     cedulasSeleccionadasEnEsteSorteo = new Set();
     
     setupButtonAction('activar_botonRC', 'capital');
-    //setupButtonAction('activar_botonRCentro', 'centro');
-    //setupButtonAction('activar_botonRCentOccidente', 'centroOccidente');
-    //setupButtonAction('activar_botonROccidente', 'occidente');
-    // setupButtonAction('activar_botonROccidenteAndes', 'occidenteAndes');
-    //setupButtonAction('activar_botonROrienteCent', 'orienteCentro');
-    //setupButtonAction('activar_botonROrientenort', 'orienteNorte');
-    //setupButtonAction('activar_botonROrientesur', 'orienteSur');
-    //setupButtonAction('activar_botonROrienteInsular', 'orienteInsular');
+    setupButtonAction('activar_botonRCentro', 'centro');
+    setupButtonAction('activar_botonRCentOccidente', 'centroOccidente');
+    setupButtonAction('activar_botonROccidente', 'occidente');
+    setupButtonAction('activar_botonROccidenteAndes', 'occidenteAndes');
+    setupButtonAction('activar_botonROrienteCent', 'orienteCentro');
+    setupButtonAction('activar_botonROrientenort', 'orienteNorte');
+    setupButtonAction('activar_botonROrientesur', 'orienteSur');
+    setupButtonAction('activar_botonROrienteInsular', 'orienteInsular');
 
     await new Promise(resolve => setTimeout(resolve, 200));
 
@@ -472,10 +477,10 @@ async function activarTodosLosBotonesYNotificar() {
         'activar_botonRCentro',
         'activar_botonRCentOccidente',
         'activar_botonROccidente',
-        // 'activar_botonROccidenteAndes',
+        'activar_botonROccidenteAndes',
         'activar_botonROrienteCent',
         'activar_botonROrientenort',
-        //'activar_botonROrientesur',
+        'activar_botonROrientesur',
         'activar_botonROrienteInsular'
     ];
 
@@ -516,22 +521,14 @@ function mezclarFilasDeTabla(tbody) {
     
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-
-    const botonSortear = document.getElementById('SortearElbeta');
-
-    if (botonSortear) {
-        botonSortear.addEventListener('click', activarTodosLosBotonesYNotificar);
-    }
-    
-});
 
 
 
 
 
 
-/*
+
+
 // Seleccionar todos los elementos con la clase .activar
 const activarElementos = document.querySelectorAll('.activar');
 const modal = document.getElementById('modal');
@@ -588,11 +585,10 @@ activarElementos.forEach((elemento) => {
         }, 10);
     });
 });
-*/
 
 
 
-/*
+
 modal.addEventListener('click', (e) => {
     if (e.target === modal) {
         modalContenido.classList.remove('activo'); 
@@ -600,4 +596,4 @@ modal.addEventListener('click', (e) => {
             modal.classList.remove('mostrar'); 
         }, 300);
     }
-});*/
+});

@@ -418,9 +418,9 @@ body > div.activador.d-sm-none.expandido > div.contenedor-elementos-responsive >
   }
 
 .sub-menu-wrap.active{
-max-height: 400px;
-transition: max-height 0.2s ease-in-out;
-border: 2px solid var(--rojo_hover)
+  max-height: 500px;
+  transition: max-height 0.2s ease-in-out;
+  border: 2px solid var(--rojo_hover)
 }
 .sub-menu{
   background: black;
@@ -2331,11 +2331,6 @@ p{
   background: linear-gradient(to right, #56ab2f, #a8e6cf);
   box-shadow: 0 0px 10px #56ab2f80;
 }
-
-
-
-
-
 
 
 

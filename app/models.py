@@ -1,8 +1,10 @@
 import datetime
+from collections import defaultdict
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash,check_password_hash
-
+from sqlalchemy import func, distinct, UniqueConstraint
 from . import db
+from sqlalchemy import Index
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -227,3 +229,950 @@ class Cobranza(db.Model):
     @classmethod
     def get_pagos_order(cls, rif):
         return Cobranza.query.filter_by(rif=rif).order_by(Cobranza.create_at.desc())
+    
+class Formula(db.Model):
+    """Fórmulas de pinturas - Versión optimizada"""
+    __tablename__ = 'formulas'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name_color = db.Column(db.String(100), nullable=False, index=True)
+    name_product = db.Column(db.String(100), nullable=False, index=True)
+    r_color = db.Column(db.SmallInteger, nullable=False)
+    g_color = db.Column(db.SmallInteger, nullable=False)
+    b_color = db.Column(db.SmallInteger, nullable=False)
+    name_base = db.Column(db.String(100))
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+    
+    # Relación con ingredientes
+    ingredientes = db.relationship(
+        'FormulaIngrediente', 
+        backref='formula', 
+        lazy='select',
+        order_by='formula_ingredientes.c.orden',
+        cascade='all, delete-orphan' 
+    )
+    
+    def to_dict(self):
+        """Convierte el modelo a diccionario para JSON"""
+        return {
+            'id': self.id,
+            'name_color': self.name_color,
+            'name_product': self.name_product,
+            'rgb': {
+                'r': self.r_color,
+                'g': self.g_color,
+                'b': self.b_color
+            },
+            'name_base': self.name_base,
+            'colorantes': [
+                {'code': ing.codigo_colorante, 'amt': float(ing.cantidad)}
+                for ing in self.ingredientes
+            ]
+        }
+    
+    def __repr__(self):
+        return f'<Formula {self.id}: {self.name_color} - {self.name_product}>'
+    
+    @classmethod
+    def get_rgb_groups_paginated(cls, page=1, per_page=50):
+        """
+        Obtiene grupos RGB paginados de forma optimizada.
+        Solo carga los datos necesarios para la página actual.
+        
+        Args:
+            page (int): Número de página (empieza en 1)
+            per_page (int): Grupos por página
+            
+        Returns:
+            tuple: (grupos_paginados, total_grupos)
+        """
+        # Contar total de grupos únicos
+        total_grupos = db.session.query(
+            func.count(func.distinct(
+                func.concat(cls.r_color, '-', cls.g_color, '-', cls.b_color)
+            ))
+        ).filter(
+            cls.name_product != 'competencia'  
+        ).scalar()
+        # Obtener solo los colores de la página actual
+        offset = (page - 1) * per_page
+        
+        colores_pagina = db.session.query(
+            cls.r_color,
+            cls.g_color,
+            cls.b_color,
+            func.count(cls.id).label('total')
+        ).filter(
+            cls.name_product != 'competencia'  
+        ).group_by(
+            cls.r_color,
+            cls.g_color,
+            cls.b_color
+        ).limit(per_page).offset(offset).all()
+            
+        # Cargar fórmulas solo de estos colores
+        grupos_paginados = []
+        
+        for r, g, b, count in colores_pagina:
+            formulas_color = cls.query.filter(
+                cls.r_color == r,
+                cls.g_color == g,
+                cls.b_color == b,
+                cls.name_product != 'competencia'  
+            ).all()
+            
+
+            name_color = formulas_color[0].name_color if formulas_color else 'Sin nombre'
+            base_color= formulas_color[0].name_base if formulas_color else 'sin base'
+            
+            grupos_paginados.append({
+                'rgb': {'r': r, 'g': g, 'b': b},
+                'rgb_string': f'rgb({r}, {g}, {b})',
+                'name_color': name_color,
+                'base_color': base_color,
+                'count': count,
+                'datos': [f.to_dict() for f in formulas_color]
+            })
+        
+        return grupos_paginados, total_grupos
+    
+    @classmethod
+    def get_count(cls):
+        """Obtiene el número total de registros"""
+        return cls.query.count()
+    
+    @classmethod
+    def get_unique_colors_count(cls):
+        """Obtiene el número de colores RGB únicos"""
+        result = db.session.query(
+            func.count(func.distinct(
+                func.concat(cls.r_color, '-', cls.g_color, '-', cls.b_color)
+            ))
+        ).scalar()
+        return result
+    
+    @staticmethod
+    def obtener_ingredientes(name_color, name_product):
+        """
+        Obtiene los ingredientes de una fórmula específica
+        
+        Args:
+            name_color (str): 
+            name_product (str): 
+        
+        Returns:
+            list: Lista de diccionarios con los ingredientes, o lista vacía si no existe
+                [{'codigo': 'BLK', 'cantidad': 3.2031, 'orden': 0}, ...]
+        """
+        
+        
+        formula = Formula.query.filter_by(
+            name_color=name_color,
+            name_product=name_product
+        ).first()
+        
+        if not formula:
+            return []
+        
+        ingredientes = [
+            {
+                'codigo': ing.codigo_colorante,
+                'cantidad': float(ing.cantidad),
+                'orden': ing.orden
+            }
+            for ing in formula.ingredientes
+        ]
+        
+        return ingredientes
+    
+    @classmethod
+    def get_unique_color_names(cls, exclude_competencia=True):
+        """
+        Obtiene una lista de nombres de colores únicos
+    
+        """
+        query = db.session.query(cls.name_color).distinct()
+        
+        if exclude_competencia:
+            query = query.filter(cls.name_product != 'competencia')
+        
+        result = query.order_by(cls.name_color).all()
+        
+        return [color[0] for color in result]
+    
+    @classmethod
+    def get_formulas_by_color_name(cls, name_color):
+        """
+        Obtiene todas las fórmulas de un color específico agrupadas por producto.
+        
+        
+        """
+
+        formulas = cls.query.filter(
+            cls.name_color == name_color,
+            cls.name_product != 'competencia'
+        ).all()
+        
+
+        if not formulas:
+            return None
+
+        primera_formula = formulas[0]
+        
+
+        resultado = {
+            'name_color': name_color,
+            'rgb': {
+                'r': primera_formula.r_color,
+                'g': primera_formula.g_color,
+                'b': primera_formula.b_color
+            },
+            'rgb_string': f'rgb({primera_formula.r_color}, {primera_formula.g_color}, {primera_formula.b_color})',
+            'total_productos': len(formulas),
+            'productos': []
+        }
+        
+        for formula in formulas:
+            producto_info = {
+                'id': formula.id,
+                'name_product': formula.name_product,
+                'name_base': formula.name_base,
+                'colorantes': [
+                    {
+                        'codigo': ing.codigo_colorante,
+                        'cantidad': float(ing.cantidad),
+                        'orden': ing.orden
+                    }
+                    for ing in formula.ingredientes
+                ]
+            }
+            resultado['productos'].append(producto_info)
+        
+        return resultado
+
+    @classmethod
+    def get_rgb_groups_by_range(cls, r_min, r_max, g_min, g_max, b_min, b_max, page=1, per_page=50):
+        """
+        Obtiene grupos RGB filtrados por rangos de color.
+        
+        Args:
+            r_min, r_max: Rango para canal rojo (0-255)
+            g_min, g_max: Rango para canal verde (0-255)
+            b_min, b_max: Rango para canal azul (0-255)
+            page: Número de página (empieza en 1)
+            per_page: Grupos por página
+            
+        Returns:
+            tuple: (grupos_filtrados, total_grupos)
+        """
+        # Contar total de grupos únicos que cumplen el criterio
+        total_grupos = db.session.query(
+            func.count(func.distinct(
+                func.concat(cls.r_color, '-', cls.g_color, '-', cls.b_color)
+            ))
+        ).filter(
+            cls.name_product != 'competencia',
+            cls.r_color.between(r_min, r_max),
+            cls.g_color.between(g_min, g_max),
+            cls.b_color.between(b_min, b_max)
+        ).scalar()
+        
+        # Obtener solo los colores de la página actual
+        offset = (page - 1) * per_page
+        
+        colores_pagina = db.session.query(
+            cls.r_color,
+            cls.g_color,
+            cls.b_color,
+            func.count(cls.id).label('total')
+        ).filter(
+            cls.name_product != 'competencia',
+            cls.r_color.between(r_min, r_max),
+            cls.g_color.between(g_min, g_max),
+            cls.b_color.between(b_min, b_max)
+        ).group_by(
+            cls.r_color,
+            cls.g_color,
+            cls.b_color
+        ).limit(per_page).offset(offset).all()
+        
+        # Cargar fórmulas solo de estos colores
+        grupos_filtrados = []
+        
+        for r, g, b, count in colores_pagina:
+            formulas_color = cls.query.filter(
+                cls.r_color == r,
+                cls.g_color == g,
+                cls.b_color == b,
+                cls.name_product != 'competencia'
+            ).all()
+            
+            name_color = formulas_color[0].name_color if formulas_color else 'Sin nombre'
+            base_color = formulas_color[0].name_base if formulas_color else 'sin base'
+            
+            grupos_filtrados.append({
+                'rgb': {'r': r, 'g': g, 'b': b},
+                'rgb_string': f'rgb({r}, {g}, {b})',
+                'name_color': name_color,
+                'base_color': base_color,
+                'count': count,
+                'datos': [f.to_dict() for f in formulas_color]
+            })
+        
+        return grupos_filtrados, total_grupos
+
+class FormulaIngrediente(db.Model):
+    """Ingredientes/colorantes de las fórmulas"""
+    __tablename__ = 'formula_ingredientes'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    formula_id = db.Column(
+        db.Integer, 
+        db.ForeignKey('formulas.id', ondelete='CASCADE'), 
+        nullable=False,
+        index=True
+    )
+    codigo_colorante = db.Column(db.String(20), nullable=False, index=True)
+    cantidad = db.Column(db.Numeric(10, 4), nullable=False, default=0.0)
+    orden = db.Column(db.SmallInteger, nullable=False)
+    
+    def __repr__(self):
+        return f'<Ingrediente {self.codigo_colorante}: {self.cantidad}>'
+    
+    
+class Producto(db.Model):
+    __tablename__ = 'productos'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    marca_codigo = db.Column(db.String(10), nullable=False, index=True)          
+    marca_nombre = db.Column(db.String(50), nullable=False, index=True)          
+    linea_codigo = db.Column(db.String(10), nullable=False, index=True)          
+    linea_nombre = db.Column(db.String(100))                                      
+    subcodigo = db.Column(db.String(20), index=True)                             
+    codigo_ficha_tecnica = db.Column(db.String(20), unique=True, index=True)     
+    nombre = db.Column(db.String(200), nullable=False, index=True)               
+    descripcion_general = db.Column(db.String(500))                             
+
+    tipo = db.Column(db.String(100))                    
+    categoria = db.Column(db.String(100))                                        
+    acabado = db.Column(db.String(50))                                          
+    calidad = db.Column(db.String(70))                                           
+    uso = db.Column(db.String(100))                                             
+    superficie = db.Column(db.String(200))                                       
+    detalles = db.Column(db.String(900))                                         
+    color = db.Column(db.String(100))                                           
+    prioridad = db.Column(db.Integer)                                           
+    destacado = db.Column(db.Boolean, default=False)                            
+
+    activo = db.Column(db.Boolean, default=True, index=True)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
+
+    # RELACIONES 
+    presentaciones = db.relationship('Presentacion', backref='producto', lazy='dynamic', cascade='all, delete-orphan')
+    detalle_tecnico = db.relationship('DetalleTecnico', backref='producto', uselist=False, cascade='all, delete-orphan')
+
+    __table_args__ = (
+        db.UniqueConstraint('marca_codigo', 'linea_codigo', 'subcodigo', name='uq_producto_identidad'),
+    )
+
+    def __repr__(self):
+        return f'<Producto {self.codigo_ficha_tecnica}: {self.nombre}>'
+
+    def to_dict(self, include_presentaciones=False, include_detalle=False):
+        """Serializa el producto con control de profundidad."""
+        data = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        if include_presentaciones:
+            data['presentaciones'] = [p.to_dict() for p in self.presentaciones]
+        if include_detalle and self.detalle_tecnico:
+            data['detalle_tecnico'] = self.detalle_tecnico.to_dict()
+        return data
+    
+
+
+    @classmethod
+    def get_all(cls, activos_only=True):
+        query = cls.query
+        if activos_only:
+            query = query.filter_by(activo=True)
+        return query.all()
+
+    @classmethod
+    def get_by_id(cls, id):
+        return cls.query.filter_by(id=id).first()
+
+    @classmethod
+    def get_by_ficha(cls, codigo_ficha):
+        return cls.query.filter_by(codigo_ficha_tecnica=codigo_ficha).first()
+    
+    @classmethod
+    def get_all_sin_marca(cls, marca_excluir, activos_only=True):
+        query = cls.query.filter(cls.marca_nombre != marca_excluir)
+        if activos_only:
+            query = query.filter_by(activo=True)
+        return query.all()
+
+    @classmethod
+    def buscar(cls, termino):
+        """Búsqueda por nombre, descripción, tipo o categoría."""
+        like = f'%{termino}%'
+        return cls.query.filter(
+            db.or_(
+                cls.nombre.ilike(like),
+                cls.descripcion_general.ilike(like),
+                cls.tipo.ilike(like),
+                cls.categoria.ilike(like),
+            )
+        ).all()
+        
+    @classmethod
+    def get_filtros(cls, marca_excluir=None):
+        """Extrae valores únicos de las columnas filtrables para los radio buttons."""
+        query = cls.query.filter_by(activo=True)
+        if marca_excluir:
+            query = query.filter(cls.marca_nombre != marca_excluir)
+
+        columnas_filtro = ['tipo', 'categoria', 'acabado', 'calidad', 'uso', 'superficie', 'marca_nombre']
+
+        filtros = {}
+        for col in columnas_filtro:
+            valores = (
+                query
+                .with_entities(getattr(cls, col))
+                .filter(getattr(cls, col).isnot(None))
+                .distinct()
+                .order_by(getattr(cls, col))
+                .all()
+            )
+            filtros[col] = [v[0] for v in valores]
+
+        return filtros
+
+
+
+class Presentacion(db.Model):
+    __tablename__ = 'presentaciones'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    producto_id = db.Column(db.Integer, db.ForeignKey('productos.id'), nullable=False, index=True)
+
+    #IDENTIFICACIÓN DEL SKU 
+    material = db.Column(db.String(20), unique=True, nullable=False, index=True)  
+    descripcion = db.Column(db.String(200))                                        
+    unidad_venta = db.Column(db.String(50))        
+    imagen_color = db.Column(db.String(300))                               
+    cod_presentacion = db.Column(db.String(10))                                    
+
+    #METADATA 
+    activo = db.Column(db.Boolean, default=True, index=True)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
+
+    def __repr__(self):
+        return f'<Presentacion {self.material}: {self.unidad_venta}>'
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+
+
+class DetalleTecnico(db.Model):
+    __tablename__ = 'detalles_tecnicos'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    producto_id = db.Column(db.Integer, db.ForeignKey('productos.id'), nullable=False, unique=True, index=True)
+
+    # DESCRIPCIÓN DEL PRODUCTO 
+    descripcion_detallada = db.Column(db.Text)                     
+    caracteristicas = db.Column(db.Text)                           
+    orientacion_uso = db.Column(db.Text)                           
+
+    # CARACTERÍSTICAS TÉCNICAS 
+    vehiculo = db.Column(db.String(200))
+    componentes_principales = db.Column(db.String(200))
+    pigmentos = db.Column(db.String(200))
+    solventes = db.Column(db.String(200))
+    color = db.Column(db.String(250))
+    voc = db.Column(db.String(250))
+    brillo = db.Column(db.String(250))
+    espesor_pelicula_recomendado = db.Column(db.String(500))
+    aspecto_pelicula = db.Column(db.String(250))
+    viscosidad = db.Column(db.String(250))
+    densidad = db.Column(db.String(50))
+    solidos_por_volumen = db.Column(db.String(50))
+    rendimiento_practico = db.Column(db.String(250))
+    rendimiento_teorico = db.Column(db.String(250))
+    nota_rendimiento = db.Column(db.Text)
+    relacion_activacion = db.Column(db.String(250))
+    vida_util_mezcla = db.Column(db.String(500))
+    viscosidad_empaque = db.Column(db.String(250))
+    tiempo_oreo = db.Column(db.String(250))
+    espesor_pelicula = db.Column(db.String(250))
+    ph = db.Column(db.String(20))
+    flash_point = db.Column(db.String(50))
+    vida_util_mezcla_25c = db.Column(db.String(250))
+    sustratos_recomendados = db.Column(db.Text)
+    nota_caracteristicas = db.Column(db.Text)
+    capas_recomendadas = db.Column(db.String(250))
+
+    # TIEMPOS DE SECAMIENTO A 25°C (77°F) 
+    secamiento_al_tacto = db.Column(db.String(250))
+    secamiento_para_repintar = db.Column(db.String(250))
+    secamiento_duro = db.Column(db.String(250))
+    curado_total = db.Column(db.String(250))
+    secamiento_inmersion = db.Column(db.String(250))
+    secamiento_al_transito = db.Column(db.String(250))
+    secamiento_al_polvo = db.Column(db.String(250))
+    nota_secamiento = db.Column(db.Text)
+
+    # PREPARACIÓN Y APLICACIÓN 
+    preparacion_superficie = db.Column(db.Text)
+    metodo_aplicacion = db.Column(db.Text)
+    equipos_recomendados = db.Column(db.Text)
+    limpieza_equipos = db.Column(db.String(200))
+    diluyente = db.Column(db.String(200))
+    condiciones_aplicar = db.Column(db.Text)
+    nota_aplicacion = db.Column(db.Text)
+
+    # INFORMACIÓN ADICIONAL 
+    fondos_recomendados = db.Column(db.Text)
+    resistencia = db.Column(db.Text)
+    almacenamiento_precauciones = db.Column(db.Text)
+    clase = db.Column(db.Text)
+    indicador_clase = db.Column(db.Float)
+    presentacion_texto = db.Column(db.String(200))                 
+    ubicacion_ficha_tecnica = db.Column(db.String(200))            
+
+    def __repr__(self):
+        return f'<DetalleTecnico producto_id={self.producto_id}>'
+
+    def to_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+    
+    
+class LogsActividad(db.Model):
+    __tablename__ = 'actividad_logs'
+
+    id          = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    rif         = db.Column(db.String(10), nullable=True)   
+    username    = db.Column(db.String(50), nullable=True)
+    ip          = db.Column(db.String(45), nullable=False)  
+    device_id   = db.Column(db.String(36), nullable=True, index=True)   
+    device_name = db.Column(db.String(100), nullable=True)              
+    endpoint    = db.Column(db.String(100), nullable=True)  
+    path        = db.Column(db.String(200), nullable=True)  
+    method      = db.Column(db.String(10), nullable=False) 
+    status_code = db.Column(db.SmallInteger, nullable=True)
+    user_agent  = db.Column(db.String(300), nullable=True)
+    created_at  = db.Column(db.DateTime, default=datetime.datetime.now)
+
+    def __repr__(self):
+        return f'<ActivityLog {self.id}: {self.rif} -> {self.path} [{self.status_code}]>'
+
+    @classmethod
+    def registrar(cls, ip, method, endpoint, path, status_code, user_agent,
+                    rif=None, username=None, device_id=None, device_name=None):
+        log = cls(
+            rif=rif,
+            username=username,
+            ip=ip,
+            device_id=device_id,
+            device_name=device_name,
+            endpoint=endpoint,
+            path=path,
+            method=method,
+            status_code=status_code,
+            user_agent=user_agent
+        )
+        db.session.add(log)
+        db.session.commit()
+        return log
+
+    @classmethod
+    def get_all(cls):
+        return cls.query.order_by(cls.created_at.desc()).all()
+
+    @classmethod
+    def get_by_user(cls, rif):
+        return cls.query.filter_by(rif=rif).order_by(cls.created_at.desc()).all()
+
+    @classmethod
+    def get_by_ip(cls, ip):
+        return cls.query.filter_by(ip=ip).order_by(cls.created_at.desc()).all()
+
+    @classmethod
+    def get_recientes(cls, limite=100):
+        return cls.query.order_by(cls.created_at.desc()).limit(limite).all()
+
+    @classmethod
+    def get_by_endpoint(cls, endpoint):
+        return cls.query.filter_by(endpoint=endpoint).order_by(cls.created_at.desc()).all()
+    
+    @classmethod
+    def get_paginado(cls, page=1, per_page=50, 
+                    rif=None, username=None, ip=None, device_id=None,
+                    endpoint=None, method=None, status_code=None,
+                    fecha_desde=None, fecha_hasta=None,
+                    orden='desc'):
+        query = cls.query
+
+        query = db.session.query(cls, User.seller).outerjoin(
+                User, cls.rif == User.rif
+            )
+        if rif:
+            query = query.filter(cls.rif == rif)
+        if username:
+            query = query.filter(cls.username.like(f'%{username}%'))
+        if ip:
+            query = query.filter(cls.ip == ip)
+        if device_id:
+            query = query.filter(cls.device_id == device_id)
+        if endpoint:
+            query = query.filter(cls.endpoint == endpoint)
+        if method:
+            query = query.filter(cls.method == method.upper())
+        if status_code:
+            query = query.filter(cls.status_code == status_code)
+        if fecha_desde:
+            query = query.filter(cls.created_at >= fecha_desde)
+        if fecha_hasta:
+            query = query.filter(cls.created_at <= fecha_hasta)
+
+        # Orden
+        if orden == 'asc':
+            query = query.order_by(cls.created_at.asc())
+        else:
+            query = query.order_by(cls.created_at.desc())
+
+
+        return query.paginate(page=page, per_page=per_page, error_out=False)
+    
+
+
+    @classmethod
+    def top_usuarios_multidispositivo(cls, limite=10):
+        """
+        Retorna los usuarios que más dispositivos distintos han usado.
+        
+        Returns:
+            Lista de dicts: [{'rif', 'username', 'dispositivos_distintos', 'ips_distintas'}]
+        """
+        resultados = db.session.query(
+            cls.rif,
+            cls.username,
+            func.count(distinct(cls.device_id)).label('dispositivos_distintos'),
+            func.count(distinct(cls.ip)).label('ips_distintas')
+        ).filter(
+            cls.rif.isnot(None),
+            cls.device_id.isnot(None)
+        ).group_by(
+            cls.rif, cls.username
+        ).having(
+            func.count(distinct(cls.device_id)) > 1
+        ).order_by(
+            func.count(distinct(cls.device_id)).desc()
+        ).limit(limite).all()
+        
+        return [
+            {
+                'rif': r.rif,
+                'username': r.username,
+                'dispositivos_distintos': r.dispositivos_distintos,
+                'ips_distintas': r.ips_distintas
+            }
+            for r in resultados
+        ]
+
+
+    @classmethod
+    def top_dispositivos_multiusuario(cls, limite=10):
+        """
+        Retorna los dispositivos que más usuarios distintos han usado.
+        
+        Returns:
+            Lista de dicts: [{'device_id', 'device_name', 'ip', 'usuarios_distintos', 'lista_usuarios'}]
+        """
+        # Primera query: agrupar por device_id y contar usuarios distintos
+        resultados = db.session.query(
+            cls.device_id,
+            func.count(distinct(cls.rif)).label('usuarios_distintos')
+        ).filter(
+            cls.device_id.isnot(None),
+            cls.rif.isnot(None)
+        ).group_by(
+            cls.device_id
+        ).having(
+            func.count(distinct(cls.rif)) > 1
+        ).order_by(
+            func.count(distinct(cls.rif)).desc()
+        ).limit(limite).all()
+        
+        datos = []
+        for r in resultados:
+            info = db.session.query(
+                cls.device_name, cls.ip
+            ).filter(
+                cls.device_id == r.device_id
+            ).order_by(
+                cls.created_at.desc()
+            ).first()
+            
+            # Lista de usuarios distintos que han usado ese device
+            usuarios = db.session.query(
+                distinct(cls.username)
+            ).filter(
+                cls.device_id == r.device_id,
+                cls.username.isnot(None)
+            ).all()
+            
+            datos.append({
+                'device_id': r.device_id,
+                'device_id_corto': r.device_id[:8] + '...',  # para mostrar en gráfica
+                'device_name': info.device_name if info else 'Desconocido',
+                'ip': info.ip if info else '-',
+                'usuarios_distintos': r.usuarios_distintos,
+                'lista_usuarios': [u[0] for u in usuarios if u[0]]
+            })
+        
+        return datos
+    
+    @classmethod
+    def multicuentas_kpi(cls):
+        """
+        Cuenta cuántos dispositivos (device_id) han sido usados por 
+        más de un usuario distinto (rif).
+        
+        Returns:
+            int: Número de dispositivos con múltiples usuarios asociados.
+                0 si no hay casos sospechosos.
+        """
+        subquery = db.session.query(
+            cls.device_id
+        ).filter(
+            cls.device_id.isnot(None),
+            cls.rif.isnot(None)
+        ).group_by(
+            cls.device_id
+        ).having(
+            func.count(distinct(cls.rif)) > 1
+        ).subquery()
+        
+        total = db.session.query(func.count()).select_from(subquery).scalar()
+        
+        return total or 0
+
+
+
+
+
+
+"""COMENTAR DESDE AQUI PARA HACER EL PULL"""
+
+class Ticket(db.Model):
+    """Ticket de atención al cliente"""
+    __tablename__ = 'tickets'
+    
+
+    class TipoProceso:
+        COLOR_MATCHING = 'color_matching'
+        QUEJA = 'queja'
+        DEVOLUCION = 'devolucion'
+        CONSULTA_TECNICA = 'consulta_tecnica'
+    
+    class EstadoGlobal:
+        ABIERTO = 'abierto'
+        EN_PROCESO = 'en_proceso'
+        CERRADO = 'cerrado'
+        CANCELADO = 'cancelado'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    numero_ticket = db.Column(db.String(20), nullable=False, unique=True, index=True)
+    tipo_proceso = db.Column(db.String(50), nullable=False, index=True)
+    
+    # Datos del cliente
+    rif_cliente = db.Column(db.String(20), nullable=False, index=True)
+    email_cliente = db.Column(db.String(150), nullable=False)
+    estado_global = db.Column(db.String(30), nullable=False, default=EstadoGlobal.ABIERTO, index=True)
+    estado_actual = db.Column(db.String(50), nullable=False, index=True)
+    asignado_a = db.Column(db.String(100), index=True)
+    fecha_creacion = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False)
+    fecha_ultima_accion = db.Column(db.DateTime, default=datetime.datetime.utcnow,
+                                    onupdate=datetime.datetime.utcnow,
+                                    nullable=False)
+    fecha_cierre = db.Column(db.DateTime, nullable=True)
+    
+    historial = db.relationship(
+        'TicketHistorial',
+        backref='ticket',
+        lazy='select',
+        order_by='ticket_historial.c.fecha',
+        cascade='all, delete-orphan'
+    )
+    
+    color_matchings = db.relationship(
+        'ColorMatching',
+        backref='ticket',
+        lazy='select',
+        cascade='all, delete-orphan'
+    )
+    
+    def to_dict(self, include_relations=False):
+        data = {
+            'id': self.id,
+            'numero_ticket': self.numero_ticket,
+            'tipo_proceso': self.tipo_proceso,
+            'rif_cliente': self.rif_cliente,
+            'email_cliente': self.email_cliente,
+            'estado_global': self.estado_global,
+            'estado_actual': self.estado_actual,
+            'asignado_a': self.asignado_a,
+            'fecha_creacion': self.fecha_creacion.isoformat() if self.fecha_creacion else None,
+            'fecha_ultima_accion': self.fecha_ultima_accion.isoformat() if self.fecha_ultima_accion else None,
+            'fecha_cierre': self.fecha_cierre.isoformat() if self.fecha_cierre else None,
+        }
+        if include_relations:
+            data['color_matchings'] = [cm.to_dict() for cm in self.color_matchings]
+            data['historial'] = [h.to_dict() for h in self.historial]
+        return data
+    
+    def registrar_paso(self, paso, ejecutado_por, comentario=None, payload=None):
+        """Helper para agregar entradas al historial sin importar TicketHistorial en cada ruta"""
+        self.historial.append(TicketHistorial(
+            paso=paso,
+            ejecutado_por=ejecutado_por,
+            comentario=comentario,
+            payload=payload
+        ))
+        self.fecha_ultima_accion = datetime.datetime.utcnow()
+    
+    def cerrar(self, ejecutado_por, comentario=None):
+        """Cierra el ticket y deja huella en el historial"""
+        self.estado_global = self.EstadoGlobal.CERRADO
+        self.estado_actual = 'cerrado'
+        self.fecha_cierre = datetime.datetime.utcnow()
+        self.registrar_paso('cierre', ejecutado_por, comentario or 'Ticket cerrado')
+    
+    def __repr__(self):
+        return f'<Ticket {self.numero_ticket} ({self.estado_global})>'
+    
+
+class TicketHistorial(db.Model):
+    """Registro inmutable de cada acción ejecutada sobre un ticket"""
+    __tablename__ = 'ticket_historial'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    ticket_id = db.Column(
+        db.Integer,
+        db.ForeignKey('tickets.id', ondelete='CASCADE'),
+        nullable=False,
+        index=True
+    )
+    paso = db.Column(db.String(50), nullable=False, index=True)
+    ejecutado_por = db.Column(db.String(100), nullable=False, index=True)
+    fecha = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=False, index=True)
+    comentario = db.Column(db.Text)
+    payload = db.Column(db.JSON)  
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'ticket_id': self.ticket_id,
+            'paso': self.paso,
+            'ejecutado_por': self.ejecutado_por,
+            'fecha': self.fecha.isoformat() if self.fecha else None,
+            'comentario': self.comentario,
+            'payload': self.payload
+        }
+    
+    def __repr__(self):
+        return f'<Historial #{self.id} ticket={self.ticket_id} paso={self.paso}>'
+
+
+class ColorMatching(db.Model):
+    """Respuesta de formulación de color para un ticket"""
+    __tablename__ = 'color_matching'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    ticket_id = db.Column(
+        db.Integer,
+        db.ForeignKey('tickets.id', ondelete='CASCADE'),
+        nullable=False,
+        index=True
+    )
+    
+
+    color_nombre = db.Column(db.String(150), nullable=False)
+    cod_std = db.Column(db.String(50))
+    marca = db.Column(db.String(100))
+    linea = db.Column(db.String(150))
+    base = db.Column(db.String(150))
+    primer = db.Column(db.String(100))
+    
+    # Unidad de envase y unidad de cantidad
+    udv = db.Column(db.String(20), nullable=False, default='1 GALON')
+    unidad_cantidad = db.Column(db.String(10), default='cc')
+    
+    observaciones = db.Column(db.Text)
+    
+    tintas = db.relationship(
+        'ColorMatchingTinta',
+        backref='color_matching',
+        lazy='select',
+        order_by='color_matching_tintas.c.orden',
+        cascade='all, delete-orphan'
+    )
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'ticket_id': self.ticket_id,
+            'color_nombre': self.color_nombre,
+            'cod_std': self.cod_std,
+            'marca': self.marca,
+            'linea': self.linea,
+            'base': self.base,
+            'primer': self.primer,
+            'udv': self.udv,
+            'unidad_cantidad': self.unidad_cantidad,
+            'observaciones': self.observaciones,
+            'tintas': [t.to_dict() for t in self.tintas]
+        }
+    
+    def __repr__(self):
+        return f'<ColorMatching #{self.id} - {self.color_nombre} ({self.udv})>'
+
+
+
+class ColorMatchingTinta(db.Model):
+    """Cada tinta/colorante de una fórmula de color matching"""
+    __tablename__ = 'color_matching_tintas'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    color_matching_id = db.Column(
+        db.Integer,
+        db.ForeignKey('color_matching.id', ondelete='CASCADE'),
+        nullable=False,
+        index=True
+    )
+    codigo_tinta = db.Column(db.String(20), nullable=False)     
+    cantidad = db.Column(db.Numeric(10, 4), nullable=False)   
+    orden = db.Column(db.SmallInteger, nullable=False, default=0)
+    
+
+    __table_args__ = (
+        UniqueConstraint('color_matching_id', 'codigo_tinta',
+                        name='uq_color_matching_tinta'),
+    )
+    
+    def to_dict(self):
+        return {
+            'codigo_tinta': self.codigo_tinta,
+            'cantidad': float(self.cantidad),
+            'orden': self.orden
+        }
+    
+    def __repr__(self):
+        return f'<Tinta {self.codigo_tinta}: {self.cantidad} en CM #{self.color_matching_id}>'
+"""COMENTAR HASTA AQUI PARA HACER EL PULL"""

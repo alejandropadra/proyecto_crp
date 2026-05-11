@@ -1,219 +1,232 @@
-{% extends 'bootstrap/base.html' %}
-
-{% block title %}
-{{titulo}}
-{% endblock %}
-
-{% block metas %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-{% endblock %}
+    <meta name="description" content="{% block meta_description %}Landing page profesional{% endblock %}">
+    <title>{% block title %}{{titulo}}{% endblock %}</title>
+    
+    <!-- Fuentes locales -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/fonts.css') }}">
 
-{% block styles %}
-<!--Bootstrap-->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-<link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
-<!--Css-->
-<link rel="stylesheet" href="{{ url_for('static', filename = 'css/estilos_landings.css') }}">
-<!--Fontawesome-->
-<script src="https://kit.fontawesome.com/8a2f042b38.js" crossorigin="anonymous"></script>
-<!--Iconos Bootstrap-->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-<!--Swiper carusel-->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-<!--Bootstrap-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-<link rel='icon' type='image/png' href="{{ url_for('static', filename = 'img/figura_corimonn.png') }}">
-<!--Popper.js-->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <!-- CSS Principal -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/main.css') }}">
+    <link rel='icon' type='image/png' href="{{ url_for('static', filename = 'img/figura_corimonn.png') }}">
 
-{% block estilos %}
+    {% block extra_css %}{% endblock %}
+    
+    
+</head>
+<body>
+    
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <!-- Logo -->
+                <div class="navbar-brand">
+                    <a href="{{ url_for('page.index')}}">
+                        <img src="{{ url_for('static', filename='static_landing/img/CRP.png') }}" alt="Corimon Pinturas Logo">
+                    </a>
+                </div>
+                
+                <!-- Menú Desktop -->
+                <ul class="navbar-menu menu-xls">
+                    <li><a class="{% if titulo == 'Inicio' %}active{% endif %}" href="{{ url_for('page.index')}}">Inicio</a></li>
+                    <li><a class="{% if titulo == 'Nosotros' %}active{% endif %}" href="{{ url_for('page.nosotros')}}">¿Quiénes Somos?</a></li>
+                    <li><a class="{% if titulo == 'Productos' %}active{% endif %}" href="{{ url_for('page.products')}}">Productos</a></li>
+                    <li><a class="{% if titulo == 'Contacto' %}active{% endif %}" href="{{ url_for('page.contacto')}}">Contacto</a></li>
+                </ul>
+                
+                <!-- CTA Desktop -->
+                <div class="navbar-cta menu-xls">
+                    <a href="{{ url_for('page.login')}}" class="btn btn-primary">Portal Clientes</a>
+                </div>
 
-{% endblock%}
+                <!-- Botón Hamburguesa (Solo Móvil) -->
+                <div class="menu-sm">
+                    <button class="hamburger">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu-icon lucide-menu"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
+                    </button>
 
-
-{% endblock %}
-
-
-
-{% block body %}
-<!--
-<div id="overlay" >
-  <div class="imagen-overlay">
-    <img src="/static/img/CRP.png" alt="#">
-  </div>
-</div>-->
-  
-{% block navbar %}
-<header>
-    <nav>
-        
-        <div class="logo d-flex align-items-center">
-            <a href="/"><img src="/static/img/CRP.png" alt="#"></a>
-        </div>
-        
-        <div class="contenedor_elementos d-none d-xl-block d-md-block d-lg-block">
-
-            <ul>
-              <li class="mx-4"><a class="{% if titulo == 'Inicio' %} active {% endif %}"  href="/">Inicio</a></li>
-              <li class="mx-4"><a class="{% if titulo == 'Nosotros' %} active {% endif %}" href="/nosotros">¿Quiénes Somos?</a></li>
-              <li class="mx-4"><a class="{% if titulo == 'Productos' %} active {% endif %}" href="/soon">Productos</a></li>
-              <li class="mx-4"><a class="{% if titulo == 'Contactanos' %} active {% endif %}" href="/contacto">Contáctanos</a></li>
-            </ul>
-          </div>
-          
-        <div class="elementos_interac d-flex " >
-            <ul class="">
-                <li class=" "><a href="/login" class="boton  "> Portal Clientes </a></li> 
-            </ul>
-
-
-        </div>
-    </nav>
-
-</header>
-
-
-
-{% endblock %}
-{% block content %}
-
-
-<div class="container">
-
-    <div class="row">
-  
-      <div class="col-md-12 col-md-offset-1">
-        {% with messages = get_flashed_messages(with_categories=True) %}
-  
-        {% if messages %}
-  
-          {% for category, message in messages %}
-            {% if category == 'error' %}
-              <div class="alert alert-danger" role="alert">
-                {{ message }}
-              </div>
-            {% else %}
-              <div class="alert alert-success" role="alert">
-                {{ message }}
-              </div>
-            {% endif %}
-          {% endfor %}
-  
-        {% endif %}
-  
-        {% endwith %}
-      </div>
-  
-  
-      {% block container %}
-      
-      {% endblock %}
-    </div>
-  </div>
-
-  {% endblock %}
-
-<div class="activador d-sm-none ">
-    <div class="flecha-up" id="flecha-up">
-      <i class="bi bi-arrow-up-circle "></i>
-      <i class="bi bi-arrow-down-circle d-none z-5 "></i>
-    </div>
-
-
-    <div class="contenedor-elementos-responsive">
-
-      <ul>
-          <li class="responsive-li "><i class="bi bi-house mx-3"></i><a  href="/" class="sub-titulo responsive-a w-100">Inicio</a></li>
-          <li class="responsive-li"><i class="bi bi-buildings mx-3"></i> <a href="/nosotros" class="sub-titulo responsive-a w-100">¿Quiénes Somos?</a></li> 
-          <li class="responsive-li"><i class="bi bi-bucket mx-3"></i><a href="" class="sub-titulo responsive-a w-100">Productos</a></li>
-          <li class="responsive-li"><i class="bi bi-telephone mx-3"></i><a href="/contacto" class="sub-titulo responsive-a w-100">Contáctanos</a></li>
-      </ul>
-      <div class="footer_resp">
-        <ul>
-          <li class="d-flex align-items-center "><i class="bi bi-question-circle algo"></i><a href=""> Ayuda</a></li>
-          <li class="d-flex align-items-center "><i class="bi bi-building algo"></i><a href=""> filiales</a></li>
-          <li class="d-flex align-items-center "><i class="bi bi-linkedin algo"></i><a href=""> Linkedin</a></li>
-      </ul>
-      </div>
-  </div>
-  
-</div>
-
-
-
-
-  
-<footer>
-    <div class="footer-content" >
-      <div class="row d-flex justify-content-center w-100">
-
-        <div class="footer_nav contenedor_elementos col-xl col-lg col-sm-12" >
-          <h3 class="fs-4 mb-1" >Navegación</h3>
-          <ul class="" style="padding: 0 !important;">
-            <li class= ><a href="/" class="text-white" >Inicio</a></li>
-            <li class=><a href="/nosotros" class="text-white">¿Quiénes Somos?</a></li>
-            <li class=><a href="/soon" class="text-white">Productos</a></li>
-            <li class=><a href="/contacto" class="text-white">Contáctanos</a></li>
-          </ul>
-        </div>
-
-        <hr class="	d-none d-sm-block d-md-block d-lg-none w-50">
-        <div class="col-xl-4 col-lg-4  col-sm-12 " >
-          <h3 class="text-center" >Corimon Pinturas, C.A.</h3>
-          <ul class="socials list-unstyled d-flex justify-content-center">
-              <li><a href="#"><i class="bi bi-linkedin"></i></a></li>
-
-          </ul>
-        </div>
-
-        <hr class="	d-none d-sm-block d-md-block d-lg-none w-50">
-        
-          <div class="contacto col-xl col-lg col-sm-12 " style="margin-top: -10px; ">
-            <h3 class="fs-4 mb-1" >Contáctanos</h3>
-            <div class="row mt-0" style="display: flex; flex-direction: column;">
-              <p class="col">Correo: info@corimon.com</p>
-              <!--<p class="col"> Teléfono de contacto: +58(241)613-16.97</p>-->
+                </div>
             </div>
-          </div>
-      </div>
-    </div>
-    <hr style="margin-top: 0 !important; ">
-    <div class="d-flex justify-content-center w-100 footer-bottom mx-2 w-100">
-      <p>copyright &copy;2023 Corimon Pinturas, C.A. RIF. J-00029572-7 | Powered by Digitalización Industrial</p>
-  </div>
-  
-</footer>
+        </nav>
+    </header>
+    
+    <!-- Contenido Principal -->
+    <main>
+        {# Mensajes flash #}
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    <div class="flash-stack">
+                        {% for category, message in messages %}
+                            {% if category == 'error' %}
+                                {% set flash_class = 'flash--error' %}
+                                {% set flash_titulo = 'Ha ocurrido un error' %}
+                            {% elif category == 'warning' %}
+                                {% set flash_class = 'flash--warning' %}
+                                {% set flash_titulo = 'Atención' %}
+                            {% elif category == 'info' %}
+                                {% set flash_class = 'flash--info' %}
+                                {% set flash_titulo = 'Información' %}
+                            {% else %}
+                                {% set flash_class = 'flash--success' %}
+                                {% set flash_titulo = 'Proceso exitoso' %}
+                            {% endif %}
 
+                            <div class="flash {{ flash_class }}" role="alert" data-duration="5000">
+                                <div class="flash-main">
+                                    <div class="flash-icon">
+                                        {% if category == 'error' %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <line x1="15" y1="9" x2="9" y2="15"/>
+                                                <line x1="9" y1="9" x2="15" y2="15"/>
+                                            </svg>
+                                        {% elif category == 'warning' %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                                                <line x1="12" y1="9" x2="12" y2="13"/>
+                                                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                            </svg>
+                                        {% elif category == 'info' %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <line x1="12" y1="16" x2="12" y2="12"/>
+                                                <line x1="12" y1="8" x2="12.01" y2="8"/>
+                                            </svg>
+                                        {% else %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <polyline points="16 10 11 15 8 12"/>
+                                            </svg>
+                                        {% endif %}
+                                    </div>
 
+                                    <div class="flash-content">
+                                        <h3 class="flash-title">{{ flash_titulo }}</h3>
+                                        <p class="flash-body">{{ message }}</p>
+                                    </div>
 
+                                    <button class="flash-close" type="button" aria-label="Cerrar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M18 6 6 18"/>
+                                            <path d="m6 6 12 12"/>
+                                        </svg>
+                                    </button>
+                                </div>
 
+                                <div class="flash-footer">
+                                    <div class="flash-progress-track">
+                                        <div class="flash-progress-fill"></div>
+                                    </div>
+                                    <p class="flash-countdown">
+                                        <span class="flash-countdown-text">El mensaje se cerrará en <span class="flash-seconds">5</span> segundos.</span>
+                                        <span class="flash-countdown-action">Pasa el cursor para detener.</span>
+                                        <span class="flash-countdown-paused">Pausado mientras el cursor esté encima.</span>
+                                    </p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
 
-{% block scripts %}
+        {% block content %}
+        <!-- Aquí va el contenido de cada página -->
+        {% endblock %}
+    </main>
 
-<!--Script Bootstrap-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <footer class="site-footer">
+        <div class="footer-container">
 
-<!--Scripts para poder usar Jquery-->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+            <!-- Fila principal -->
+            <div class="footer-grid">
 
-<!--Scripts carusel-->
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+                <!-- Columna 1: Marca -->
+                <div class="footer-brand">
+                    <a href="{{ url_for('page.index') }}">
+                        <img src="{{ url_for('static', filename='img/logoCRM.avif') }}" alt="Corimon Pinturas" class="footer-logo">
+                    </a>
+                    <p class="footer-tagline">
 
-<!--Scripts animaciones-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+                        Corimon Pinturas C.A. — Empresa filial del <span> <a href="https://www.corimon.com/">Grupo Corimon</a>.</span>
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" aria-label="LinkedIn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                        </a>
+                    </div>
+                </div>
 
-<!--Scripts locales-->
-<script src="{{ url_for('static', filename='js/app.js') }}"></script>
-<script src="{{ url_for('static', filename='js/animacion.js') }}"></script>
-<script src="{{ url_for('static', filename='js/carusel.js') }}"></script>
+                <!-- Columna 2: Productos -->
+                <div class="footer-col">
+                    <h4 class="footer-col-title">Productos</h4>
+                    <ul>
+                        <li><a href="{{ url_for('page.products') }}">Arquitectónicos</a></li>
+                        <li><a href="{{ url_for('page.products') }}">Madera</a></li>
+                        <li><a href="{{ url_for('page.products') }}">Mantenimiento Industrial</a></li>
+                        <li><a href="{{ url_for('page.products') }}">Tráfico</a></li>
+                        <li><a href="{{ url_for('page.products') }}">Marinas</a></li>
+                    </ul>
+                </div>
 
+                <!-- Columna 3: Empresa -->
+                <div class="footer-col">
+                    <h4 class="footer-col-title">Empresa</h4>
+                    <ul>
+                        <li><a href="#">¿Quiénes Somos?</a></li>
+                        <li><a href="#">Nuestra Historia</a></li>
+                        <li><a href="#">Nuestras Marcas</a></li>
+                        <li><a href="#">Trabaja con Nosotros</a></li>
+                    </ul>
+                </div>
 
-{% endblock %} 
+                <!-- Columna 4: Contacto -->
+                <div class="footer-col">
+                    <h4 class="footer-col-title">Contacto</h4>
+                    <ul class="footer-contact-list">
+                        <li>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Valencia, Edo. Carabobo, Venezuela
+                        </li>
+                        <li>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                            
+                        </li>
+                        <li>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            info@corimon.com
+                        </li>
+                    </ul>
+                    <a href="{{ url_for('page.login') }}" class="footer-cta">
+                        Portal Clientes
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
 
-{% endblock %}
+            </div>
 
+            <!-- Separador -->
+            <div class="footer-divider"></div>
+
+            <!-- Fila inferior -->
+            <div class="footer-bottom">
+                <p class="footer-copy">&copy; {{ now.year if now else '2025' }} Corimon Pinturas C.A. — Grupo Corimon. Todos los derechos reservados.|Powered by Digitalización Industrial</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Términos</a>
+                    <a href="#">Privacidad</a>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+    
+
+    
+    <!-- JavaScript Principal -->
+    <script src="{{ url_for('static', filename='static_landing/js/main.js') }}"></script>
+    <!-- JS Extra por página -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -3,19 +3,20 @@ from flask import render_template, request, flash, redirect, url_for, abort
 from werkzeug.utils import secure_filename
 from flask import jsonify
 from flask_login import login_user,logout_user,login_required, current_user
-from .forms import LoginForm, RegisterForm, RegistroPagoForm,EditForm,PerfilForm,ContactForm, Retenciones
-from .models import User, Cobranza #, Formula
+from .forms import LoginForm, RegisterForm, RegistroPagoForm,EditForm,PerfilForm,ContactForm, Retenciones, SolicitudColorForm
+from .models import User, Cobranza, Producto, Presentacion, DetalleTecnico , Formula, LogsActividad
 from . import login_manager
 from .consts import *
-from .email import welcome_mail, pago_crm_mail, pago_mail, comprobante_mail, comprobante_crm_mail, pago_iva_mail,pago_iva_crm_mail, prepago_crm_mail, prepago_mail, letra_cambio_mail
+from .email import contacto_email, welcome_mail, pago_crm_mail, pago_mail, comprobante_mail, comprobante_crm_mail, pago_iva_mail,pago_iva_crm_mail, prepago_crm_mail, prepago_mail, letra_cambio_mail
 from flask import session
 from flask import send_file
-from datetime import datetime
+from datetime import datetime, time
 #from .promo import participantes
 from .funciones import cadena_md5,obtener_hora_minutos_segundos_fecha,fecha_sap, consulta_basica_sap
 from requests.auth import HTTPBasicAuth
 from .servicios_consultas import ConsultasSAP
 import json
+import uuid
 import collections
 import random
 import traceback
@@ -27,12 +28,12 @@ from bs4 import BeautifulSoup
 import os
 local_adj = 'app\\static\\adj\\{}'
 server_adj = 'app/static/adj/{}'
-APP_VERSION = "20260128"
+APP_VERSION = "11052026"
 user_fuente = U_FUENTE
 contra_fuente = C_FUENTE
 ip_fuente = URL_FUENTE
+MOSTRAR_PRODUCTOS= False
 
-#sdfsdf
 page = Blueprint('page', __name__)
 
 @page.context_processor
@@ -46,7 +47,7 @@ def load_user(rif):
 @page.route('/logout')
 def logout():
     logout_user()
-    flash(LOGOUT)
+    flash(LOGOUT, "success")
     return redirect(url_for('.login'))
 
 @page.app_errorhandler(500)
@@ -58,6 +59,124 @@ def internar_error_server(error):
 def page_not_found(error):
     flash(ERROR_404)
     return render_template('/errors/404.html'),404
+
+@page.route("/coming-soon")
+def coming_soon():
+    return render_template(
+        "errors/coming_soon.html",
+        titulo="En construcción",
+    )
+
+
+
+
+
+
+# ============================================
+# Configuración del Device ID
+# ============================================
+DEVICE_COOKIE_NAME = 'corimon_device_id'
+DEVICE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365  # 1 año en segundos
+
+
+def obtener_device_id():
+    """Obtiene el device_id de la cookie del navegador. Si no existe, crea uno nuevo."""
+    device_id = request.cookies.get(DEVICE_COOKIE_NAME)
+    if not device_id:
+        device_id = str(uuid.uuid4())
+    return device_id
+
+
+def obtener_device_name():
+    """Construye un nombre legible del dispositivo a partir del User-Agent."""
+    ua_string = request.user_agent.string or ''
+    
+    # Detectar sistema operativo
+    if 'Windows NT 10.0' in ua_string:
+        os_name = 'Windows 10/11'
+    elif 'Windows NT' in ua_string:
+        os_name = 'Windows'
+    elif 'Android' in ua_string:
+        os_name = 'Android'
+    elif 'iPhone' in ua_string or 'iOS' in ua_string:
+        os_name = 'iOS'
+    elif 'iPad' in ua_string:
+        os_name = 'iPadOS'
+    elif 'Mac OS X' in ua_string or 'Macintosh' in ua_string:
+        os_name = 'macOS'
+    elif 'Linux' in ua_string:
+        os_name = 'Linux'
+    else:
+        os_name = 'SO desconocido'
+    
+    # Detectar navegador y versión
+    import re
+    browser = 'Navegador'
+    version = ''
+    
+    if 'Edg/' in ua_string:
+        browser = 'Edge'
+        match = re.search(r'Edg/(\d+)', ua_string)
+        version = match.group(1) if match else ''
+    elif 'OPR/' in ua_string or 'Opera' in ua_string:
+        browser = 'Opera'
+        match = re.search(r'OPR/(\d+)', ua_string)
+        version = match.group(1) if match else ''
+    elif 'Chrome/' in ua_string:
+        browser = 'Chrome'
+        match = re.search(r'Chrome/(\d+)', ua_string)
+        version = match.group(1) if match else ''
+    elif 'Firefox/' in ua_string:
+        browser = 'Firefox'
+        match = re.search(r'Firefox/(\d+)', ua_string)
+        version = match.group(1) if match else ''
+    elif 'Safari/' in ua_string:
+        browser = 'Safari'
+        match = re.search(r'Version/(\d+)', ua_string)
+        version = match.group(1) if match else ''
+    
+    if version:
+        return f"{os_name} - {browser} {version}"
+    
+    nombre_base = f"{os_name} - {browser} {version}"
+    return f"{os_name} - {browser}"
+
+@page.after_request
+def log_actividad(response):
+    try:
+        es_post = request.method == "POST"
+
+
+        if (es_post) and current_user.is_authenticated:
+            device_id = obtener_device_id()
+            device_name = obtener_device_name()
+
+            LogsActividad.registrar(
+                ip          = request.remote_addr,
+                method      = request.method,
+                endpoint    = request.endpoint,
+                path        = request.path,
+                status_code = response.status_code,
+                user_agent  = request.user_agent.string[:300],
+                rif         = current_user.rif,
+                username    = current_user.username,
+                device_id   = device_id,
+                device_name = device_name
+            )
+
+            # Si el navegador no tenía la cookie, la seteamos ahora
+            if not request.cookies.get(DEVICE_COOKIE_NAME):
+                response.set_cookie(
+                    DEVICE_COOKIE_NAME,
+                    device_id,
+                    max_age=DEVICE_COOKIE_MAX_AGE,
+                    httponly=True,
+                    samesite='Lax'
+                )
+    except Exception as e:
+        print(f"[ActivityLog ERROR] {e}")
+    return response
+
 
 
 @page.route("/login", methods = ["GET","POST"])
@@ -128,7 +247,6 @@ def panel():
 
 @page.route("/download_panel/<file_key>")
 def download_panel_file(file_key):
-    print('asdasdasdas')
     base_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(base_dir, 'static', 'adj', file_key)
     print(file_path)
@@ -204,6 +322,140 @@ def perfil():
                 flash(USER_ERROR, 'error')
 
     return render_template("auth/perfil.html",titulo="Cambiar clave",form = form) 
+
+
+@page.route("/logs_actividad", methods=["GET"])
+def logs_actividad():
+    """# Solo administradores / corimon pueden ver los logs
+    if current_user.nivel not in ("corimon", "administrador"):
+        return redirect(url_for('.dashboard'))"""
+    
+    xocas= LogsActividad.multicuentas_kpi()
+
+    if request.args.get('get_data') == 'true':
+        # Parámetros de paginación
+        page_num = request.args.get('page', 1, type=int)
+        per_page = min(request.args.get('per_page', 50, type=int), 200)  
+
+        
+        rif = request.args.get('rif') or None
+        username = request.args.get('username') or None
+        ip = request.args.get('ip') or None
+        device_id = request.args.get('device_id') or None
+        endpoint = request.args.get('endpoint') or None
+        method = request.args.get('method') or None
+
+        # Rango de fechas (formato 'YYYY-MM-DD')
+        fecha_desde_str = request.args.get('fecha_desde')
+        fecha_hasta_str = request.args.get('fecha_hasta')
+        fecha_desde = datetime.strptime(fecha_desde_str, '%Y-%m-%d') if fecha_desde_str else None
+        fecha_hasta = datetime.strptime(fecha_hasta_str, '%Y-%m-%d') if fecha_hasta_str else None
+
+        # Consulta paginada
+        paginacion = LogsActividad.get_paginado(
+            page=page_num,
+            per_page=per_page,
+            rif=rif,
+            username=username,
+            ip=ip,
+            device_id=device_id,
+            endpoint=endpoint,
+            method=method,
+            fecha_desde=fecha_desde,
+            fecha_hasta=fecha_hasta
+        )
+
+        return jsonify({
+            'logs': [
+                {
+                    'id': log.id,
+                    'rif': log.rif,
+                    'username': log.username,
+                    'seller': seller,
+                    'ip': log.ip,
+                    'device_id': log.device_id,
+                    'device_name': log.device_name,
+                    'endpoint': log.endpoint,
+                    'path': log.path,
+                    'method': log.method,
+                    'status_code': log.status_code,
+                    'user_agent': log.user_agent,
+                    'created_at': log.created_at.strftime('%d/%m/%Y %H:%M:%S') if log.created_at else None,
+                }
+                for log, seller in paginacion.items
+            ],
+            'total': paginacion.total,
+            'pages': paginacion.pages,
+            'page': paginacion.page,
+            'per_page': paginacion.per_page,
+            'has_next': paginacion.has_next,
+            'has_prev': paginacion.has_prev,
+        })
+
+    return render_template("auth/logs_actividad.html", titulo="Logs de Actividad", xocas=xocas)
+
+
+
+
+
+@page.route("/atencion_cliente/color_matching", methods=["GET"])
+@login_required
+def crear_color_matching():
+    """Renderiza base de atencion_cliente"""
+    form = SolicitudColorForm()
+    
+    form.tienda.data = current_user.username
+    form.email.data = current_user.email
+    form.location.data = current_user.zona
+    
+    return render_template(
+        "atencion_cliente/color_matching_cliente.html",
+        modulo="Atencion al cliente",
+        titulo="Color Matching",
+        form=form,
+    )
+
+@page.route("/api/color_matching", methods=["POST"])
+@login_required
+def api_crear_color_matching():
+    """Crea una solicitud de color matching desde el formulario"""
+    form = SolicitudColorForm(request.form)
+    
+    if not form.validate():
+        return jsonify({
+            'success': False,
+            'errors': form.errors
+        }), 400
+    
+    
+    
+    print(f"[API] Recibida solicitud de color matching: tienda={form.tienda.data}, email={form.email.data}, location={form.location.data}")
+    solicitud_creada = {
+        'email': form.email.data,
+        'codigo_caso': 'TIN-2026-XXX'
+    }
+
+    flash('Solicitud creada correctamente', 'success')
+    return jsonify({
+        'success': True,
+        'data': solicitud_creada,
+        'url': url_for('.crear_color_matching')  
+    }), 201
+
+
+
+
+
+@page.route("/logs-actividad/stats", methods=["GET"])
+def logs_actividad_stats():
+    """Endpoint JSON con datos para las gráficas del dashboard de logs."""
+    """if current_user.nivel not in ("corimon", "administrador"):
+        return jsonify({'error': 'No autorizado'}), 403"""
+
+    return jsonify({
+        'usuarios_multidispositivo': LogsActividad.top_usuarios_multidispositivo(limite=10),
+        'dispositivos_multiusuario': LogsActividad.top_dispositivos_multiusuario(limite=10)
+    })
 
 @page.route("/usuarios",  methods=["GET","POST"])
 @login_required
@@ -284,11 +536,11 @@ def usuario_perfil(rif):
         flash(mensaje)
         return redirect(url_for('page.usuario_perfil', rif=rif_completo))
     return render_template("auth/edit_user.html", current_user=current_user, form = edit_form, digito_rif=digito_rif, letra_rif=letra_rif, titulo="Editar Usuario", user=user)
-
+"""
 @page.route("/landing_dos")
 def landing_dos():
     
-    return render_template("nuevo_landing/index.html",titulo="landingDos")
+    return render_template("landing/index.html",titulo="landingDos")"""
 
 @page.route("/usuarioPost", methods = ["GET","POST"])
 @login_required
@@ -1023,9 +1275,7 @@ def modulos():
 
 
 
-
 """
-
 @page.route("/dashboard", methods=["GET"])
 @login_required
 def dashboard():
@@ -1095,8 +1345,8 @@ def dashboard():
         sap_client.cerrar_sesion()
     
     return render_template("collections/dashboard.html", titulo = "Estado de cuenta", pagos=pagos, pago_t = pago_t,rate=0, no_vencido_dolar=response_json['tnovencdiv'],no_vencido_bs=response_json['tnovencbs'],total_deudas_dolares=response_json['tdeudadiv'],total_deudas_bs=response_json['tdeudabs'], total_saldo_dolar=response_json['tsaldofdiv'],total_saldo_bs=response_json['tsaldofbs'], total_bolos=response_json['totfactbs'],total_vencido_d=response_json['tvencdiv'],total_vencido_b=response_json['tvencbs'],vencido_130_d=response_json['tvenc130d'],vencido_130_b=response_json['tvenc130b'], vencido_3160_d=response_json['tvecc3160d'], vencido_3160_b=response_json['tvecc3160b'], vencido_60_d=response_json['tvec61masd'], vencido_60_b=response_json['tvec61masb'], facturas =response_json1, retenciones=response_json2,contador_fact = ret, deuda_dif_dolar=response_json['tdifedeudadiv'],deuda_dif_bs=response_json['tdifedeudabs'],favor_dif_dolar=response_json['tdifesaldofdiv'],favor_dif_bs=response_json['tdifesaldofbs'],contador_retenciones_pendientes=contador_retenciones_pendientes,iva_x_pagar=iva_x_pagar)
-
 """
+
 
 
 """NUEVA FORMA DE CARGAR EL DASHBOARD CON SKELETON LOADING"""
@@ -1119,7 +1369,7 @@ def _auth_params():
 def dashboard():
     pagos  = Cobranza.get_pagos_order(current_user.rif)
     pago_t = pagos[:3]
-    return render_template("collections/dashboard.html", titulo="Estado de cuenta", pagos=pagos, pago_t=pago_t)
+    return render_template("collections/dashboard2.html", titulo="Estado de cuenta", pagos=pagos, pago_t=pago_t)
 
 @page.route("/api/sap/resumen", methods=["GET"])
 @login_required
@@ -1136,7 +1386,7 @@ def api_sap_resumen():
     finally:
         sap.cerrar_sesion()
         
-@page.route("/api/sap/sap_facturas", methods=["GET"])
+@page.route("/api/sap/resumen", methods=["GET"])
 @login_required
 def api_sap_facturas():
     sap = _crear_sap()
@@ -1152,6 +1402,7 @@ def api_sap_facturas():
         if facturas is None:
             return jsonify({'error': 'Sin respuesta de SAP'}), 503
 
+        # Lógica de negocio migrada desde el template Jinja
         por_pagar         = 0
         abono_conciliar   = 0
         facturas_verificar = 0
@@ -1193,9 +1444,7 @@ def api_sap_facturas():
         return jsonify({'error': str(e)}), 500
     finally:
         sap.cerrar_sesion()
-
-
-
+        
 @page.route("/api/sap/contadores", methods=["GET"])
 @login_required
 def api_sap_contadores():
@@ -1221,8 +1470,6 @@ def api_sap_contadores():
         return jsonify({'error': str(e)}), 500
     finally:
         sap.cerrar_sesion()
-
-
 
 
 
@@ -1653,9 +1900,47 @@ def aprobar(estado,n):
 @page.route("/")
 def index():
 
-    return render_template("/landing/index.html",titulo = "Inicio")
+    return render_template("/nuevo_landing/index.html",   titulo = "Inicio")
+
+@page.route("/nosotros")
+def nosotros():
+
+    return render_template("/nuevo_landing/nosotros_nuevo.html",titulo = "Nosotros")
 
 
+@page.route("/contacto", methods=['GET', 'POST'])
+def contacto():
+    contact_form = ContactForm(request.form)
+
+    if request.method == 'POST':
+        if contact_form.validate(): 
+            # Honeypot check
+            if contact_form.website.data:
+                flash("¡Mensaje enviado exitosamente!", "success")
+                return redirect(url_for('page.contacto'))
+
+            datos = {
+                'nombre': contact_form.nombre.data.strip(),
+                'email': contact_form.email.data.strip().lower(),
+                'telefono': contact_form.telefono_contacto.data.strip(),
+                'motivo': contact_form.motivo.data,
+                'mensaje': contact_form.mensaje.data.strip(),
+                'fecha': datetime.now().strftime('%d/%m/%Y %H:%M')
+            }
+
+            try:
+                contacto_email(datos)
+                flash("¡Mensaje enviado exitosamente! Nos pondremos en contacto pronto.", "success")
+            except Exception as e:
+                print(f"Error enviando email de contacto: {e}")
+                flash("Hubo un error al enviar el mensaje. Intente nuevamente.", "error")
+
+            return redirect(url_for('page.contacto'))
+        else:
+            flash("Para enviar el mensaje, por favor corrige los errores en el formulario.", "error")
+
+
+    return render_template("landing/contacto.html", titulo="Contacto", form=contact_form)
 
 
 local_consultoria = 'app\\static\\consultoria_tecnica\\{}'
@@ -1667,8 +1952,8 @@ ARCHIVOS_MOSTRAR = {
     'libro-resistencias-quimicas-epomon-epoxi.pdf':'Libro de Resistencias Químicas del Epomon Epoxi Fenólico.pdf',
     'manual-hojas-tecnicas-MIM.pdf':'Manual de Hojas Técnica MIM.pdf',
     'manual-hojas-tecnicas-ARQ.pdf': 'Manual de Hojas Técnicas ARQ.pdf',
-    'Manual de Hojas de Seguridad (MSDS) MIM.pdf': 'Manual de Hojas de Seguridad (MSDS) MIM.pdf',
-    'Manual de Hojas de Seguridad (MSDS) ARQ.pdf': 'Manual de Hojas de Seguridad (MSDS) ARQ.pdf'
+    'Manual de Hojas de Seguridad (MSDS) MIM.pdf': 'Manual de Hojas de Seguridad (MSDS) MIM.pdf'
+
 }
 
 @page.route("/consultoria_tecnica")
@@ -1743,10 +2028,7 @@ def format_file_size(bytes_size):
         return f"{bytes_size/(1024**2):.1f} MB"
     
     
-@page.route("/nosotros")
-def nosotros():
 
-    return render_template("/landing/nosotros.html",titulo = "Nosotros")
 
 @page.route("/Promocion",  methods=["GET","POST"] )
 def Promocion():
@@ -1911,7 +2193,6 @@ def Promocion():
 
 @page.route("/Promocion2",  methods=["GET","POST"])
 def Promocion2():
-    # Si piden los datos en JSON
     if request.args.get('get_data') == 'true':
         json_path = os.path.join(os.path.dirname(__file__), "promo_TMO_190126.json")
         with open(json_path, encoding="utf-8-sig") as f:
@@ -1919,7 +2200,6 @@ def Promocion2():
 
         return jsonify(participantes['data'])
     
-    # Si no, renderizar HTML normal
     return render_template("/Promos/promocion_final.html", titulo="Promocion")
 
 @page.route("/soon")
@@ -1927,20 +2207,146 @@ def soon():
 
     return render_template("/errors/soon.html",titulo = "En construccion")
 
-@page.route("/contacto")
-def contacto():
-    contact_form = ContactForm(request.form)
-    return render_template("/landing/contacto.html",titulo = "Contactanos", form =contact_form)
 
+
+
+def ruta_foto_producto(numero, marca):
+    dir = 'app/static/img/Productos'
+    marcas= {
+        "FA": "Montana",
+        "FC": "Pinco",
+        "FS": "PPV"
+    }
+    extensiones = ['.png', '.jpg', '.jpeg', '.avif']
+    num_str = str(numero)
+    num_str= num_str+"D"
+    prefijo_marca = marca[:2].upper()
+    carpeta_marca = marcas.get(prefijo_marca)
+    
+    if not carpeta_marca:
+        print(f"Marca '{prefijo_marca}' no encontrada en el diccionario")
+        return None
+    
+    dir_completo = os.path.join(dir, carpeta_marca)
+    
+    try:
+        contenido = os.listdir(dir_completo)
+        for archivo in contenido:
+            nombre, ext = os.path.splitext(archivo)
+
+            if nombre == num_str and ext.lower() in extensiones:
+                return f"img/Productos/{carpeta_marca}/{archivo}"
+        return None
+        
+    except Exception as e:
+        print(f"Error al acceder al directorio {dir_completo}: {e}")
+        return None
+    
+
+def ruta_marca(marca):
+    dir = 'app/static/img/marcas'
+    marcas= {
+        "FA": "tiendas_montana",
+        "FC": "pinco",
+        "FS": "ppv"
+    }
+    extensiones = ['.png', '.jpg', '.jpeg', '.avif']
+    prefijo_marca = marca[:2].upper()
+    marca = marcas.get(prefijo_marca)
+    try:
+        contenido = os.listdir(dir)
+        for archivo in contenido:
+            nombre, ext = os.path.splitext(archivo)
+            if nombre == marca and ext.lower() in extensiones:
+                return f"img/marcas/{archivo}"
+        return None
+    except Exception as e:
+        print(f"Error al acceder al directorio {dir}: {e}")
+        return None
+    
 @page.route("/productos", methods= ["GET"])
 def products():
+    if MOSTRAR_PRODUCTOS:
+        productos = Producto.get_all_sin_marca("Cerdex")
+        filtros = Producto.get_filtros(marca_excluir="Cerdex")
+        
+        productos_incompletos = [p for p in productos if not p.linea_nombre ]
+        productos_completos = [p for p in productos if p.linea_nombre]
+        return render_template("/products/Productos.html", titulo = "Productos", ruta_marca=ruta_marca, filtros=filtros, productos= productos_completos, productos_incompletos= productos_incompletos, ruta_foto_producto=ruta_foto_producto)
+    else:
+        return redirect(url_for('page.coming_soon'))
 
-    return render_template("/products/Productos.html",titulo = "Productos")
+@page.route("/downloadficha/<file_key>/<marca>/<id>")
+def download_ficha(file_key, marca, id):
+    print(id)
+    marcas = {
+        "FA": "Montana",
+        "FC": "Pinco",
+        "FS": "ppv"
+    }
+    
+    prefijo_marca = marca[:2].upper()
+    carpeta_marca = marcas.get(prefijo_marca)
+    
+    if carpeta_marca is None:
+        print(f"Marca no reconocida: {marca}")
+        abort(404)
+    
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    carpeta_path = os.path.join(base_dir, 'static', 'fichas_tecnicas', carpeta_marca)
+    
+    if not os.path.exists(carpeta_path):
+        print(f"Carpeta no encontrada: {carpeta_path}")
+        abort(404)
+
+    longitud_comparar = len(file_key)
+    
+    archivo_encontrado = None
+    
+    for archivo in os.listdir(carpeta_path):
+        if archivo.endswith('.pdf'):
+            prefijo_archivo = archivo[:longitud_comparar]
+            prefijo_normalizado = prefijo_archivo.replace(" ", "-")
+            
+            if prefijo_normalizado == file_key:
+                archivo_encontrado = archivo
+                break
+    
+    if archivo_encontrado is None:
+        print(f"No se encontró archivo que coincida con: {file_key}")
+        flash("Error al Descargar el archivo/No se cuenta con la ficha tecnica del archivo", "error")
+        return redirect(url_for('page.product', id=id))
+    
+    file_path = os.path.join(carpeta_path, archivo_encontrado)
+
+    
+    try:
+        return send_file(
+            file_path,
+            as_attachment=True,
+            download_name=archivo_encontrado,
+            mimetype='application/pdf'
+        )
+    except FileNotFoundError:
+        abort(404)
+
+@page.route("/producto/<id>", methods= ["GET"])
+def product(id):
+    producto= Producto.get_by_id(id)
+    detalle = producto.detalle_tecnico
+    presentaciones = producto.presentaciones.all()
+    presentaciones_json = json.dumps([p.to_dict() for p in presentaciones], default=str)
+    caracteristicas = [c.strip() for c in detalle.caracteristicas.split("/")] if detalle and detalle.caracteristicas else []
+    
+    return render_template("/products/detalles.html",titulo= "Producto", caracteristicas=caracteristicas, detalle=detalle, presentaciones=presentaciones_json, producto= producto, ruta_foto_producto= ruta_foto_producto, ruta_marca= ruta_marca)
+
+
+
 
 @page.route("/productos/detalles", methods= ["GET", "POST"])
 def details():
 
-    return render_template("/products/detalles.html",titulo = "Detalles")
+    return render_template("/products/detalles2.html",titulo = "Detalles")
 
 @page.route("/retenciones", methods= ["GET"])
 @login_required
@@ -2041,6 +2447,7 @@ def retenciones():
             #print('Error en la peticion')
         
     return render_template("/collections/registrar_retenciones.html", pagina="registrar_retenciones", titulo = "Registrar Comprobante de Retención", form = control_form)
+
 
 @page.route("/dashboard2", methods= ["GET", "POST"])
 def dashboard2():
@@ -2341,7 +2748,6 @@ def prepagoPost():
             nombre_imagen =''
             
 
-        
         url = ip_fuente+'/sap/bc/rest/zrecdepo?sap-client=510&ENVIO=C'
         tiempo, fecha_enc = obtener_hora_minutos_segundos_fecha()
         cadena = cadena_md5('1200',current_user.rif,tiempo,fecha_enc)
@@ -2386,8 +2792,8 @@ def prepagoPost():
             elif respuesta == "Actualizacion de deposito Satisfactoria":
                 #print("todo bien")
                 flash(PAGO_CREADO)
-                prepago_crm_mail(current_user, datos, post_imagen,nombre_imagen)
-                prepago_mail(current_user, datos )
+                #prepago_crm_mail(current_user, datos, post_imagen,nombre_imagen)
+                #prepago_mail(current_user, datos )
                 return jsonify({
                     "success": True,
                     "message": "Pago creado exitosamente",
@@ -2626,6 +3032,7 @@ def letra_cambio_post():
             elif respuesta == "Actualizacion de deposito Satisfactoria":
                 #print("todo bien")
                 flash(PAGO_CREADO)
+                
                 letra_cambio_mail(current_user, datos )
                 
                 return jsonify({
@@ -2654,7 +3061,7 @@ def letra_cambio_post():
 
 
 
-"""@page.route("/formulacion", methods=["GET", "POST"])
+@page.route("/formulacion", methods=["GET", "POST"])
 def formy():
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         print('asda')
@@ -2917,4 +3324,4 @@ def filtrar_por_rango_color():
         return jsonify({
             'success': False,
             'message': str(e)
-        }), 500"""
+        }), 500

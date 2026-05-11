@@ -1,0 +1,678 @@
+
+.nosotros-desc-texto .nosotros-badge,
+.nosotros-desc-imagen {
+    opacity: 0;
+}
+
+
+/* ========================================
+    2. BADGE REUTILIZABLE
+======================================== */
+
+.nosotros-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-red-500);
+    background: var(--color-red-soft);
+    padding: 6px 14px;
+    border-radius: 100px;
+    width: fit-content;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.nosotros-badge svg {
+    flex-shrink: 0;
+    color: var(--color-red-500);
+}
+
+.nosotros-badge span {
+    color: var(--texto-oscuro);
+    position: relative;
+    display: inline-block;
+}
+
+
+/* ========================================
+    3. DESCRIPCIÓN GENERAL
+   ======================================== */
+
+.nosotros-descripcion {
+    position: relative;
+    background: var(--color-gray-light);
+    padding: 80px 0 100px;
+    z-index: 2;
+    overflow: hidden;
+}
+
+.nosotros-descripcion::after {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -15%;
+    width: 50%;
+    height: 160%;
+    background: linear-gradient(
+        145deg,
+        rgba(229, 9, 20, 0.03) 0%,
+        rgba(176, 7, 16, 0.04) 40%,
+        rgba(229, 9, 20, 0.01) 100%
+    );
+    transform: rotate(-12deg);
+    border-radius: 80px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+
+.nosotros-descripcion-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-4xl);
+    align-items: center;
+    padding: var(--spacing-3xl) 0;
+}
+
+.nosotros-desc-texto {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    position: relative;
+}
+
+.nosotros-desc-texto h2 {
+    font-family: var(--font-display);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    letter-spacing: -0.02em;
+    color: var(--color-gray-900);
+    margin: 0;
+}
+
+.nosotros-desc-texto p {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    line-height: 1.75;
+    color: var(--color-gray-600);
+    margin: 0;
+}
+
+.nosotros-desc-texto p strong {
+    color: var(--color-gray-900);
+    font-weight: var(--font-weight-semibold);
+}
+
+.nosotros-desc-imagen {
+    position: relative;
+    border-radius: var(--radius-xl);
+    overflow: visible;
+    transform-style: preserve-3d;
+}
+
+.nosotros-desc-imagen img {
+    width: 100%;
+    height: 480px;
+    object-fit: cover;
+    border-radius: var(--radius-xl);
+    display: block;
+    will-change: transform;
+    transition: box-shadow 0.3s ease;
+}
+
+.nosotros-desc-imagen:hover img {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.nosotros-desc-imagen .imagen-acento {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 100%;
+    height: 100%;
+    border: 2px solid var(--color-red-500);
+    border-radius: var(--radius-xl);
+    z-index: -1;
+    opacity: 0.15;
+}
+
+
+/* ========================================
+    4. VALORES GRID
+======================================== */
+
+.nosotros-valores-grid {
+    position: relative;
+    z-index: 3;
+    margin-top: -60px;
+    background: transparent;
+}
+
+.valores-grid-container {
+    width: 100% !important;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0;
+    gap: var(--spacing-xl);
+    margin: 0 auto;
+}
+
+.valor-grid-card {
+    background: var(--color-white);
+    border: 1px solid var(--border-light);
+    border-radius: 1.2rem;
+    padding: var(--spacing-2xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    text-align: justify;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    position: relative;
+    overflow: hidden;
+    transition:
+        transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        box-shadow 0.3s ease;
+}
+
+.valor-grid-card:nth-child(3) {
+    grid-column: span 2;
+}
+
+.valor-grid-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+}
+
+.valor-grid-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-red-500), var(--color-red-700));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.valor-grid-card:hover::before {
+    transform: scaleX(1);
+}
+
+.valor-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.valor-grid-icono {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: var(--color-red-soft);
+    color: var(--color-red-500);
+    transition: all 0.3s ease;
+}
+
+.valor-grid-card:hover .valor-grid-icono {
+    background: var(--color-red-500);
+    color: var(--color-white);
+}
+
+.valor-grid-numero {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-600);
+    letter-spacing: 0.06em;
+}
+
+.valor-grid-card h3 {
+    font-family: var(--font-display);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+    margin: 0;
+    letter-spacing: -0.02em;
+    line-height: var(--line-height-tight);
+}
+
+.valor-grid-card p {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    color: var(--color-gray-600);
+    line-height: 1.75;
+    margin: 0;
+}
+
+
+/* ========================================
+    5. MARCAS — Pinned Scroll Sections
+======================================== */
+
+.marcas-slides-wrapper {
+    position: relative;
+    margin-top: var(--spacing-xl);
+}
+
+.marca-slide {
+    min-height: min(100vh, 700px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border-radius: 32px 32px 0 0;
+    box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.08);
+    padding: var(--spacing-2xl) var(--spacing-xl);
+    box-sizing: border-box;
+}
+
+.marca-slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    border-radius: 0 0 4px 4px;
+    z-index: 2;
+}
+
+.marca-slide-content {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding:  0;
+    position: relative;
+    z-index: 1;
+    min-height: inherit;
+}
+
+.marca-slide-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2xl);
+}
+
+.marca-slide-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: var(--spacing-3xl);
+    align-items: center;
+}
+
+.marca-slide-grid--invertido {
+    grid-template-columns: 1.2fr 1fr;
+    direction: rtl;
+}
+
+.marca-slide-grid--invertido > * {
+    direction: ltr;
+}
+
+/* Texto */
+.marca-slide-texto {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.marca-slide-logo {
+    max-width: 220px;
+    width: auto;
+    object-fit: contain;
+}
+
+.marca-slide-texto h2 {
+    font-family: var(--font-display);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+    margin: 0;
+    letter-spacing: -0.02em;
+    line-height: var(--line-height-tight);
+}
+
+.marca-slide-texto > p {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    color: var(--color-gray-600);
+    line-height: 1.8;
+    margin: 0;
+}
+
+/* Misión / Visión */
+.marca-slide-mv {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border-light);
+}
+
+.marca-mv-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.marca-mv-item h4 {
+    font-family: var(--font-display);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.marca-mv-item p {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    color: var(--color-gray-600);
+    line-height: 1.65;
+    margin: 0;
+    text-align: justify;
+}
+
+/* Imagen */
+.marca-slide-imagen {
+    position: relative;
+    border-radius: 1.2rem;
+    overflow: visible;
+    aspect-ratio: 16 / 9; 
+}
+
+.marca-slide-imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    background-color: transparent !important;
+}
+
+.marca-slide:hover .marca-slide-imagen img {
+    transform: scale(1.04);
+}
+
+.marca-slide-imagen--cover img {
+    object-fit: cover;
+    padding: 0;
+}
+
+
+/* ========================================
+    6. MARCAS — Identidad visual por marca
+======================================== */
+
+/* Montana (Azul) */
+.marca-slide--montana {
+    background:
+        radial-gradient(ellipse at 0% 0%, rgba(0, 51, 102, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 100% 100%, rgba(0, 51, 102, 0.04) 0%, transparent 50%),
+        var(--color-gray-100);
+}
+
+.marca-slide--montana::before {
+    background: linear-gradient(90deg, #003366, #00264d);
+}
+
+.marca-slide--montana::after {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -15%;
+    width: 50%;
+    height: 160%;
+    background: linear-gradient(145deg, rgba(0, 51, 102, 0.05) 0%, rgba(0, 38, 77, 0.08) 40%, rgba(0, 51, 102, 0.02) 100%);
+    transform: rotate(-12deg);
+    border-radius: 80px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.marca-slide--montana .marca-slide-texto h2 { color: #00264d; }
+.marca-slide--montana .marca-mv-item h4 { color: #003366; }
+.marca-slide--montana .marca-slide-mv { border-top-color: rgba(0, 51, 102, 0.12); }
+
+/* Pinco (Rojo) */
+.marca-slide--pinco {
+    background:
+        radial-gradient(ellipse at 100% 0%, rgba(139, 0, 0, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 0% 100%, rgba(139, 0, 0, 0.04) 0%, transparent 50%),
+        #fdf8f6;
+}
+
+.marca-slide--pinco::before {
+    background: linear-gradient(90deg, #8B0000, #c41e1e);
+}
+
+.marca-slide--pinco::after {
+    content: '';
+    position: absolute;
+    bottom: -25%;
+    left: -10%;
+    width: 45%;
+    height: 150%;
+    background: linear-gradient(-30deg, rgba(139, 0, 0, 0.04) 0%, rgba(196, 30, 30, 0.07) 40%, rgba(139, 0, 0, 0.02) 100%);
+    transform: rotate(8deg);
+    border-radius: 80px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.marca-slide--pinco .marca-slide-texto h2 { color: #6b0000; }
+.marca-slide--pinco .marca-mv-item h4 { color: #8B0000; }
+.marca-slide--pinco .marca-slide-mv { border-top-color: rgba(139, 0, 0, 0.1); }
+
+/* Sherwin-Williams (Azul noche) */
+.marca-slide--sherwin {
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(15, 52, 96, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 0% 80%, rgba(26, 26, 46, 0.04) 0%, transparent 50%),
+        #f5f7fa;
+}
+
+.marca-slide--sherwin::before {
+    background: linear-gradient(90deg, #1a1a2e, #0f3460);
+}
+
+.marca-slide--sherwin::after {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -12%;
+    width: 55%;
+    height: 140%;
+    background: linear-gradient(160deg, rgba(15, 52, 96, 0.04) 0%, rgba(26, 26, 46, 0.06) 40%, rgba(15, 52, 96, 0.02) 100%);
+    transform: rotate(-15deg);
+    border-radius: 80px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.marca-slide--sherwin .marca-slide-texto h2 { color: #16213e; }
+.marca-slide--sherwin .marca-mv-item h4 { color: #0f3460; }
+.marca-slide--sherwin .marca-slide-mv { border-top-color: rgba(15, 52, 96, 0.1); }
+
+
+/* ========================================
+    7. RESPONSIVE — Tablet
+======================================== */
+
+@media (min-width: 48.0625rem) and (max-width: 64rem) {
+
+    /* Descripción */
+    .nosotros-descripcion-grid { gap: var(--spacing-2xl); }
+    .nosotros-desc-texto h2 { font-size: var(--font-size-3xl); }
+    .nosotros-desc-imagen img { height: 400px; }
+
+    /* Valores */
+    .nosotros-valores-grid { margin-top: -50px; }
+    .valores-grid-container { gap: var(--spacing-lg); }
+    .valor-grid-card { padding: var(--spacing-xl); }
+    .valor-grid-card h3 { font-size: var(--font-size-xl); }
+
+    /* Marcas */
+    .marca-slide-grid,
+    .marca-slide-grid--invertido { gap: var(--spacing-2xl); }
+    .marca-slide-texto h2 { font-size: var(--font-size-2xl); }
+    .marca-slide-logo { max-width: 180px; }
+}
+
+
+/* ========================================
+    8. RESPONSIVE — Móvil
+======================================== */
+
+@media (max-width: 64rem) {
+
+    /* Descripción */
+    .nosotros-descripcion {
+        border-radius: 18px 18px 0 0;
+        padding: var(--spacing-lg);
+    }
+    .nosotros-descripcion-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-2xl);
+    }
+    .nosotros-desc-texto { order: 1; }
+    .nosotros-desc-imagen { order: 2; }
+    .nosotros-desc-texto h2 { font-size: var(--font-size-3xl); }
+    .nosotros-desc-imagen img { height: 300px; }
+    .nosotros-desc-imagen .imagen-acento { top: -8px; right: -8px; }
+
+    /* Valores — 1 columna, sin span */
+    .nosotros-valores-grid { margin-top: -40px; }
+    .valores-grid-container {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    .valor-grid-card { padding: var(--spacing-xl); }
+    .valor-grid-card:nth-child(3) { grid-column: span 1; }
+    .valor-grid-card h3 { font-size: var(--font-size-xl); }
+
+    /* Marcas */
+    .marca-slide {
+        min-height: 100vh;
+        min-height: 100dvh;
+        border-radius: 24px 24px 0 0;
+        padding: 0 var(--spacing-md);
+    }
+    .marca-slide-content { padding: var(--spacing-2xl) 0; }
+    .marca-slide-grid,
+    .marca-slide-grid--invertido {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xl);
+        direction: ltr;
+    }
+    .marca-slide-imagen {
+        order: -1;
+        aspect-ratio: 16 / 9;
+    }
+    .marca-slide-imagen img { height: auto; }
+    .marca-slide-texto h2 { font-size: var(--font-size-2xl); }
+    .marca-slide-mv {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    .marca-slide-logo { max-width: 180px; }
+}
+
+
+/* ========================================
+    9. RESPONSIVE — Móvil pequeño
+======================================== */
+
+@media (max-width: 30rem) {
+
+    /* Descripción */
+    .nosotros-descripcion { padding: var(--spacing-md); }
+    .nosotros-desc-texto h2 { font-size: var(--font-size-2xl); }
+    .nosotros-desc-texto p { font-size: var(--font-size-sm); }
+    .nosotros-desc-imagen img { height: 220px; }
+    .nosotros-desc-imagen .imagen-acento { display: none; }
+
+    /* Valores */
+    .nosotros-valores-grid { margin-top: -30px; }
+    .valor-grid-card { padding: var(--spacing-lg); }
+    .valor-grid-icono { width: 44px; height: 44px; border-radius: 10px; }
+    .valor-grid-icono svg { width: 22px; height: 22px; }
+    .valor-grid-card h3 { font-size: var(--font-size-lg); }
+    .valor-grid-card p { font-size: var(--font-size-sm); }
+
+    /* Marcas */
+    .marca-slide {
+        border-radius: 18px 18px 0 0;
+        padding: 0 var(--spacing-sm);
+    }
+    .marca-slide-content { padding: var(--spacing-xl) 0; }
+    .marca-slide-texto h2 { font-size: var(--font-size-xl); }
+    .marca-slide-texto > p { font-size: var(--font-size-sm); }
+    .marca-slide-imagen { aspect-ratio: 3 / 2; }
+    .marca-slide-logo { max-width: 140px; }
+    .marca-mv-item p { font-size: var(--font-size-sm); }
+}
+
+
+
+/* ========================================
+    BROCHAZO — Subrayado decorativo
+   ======================================== */
+
+.marcas-header {
+    position: relative;
+    overflow: visible;
+}
+.brochazo-underline {
+    position: absolute;
+    top: -70px;
+    left: 180px;
+    transform: translateX(-50%);
+    width: 420px;
+    height: auto;
+    pointer-events: none;
+    z-index: 0;
+    filter:
+        brightness(0) saturate(100%)
+        invert(12%) sepia(95%) saturate(6000%)
+        hue-rotate(355deg) brightness(95%) contrast(110%);
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    will-change: clip-path, opacity;
+    mix-blend-mode: multiply;
+}
+
+.marcas-header h2,
+.marcas-header p,
+.marcas-header .post-hero-badge {
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 64rem) {
+    .brochazo-underline {
+        width: 300px;
+        top: -80px;
+    }
+}
+
+@media (max-width: 30rem) {
+    .brochazo-underline {
+        width: 300px;
+        top: -80px;
+    }
+}

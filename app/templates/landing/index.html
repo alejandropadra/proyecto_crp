@@ -1,219 +1,145 @@
 {% extends 'layout_landings.html' %}
-
+{#
+    ESTA PAGINA NO SE USA
+#}
 
 {% block content %}
 
+<section class="hero">
 
-<div id="myCarousel" class="carousel slide carousel-fade d-flex justify-content-center align-items-center z-0" data-bs-ride="carousel">
-    <div class="carousel-inner mt-0 rounded-0 ">
-        <div class="carousel-item active d-flex justify-content-center align-items-center" data-interval="1000">
-            <img src="/static/img/planta_carrusel.jpg" class="" alt="..." >
-        </div>
-        <div class="carousel-item" data-interval="1000">
-            <img src="/static/img/pinco_carrusel.jpg" class="" alt="..." style="object-position: 0% 0%;">
-        </div>
-        <div class="carousel-item" data-interval="1000">
-            <img src="/static/img/montana_carrusel.png" class="" alt="...">
-        </div>
+    <div class="hero-splash-bg">
+        <svg viewBox="0 0 1440 900" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#E50914"/>
+                    <stop offset="100%" stop-color="#B00710"/>
+                </linearGradient>
+            </defs>
+
+            <path d="
+                M880 0
+                C860 60, 845 110, 810 170
+                C775 230, 770 290, 735 350
+                C700 410, 695 470, 660 530
+                C625 580, 615 640, 585 700
+                C555 750, 540 820, 510 900
+                L1440 900 L1440 0 Z
+            " fill="url(#redGrad)"/>
+
+            <!-- Zona superior -->
+            <circle class="splash-dot" cx="838" cy="50"  r="9"  fill="url(#redGrad)"/>
+            <circle class="splash-dot" cx="818" cy="95"  r="5"  fill="url(#redGrad)"/>
+
+            <!-- Zona media-alta -->
+            <circle class="splash-dot" cx="755" cy="220" r="8"  fill="url(#redGrad)"/>
+            <circle class="splash-dot" cx="730" cy="270" r="4"  fill="url(#redGrad)"/>
+
+            <!-- Zona media -->
+            <circle class="splash-dot" cx="665" cy="400" r="10" fill="url(#redGrad)"/>
+            <circle class="splash-dot" cx="640" cy="445" r="4"  fill="url(#redGrad)"/>
+
+            <!-- Zona media-baja -->
+            <circle class="splash-dot" cx="598" cy="575" r="7"  fill="url(#redGrad)"/>
+            <circle class="splash-dot" cx="575" cy="620" r="3"  fill="url(#redGrad)"/>
+
+            <!-- Zona inferior -->
+            <circle class="splash-dot" cx="528" cy="740" r="8"  fill="url(#redGrad)"/>
+            <circle class="splash-dot" cx="505" cy="795" r="4"  fill="url(#redGrad)"/>
+        </svg>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
 
-    <div class="flecha-down">
-        <i class="bi bi-chevron-compact-down d-none" id="ancla"></i>
-        <h3 class="fs-2 sub-titulo mt-xl-5 ancla" >Productos</h3>
-    </div>
-</div>
+    <div class="hero-grid container">
 
-<main class="px-3" >
+        <div class="hero-copy">
 
+            <div class="Titulo Principal">
+                <h1 class="posicionamiento">Corimon <span> Pinturas </span></h1>
+                <h1 class="hero-titulo">
+                    <span class="hero-titulo-linea">Transformando tus</span>
+                    <span class="hero-titulo-linea hero-titulo-destacado">Espacios</span>
+                    <span class="hero-titulo-linea">con Color</span>
+                </h1>
+            </div>
 
-<section class="contenedor-productos z-1 container " >
+            <p class="hero-subtitulo">
+                Corimon Pinturas es una empresa con más de 75 años de trayectoria brindando soluciones de
+                <strong>pintura profesional para hogares e industrias</strong> a lo largo del territorio venezolano.
+            </p>
 
-    <div class="row d-flex justify-content-around gap-5"  >
+            <div class="hero-ctas" style="cursor: pointer;">
+                <a href="{{ url_for('page.products')}}" class="btn btn-primary btn-hero">
+                    Ver Productos
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+                <a href="#contacto" class="btn btn-secondary btn-hero-secondary">
+                    Contactar Ahora
+                </a>
+            </div>
 
-            <div class="col tarjeta-producto">
-                <div class="cabezera ">
-                    <span class="overlay"></span>
-                    <div class="swiper swpiper-tarjeta content-imagen">
-                        <!-- Adicional required wrapper -->
-                        <div class="swiper-wrapper">
-                            <!-- Slides -->
-                            <div class="swiper-slide imagen-swiper caso"><img src="/static/product/Montana/270dd (1).png"></div>
-                            <div class="swiper-slide imagen-swiper"><img src="/static/img/PINCO SATINADO.png"></div>
-                            <div class="swiper-slide imagen-swiper"><img src="/static/img/CLASS PPV.png"></div>
-                        </div>
-                        <!--Swier buttoms -->
-                        <div class="swiper-button-prev navegacion-card" ></div>
-                        <div class="swiper-button-next navegacion-card"></div>
-                    </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-number">75+</div>
+                    <div class="stat-label">Años de experiencia</div>
                 </div>
-                <div class="tarjeta-body">
-                    <h1 class="nombre-producto">Arquitectónicos</h1>
-                    <p class="descripcion">Descubre la excelencia en pintura con nuestra 
-                        línea de productos Arquitectónicos. Ofrecemos una amplia gama que 
-                        abarca desde emulsiones de alta calidad, esmaltes brillantes, 
-                        texturizados únicos hasta acondicionadores de superficie que 
-                        garantizan una mejor experiencia al pintar.</p>
-                    <a href="#"> <button class="boton-redirect" >Ver más</button></a>
-
+                <div class="stat">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Hecho en Venezuela</div>
                 </div>
             </div>
 
-            <div class="col tarjeta-producto">
-                <div class="cabezera ">
-                    <span class="overlay"></span>
-                    <div class="swiper swpiper-tarjeta content-imagen">
-                        <!-- Additional required wrapper -->
-                        <div class="swiper-wrapper">
-                            <!-- Slides -->
-                            <div class="swiper-slide imagen-swiper"><img src="/static/img/MADERA-BARNIZ-PINCO.png"></div>
-                            <div class="swiper-slide imagen-swiper"><img src="/static/img/maderas-wood-classic-natural.jpg"></div>
-                        </div>
-                        <!--Swier buttoms -->
-                        <div class="swiper-button-prev navegacion-card" ></div>
-                        <div class="swiper-button-next navegacion-card"></div>
-                    </div>
-                </div>
-                <div class="tarjeta-body">
-                    <h1 class="nombre-producto">Madera</h1>
-                    <p class="descripcion">Contamos con una excelente línea de productos dirigidos al mercado del tratamiento de maderas, siendo las categorías de barnices, nitrocelulósicos, poliuretanos y lacas las que se encuentran a disposición para las marcas Montana y Pinco, ofrecidas en nuestro catálogo </p>
-                    <a href="#"> <button class="boton-redirect" >Ver más</button></a>
-                </div>
-            </div>
+        </div>
 
-            <div class="col tarjeta-producto">
-                <div class="cabezera ">
-                    <span class="overlay"></span>
-                    <div class="swiper swpiper-tarjeta content-imagen">
-                        <!-- Additional required wrapper -->
-                        <div class="swiper-wrapper">
-                            <!-- Slides -->
-                            <div class="swiper-slide imagen-swiper"><img src="/static/img/monprotec.jpg"></div>
-                            <div class="swiper-slide imagen-swiper"><img src="/static/img/MIM D.jpg"></div>
-                            <div class="swiper-slide imagen-swiper"><img src="/static/img/PINCO PROTECTOR.jpg"></div>
+        <div class="hero-visual">
+            <div class="hero-image-wrapper">
+                <img src="/static/img/banner2.avif"
+                        alt="Productos Montana - Dekoral, AV2000, Pinco 69"
+                        class="hero-image">
+
+                <div class="flotando flotando--left">
+                    <div class="product-tag">
+                        <div class="tag-color" style="background: #3B6FB5;"></div>
+                        <div class="tag-info">
+                            <span class="tag-name">Dekoral Mate</span>
+                            <span class="tag-type">Poliacrílica</span>
                         </div>
-                        <!--Swier buttoms -->
-                        <div class="swiper-button-prev navegacion-card" ></div>
-                        <div class="swiper-button-next navegacion-card"></div>
                     </div>
                 </div>
-                <div class="tarjeta-body">
-                    <h1 class="nombre-producto">Mantenimiento Industrial</h1>
-                    <p class="descripcion">En Corimon Pinturas, ofrecemos una amplia línea de productos de alta gama para el mantenimiento industrial. Contamos con categorías como solventes, pinturas para ambientes que requieren alta resistencia, como tráfico y canchas, fondos y muchas más</p>
-                    <buttom class="boton-redirect">Ver más</buttom>
+
+                <div class="flotando flotando--right"> 
+                    <div class="product-tag">
+                        <div class="tag-color" style="background: #C9A84C;"></div>
+                        <div class="tag-info">
+                            <span class="tag-name">AV2000</span>
+                            <span class="tag-type">Brillo de Seda</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flotando flotando--bottom"> 
+                    <div class="product-tag ">
+                        <div class="tag-color" style="background: #B58D5B;"></div>
+                        <div class="tag-info">
+                            <span class="tag-name">Pinco 69</span>
+                            <span class="tag-type">Caucho Mate</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+
     </div>
+
 </section>
 
+{% endblock %}
 
-
-
-
-<div class="EfectoDiv  container "  >
-        
-        <div class="circle"></div>
-        <div class="circle"></div>
-
-        <div class="row d-flex justify-content-between  mt-3 inner " >
-            <div class="imagen col-sm-12 col-xl-6">
-                <img src="/static/img/LaEmpresa.png" alt="" style="border-radius: 8px; height: 100%;">
-            </div>
-    
-            <div class="texto col-md-12 col-lg-12 col-sm-12 mt-3 col-xl-6 " >
-                <div class="flex-column">
-                        <h3 class="text-center pb-1 sub-titulo">Nosotros</h3>
-                        <p style="text-align: justify;" class="descripcion m-0 p-0">Corimon Pinturas C.A. es una empresa del Grupo CORIMON que se dedica a la producción de pinturas. Actualmente produce para las marcas más prestigiosas del país, como Pinturas Montana y Pinturas Pinco. Además, cuenta con una larga y reconocida trayectoria en la fabricación de pinturas para áreas arquitectónicas, madera, tráfico, mantenimiento industrial, marinas, equipo original (OEM) y reacabado automotriz.</p>
-                        <a href="/nosotros" id="vermas"><h3 class="fs-4 p-0 mt-4 float-end">Ver más &rarr;</h3></a>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class=" container  Efecto2  w-100" >
-        <svg id="sw-js-blob-svg" class="svg z-1 animaSVG "  viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-            <linearGradient id="sw-gradient" x1="0" x2="1" y1="1" y2="0">
-            <stop id="stop1" stop-color="var(--rojo)" offset="0%"></stop>
-            <stop id="stop2" stop-color="#981914" offset="100%"></stop>
-            </linearGradient>
-        </defs><path fill="url(#sw-gradient)" d="M24.6,-33.3C28.8,-25.9,26.7,-15.1,28.8,-4.9C30.8,5.4,36.9,15.1,34.8,21.3C32.6,27.4,22.2,29.9,13.3,30.6C4.4,31.2,-3,29.9,-10.3,27.6C-17.5,25.2,-24.6,21.8,-30.8,15.6C-37,9.4,-42.3,0.5,-40,-6.1C-37.7,-12.7,-27.8,-17,-19.8,-23.6C-11.9,-30.3,-5.9,-39.4,2.2,-42C10.3,-44.5,20.5,-40.6,24.6,-33.3Z" transform="translate(50 50)" stroke-width="0" style="transition: all 0.3s ease 0s;"></path></svg>
-
-        <div class="row d-flex d-flex justify-content-around " >
-            <div class="col-xl-4 col-sm-12 col-lg-12 col-md-12 mx-3 px-4  z-2 max ">
-                <h3 class="sub-titulo text-center text-white mb-2 fs-sm-1"> Reconocimientos</h3>
-                <p class="descripcion text-white">Somos una empresa con más de 70 años de trayectoria, comprometida en cumplir con los estándares de mayor calidad para satisfacer la necesidad de nuestros clientes, siempre respetando y cuidando el medio ambiente.</p>
-                <!-- <p class="descripcion text-white ">Nuestra empresa se enorgullece de contar con las certificaciones <span class="iso"> ISO 9000,</span> <span class="iso"> ISO 9001 </span> y  <span class="iso">QSS 9000, </span> las cuales son evidencia de nuestro compromiso en la fabricación de productos de calidad. </p> -->
-            </div>
-            
-            <div class="col-xl-6 col-sm-12 col-lg-12 col-md-12 rounded p-2 inner EfectoDiv video" >
-                <iframe class="w-100 h-100" src="https://www.youtube.com/embed/KiXSCf2h0n8?si=mHYBBYhslR1R2Ltt" title="YouTube video player"  style="zoom: 0.65; border-radius: 8px; "frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="marcas container pb-5">
-        <h3 class="sub-titulo text-center mark">Nuestras marcas</h3>
-        <div class="row gap-2 d-flex">
-
-            <div class="marca azul wallet col aparicion" onclick="window.location.href='/nosotros#PM'">
-                <div class="overlay2 azul"></div>
-                <div class="circle2 azul">
-                    <img src="/static/img/montana_marca.png" alt="">
-                </div>
-                <p class="sub-titulo">Pinturas Montana</p>
-            </div>
-
-            <div class="marca wallet col aparicion" onclick="window.location.href='/nosotros#PINCO'">
-                <div class="overlay2"></div>
-                <div class="circle2">
-                    <img src="/static/img/pinco_nostros.png" alt="">
-                </div>
-                <p class="sub-titulo">Pinco</p>
-            </div>
-
-            <div class="marca azul wallet col aparicion" onclick="window.location.href='/nosotros#PPV'">
-                <div class="overlay2 azul"></div>
-                <div class="circle2 azul" >
-                    <img src="/static/img/sherwinW_marca.png" alt="">
-                </div>
-                <p class="sub-titulo">Sherwin-Williams</p>
-            </div>
-
-            <div class="marca wallet col aparicion"  >
-                <div class="overlay2"></div>
-                <div class="circle2 ">
-                    <img src="/static/img/cerdex-removebg-preview.png" alt="">
-                </div>
-                <p class="sub-titulo">Cerdex</p>
-            </div>
-
-            <div class="marca azul wallet col aparicion" onclick="window.location.href='/nosotros#PPV'">
-                <div class="overlay2 azul"></div>
-                <div class="circle2 azul">
-                    <img src="/static/img/ppv_marca.png"   alt="">
-                </div>
-                <p class="sub-titulo text-center">Puras Pinturas Venezolanas <br> PPV</p>
-            </div>
-
-
-        </div>
-    </div>
-
-</main>
-
-
-
-
-
-
+{% block extra_js %}
+    <!-- GSAP Core -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <!-- ScrollTrigger Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+    <script src="{{ url_for('static', filename='js/jsLanding/home.js') }}"></script>
 {% endblock %}

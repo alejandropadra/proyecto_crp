@@ -1,181 +1,465 @@
-{% extends 'layout_landings.html' %}
-{% from 'helpers/_forms.html' import render_field %}
+{% extends 'nuevo_landing/base_landing.html' %}
+{% block title %}{{titulo}}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/products.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/detalles_productos.css') }}">
+{% endblock %}
+
 {% block content %}
+<input type="hidden" id="presentacionesJson" value="{{ presentaciones }}">
 
+<div class="container">
 
+    <a href="{{ url_for('.products') }}" class="btn-volver">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        Volver al catálogo
+    </a>
 
-<main class="px-3" style="min-height: 100vh;padding: 120px 0px 50px 0;" >
-    
-    <div class="contenedor_detalles  container position-relative mb-4 p-2 pb-5">
-        <div class="row d-flex justify-content-around p-2 position-relative">
-            <div class="imagen_detalles col-xl-5 col-lg-5 col-md-5 col-sm-12 d-flex  justify-content-center align-items-center" >
-                <img src="/static/img/AV 2000 BRILLO.png" alt="">
-            </div>
-            
-            <div class="especificaciones col-xl-6 col-lg-6 col-md-6 col-sm-12 position-relative">
-                <h1 class="titulo w-100 ">AV-2000 BRILLO DE SEDA</h1>
+    <div class="detalles-contenedor">
+        <div class="detalle-grid">
 
+            <!-- ══ GALERÍA ══ -->
+            <div class="producto-galeria">
+                <div class="galeria-main">
+                    <div class="galeria-img-wrapper">
+                        {% set linea = (producto.linea_codigo ~ producto.subcodigo) if producto.subcodigo else producto.linea_codigo %}
+                        {% set ruta = ruta_foto_producto(linea, producto.marca_codigo) %}
+                        <img src="{{ url_for('static', filename=ruta if ruta else 'img/noImagen.png') }}"
+                            alt="{{ producto.nombre }}">
+                    </div>
+                    <div class="galeria-actions">
+                        <button type="button" class="galeria-action-btn" title="Ampliar imagen">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+                            </svg>
+                        </button>
+                        <button type="button" class="galeria-action-btn" title="Compartir">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                                <polyline points="16 6 12 2 8 6"/>
+                                <line x1="12" y1="2" x2="12" y2="15"/>
+                            </svg>
+                        </button>
+                    </div>
 
-                <h3 class="subtitulo-esp">Colores disponibles:</h3>
-
-                <!-- Estructura del Swiper -->
-                <div class="mi-swiper-container">
-                    <div class="swiper-wrapper">
-                        <!-- Slide 1 -->
-                        <div class="swiper-slide">
-                            <div class="colores mb-2">
-                                <div class="palette">
-                                    <div class="color"><span>264653</span></div>
-                                    <div class="color"><span>2A9D8F</span></div>
-                                    <div class="color"><span>E9C46A</span></div>
-                                    <div class="color"><span>F4A261</span></div>
-                                    <div class="color"><span>E76F51</span></div>
-                                </div>
-                            </div>
+                    <!-- Presentación -->
+                    <div class="pres-selector-wrap" id="presSelector" style="display:none;">
+                        <div class="carousel-wrap presentacion" >
+                            <div class="carousel-track pres" id="presOptions"></div>
                         </div>
-                        <!-- Slide 2 -->
-                        <div class="swiper-slide">
-                            <div class="colores mb-2">
-                                <div class="palette">
-                                    <div class="color"><span>264653</span></div>
-                                    <div class="color"><span>2A9D8F</span></div>
-                                    <div class="color"><span>E9C46A</span></div>
-                                    <div class="color"><span>F4A261</span></div>
-                                    <div class="color"><span>E76F51</span></div>
-                                </div>
+                    </div>
+                </div>
+
+                <!-- Resumen -->
+                <div class="selection-summary" id="selectionSummary" style="display:none;">
+                    <div class="selection-summary-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-glasses-icon lucide-glasses"><circle cx="6" cy="15" r="4"/><circle cx="18" cy="15" r="4"/><path d="M14 15a2 2 0 0 0-2-2 2 2 0 0 0-2 2"/><path d="M2.5 13 5 7c.7-1.3 1.4-2 3-2"/><path d="M21.5 13 19 7c-.7-1.3-1.5-2-3-2"/></svg>
+                    </div>
+                    <span class="selection-summary-text" id="summaryText"></span>
+                    <span class="selection-summary-code" id="summaryCode"></span>
+                </div>
+            </div><!-- /.producto-galeria -->
+
+            <!-- ══ INFO ══ -->
+            <div class="producto-info">
+
+                <div class="info-header">
+
+                    {% set meta_parts = [] %}
+                    {% if producto.linea_nombre %}{% do meta_parts.append(producto.linea_nombre) %}{% endif %}
+                    {% if producto.tipo %}{% do meta_parts.append(producto.tipo) %}{% endif %}
+                    {% if producto.acabado %}{% do meta_parts.append(producto.acabado) %}{% endif %}
+                    {% if producto.categoria %}{% do meta_parts.append(producto.categoria) %}{% endif %}
+
+                    <div class="info-meta">
+                        {% for part in meta_parts %}
+                            <span class="info-meta-item">{{ part }}</span>
+                            {% if not loop.last %}
+                                <span class="info-meta-sep"></span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <h1 class="info-nombre">{{ producto.nombre }}</h1>
+
+                    <div class="info-id-row">
+                        <div class="info-codigo-principal" id="codigoPrincipal">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="16" rx="2"/>
+                                <path d="M7 8h.01M7 12h.01M7 16h.01M11 8h6M11 12h6M11 16h6"/>
+                            </svg>
+                            <span class="codigo-label">CÓD</span>
+                            <span class="codigo-value" id="codigoValue">{{ producto.marca_codigo }}-{{ producto.linea_codigo }}{{ producto.subcodigo if producto.subcodigo else '' }}</span>
+                        </div>
+
+                        {% if producto.calidad %}
+                        <span class="info-badge-calidad{% if producto.calidad == 'C' %} standard{% endif %}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>
+                            </svg>
+                            Clase {{ producto.calidad }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <p class="info-descripcion">
+                        {% if producto.descripcion_general or detalle.descripcion_detallada %}
+                            {{ producto.descripcion_general | default('', true) }}
+                            {% if producto.descripcion_general and detalle.descripcion_detallada %} — {% endif %}
+                            {{ detalle.descripcion_detallada | default('', true) }}
+                        {% else %}
+                            <span class="info-descripcion--empty">Descripción no disponible.</span>
+                        {% endif %}
+                    </p>
+
+                </div><!-- /.info-header -->
+
+                <div class="presentacion-selector">
+                    <div class="color-selector" id="colorSelector" style="display:none;">
+                        <div class="selector-label">
+                            <div class="selector-icon-color  selector-icon-color--red">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
                             </div>
+                            <span class="selector-label-text">Colores Disponibles:</span>
+                            <span class="selector-label-count" id="colorCount">0</span>
+                        </div>
+                        <div class="carousel-wrap" id="colorCarousel">
+                            <div class="carousel-track" id="colorOptions"></div>
+                            <button type="button" class="carousel-arrow carousel-arrow--left">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+                            </button>
+                            <button type="button" class="carousel-arrow carousel-arrow--right">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                            </button>
                         </div>
                     </div>
 
-                    <div class="swiper-button-next sig" data-bs-toggle="tooltip" title="Ver sigueinte muestra de colores"></div>
-                    <div class="swiper-button-prev atr" data-bs-toggle="tooltip" title="Ver anterior muestra de colores"></div>
+                </div><!-- /.presentacion-selector -->
+
+                <div class="caracteristicas">
+                    <div class="dc-header">
+                        <div class="dc-icon dc-icon--green">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        </div>
+                        <div class="dc-title">Características</div>
+                    </div>
+                    <div class="dc-body">
                     
+                        {#<p class="caract-subtittle">Características Generales</p>
+                        <div class="lista-pills">
 
-                </div>
-                <h3 class="subtitulo-esp">Características Génerales</h3>
-                <div class="Caracteristicas generales mb-4">
-                    <div class="row gap-2">
-                        <div class="caracteristica d-flex gap-2 col col-sm-12"><i class="bi bi-check-circle"></i> <strong>  Película lavable</strong></div>
-                        <div class="caracteristica d-flex gap-2 col col-sm-12"><i class="bi bi-check-circle"></i><strong>Excelente Cubrimiento y Rendimiento</strong></div>
-                        <div class="caracteristica d-flex gap-2 col col-sm-12"><i class="bi bi-check-circle"></i></strong>Libre de Plomo y Mercurio </strong></div>
-                        <div class="caracteristica d-flex gap-2 col col-sm-12"><i class="bi bi-check-circle"></i></strong>Bajo Olor</strong> </div>
-                        <div class="caracteristica d-flex gap-2 col-auto"><i class="bi bi-check-circle"></i></strong>Acabado Satinado</strong></div>
+                            <span class="h-pill">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                                {{producto.categoria if producto.categoria else ''}}
+                            </span>
+
+                            <span class="h-pill">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                                {{producto.uso if producto.uso else ''}}
+                            </span>
+                        </div>#}
+                        <div class="char-list">
+                            {% if caracteristicas|length <=1 %}
+                                {%if producto.categoria  %}
+                                    <div class="char-item">
+                                        <div class="char-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                        <span class="char-text">{{ 'Categoría: ' + producto.categoria if producto.categoria else ''}}</span>
+                                    </div>
+                                {% endif %}
+                                {%if producto.uso  %}
+                                    <div class="char-item">
+                                        <div class="char-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                        <span class="char-text">{{ 'Uso: ' + producto.uso if producto.uso else ''}}</span>
+                                    </div>
+                                {% endif %}
+                                {%if producto.superficie  %}
+                                    <div class="char-item">
+                                        <div class="char-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                        <span class="char-text">{{ 'Superficie para usar: ' + producto.superficie if producto.superficie else ''}}</span>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                            {% for caracteristica in caracteristicas %}
+                            <div class="char-item">
+                                <div class="char-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                <span class="char-text">{{ caracteristica }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
                     </div>
+                </div><!-- /.caracteristicas -->
+
+                <div class="seccion-acciones">
+                    <a class="btn-primary" href="{{ url_for('page.download_ficha', file_key=producto.codigo_ficha_tecnica if producto.codigo_ficha_tecnica else producto.linea_producto, marca=producto.marca_codigo if producto.marca_codigo else '', id=producto.id) }}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Descargar Ficha Técnica
+                    </a>
+
+                    <button class="btn-terciary" id="btnInfoTecnica" onclick="toggleInfoTecnica()">
+                        <svg class="btn-icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 7v6"/><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><path d="M9 10h6"/>
+                        </svg>
+                        <svg class="btn-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><path d="M9 10h6"/>
+                        </svg>
+                        <span class="btn-label-open">Más información</span>
+                        <span class="btn-label-close">Ocultar información</span>
+                    </button>
+                    <button class="btn-secondary" title="Compartir producto" onclick="compartirProducto()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/>
+                            <circle cx="18" cy="19" r="3"/>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                        </svg>
+                    </button>
+                </div>
+
+            </div><!-- /.producto-info -->
+
+        </div><!-- /.detalle-grid -->
+    </div><!-- /.detalles-contenedor -->
+
+
+    <div class="info-tecnica">
+
+        <div class="tecnica-grid">
+
+        <!-- ══ COLUMNA IZQUIERDA══ -->
+        <div class="tecnica-col-izquierda">
+            <div class="tecnica-card">
+                <div class="tecnica-card-header">
+                    <div class="tecnica-card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                    </div>
+                    <h3 class="tecnica-card-title">Características Técnicas</h3>
+                </div>
+
+                <div class="especificaciones-lista">
+                    {% if detalle %}
+                        {% set specs = [
+                            ('Nombre del producto', producto.nombre if producto.nombre else '---'),
+                            ('Marca', producto.marca_nombre if producto.marca_nombre else '---'),
+                            ('Línea', producto.linea_nombre if producto.linea_nombre else '---'),
+                            ('Código', producto.marca_codigo ~ '-' ~ producto.linea_codigo),
+                            ('Vehículo', detalle.vehiculo if detalle.vehiculo else '---'),
+                            ('Pigmentos', detalle.pigmentos if detalle.pigmentos else '---'),
+                            ('Color', detalle.color_detalle if detalle.color_detalle else '---'),
+                            ('Aspecto de la película', detalle.aspecto_pelicula if detalle.aspecto_pelicula else '---'),
+                            ('Solventes', detalle.solventes if detalle.solventes else '---'),
+                            ('Densidad', detalle.densidad if detalle.densidad else '---'),
+                            ('% Sólidos por volumen', detalle.solidos_volumen if detalle.solidos_volumen else '---'),
+                            ('VOC', detalle.voc if detalle.voc else '---'),
+                            ('Viscosidad', detalle.viscosidad if detalle.viscosidad else '---'),
+                            ('Rendimiento', detalle.rendimiento if detalle.rendimiento else '---'),
+                            ('pH', detalle.ph if detalle.ph else '---'),
+                            ('Capas recomendadas', detalle.capas_recomendadas if detalle.capas_recomendadas else '---')
+                        ] %}
+
+                        {% for label, valor in specs %}
+                            {% if valor %}
+                            <div class="spec-row">
+                                <span class="spec-label">{{ label }}</span>
+                                <span class="spec-value">{{ valor }}</span>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="tecnica-empty">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 16v-4M12 8h.01"/>
+                            </svg>
+                            <p>Información técnica no disponible.</p>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
-            <div class="d-flex align-items-center gap-2 info" id="mostrarInformacion">
-                <h3 class="fs-5 m-0">Más informacion</h3>
-                <i class="bi bi-arrow-down-circle m-0"></i>
-            </div>
-        </div>
-    </div>
 
-    <div class="info-tecnica d-none container">
-        <div class="row gap-3">
-            <div class="contenedor_detalles especificaciones col p-4 position-relative">
-                <div class="dowload" data-bs-toggle="tooltip" title="Descargar toda la ficha tecnica"><i class="bi bi-download"></i></div>
-                <h3 class="text-center titulo">Caracteristicas Tecnicas</h3>
-                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Nombre del producto:</p> <p class="valor-ficha">AV-2000 BRILLO DE SEDA</p></div>
-                <hr class="m-0">
-                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Marca:</p> <p class="valor-ficha">Montana</p></div>
-                <hr class="m-0">
-                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Línea:</p> <p class="valor-ficha">271</p></div>
-                <hr class="m-0">
-                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Código (Línea):</p> <p class="valor-ficha">FA0-271</p></div>
-                <hr class="m-0">
-                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Vehiculo</p> <p class="valor-ficha">Copolímeros Acrílicos</p></div>
-                <hr class="m-0">
-                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Pigmentos</p> <p class="valor-ficha">Dióxido de Titanio y cargas inertes</p></div>
-                <hr class="m-0">
-                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Color</p> <p class="valor-ficha">Según Carta de Colores. Disponible en el sistema de preparación de colores.</p></div>
-                <hr class="m-0">
-                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Aspecto de la pelicula</p> <p class="valor-ficha">Satinada</p></div>
-                <hr class="m-0">
-                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Solventes</p> <p class="valor-ficha"> Agua</p></div>
-                <hr class="m-0">
-                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Densidad</p> <p class="valor-ficha"> 4,6 – 4,8 Kg/GAL</p></div>
-                <hr class="m-0">
-                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">% SOLIDOS POR VOLUMEN:</p> <p class="valor-ficha"> 30 ± 2 % según color</p></div>
-                <hr class="m-0">
-                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">VOC</p> <p class="valor-ficha"> menor a 80 g/L</p></div>
-                <hr class="m-0">
-                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Viscosidad</p> <p class="valor-ficha"> 85 – 95 KU</p></div>
-                <hr class="m-0">
-                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Nota del rendimiento</p> <p class="valor-ficha"> 50 m2 /GAL. Este rendimiento puede variar según el método de aplicación y la porosidad del substrato. Algunas superficies pueden requerir más de una aplicación. </p></div>
-                <hr class="m-0">
-                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">PH </p> <p class="valor-ficha"> </p></div>
-                <hr class="m-0">
-                <hr class="m-0">
-                <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Capas recomendadas</p> <p class="valor-ficha"> </p></div>
-                <hr class="m-0">
-            </div>
-
-            <div class=" especificaciones col gap-4 p-0">
-                <div class="contenedor_detalles p-4">
-                    <h3 class="text-center titulo fs-5" >Descripción del producto</h3>
-                    <div class="item d-flex w-100 mb-0 mt-2 "> <p class="valor-ficha ">El AV 2000 Brillo de Seda es una pintura emulsionada de primera calidad, diseñada para dar a las superficies de concreto y mampostería en general un acabado satinado de brillo sedoso en ambientes interiores, así como también en superficies de madera debidamente fondeadas. </p></div>
-                    <hr class="mt-3">
-                    <h3 class="text-center titulo fs-5 p-3" >Caracteristicas</h3>
-                    <div class="row gap-2">
-                        <div class="caracteristica d-flex gap-2 w-100 p-2"><i class="bi bi-check-circle"></i>Película lavable</div>
-                        <div class="caracteristica d-flex gap-2 w-100 p-2"><i class="bi bi-check-circle"></i>Excelente Cubrimiento y Rendimiento</div>
-                        <div class="caracteristica d-flex gap-2 w-100 p-2"><i class="bi bi-check-circle"></i>Libre de Plomo y Mercurio</div>
-                        <div class="caracteristica d-flex gap-2 w-100 p-2"><i class="bi bi-check-circle"></i>Acabado Satinado</div>
-                        <div class="caracteristica d-flex gap-2 w-100 p-2"><i class="bi bi-check-circle"></i>Bajo Olor</div>
+            <!-- Descripción del producto -->
+            {% if detalle and detalle.almacenamiento_precauciones %}
+            <div class="tecnica-card">
+                <div class="tecnica-card-header">
+                    <div class="tecnica-card-icon tecnica-card-icon--info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package-icon lucide-package"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg>
                     </div>
-                    <hr>
+                    <h3 class="tecnica-card-title">Almacenamiento y Precauciones</h3>
+                </div>
+                <div class="tecnica-descripcion-preparacion">
+                    {% set t = detalle.almacenamiento_precauciones.replace('/ *', '/*').replace('/* ', '/*').replace(' /*', '/*') %}
+                    {% for p in t.split('/*') %}
+                        {% set raw = p.strip() %}
+                        {% if raw %}
+                            <p>{{ raw }}</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if detalle and detalle.fondos_recomendados %}
+            <div class="tecnica-card">
+                <div class="tecnica-card-header">
+                    <div class="tecnica-card-icon tecnica-card-icon--check">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-paintbrush-icon lucide-paintbrush"><path d="m14.622 17.897-10.68-2.913"/><path d="M18.376 2.622a1 1 0 1 1 3.002 3.002L17.36 9.643a.5.5 0 0 0 0 .707l.944.944a2.41 2.41 0 0 1 0 3.408l-.944.944a.5.5 0 0 1-.707 0L8.354 7.348a.5.5 0 0 1 0-.707l.944-.944a2.41 2.41 0 0 1 3.408 0l.944.944a.5.5 0 0 0 .707 0z"/><path d="M9 8c-1.804 2.71-3.97 3.46-6.583 3.948a.507.507 0 0 0-.302.819l7.32 8.883a1 1 0 0 0 1.185.204C12.735 20.405 16 16.792 16 15"/></svg>
+                    </div>
+                    <h3 class="tecnica-card-title">Fondos Recomendados</h3>
+                </div>
+                <div class="char-list">
+                    {% set u = detalle.fondos_recomendados.replace('/ *', '/*').replace('/* ', '/*').replace(' /*', '/*') %}
+                    {% for p in u.split('/*') %}
+                        {% set raw = p.strip().strip('*').strip() %}
+                        {% if raw %}
+                            <div class="char-item">
+                                <div class="char-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+                                <span class="char-text">{{ raw.strip('*').strip() }}</span>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+
+        <!-- ══ COLUMNA DERECHA-->
+        <div class="tecnica-col-derecha">
+
+            <!-- Descripción del producto -->
+            {% if detalle and detalle.descripcion_detallada %}
+            <div class="tecnica-card">
+                <div class="tecnica-card-header">
+                    <div class="tecnica-card-icon tecnica-card-icon--info">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4M12 8h.01"/>
+                        </svg>
+                    </div>
+                    <h3 class="tecnica-card-title">Descripción del Producto</h3>
+                </div>
+                <p class="tecnica-descripcion">{{ detalle.descripcion_detallada }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Secamiento pa a siete cinco grado -->
+            <div class="tecnica-card">
+                <div class="tecnica-card-header">
+                    <div class="tecnica-card-icon tecnica-card-icon--time">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                    </div>
+                    <h3 class="tecnica-card-title">Secamiento a 25°C (77°F)</h3>
+                </div>
+                <div class="secamiento-grid">
+                    {% set sec_items = [
+                        ('Al tacto', detalle.secamiento_al_tacto if detalle.secamiento_al_tacto else '---'),
+                        ('Para repintar', detalle.secamiento_para_repintar if detalle.secamiento_para_repintar else '---'),
+                        ('Secamiento duro', detalle.secamiento_duro if detalle.secamiento_duro else '---'),
+                        ('Curado total', detalle.secamiento_curado_total if detalle.secamiento_curado_total else '---'),
+                        ('Inmersión', detalle.secamiento_inmersion if detalle.secamiento_inmersion else '---'),
+                        ('Secamiento al transito', detalle.secamiento_al_transito if detalle.secamiento_al_transito else '---'),
+                        ('Secamiento al polvo', detalle.secamiento_al_polvo if detalle.secamiento_al_polvo else '---'),
+
+                    ] %}
+
+                    {% for label, valor in sec_items %}
+                        {% if valor %}
+                        <div class="sec-item">
+                            <span class="sec-label">{{ label }}</span>
+                            <span class="sec-value">{{ valor }}</span>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
 
-                <div class="contenedor_detalles p-4">
-                    <h3 class="text-center titulo fs-5 p-3" >SECAMIENTO A 25°C (77°F)</h3>
-                    <div class="row gap-3">
-                        <div class="caracteristica d-flex gap-2 w-100"><p class="ref">Al Tacto: </p> <p class="valor-ficha"> 30 minutos</p></div>
-                        <div class="caracteristica d-flex gap-2 w-100"><p class="ref">Para repintar: </p> <p class="valor-ficha"> 4</p></div>
-                        <div class="caracteristica d-flex gap-2 w-100"><p class="ref">Secamiento Duro: </p> <p class="valor-ficha"> 4 horas</p></div>
-                        <div class="caracteristica d-flex gap-2 w-100"><p class="ref">Curado Total</p> <p class="valor-ficha"> </p></div>
-                        <div class="caracteristica d-flex gap-2 w-100"><p class="ref">Inmersión </p> <p class="valor-ficha"> </p></div>
-                        <div class="caracteristica d-flex gap-2 w-100"><p class="ref">Al polvo </p> <p class="valor-ficha"> </p></div>
-                        <div class="d-flex gap-2 w-100"><p class="ref">Nota </p> <p class="valor-ficha"> Es importante respetar los tiempos de repintado, para evitar fallas de cubrimiento y problemas en la aplicación. </p></div>
-                    </div>
+                {% if detalle.nota_secamiento %}
+                <div class="secamiento-nota">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4M12 8h.01"/>
+                    </svg>
+                    <p>{{ detalle.nota_secamiento }}</p>
                 </div>
-            </div> 
-        </div>
-    </div>
+                {% endif %}
+            </div>
 
-    <div class="info-tecnica d-none  contenedor_detalles container p-3 mt-4">
-        <h3 class="text-center titulo fs-5 p-3" >Preparacion de la superficie</h3>
-        <p class="valor-ficha ">La superficie debe estar completamente limpia y seca, libre de polvo, aceite, grasa y otros contaminantes. El AV 2000 BRILLO DE SEDA, se aplica sobre superficies debidamente preparadas. En caso de existir contaminación por grasa o aceite, esta se debe eliminar según norma SSPC-SP-1, utilizando limpieza con solventes, agua y jabón, desengrasantes industriales u otro material adecuado dependiendo del grado de contaminación. En caso de contaminación con moho y hongos frote el área con una solución de 2 partes de cloro y una de agua utilizando un cepillo de cerdas duras. Deje actuar por dos horas y luego lave con agua limpia dejando secar la superficie antes de pintar.</p>
-    </div>
-
-    <div class="info-tecnica d-none  container mt-4">
-    <div class="row gap-3" >
-        <div class="contenedor_detalles especificaciones col p-3">
-            <h3 class="text-center titulo fs-5 p-3" >Fondos recomendados</h3>
-            <div class="item d-flex w-100 mb-0"> <p class="valor-ficha ">*Superficies porosas, con grietas menores, frisos rústicos:* Aplique una ó dos manos de Mastilisto 202 – 100. /* Superficies alcalinas (concreto nuevo):* Aplique una mano de Sellacril Original 207 – 101/* Para colores intensos que lo requieran:* Aplique una mano de Sellacril Plus Color Línea 213. /*Superficies con pintura caleada o envejecida:* Aplique una mano de Sellacril Sellador Pro 051-100./ *Para una especificación acorde a sus necesidades, consulte a un Representante Técnico de Corimon Pinturas, C.A.* </p></div>
-            <hr>
-            <h3 class="text-center titulo fs-5 p-1" >Almacenamiento y precauciones</h3>
-            <div class="item d-flex w-100 mb-0 "> <p class="valor-ficha ">Almacene en un lugar fresco y lejos del alcance de los niños. Evite el contacto directo con la piel y ojos. En caso de contacto con los ojos, lave con abundante agua fresca por espacio de 15 minutos y solicite atención médica. En caso de ingestión, no induzca el vómito, consulte inmediatamente un médico. Producto no inflamable. En caso de derrame, absorba con material inerte y disponga según regulaciones. No vierta en cañerías. Consulte la Hoja de Seguridad (MSDS) antes de usarlo./* Tiempo máximo de almacenamiento en envases originales: 3 años. *</p></div>
-        </div>
-        <div class="contenedor_detalles  especificaciones col p-3">
-            <h3 class="text-center titulo fs-5 p-3" >Aplicación</h3>
-            <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Metodo de aplicación:</p> <p class="valor-ficha">Rodillo, Brocha o Pistola.</p></div>
-            <hr class="m-0">
-            <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Equipos recomendados:</p> <p class="valor-ficha"></p></div>
-            <hr class="m-0">
-            <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Limpieza de Equipos</p> <p class="valor-ficha"></p></div>
-            <hr class="m-0">
-            <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Diluyente</p> <p class="valor-ficha">Agua. / *Para Brocha o Rodillo:* Hasta 10%. (aprox. ¼ de litro de agua por galón para facilitar su aplicación). / *Para Pistola Convencional:* No requiere dilución.</p></div>
-            <hr class="m-0">
-            <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Condiciones para aplicar</p> <p class="valor-ficha"></p></div>
-            <hr class="m-0">
-            <div class="item d-flex w-100 mb-0 mt-2"> <p class="ref">Nota</p> <p class="valor-ficha">Agite el producto hasta su completa homogenización antes de pintar</p></div>
-            <hr class="m-0">
-        </div>
-    </div>
-</div>
-
-</main>
+            <!-- Preparación de la superficie -->
+            {% if detalle and detalle.preparacion_superficie %}
+            <div class="tecnica-card">
+                <div class="tecnica-card-header">
+                    <div class="tecnica-card-icon tecnica-card-icon--warning">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-paint-roller-icon lucide-paint-roller"><rect width="16" height="6" x="2" y="2" rx="2"/><path d="M10 16v-2a2 2 0 0 1 2-2h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect width="4" height="6" x="8" y="16" rx="1"/></svg>
+                    </div>
+                    <h3 class="tecnica-card-title">Preparación de la superficie</h3>
+                </div>
+                <div class="tecnica-descripcion-preparacion">
+                    {% set texto_limpio = detalle.preparacion_superficie.replace('/ *', '/*').replace('/* ', '/*').replace(' /*', '/*') %}
+                    {% for parrafo in texto_limpio.split('/*') %}
+                        {% set texto = parrafo.strip().strip('*').strip() %}
+                        {% if texto %}
+                            <p{% if parrafo.strip().startswith('*') and parrafo.strip().endswith('*') %} class="tecnica-nota"{% endif %}>
+                                {{ texto }}
+                            </p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div><!-- /.preparacion de la superficie -->
+            {% endif %}
 
 
+            <!-- APLICACIÓN -->
+            {% if detalle and detalle.metodo_aplicacion %}
+            <div class="tecnica-card">
+                <div class="tecnica-card-header">
+                    <div class="tecnica-card-icon tecnica-card-icon--info ">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-paintbrush-icon lucide-paintbrush"><path d="m14.622 17.897-10.68-2.913"/><path d="M18.376 2.622a1 1 0 1 1 3.002 3.002L17.36 9.643a.5.5 0 0 0 0 .707l.944.944a2.41 2.41 0 0 1 0 3.408l-.944.944a.5.5 0 0 1-.707 0L8.354 7.348a.5.5 0 0 1 0-.707l.944-.944a2.41 2.41 0 0 1 3.408 0l.944.944a.5.5 0 0 0 .707 0z"/><path d="M9 8c-1.804 2.71-3.97 3.46-6.583 3.948a.507.507 0 0 0-.302.819l7.32 8.883a1 1 0 0 0 1.185.204C12.735 20.405 16 16.792 16 15"/></svg>
+                    </div>
+                    <h3 class="tecnica-card-title">Aplicación</h3>
+                </div>
+                <div class="especificaciones-lista">
+                    {% set app_specs = [
+                        ('Método de aplicación', detalle.metodo_aplicacion),
+                        ('Equipos recomendados', detalle.equipos_recomendados),
+                        ('Limpieza de equipos', detalle.limpieza_equipos),
+                        ('Diluyente', detalle.diluyente),
+                        ('Condiciones para aplicar', detalle.condiciones_aplicacion),
+                        ('Nota', detalle.nota_aplicacion)
+                    ] %}
 
+                    {% for label, valor in app_specs %}
+                        {% if valor %}
+                        <div class="spec-row">
+                            <span class="spec-label">{{ label }}</span>
+                            <span class="spec-value">{{ valor }}</span>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div><!-- /.aplicacion -->
+            {% endif %}
+            
+        
+
+
+
+        </div><!-- /.tecnica-col-derecha -->
+
+    </div><!-- /.tecnica-grid -->
+
+</div><!-- /.info-tecnica -->
+
+</div><!-- /.container -->
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{{ url_for('static', filename='static_landing/js/detalles_productos.js') }}"></script>
 {% endblock %}

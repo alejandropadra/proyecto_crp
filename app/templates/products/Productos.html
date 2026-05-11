@@ -1,102 +1,257 @@
 {% extends 'layout_landings.html' %}
-{% from 'helpers/_forms.html' import render_field %}
+
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/products.css') }}">
+{% endblock %}
+
 {% block content %}
 
 
-<div class="position-relative " style="padding-top: 100px; border-radius: 15px;" >
+<input type="hidden" name="filtros" id="filtros" value="{{filtros}}">
+<div class="row">
 
-  <div class="parallax " style="background-image: url('/static/img/banner-1-campana-montana.jpg'); background-position: center  -120px; height: 100vh; border-radius: 15px;"> </div>
-  <div class="flecha-down top-50 bottom-50 end-50 d-sm-block d-none" style="margin-top: 160px; cursor: auto;">
-    <i class="bi bi-chevron-compact-down "></i>
+    <div class="banner">
+        <div class="banner-section">
+            <img src="{{ url_for('static', filename='img/Arquitectonico.avif') }}" 
+                alt="Pinturas para el hogar" loading="lazy">
+            <div class="banner-overlay"></div>
+            <div class="banner-content">
+                <h2>Arquitectonico</h2>
+                <p>Pinturas para el hogar</p>
+            </div>
+        </div>
+
+        <div class="banner-section">
+            <img src="{{ url_for('static', filename='img/madera.avif') }}" 
+                alt="Productos para madera" loading="lazy">
+            <div class="banner-overlay"></div>
+            <div class="banner-content">
+                <h2>Madera</h2>
+                <p>Recubrimientos para madera</p>
+            </div>
+        </div>
+
+        <div class="banner-section">
+            <img src="{{ url_for('static', filename='img/Automotriz.avif') }}" 
+                alt="Recubrimientos industriales" loading="lazy">
+            <div class="banner-overlay"></div>
+            <div class="banner-content">
+                <h2>Industrial</h2>
+                <p>Recubrimientos industriales</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row-contenedor">
+        <div class="sidebar-v2">
+            <div class="v2-header">
+                <div class="v2-header-left">
+                    <div class="v2-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                        </svg>
+                    </div>
+                    <span class="v2-title">Filtros</span>
+                </div>
+                <button class="v2-btn-clear">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 5H3"/><path d="M7 12H3"/><path d="M7 19H3"/>
+                        <path d="M12 18a5 5 0 0 0 9-3 4.5 4.5 0 0 0-4.5-4.5c-1.33 0-2.54.54-3.41 1.41L11 14"/>
+                        <path d="M11 10v4h4"/>
+                    </svg>
+                    Limpiar
+                </button>
+            </div>
+
+            <div class="v2-search">
+                <div class="v2-search-inner">
+                    <svg class="v2-search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" 
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.3-4.3"/>
+                    </svg>
+                    <input type="text" class="v2-search-input" id="v2SearchInput" 
+                        placeholder="Buscar producto..." autocomplete="off">
+                    <button class="v2-search-clear" id="v2SearchClear" aria-label="Limpiar búsqueda" style="display:none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" 
+                            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" 
+                            stroke-linejoin="round">
+                            <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="v2-body"></div>
+
+            <div class="v2-footer">
+                <div class="v2-footer-count">
+                    <span class="v2-badge">0</span>
+                    filtros activos
+                </div>
+                <!--
+                <button class="v2-btn-apply">Aplicar</button>-->
+                <div class="filtrosActivos">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+<section class="section-tarjetas">
+
+    <div class="grid-productos">
+        {% for producto in productos %}
+        {% set linea = (producto.linea_codigo ~ producto.subcodigo) if producto.subcodigo else producto.linea_codigo %}
+        {% set ruta = ruta_foto_producto(linea, producto.marca_codigo) %}
+        <div class="card-f contenedor-tarjeta-producto" data-info-producto='{{ producto.to_dict() | tojson }}'>
+            <div class="img-area">
+                <!-- 
+                <span class="b-marca">{{ producto.marca_codigo }} - {{producto.subcodigo}}</span>-->
+                    <img src="{{ url_for('static', filename=ruta if ruta else 'img/noImagen.png') }}" 
+                        alt="{{ producto.nombre }}"
+                        loading="lazy"
+                        decoding="async">
+            </div>
+            <div class="body">
+                <div class="nombre">{{ producto.nombre }}</div>
+                <div class="linea-text">{{ producto.linea_nombre }}</div>
+                <!---->
+                <span class="ft-code">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        {{ producto.marca_codigo }}-
+                        {% if producto.subcodigo %} 
+                            {{producto.linea_codigo}}{{producto.subcodigo}} 
+                        {%else%}
+                            {{producto.linea_codigo}}
+                        {% endif %}
+                        
+
+                    </span>
+                <!--  
+                <div class="info-pills">
+
+                    <span class="pill">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-brush-cleaning-icon lucide-brush-cleaning"><path d="m16 22-1-4"/><path d="M19 14a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2h-3a1 1 0 0 1-1-1V4a2 2 0 0 0-4 0v5a1 1 0 0 1-1 1H6a2 2 0 0 0-2 2v1a1 1 0 0 0 1 1"/><path d="M19 14H5l-1.973 6.767A1 1 0 0 0 4 22h16a1 1 0 0 0 .973-1.233z"/><path d="m8 22 1-4"/></svg>
+                        
+                        {%if producto.acabado%}
+                            Acabado:{{producto.acabado}}
+                        {% else %}
+                            {{ producto.tipo if producto.tipo else producto.uso if producto.uso else "---" }}
+                        {% endif %}
+                    </span>
+                    {% if producto.superficie %}
+                    <span class="pill">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m-7.07-3.93l2.83-2.83m8.48-8.48l2.83-2.83M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83"/></svg>
+                        Superficie: {{ producto.superficie }}
+                    </span>
+                    {% endif %}
+                </div>-->
+                <!-- 
+                <div class="specs-strip">
+                    <div class="spec">
+                        <div class="spec-label">Acabado</div>
+                        <div class="spec-val">{{ producto.acabado if producto.acabado else "---" }}</div>
+                    </div>
+                    <div class="spec">
+                        <div class="spec-label">Tipo</div>
+                        <div class="spec-val">{{ producto.tipo if producto.tipo else "---" }}</div>
+                    </div>
+                    <div class="spec">
+                        <div class="spec-label">Uso</div>
+                        <div class="spec-val">{{ producto.uso if producto.uso else "---" }}</div>
+                    </div>
+                </div>-->
+                <div class="footer">
+                    {% set ruta_marca = ruta_marca(producto.marca_codigo) %}
+                        <span class="marca-badge"><img src="{{ url_for('static', filename=ruta_marca if ruta_marca else 'img/noImagen.png') }}" 
+                            alt="{{ producto.marca | upper }}"
+                            loading="lazy"
+                            decoding="async"></span>
+                    <!--<span class="ft-code">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        {{ producto.marca_codigo }}{% if producto.subcodigo %} - {{producto.linea_codigo if producto.linea_codigo }}{{ producto.subcodigo }}{% endif %}
+                    </span>-->
+                    <a href="{{ url_for('.product', id=producto.id) }}" class="btn-info">
+                        Detalles
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+
+    <div class=" texto-completo-col">
+            <H1> Productos con información incompleta</H1>
+    </div>
+
+    <div class="grid-productos" >
+
+        {% for producto in productos_incompletos %}
+        {% set linea = (producto.linea_codigo ~ producto.subcodigo) if producto.subcodigo else producto.linea_codigo %}
+        {% set ruta = ruta_foto_producto(linea, producto.marca_codigo) %}
+        <div class="card-f" data-info-producto='{{ producto.to_dict() | tojson }}'>
+            <div class="img-area">
+                <!-- 
+                <span class="b-marca">{{ producto.marca_codigo }} - {{producto.subcodigo}}</span>-->
+                <img src="{{ url_for('static', filename=ruta if ruta else 'img/noImagen.png') }}" 
+                        alt="{{ producto.nombre }}"
+                        loading="lazy"
+                        decoding="async">
+            </div>
+            <div class="body">
+                <div class="nombre">{{ producto.nombre }}</div>
+                <div class="linea-text">{{ producto.linea_nombre }}</div>
+                <!---->
+                <span class="ft-code">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        {{ producto.marca_codigo }}-
+                        {% if producto.subcodigo %} 
+                            {{producto.linea_codigo}}{{producto.subcodigo}} 
+                        {%else%}
+                            {{producto.linea_codigo}}
+                        {% endif %}
+                        
+
+                    </span>
+                
+                <div class="footer">
+                    {% set ruta_marca = ruta_marca(producto.marca_codigo) %}
+                        <span class="marca-badge"><img src="{{ url_for('static', filename=ruta_marca if ruta_marca else 'img/noImagen.png') }}" 
+                                        alt="{{ producto.marca | upper }}"></span>
+                    <a href="{{ url_for('.product', id=producto.id) }}" class="btn-info">
+                        Detalles
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    
+
+    
+
   </div>
+</section>
+
+
+
 </div>
 
-<main class="px-2" style="margin-top: -100px;" >
-
-  <div class="contenedor-filtros container d-flex justify-content-end">
-    <div class="group">
-      <input class="input search mb-0" id="buscador" type="search" placeholder="Buscar características" autocomplete="off" >
-      <svg viewBox="0 0 24 24" aria-hidden="true" class="icon">
-        <g>
-          <path
-            d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"
-          ></path>
-        </g>
-      </svg>
-    </div>
-  </div>
+{%endblock%}
 
 
-
-<div class="contenedor_tarjetas container p-3">
-  <div class="row d-flex gap-5 justify-content-center">
-
-    <div class="product col-3 position-relative z-4">
-      <div class="product__img"><img src="/static/img/AV 2000 BRILLO.png"" alt=""> </div>
-      <div class="contenido">
-        <div class="product__title">AV-2000 Brillo de Seda </div>
-        <div class="descripcion producto">Pintura Emulsionada Poliacrílica Satinada</div>
-        <div class="product__buttom d-flex justify-content-center p-2">
-          <a class="button-vermas" href="/productos/detalles">
-            <span class="button-vermas__icon-wrapper">
-                <svg width="10" class="button-vermas__icon-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 15">
-                    <path fill="currentColor" d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z"></path>
-                </svg>
-                <svg class="button-vermas__icon-svg  button-vermas__icon-svg--copy" xmlns="http://www.w3.org/2000/svg" width="10" fill="none" viewBox="0 0 14 15">
-                    <path fill="currentColor" d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z"></path>
-                </svg>
-            </span>
-            Ver más
-        </a>
-        </div>
-      </div>
-    </div>
-
-    <div class="product col-3 position-relative z-4">
-      <div class="product__img"><img src="/static/img/AV 2000 BRILLO.png"" alt=""> </div>
-      <div class="contenido">
-        <div class="product__title">AV-2000 Brillo de Seda</div>
-        <div class="descripcion producto">Pintura Emulsionada Poliacrílica Satinada</div>
-        <div class="product__buttom d-flex justify-content-center p-2">
-          <a class="button-vermas" href="/productos/detalles">
-            <span class="button-vermas__icon-wrapper">
-                <svg width="10" class="button-vermas__icon-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 15">
-                    <path fill="currentColor" d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z"></path>
-                </svg>
-                <svg class="button-vermas__icon-svg  button-vermas__icon-svg--copy" xmlns="http://www.w3.org/2000/svg" width="10" fill="none" viewBox="0 0 14 15">
-                    <path fill="currentColor" d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z"></path>
-                </svg>
-            </span>
-            Ver más
-        </a>
-        </div>
-      </div>
-    </div>
-
-    <div class="product col-3 position-relative z-4">
-      <div class="product__img"><img src="/static/img/AV 2000 BRILLO.png"" alt=""> </div>
-      <div class="contenido">
-        <div class="product__title">AV-2000 Brillo de Seda</div>
-        <div class="descripcion producto">Pintura Emulsionada Poliacrílica Satinada</div>
-        <div class="product__buttom d-flex justify-content-center p-2">
-          <a class="button-vermas" href="/productos/detalles">
-            <span class="button-vermas__icon-wrapper">
-                <svg width="10" class="button-vermas__icon-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 15">
-                    <path fill="currentColor" d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z"></path>
-                </svg>
-                <svg class="button-vermas__icon-svg  button-vermas__icon-svg--copy" xmlns="http://www.w3.org/2000/svg" width="10" fill="none" viewBox="0 0 14 15">
-                    <path fill="currentColor" d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z"></path>
-                </svg>
-            </span>
-            Ver más
-        </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-</main>
+{% block extra_js %}
 
 
-
+    <script src="{{ url_for('static', filename='static_landing/js/productos.js') }}"></script>
+    <script src="{{ url_for('static', filename='static_landing/js/animation_productos.js') }}"></script>
 {% endblock %}

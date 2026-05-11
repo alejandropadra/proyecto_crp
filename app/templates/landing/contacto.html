@@ -1,88 +1,96 @@
 {% extends 'layout_landings.html' %}
-{% from 'helpers/_forms.html' import render_field %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9/dist/leaflet.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/contacto.css') }}">
+<style>
+
+</style>
+{% endblock %}
+
 {% block content %}
 
+<section class="contacto-seccion container">
+    <div class="contacto-grid ">
 
-<main class="main_contacto p-5">
+        <!-- Columna formulario -->
+        <div class="contacto-form-col">
 
-<div class="row d-flex  super">
+            <h1 class="contacto-titulo">Contactános</h1>
+            <p class="contacto-subtitulo">Completa el formulario y nos pondremos en contacto contigo.</p>
 
-    <div class="contenedor_informacion_contacto d-flex justify-content-center col-xl col-lg-12 col-sm-12 ">
-        <div class="row col-12">
-            <div class="" style="display: flex; flex-direction: column; justify-content: center;">
-                <h3 class="fs-2">Ventas:</h3>
-                <h3 class="fs-4 text-start">Capital</h3>
-                <p class="text-start">Email: ventas_capital@corimon.com</p>
-                <p class="text-start">Teléfono:</p>
-                <h3 class="fs-4 text-start">Centro</h3>
-                <p class="text-start">Email: ventas_centro@corimon.com</p>
-                <p class="text-start">Teléfono:</p>
-                <h3 class="fs-4 text-start">Oriente</h3>
-                <p class="text-start">Email: ventas_oriente@corimon.com</p>
-                <p class="text-start">Teléfono:</p>
-                <h3 class="fs-4 text-start">Occidente</h3>
-                <p class="text-start">Email: ventas_occidenteo@corimon.com</p>
-                <p class="text-start">Teléfono:</p>
-            </div>
+            <form method="POST" action="{{ url_for('page.contacto') }}" class="contacto-form" id="contactForm" novalidate>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-            <div>
-              <br>
-              <h3 class="fs-2">Compras:</h3>
-                <p class="text-start">Email: compras@corimon.com</p>
-                <p class="text-start">Teléfono:</p>
-            </div>
+                <!-- Honeypot o como se escriba -->
+                <div class="hp-field" aria-hidden="true">
+                    {{ form.website(tabindex="-1", autocomplete="off") }}
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group {% if form.nombre.errors %}has-error{% endif %}">
+                        <label for="nombre">Nombre completo</label>
+                        {{ form.nombre(id="nombre", class="form-input", placeholder="Tu nombre") }}
+                        {% if form.nombre.errors %}
+                            <span class="form-error">{{ form.nombre.errors[0] }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="form-group {% if form.telefono_contacto.errors %}has-error{% endif %}">
+                        <label for="telefono_contacto">Teléfono</label>
+                        {{ form.telefono_contacto(id="telefono_contacto", class="form-input", placeholder="ejemplo: 04120001234") }}
+                        {% if form.telefono_contacto.errors %}
+                            <span class="form-error">{{ form.telefono_contacto.errors[0] }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group {% if form.email.errors %}has-error{% endif %}">
+                        <label for="email">Correo electrónico</label>
+                        {{ form.email(id="email", class="form-input", placeholder="tu@email.com") }}
+                        {% if form.email.errors %}
+                            <span class="form-error">{{ form.email.errors[0] }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="form-group {% if form.motivo.errors %}has-error{% endif %}">
+                        <label for="motivo">Motivo de contacto</label>
+                        {{ form.motivo(id="motivo", class="form-input form-select") }}
+                        {% if form.motivo.errors %}
+                            <span class="form-error">{{ form.motivo.errors[0] }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group {% if form.mensaje.errors %}has-error{% endif %}">
+                    <label for="mensaje">Mensaje</label>
+                    {{ form.mensaje(id="mensaje", class="form-input form-textarea", placeholder="Escribe tu mensaje aquí...", rows="5") }}
+                    <span class="form-char-count"><span id="charCount">0</span>/2000</span>
+                    {% if form.mensaje.errors %}
+                        <span class="form-error">{{ form.mensaje.errors[0] }}</span>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary contacto-submit" id="submitBtn">
+                    Enviar Mensaje
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+            </form>
         </div>
-        
-    
+
+        <div class="contacto-mapa-col">
+            <div class="contacto-mapa-wrapper" id="mapaContacto"></div>
+
+        </div>
+
     </div>
-    
-    <div class="formulario_contacto  col-xl-7 col-lg- col-sm-12 ">
-        <form method="POST" >
-          <div class="titulo"> <h3 class="text-white"> Contáctanos </h3></div>
-          
-          <div class="input-container contacto">
-            {{ render_field(form.nombre, class ="entrada contacto", id="nombre" ) }}
-            <label for="nombre" class="label contacto">Ingrese su nombre</label>
-            <div class="underline"></div>
-          </div>
-    
-          <div class="input-container contacto">
-            {{ render_field(form.telefono_contacto, class ="entrada contacto", id="tlf" ) }}
-            <label for="tlf" class="label contacto">Ingrese su número de teléfono</label>
-            <div class="underline"></div>
-          </div>
+</section>
 
-          <div class="input-container contacto">
-            {{ render_field(form.email, class ="entrada contacto", id="tlf" ) }}
-            <label for="tlf" class="label contacto">Ingrese su correo electrónico</label>
-            <div class="underline"></div>
-          </div>
-    
-          <div class="input-container contacto select-container">
-            {{ render_field(form.motivo, class="entrada contacto", id="motivo", onchange="updateDropdownDirection(this)") }}
-            <label for="motivo" class="label contacto">¿Cuál es el motivo de su contacto?</label>
-            <div class="underline"></div>
-          </div>
-        
-        
-    
-          
-    
-    
-          <div class="elboton d-flex justify-content-center" >
-            {{ form.honeypot }}
-            <input type ="hidden" name = "csrf_token" value ="{{csrf_token()}}"/>
-            <button class="submit " > <span>Enviar</span></button >
-          </div>
-    
-        </form>
-      </div>
-    
+{% endblock %}
 
 
 
-
-</div>
-</main>
-
+{% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9/dist/leaflet.min.js"></script>
+    <script src="{{ url_for('static', filename='static_landing/js/contacto.js') }}"></script>
 {% endblock %}

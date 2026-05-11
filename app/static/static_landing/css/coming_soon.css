@@ -1,0 +1,317 @@
+/* ========================================
+   1. COMING SOON — Layout
+   ======================================== */
+
+.cs-seccion {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    min-height: 100vh;
+    background: var(--color-white);
+    position: relative;
+    overflow: hidden;
+    padding-top: 50px;
+}
+
+
+/* Ambient gradient sutil */
+.cs-seccion::after {
+    content: '';
+    position: absolute;
+    top: -30%;
+    left: -10%;
+    width: 45%;
+    height: 160%;
+    background: linear-gradient(
+        145deg,
+        rgba(229, 9, 20, 0.03) 0%,
+        rgba(176, 7, 16, 0.04) 40%,
+        rgba(229, 9, 20, 0.01) 100%
+    );
+    transform: rotate(-12deg);
+    border-radius: 60px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--color-gray-900);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 200px;
+    border-radius: var(--radius-md);
+    box-shadow: rgba(0,0,0,0.02) 0px 1px 3px 0px, rgba(27,31,35,0.15) 0px 0px 0px 1px;
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-gray-900);
+    color: var(--color-white);
+    border-color: var(--color-gray-900);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+/* ========================================
+   2. COMING SOON — Texto
+   ======================================== */
+
+.cs-texto {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-4xl);
+    padding-right: 0;
+    margin-right: -60px;
+    padding-left: 100px;
+    position: relative;
+    z-index: 2;
+}
+
+
+.posicionamiento {
+    font-family: var(--font-body);
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+}
+
+.posicionamiento span {
+    color: var(--color-red-500);
+    position: relative;
+    display: inline-block;
+}
+/* Badge dot */
+.badge-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--color-red-500);
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+.cs-titulo {
+    font-family: var(--font-display);
+    font-size: var(--font-size-5xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+    margin: 0;
+    letter-spacing: -0.02em;
+    line-height: var(--line-height-tight);
+}
+
+.cs-destacado {
+    color: var(--color-red-500);
+    font-style: italic;
+    position: relative;
+    display: inline-block;
+}
+
+.cs-destacado::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background-color: rgba(229, 9, 20, 0.12);
+    z-index: -1;
+    border-radius: var(--radius-sm);
+}
+
+.cs-subtitulo {
+    font-family: var(--font-body);
+    font-size: var(--font-size-lg);
+    color: var(--color-gray-600);
+    margin: 0;
+    line-height: 1.7;
+}
+
+.cs-ctas {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-sm);
+}
+
+.cs-btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cs-btn-contact {
+    color: var(--color-gray-900);
+    border: 1px solid var(--border-light);
+}
+
+.cs-btn-contact:hover {
+    background: var(--color-gray-light);
+}
+
+.cs-footer {
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    color: var(--color-gray-400);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: var(--spacing-lg);
+}
+
+.cs-footer svg {
+    color: var(--color-gray-400);
+}
+
+
+/* ========================================
+   3. COMING SOON — Imagen
+   ======================================== */
+
+.cs-imagen {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Glow sutil */
+.cs-imagen::before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    right: -5%;
+    width: 50%;
+    height: 50%;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(229, 9, 20, 0.03) 0%,
+        transparent 70%
+    );
+    pointer-events: none;
+}
+
+.cs-imagen img {
+    width: auto;
+    height: 100%;
+    max-height: calc(100vh - 10px);
+    object-fit: cover;
+    position: relative;
+    z-index: 1;
+}
+
+
+/* ========================================
+   4. RESPONSIVE — Tablet
+   ======================================== */
+
+@media (min-width: 48.0625rem) and (max-width: 64rem) {
+    .cs-texto {
+        padding: var(--spacing-2xl);
+    }
+
+    .cs-titulo {
+        font-size: var(--font-size-4xl);
+    }
+
+    .cs-imagen img {
+        height: 75%;
+    }
+}
+
+/* ========================================
+   5. RESPONSIVE — Móvil
+   ======================================== */
+
+@media (max-width: 64rem) {
+    .cs-seccion {
+        grid-template-columns: 1fr;
+    }
+
+    .cs-imagen {
+        min-height:400px;           
+
+        align-items: flex-end;       
+    }
+
+    .cs-imagen img {
+        height: 100%;                
+        width: auto;
+        max-height:400px;
+        max-width: 100%;
+        object-fit: cover;
+    }
+
+    .cs-texto {
+        padding: var(--spacing-xl) var(--spacing-lg);
+        margin-right: 0;             
+        text-align: center;
+        align-items: center;
+        margin-top: 70px;
+    }
+
+    .cs-titulo {
+        font-size: var(--font-size-3xl);
+    }
+
+    .cs-subtitulo {
+        font-size: var(--font-size-base);
+        max-width: 100%;
+    }
+
+    .cs-ctas {
+        justify-content: center;
+    }
+
+    .cs-footer {
+        justify-content: center;
+    }
+}
+
+
+/* ========================================
+   6. RESPONSIVE — Móvil pequeño
+   ======================================== */
+
+@media (max-width: 30rem) {
+    .cs-imagen {
+        min-height: 400px;
+
+    }
+
+    .cs-imagen img {
+        max-height: 400px;
+    }
+
+    .cs-texto {
+        padding: var(--spacing-lg) var(--spacing-md);
+        gap: var(--spacing-md);
+    }
+
+    .cs-titulo {
+        font-size: var(--font-size-2xl);
+    }
+
+    .cs-subtitulo {
+        font-size: var(--font-size-sm);
+    }
+
+    .cs-ctas {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .cs-ctas .btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+}

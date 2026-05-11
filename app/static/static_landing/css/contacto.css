@@ -1,0 +1,491 @@
+/* ========================================
+   1. CONTACTO — Sección principal
+   ======================================== */
+
+.contacto-seccion {
+    background:
+        radial-gradient(ellipse at 0% 0%, rgba(0, 0, 0, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 100% 100%, rgba(0, 0, 0, 0.02) 0%, transparent 50%),
+        var(--color-white);
+    padding: var(--spacing-4xl) var(--spacing-2xl);
+    min-height: min(100vh, 700px);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-light);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+.contacto-seccion::after {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -15%;
+    width: 50%;
+    height: 160%;
+    background: linear-gradient(
+        145deg,
+        rgba(0, 0, 0, 0.02) 0%,
+        rgba(0, 0, 0, 0.035) 40%,
+        rgba(0, 0, 0, 0.01) 100%
+    );
+    transform: rotate(-12deg);
+    border-radius: 80px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.contacto-seccion::after {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -15%;
+    width: 50%;
+    height: 160%;
+    background: linear-gradient(
+        145deg,
+        rgba(229, 9, 20, 0.03) 0%,
+        rgba(176, 7, 16, 0.04) 40%,
+        rgba(229, 9, 20, 0.01) 100%
+    );
+    transform: rotate(-12deg);
+    border-radius: 80px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.contacto-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: var(--spacing-4xl);
+    align-items: start;
+    position: relative;
+    z-index: 1;
+}
+
+
+/* ========================================
+   2. FORMULARIO — Columna izquierda
+   ======================================== */
+
+.contacto-form-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.contacto-titulo {
+    font-family: var(--font-display);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+    margin: 0;
+    letter-spacing: -0.02em;
+    line-height: var(--line-height-tight);
+}
+
+.contacto-subtitulo {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    color: var(--color-gray-600);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.contacto-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-md);
+}
+
+/* Honeypot */
+.hp-field {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+    height: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+}
+
+.form-group label {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-gray-900);
+}
+
+.form-input {
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    color: var(--text-2);
+    background: var(--color-white);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 12px 16px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+    width: 100%;
+}
+
+.form-input:focus {
+    border-color: var(--color-red-500);
+    box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.08);
+}
+
+.form-input::placeholder {
+    color: var(--color-gray-400);
+}
+
+.form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 120px;
+    max-height: 300px;
+}
+
+.form-char-count {
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    color: var(--color-gray-400);
+    text-align: right;
+    transition: color 0.2s ease;
+}
+
+/* Errores */
+.form-error {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--color-red-500);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 0 0;
+}
+
+.form-error::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23E50914' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cline x1='12' y1='8' x2='12' y2='12'/%3E%3Cline x1='12' y1='16' x2='12.01' y2='16'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.form-group.has-error .form-input {
+    border-color: var(--color-red-500);
+    box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.06);
+}
+
+/* Botón submit */
+.contacto-submit {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: var(--spacing-sm);
+}
+
+.contacto-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+
+/* ========================================
+   3. MAPA + INFO — Columna derecha
+   ======================================== */
+
+.contacto-mapa-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+    height: 100%;
+}
+
+.contacto-mapa-wrapper {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    height: 100%;
+    min-height: 340px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+    z-index: 0;
+}
+
+/* Info cards */
+.contacto-info-cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.info-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--color-white);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 16px 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+.info-card-icono {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: var(--color-red-soft);
+    color: var(--color-red-500);
+    flex-shrink: 0;
+}
+
+.info-card h4 {
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-900);
+    margin: 0;
+}
+
+.info-card p {
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    color: var(--color-gray-600);
+    margin: 0;
+    line-height: 1.4;
+}
+
+
+/* ========================================
+   4. LEAFLET — Overrides
+   ======================================== */
+
+.contacto-mapa-wrapper .leaflet-control-attribution {
+    display: none !important;
+}
+
+.contacto-mapa-wrapper .leaflet-control-zoom {
+    border: none !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 10px !important;
+    overflow: hidden;
+}
+
+.contacto-mapa-wrapper .leaflet-control-zoom a {
+    width: 34px !important;
+    height: 34px !important;
+    line-height: 34px !important;
+    font-size: 16px !important;
+    color: var(--color-gray-900) !important;
+    background: var(--color-white) !important;
+    border-bottom: 1px solid var(--border-light) !important;
+}
+
+.contacto-mapa-wrapper .leaflet-control-zoom a:hover {
+    background: var(--color-gray-light) !important;
+}
+
+.contacto-mapa-wrapper .leaflet-popup-content-wrapper {
+    border-radius: 12px !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+    padding: 0 !important;
+}
+
+.contacto-mapa-wrapper .leaflet-popup-content {
+    margin: 14px 16px !important;
+    min-width: 180px;
+}
+
+.contacto-mapa-wrapper .leaflet-popup-tip {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Popup custom */
+.mapa-popup {
+    text-align: center;
+    padding: 4px 0;
+}
+
+.mapa-popup h4 {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-gray-900);
+    margin: 0 0 4px;
+}
+
+.mapa-popup p {
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    color: var(--color-gray-600);
+    margin: 0 0 8px;
+    line-height: 1.4;
+}
+
+.mapa-popup-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #fff !important;
+    background: var(--color-red-500);
+    padding: 5px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.mapa-popup-btn:hover {
+    background: var(--color-gray-900);
+}
+
+/* Marcador */
+.custom-marker {
+    background: none !important;
+    border: none !important;
+}
+
+.marker-pin {
+    filter: drop-shadow(0 4px 8px rgba(229, 9, 20, 0.3));
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.marker-pin:hover {
+    transform: scale(1.1) translateY(-4px);
+}
+
+
+/* ========================================
+   5. RESPONSIVE — Tablet
+   ======================================== */
+
+@media (min-width: 48.0625rem) and (max-width: 64rem) {
+    .contacto-grid {
+        gap: var(--spacing-2xl);
+    }
+
+    .contacto-titulo {
+        font-size: var(--font-size-3xl);
+    }
+
+    .contacto-mapa-wrapper {
+        min-height: 280px;
+    }
+}
+
+
+/* ========================================
+   6. RESPONSIVE — Móvil
+   ======================================== */
+
+@media (max-width: 64rem) {
+    .contacto-seccion {
+        padding: 40px 0 60px;
+    }
+
+    .contacto-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-2xl);
+    }
+
+    .contacto-mapa-col {
+        position: static;
+        order: -1;
+        height: auto;
+    }
+
+    .contacto-mapa-wrapper {
+        height: 280px;
+        min-height: 280px;
+        width: 100%;
+    }
+
+    .contacto-titulo {
+        font-size: var(--font-size-3xl);
+    }
+}
+
+
+/* ========================================
+   7. RESPONSIVE — Móvil pequeño
+   ======================================== */
+
+@media (max-width: 30rem) {
+    main{
+        padding: var(--spacing-lg);
+    }
+    .contacto-seccion {
+        padding: var(--spacing-md) !important;
+    }
+
+    .contacto-titulo {
+        font-size: var(--font-size-2xl);
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+
+    .contacto-mapa-wrapper {
+        height: 220px;
+        min-height: 220px;
+    }
+
+    .contacto-submit {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .info-card {
+        padding: 12px 16px;
+    }
+
+    .info-card-icono {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+    }
+}
+
+@media (width >= 96rem) {
+     main{
+        margin: 0px;
+        display: flex;
+        align-items: center;
+    }
+}

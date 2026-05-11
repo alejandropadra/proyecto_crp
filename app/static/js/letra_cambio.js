@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function() {
             monedaSpan.textContent = estado.transaccion;
         }
 
-        console.log('📊 Resumen actualizado:', {
+        console.log(' Resumen actualizado:', {
             moneda: estado.transaccion,
             cantidadFacturas: estado.facturasSeleccionadas.length,
             facturaAbonada: estado.facturaAbonada ? `${estado.facturaAbonada.numero} (${estado.facturaAbonada.montoAbono.toFixed(2)})` : 'No',
@@ -329,8 +329,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (estado.transaccion === "bs" && permiteMoneda === false) {
 
                 if (facturasSeleccionadasTemp.length > 0) {
-                    console.log(`⚠️ Factura ${datos.numero} no permite Bs - Deteniendo proceso`);
-                    console.log(`✅ Se mantienen ${facturasSeleccionadasTemp.length} facturas ya seleccionadas`);
+                    console.log(`Factura ${datos.numero} no permite Bs - Deteniendo proceso`);
+                    console.log(` Se mantienen ${facturasSeleccionadasTemp.length} facturas ya seleccionadas`);
                     
                     showAlertGrandes(
                         `Proceso detenido: La siguiente factura no permite pagos en Bs.\n` +
@@ -355,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const montoRestanteActual = estado.montoDisponible - montoAcumulado;
 
-            console.log(`\n📄 Evaluando Factura ${index + 1}/${facturas.length}:`);
+            console.log(`\n Evaluando Factura ${index + 1}/${facturas.length}:`);
             console.log(`   Número: ${datos.numero}`);
             console.log(`   Monto: ${datos.monto.toFixed(2)} ${estado.transaccion}`);
             console.log(`   Permite ${estado.transaccion}: ${permiteMoneda ? '✅ Sí' : '❌ No'}`);
@@ -370,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 montoAcumulado += datos.monto;
                 facturasSeleccionadasTemp.push(datos);
                 
-                console.log(`   ✅ SELECCIONADA COMPLETA`);
+                console.log(`    SELECCIONADA COMPLETA`);
                 console.log(`   Acumulado: ${montoAcumulado.toFixed(2)} ${estado.transaccion}`);
             } 
             // Si no cabe completa pero queda saldo
@@ -388,7 +388,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     montoAcumulado += datos.monto;
                     facturasSeleccionadasTemp.push(datos);
                     
-                    console.log(`   ✅ SELECCIONADA COMPLETA (Monto sobrante)`);
+                    console.log(`    SELECCIONADA COMPLETA (Monto sobrante)`);
                     console.log(`   Acumulado: ${montoAcumulado.toFixed(2)} ${estado.transaccion}`);
                 } else {
                     // Hacer abono parcial
@@ -396,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     montoAcumulado += montoRestanteActual;
                     procesoDetenido = true;
                     
-                    console.log(`   💰 ABONADA con ${montoRestanteActual.toFixed(2)} ${estado.transaccion}`);
+                    console.log(`    ABONADA con ${montoRestanteActual.toFixed(2)} ${estado.transaccion}`);
                     console.log(`   Monto total factura: ${datos.monto.toFixed(2)} ${estado.transaccion}`);
                     console.log(`   PROCESO DETENIDO - Monto agotado`);
                 }

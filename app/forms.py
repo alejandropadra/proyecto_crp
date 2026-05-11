@@ -1,8 +1,8 @@
 from wtforms import Form
-from wtforms import validators
+from wtforms import validators, ValidationError
 from wtforms import StringField,PasswordField, SelectField, HiddenField,BooleanField, EmailField
 from wtforms import DateField,FileField,IntegerField,RadioField,FloatField,TextAreaField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Email, Length, Optional
 
 from .models import User
 
@@ -17,18 +17,39 @@ class LoginForm(Form):
     clave = PasswordField("",[validators.length(min=4,max=20),
                             validators.DataRequired()])
     honeypot = HiddenField("", [ length_honeypot])
-
+    
 class ContactForm(Form):
-    nombre= StringField("",[validators.DataRequired()])
-    telefono_contacto= StringField("",[validators.DataRequired()])
-    email = EmailField("", [validators.DataRequired(message='El email es requerido.'),
-        validators.Email(message='Ingre un email valido.')
+    nombre = StringField("", [
+        validators.DataRequired(message="El nombre es requerido.")
     ])
-    motivo =SelectField("", [validators.DataRequired()], choices=[("",""), 
-                                                ("Ventas", "Quiero vender sus productos"),
-                                                ("Particular", "Quiero comprar pinturas"),
-                                                ("Compras", "Quiero ofrecer mis productos o servicios"),
-                                                ("Empleo", "Quiero unirme a su equipo de trabajo")])
+    
+    telefono_contacto = StringField("", [
+        validators.DataRequired(message="El teléfono es requerido.")
+    ])
+
+    def validate_telefono_contacto(self, field):
+        if field.data:
+            telefono = field.data.strip()
+            if not telefono.isdigit() or len(telefono) != 11:
+                raise ValidationError("Ingrese un número válido de 11 dígitos.")
+    email = EmailField("", [
+        validators.DataRequired(message="El email es requerido."),
+        validators.Email(message="Ingrese un email válido.")
+    ])
+    motivo = SelectField("", [
+        validators.DataRequired(message="Seleccione un motivo.")
+    ], choices=[
+        ("", "Seleccione un motivo..."),
+        ("Ventas", "Quiero vender sus productos"),
+        ("Particular", "Quiero comprar pinturas"),
+        ("Compras", "Quiero ofrecer mis productos o servicios"),
+        ("Empleo", "Quiero unirme a su equipo de trabajo")
+    ])
+    mensaje = TextAreaField("", [
+        validators.DataRequired(message="El mensaje es requerido."),
+        validators.Length(max=2000, message="Máximo 2000 caracteres.")
+    ])
+    website = HiddenField("", [ length_honeypot])
 
 class RegisterForm(Form):
     rif = SelectField("", choices=[("",""),("J","J"),("G","G"),("V","V")])
@@ -223,3 +244,107 @@ class RegistroPagoForm(Form):
     imagen= FileField("Imagen")
     base_iva=BooleanField("")
     base= BooleanField("")
+
+
+class SolicitudColorForm(Form):
+
+    # ── Datos del solicitante (vienen de BD, viajan ocultos) ──
+    tienda = HiddenField(
+        validators=[DataRequired(), Length(max=120)]
+    )
+    email = HiddenField(
+        validators=[DataRequired(), Email()]
+    )
+    location = HiddenField(
+        validators=[DataRequired(), Length(max=80)]
+    )
+
+    # ── PASO 1: Muestra de color ──────────────────────────────
+    color = StringField(
+        'Nombre del color',
+        validators=[
+            DataRequired(message='Ingrese el nombre del color'),
+            Length(max=80)
+        ],
+        render_kw={
+            'placeholder': 'Ej: Beige Arena',
+            'data-campo': 'color'
+        }
+    )
+
+    cod_std = StringField(
+        'Código STD',
+        validators=[
+            DataRequired(message='Ingrese el código STD'),
+            Length(max=40)
+        ],
+        render_kw={
+            'placeholder': 'Ejemplo 270-618, SW7503',
+            'data-campo': 'cod_std'
+        }
+    )
+
+    marca = SelectField(
+        'Marca',
+        validators=[DataRequired(message='Seleccione una marca')],
+        choices=[
+            ('', 'Seleccionar…'),
+            ('PPV', 'PPV'),
+            ('Pinturas Montana', 'Pinturas Montana'),
+            ('Pinco', 'Pinco'),
+        ],
+        render_kw={'data-campo': 'marca', 'class': 'tom-select'}
+    )
+
+    linea = SelectField(
+        'Línea de producto',
+        validators=[Optional()],
+        choices=[
+            ('', 'Seleccionar…'),
+            ('Av-2000 Interior Mate', 'Av-2000 Interior Mate'),
+            ('Av-2000 Brillo de Seda', 'Av-2000 Brillo de Seda'),
+            ('Av-2000 Montafix Esmalte Brillante', 'Av-2000 Montafix Esmalte Brillante'),
+            ('Av-2000 Montafix Esmalte Satinado', 'Av-2000 Montafix Esmalte Satinado'),
+            ('Av-2000 Hidroesmalte Brillante', 'Av-2000 Hidroesmalte Brillante'),
+            ('Loxon Interior Mate', 'Loxon Interior Mate'),
+            ('Loxon Interior Satinado', 'Loxon Interior Satinado'),
+            ('Loxon Exterior Mate', 'Loxon Exterior Mate'),
+            ('Versatyl Interior Mate', 'Versatyl Interior Mate'),
+            ('Versatyl Interior Satinado', 'Versatyl Interior Satinado'),
+            ('Versatyl Exterior Mate', 'Versatyl Exterior Mate'),
+            ('Sherwin Williams Esmalte Brillante', 'Sherwin Williams Esmalte Brillante '),
+            ('Sherwin Williams Esmalte Satinado', 'Sherwin Williams Esmalte Satinado '),
+            ('Dekoral Caucho Mate', 'Dekoral Caucho Mate '),
+            ('Dekoral Caucho Satinado', 'Dekoral Caucho Satinado '),
+            ('Proclassic Interior Mate', 'Proclassic Interior Mate '),
+            ('Proclassic Interior Satinado', 'Proclassic Interior Satinado '),
+            ('Proclassic Exterior Mate', 'Proclassic Exterior Mate '),
+            ('Weekend Interior Mate', 'Weekend Interior Mate '),
+            ('Weekend Interior Satinado', 'Weekend Interior Satinado '),
+            ('Weekend Exterior Mate', 'Weekend Exterior Mate '),
+        ],
+        render_kw={'data-campo': 'linea', 'class': 'tom-select'}
+    )
+
+    udv = SelectField(
+        'Unidad de venta',
+        validators=[Optional()],
+        choices=[
+            ('', 'Seleccionar…'),
+            ('Galón', 'Galón'),
+            ('Cuñete', 'Cuñete'),
+
+        ],
+        render_kw={'data-campo': 'udv', 'class': 'tom-select'}
+    )
+
+    # ── PASO 2: Observaciones ─────────────────────────────────
+    observaciones = TextAreaField(
+        'Observaciones adicionales',
+        validators=[Optional(), Length(max=1000)],
+        render_kw={
+            'placeholder': 'Detalles especiales para el formulador: preferencias de tono, urgencia, condiciones de aplicación…',
+            'data-campo': 'observaciones',
+            'style': 'min-height:120px;'
+        }
+    )

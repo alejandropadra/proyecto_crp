@@ -4,21 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{% block meta_description %}Landing page profesional{% endblock %}">
-    <title>{% block title %}Mi Landing Page{% endblock %}</title>
+    <title>{% block title %}{% endblock %}</title>
     
     <!-- Fuentes locales -->
     <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/fonts.css') }}">
-    
+
     <!-- CSS Principal -->
     <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/main.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/animation.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/splash-effect.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/responsividad.css') }}">
+
+
     {% block extra_css %}{% endblock %}
     
     
 </head>
 <body>
+
+    {# ESTE BASE NO SE USAAAAAAAA#}
     
 <header>
         <nav class="navbar">
@@ -32,15 +33,15 @@
                 
                 <!-- Menú Desktop -->
                 <ul class="navbar-menu menu-xls">
-                    <li><a href="#inicio">Inicio</a></li>
-                    <li><a href="#features">¿Quiénes Somos?</a></li>
-                    <li><a href="#testimonios">Productos</a></li>
-                    <li><a href="#contacto">Contacto</a></li>
+                    <li><a class="active" href="{{ url_for('page.index')}}">Inicio</a></li>
+                    <li><a href="">¿Quiénes Somos?</a></li>
+                    <li><a href="{{ url_for('page.products')}}">Productos</a></li>
+                    <li><a href="">Contacto</a></li>
                 </ul>
                 
                 <!-- CTA Desktop -->
                 <div class="navbar-cta menu-xls">
-                    <a href="#contacto" class="btn btn-primary">Portal Clientes</a>
+                    <a href="{{ url_for('page.login')}}" class="btn btn-primary">Portal Clientes</a>
                 </div>
 
                 <!-- Botón Hamburguesa (Solo Móvil) -->
@@ -56,21 +57,92 @@
     
     <!-- Contenido Principal -->
     <main>
+        {# Mensajes flash #}
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    <div class="flash-stack">
+                        {% for category, message in messages %}
+                            {% if category == 'error' %}
+                                {% set flash_class = 'flash--error' %}
+                                {% set flash_titulo = 'Ha ocurrido un error' %}
+                            {% elif category == 'warning' %}
+                                {% set flash_class = 'flash--warning' %}
+                                {% set flash_titulo = 'Atención' %}
+                            {% elif category == 'info' %}
+                                {% set flash_class = 'flash--info' %}
+                                {% set flash_titulo = 'Información' %}
+                            {% else %}
+                                {% set flash_class = 'flash--success' %}
+                                {% set flash_titulo = 'Proceso exitoso' %}
+                            {% endif %}
+
+                            <div class="flash {{ flash_class }}" role="alert" data-duration="5000">
+                                <div class="flash-main">
+                                    <div class="flash-icon">
+                                        {% if category == 'error' %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <line x1="15" y1="9" x2="9" y2="15"/>
+                                                <line x1="9" y1="9" x2="15" y2="15"/>
+                                            </svg>
+                                        {% elif category == 'warning' %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                                                <line x1="12" y1="9" x2="12" y2="13"/>
+                                                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                            </svg>
+                                        {% elif category == 'info' %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <line x1="12" y1="16" x2="12" y2="12"/>
+                                                <line x1="12" y1="8" x2="12.01" y2="8"/>
+                                            </svg>
+                                        {% else %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <polyline points="16 10 11 15 8 12"/>
+                                            </svg>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="flash-content">
+                                        <h3 class="flash-title">{{ flash_titulo }}</h3>
+                                        <p class="flash-body">{{ message }}</p>
+                                    </div>
+
+                                    <button class="flash-close" type="button" aria-label="Cerrar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M18 6 6 18"/>
+                                            <path d="m6 6 12 12"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div class="flash-footer">
+                                    <div class="flash-progress-track">
+                                        <div class="flash-progress-fill"></div>
+                                    </div>
+                                    <p class="flash-countdown">
+                                        <span class="flash-countdown-text">El mensaje se cerrará en <span class="flash-seconds">5</span> segundos.</span>
+                                        <span class="flash-countdown-action">Pasa el cursor para detener.</span>
+                                        <span class="flash-countdown-paused">Pausado mientras el cursor esté encima.</span>
+                                    </p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
         {% block content %}
         <!-- Aquí va el contenido de cada página -->
         {% endblock %}
     </main>
     
-    <!-- GSAP Core -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <!-- ScrollTrigger Plugin -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+
     
     <!-- JavaScript Principal -->
     <script src="{{ url_for('static', filename='static_landing/js/main.js') }}"></script>
-    <script src="{{ url_for('static', filename='static_landing/js/animation.js') }}"></script>
+
     
     <!-- JS Extra por página -->
     {% block extra_js %}{% endblock %}

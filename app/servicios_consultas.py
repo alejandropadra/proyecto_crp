@@ -7,7 +7,7 @@ class ConsultasSAP:
     """Este es el gestor de consultas a SAP, para no tener tantas sesiones de HTTP abiertas y solo abrir una sola"""
     
     def __init__(self, user_fuente: str, contra_fuente: str, ip_fuente: str, 
-                verificacion_ssl: bool = True, timeout: int = 30):
+                verificacion_ssl: bool = True, timeout: int = 40):
         self.user_fuente = user_fuente
         self.contra_fuente = contra_fuente
         self.ip_fuente = ip_fuente

@@ -2454,8 +2454,6 @@ function validarCampos() {
 
 function agregarError(elemento, mensaje) {
     if (!elemento) return;
-    
-
     if (elemento.classList.contains('campo-error')) return;
     
     elemento.classList.add('campo-error');

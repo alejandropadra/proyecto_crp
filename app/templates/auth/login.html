@@ -1,126 +1,92 @@
 {% extends 'layout_landings.html' %}
-{% from 'helpers/_forms.html' import render_field %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/login.css') }}">
+
+<style>
+    main{
+        padding: 50px 0px;
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-{% block stilos%}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/estilos_login.css') }}">
 
-{% endblock%}
+<section class="login-seccion">
+    <div class="login-card">
 
+        <!-- Columna imagen -->
+        <div class="login-imagen">
+            <img src="{{ url_for('static', filename='img/montana_galon_planta.webp') }}" alt="Corimon Pinturas">
+            <div class="login-imagen-overlay"></div>
+            <div class="login-imagen-content">
+                <img src="{{ url_for('static', filename='img/logoCRP.avif') }}" 
+                    alt="Corimon Pinturas" class="login-logo">
+                <p>Portal de clientes </p>
+            </div>
+        </div>
 
+        <!-- Columna formulario -->
+        <div class="login-form-col">
+            <div class="login-form-inner">
 
-<main class="position-relative">
-
-  
-<div class="container d-flex justify-content-center w-100 position-absolute mensaje-flashc"  >
-  <div class="col-12  col-md-offset-1 flash  z-2 " >
-    {% with messages = get_flashed_messages(with_categories=True) %}
-      {% if messages %}
-        <div class="alert-container d-flex justify-content-center" >
-          {% for category, message in messages %}
-            {% if category == 'error' %}
-              <div class="alert mensaje_flash  alert-dismissible " role="alert">
-                <div class="error__icon">
-                  <svg
-                    fill="none"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="m13 13h-2v-6h2zm0 4h-2v-2h2zm-1-15c-1.3132 0-2.61358.25866-3.82683.7612-1.21326.50255-2.31565 1.23915-3.24424 2.16773-1.87536 1.87537-2.92893 4.41891-2.92893 7.07107 0 2.6522 1.05357 5.1957 2.92893 7.0711.92859.9286 2.03098 1.6651 3.24424 2.1677 1.21325.5025 2.51363.7612 3.82683.7612 2.6522 0 5.1957-1.0536 7.0711-2.9289 1.8753-1.8754 2.9289-4.4189 2.9289-7.0711 0-1.3132-.2587-2.61358-.7612-3.82683-.5026-1.21326-1.2391-2.31565-2.1677-3.24424-.9286-.92858-2.031-1.66518-3.2443-2.16773-1.2132-.50254-2.5136-.7612-3.8268-.7612z"
-                      fill="#393a37"
-                    ></path>
-                  </svg>
+                <div class="login-header">
+                    <h1>Bienvenido</h1>
+                    <p>Ingresa tus credenciales para acceder al sistema.</p>
                 </div>
-                <div class="error-tittle"> {{ message }} </div>
-                <div class="error__close">
-                <button type="button" class="btn-close p-1" data-bs-dismiss="alert" aria-label="Close"></button></div>
-              </div>
-            {% else %}
-            <div class="alert mensaje_flash  alert-dismissible succes " role="alert">
-              <div class="error__icon">
-                <i class="bi bi-check-circle-fill" style="color: #fff" > </i>
-              </div>
-              <div class="error-tittle"> {{ message }} </div>
-              <div class="error__close">
-              <button type="button" class="btn-close p-1" data-bs-dismiss="alert" aria-label="Close"></button></div>
-            
+
+                <form method="POST" class="login-form" id="loginForm" novalidate>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    {{ form.honeypot }}
+
+                    <!-- RIF -->
+                    <div class="form-group">
+                        <label>Documento de identidad</label>
+                        <div class="login-rif-row">
+                            <div class="login-rif-select">
+                                {{ form.rif(class="form-input form-select") }}
+                            </div>
+                            <div class="login-rif-input">
+                                {{ form.n_rif(class="form-input", placeholder="Ej: 123456789") }}
+                            </div>
+                        </div>
+                        {% if form.n_rif.errors %}
+                            <span class="form-error">{{ form.n_rif.errors[0] }}</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Contraseña -->
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <div class="login-password-wrap">
+                            {{ form.clave(id="password", class="form-input", placeholder="Ingresa tu contraseña") }}
+                            <button type="button" class="login-eye" id="togglePassword" aria-label="Mostrar contraseña">
+                                <svg id="eyeOpen" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg id="eyeClosed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                            </button>
+                        </div>
+                        {% if form.clave.errors %}
+                            <span class="form-error">{{ form.clave.errors[0] }}</span>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary login-submit" id="submitBtn">
+                        Iniciar Sesión
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                    </button>
+
+                </form>
+
             </div>
-            {% endif %}
-          {% endfor %}
         </div>
-      {% endif %}
-    {% endwith %}
-  </div>
-</div>
 
-  <div class="login_contenedor row col-9 mb-2"  >
-    <div class="imagen_login col-xl-6 col-lg-6 col-sm-12">
-
-      <img src="{{ url_for('static', filename='img/montana_galon_planta.jpg') }}" alt="">
     </div>
-    <div class="formulario_login col-xl-6 col-sm-12 col-lg-6 ">
-      <form method="POST"  class="w-100">
-        <div class="titulo"> <h3> Inicio de sesión </h3></div>
-        
-        <div class="primer_input col-12 ">
-          <div class="row">
-            <div class="input-container col-2"  >
-              {{ render_field(form.rif, class ="entrada rif", id="person") }}
-              <label for="person" class="label">Usuario</label>
-              <div class="underline"></div>
-            </div>
-            <div class="input-container col" style="margin-right: 13px;" >
-            {{ render_field(form.n_rif, class ="entrada", id="usuario" ) }}
-            <div class="underline" style="margin-left: 10px; max-width: 100.9vh; " ></div>
-            
-            </div>
-          </div>
-          
-        </div>
+</section>
 
-         <!--PASSWORD-->
-         <div class="input-container d-flex">
-          {{ render_field(form.clave, class ="entrada", id="password" ) }}
-          <div class="eye"><i class="bi bi-eye h-100"></i></div>
-          <label for="password" class="label">Ingrese la Contraseña</label>
-          <div class="underline"></div>
-        </div>
-        <div class="elboton d-flex justify-content-center" >
-          {{ form.honeypot }}
-          <input type ="hidden" name ="csrf_token" value ="{{csrf_token()}}"/>
-          <button class="submit " > <span>Enviar</span></button >
-        </div>
+{% endblock %}
 
-       
-      </form>
-    </div>
-  </div>
+{% block extra_js %}
 
-
-</main>
-
-<script>
-  const eye = document.querySelector('.eye');
-    const input = document.getElementById('password');
-
-    // Función para mostrar la contraseña
-    function showPassword() {
-      input.type = 'text';
-    }
-
-    // Función para ocultar la contraseña
-    function hidePassword() {
-      input.type = 'password';
-    }
-
-    // Agregar event listeners
-    eye.addEventListener('mousedown', showPassword);
-    eye.addEventListener('mouseup', hidePassword);
-    eye.addEventListener('mouseleave', hidePassword);
-
-    // Prevenir el comportamiento predeterminado de arrastrar el botón en algunos navegadores
-    eye.addEventListener('dragstart', (e) => e.preventDefault());
-</script>
+<script src="{{ url_for('static', filename='static_landing/js/login.js') }}"></script>
 {% endblock %}

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promoción Montana - Sistema de Sorteo</title>
+    
+    <!-- Semantic UI CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.9.2/semantic.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.semanticui.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <!-- CSS Custom -->
+    <link rel="stylesheet" href="{{ url_for('static', filename = 'css/promocion_final.css') }}">
+</head>
+<body>
+
+    <header> 
+        <div class="pintura-diagonal"></div> 
+        <div class="contenedor animacionEntrada-Fade">
+            <img src="{{ url_for('static', filename = 'img/logo_promo.png') }}" alt="Logo Promoción">
+        </div>
+    </header>
+
+    
+    <div class="container">
+
+        <div id="inicial" class="page active">
+            <div class="content content-wide">
+                
+                <div class="buttons">
+                    <button id="btn-prev-1" disabled class="ui button"><i class="arrow left icon"></i> Anterior</button>
+                    <button id="btn-next-1" class="ui primary button">Siguiente <i class="arrow right icon"></i></button>
+                </div>
+                <h1 class="page-title"> Participantes Registrados</h1>
+                <p class="page-subtitle">Listado completo de todos los participantes en la promoción</p>
+                
+                <div class="table-wrapper">
+                    <table id="tablaParticipantes" class="ui celled table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Email</th>
+                                <th>Cédula</th>
+                                <th>Factura</th>
+                                <th>Teléfono</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Se llena solo pa -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Página 2: Realizar Sorteo -->
+        <div id="segundo" class="page right">
+            <div class="content content-wide">
+                <div class="buttons">
+                    <button id="btn-prev-2" class="ui button"><i class="arrow left icon"></i> Anterior</button>
+                    <button id="btn-next-2" class="ui primary button">Siguiente <i class="arrow right icon"></i></button>
+                </div>
+                <h1 class="page-title"> Realizar Sorteo</h1>
+                <p class="page-subtitle">Selecciona el premio y realiza el sorteo aleatorio</p>
+                
+                <div class="sorteo-controls">
+                    <div class="ui form">
+                        <div class="radio-inputs">
+                            <label class="radio-item">
+                                <input class="radio-input" type="radio" name="premio" value="auto">
+                                <span class="radio-tile">
+                                    <span class="radio-imagen">
+                                        <img src="{{ url_for('static', filename = 'img/changan-sorteo.png') }}" alt="Logo Promoción">
+                                    </span>
+
+                                    <span class="radio-check"></span>
+                                </span>
+                            </label>
+
+                            <label class="radio-item">
+                                <input class="radio-input" type="radio" name="premio" value="telefono">
+                                <span class="radio-tile">
+                                    <span class="radio-imagen">
+                                        <img src="{{ url_for('static', filename = 'img/samsung-sorteo.png') }}" alt="Logo Promoción">
+                                    </span>
+
+                                    <span class="radio-check"></span>
+                                </span>
+                            </label>
+
+                            <label class="radio-item">
+                                <input class="radio-input" type="radio" name="premio" value="tablet">
+                                <span class="radio-tile">
+                                    <span class="radio-imagen">
+                                        <img src="{{ url_for('static', filename = 'img/tablets-sorteo.png') }}" alt="Logo Promoción">
+                                    </span>
+
+                                    <span class="radio-check"></span>
+                                </span>
+                            </label>
+
+                            <label class="radio-item">
+                                <input class="radio-input" type="radio" name="premio" value="televisor">
+                                <span class="radio-tile">
+                                    <span class="radio-imagen">
+                                        <img src="{{ url_for('static', filename = 'img/tv-sorteo.png') }}" alt="Logo Promoción">
+                                    </span>
+
+                                    <span class="radio-check"></span>
+                                </span>
+                            </label>
+
+                        </div>
+                    </div>
+
+                    <div class="condicion-sorteo">
+                        <h3 class=" text-center"><i class="gift icon"></i> Condición del Sorteo</h3>
+                        <div class="info-body">
+                            <div class="contenido">
+                                <h3 class=" m-0">Premio Seleccionado:</h3><span id="premioSeleccionado">Ninguno</span>
+                            </div>
+                            <div class=" informacion">
+                                <i class="info circle icon"></i>
+                                <p>Seleccione un premio para saber la información</p>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <button id="btnSortear" class="ui huge primary button">
+                        <i class="random icon"></i>
+                        Realizar Sorteo
+                    </button>
+
+                    <div id="resultadoSorteo" class="resultado-sorteo" style="display:none;">
+                        <div class="ui success message">
+                            <div class="header">🎉 ¡Ganador Seleccionado!</div>
+                            <p id="nombreGanador"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Página 3: Ganadores -->
+        <div id="final" class="page right">
+            <div class="content content-wide">
+                <div class="buttons">
+                    <button id="btn-prev-3" class="ui button"><i class="arrow left icon"></i> Anterior</button>
+                    <button id="downloadBtn" class="ui button download"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download-icon lucide-download"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg> Descargar Tablas</button>
+                </div>
+                <h1 class="page-title">🏆 Ganadores del Sorteo</h1>
+                <p class="page-subtitle">Listado de todos los ganadores seleccionados por premio</p>
+                
+                <!-- Tabla de Ganadores de Auto -->
+                <div class="table-wrapper">
+                    <h2 class="premio-titulo"> Ganadores de Changan Auto</h2>
+                    <table id="tablaGanadoresAuto" class="ui celled table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Orden</th>
+                                <th>Nombre Completo</th>
+                                <th>Cédula</th>
+                                <th>Teléfono</th>
+                                <th>Estado</th>
+                                <th>Fecha Sorteo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Tabla de Ganadores de Tablets -->
+                <div class="table-wrapper">
+                    <h2 class="premio-titulo"> Ganadores de Tablets Samsung</h2>
+                    <table id="tablaGanadoresTablet" class="ui celled table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Orden</th>
+                                <th>Nombre Completo</th>
+                                <th>Cédula</th>
+                                <th>Teléfono</th>
+                                <th>Estado</th>
+                                <th>Fecha Sorteo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Tabla de Ganadores de Teléfonos -->
+                <div class="table-wrapper">
+                    <h2 class="premio-titulo">Ganadores de Teléfonos Celulares</h2>
+                    <table id="tablaGanadoresTelefono" class="ui celled table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Orden</th>
+                                <th>Nombre Completo</th>
+                                <th>Cédula</th>
+                                <th>Teléfono</th>
+                                <th>Estado</th>
+                                <th>Fecha Sorteo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Tabla de Ganadores de Televisores -->
+                <div class="table-wrapper">
+                    <h2 class="premio-titulo">Ganadores de Televisores Smart TV</h2>
+                    <table id="tablaGanadoresTV" class="ui celled table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Orden</th>
+                                <th>Nombre Completo</th>
+                                <th>Cédula</th>
+                                <th>Teléfono</th>
+                                <th>Estado</th>
+                                <th>Fecha Sorteo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Indicadores de página -->
+        <div class="indicators">
+            <div class="indicator active" data-page="0" title="Participantes"></div>
+            <div class="indicator" data-page="1" title="Sorteo"></div>
+            <div class="indicator" data-page="2" title="Ganadores"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fomantic-ui/2.9.2/semantic.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.semanticui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    
+    <script src="{{ url_for('static', filename = 'js/promocion_final.js') }}"></script>
+</body>
+</html>

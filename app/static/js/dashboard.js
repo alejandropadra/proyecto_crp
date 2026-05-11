@@ -27,7 +27,7 @@ function setVal(id, value, format = true) {
     const el = document.getElementById(id);
     if (!el) return;
     el.classList.remove('skeleton-val');
-    el.textContent = format ? fmt(value) : value;
+    el.textContent = format ? fmt(value) : (value ?? 0);
 }
 
 //Marca un elemento como error (no se pudo cargar)
@@ -56,7 +56,7 @@ function renderResumen(data) {
         setVal('vencida-total-dolar', 0);
     }
 
-    // Desglose por antigüedad
+
     setVal('no-vencida-bs',     data.tnovencbs);
     setVal('no-vencida-dolar',  data.tnovencdiv);
     setVal('vencido-130-bs',    data.tvenc130b);

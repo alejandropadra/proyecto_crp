@@ -1,10 +1,85 @@
-{% extends 'nuevo_landing/base_landing.html' %}
-{% block title %}Corimon Pinturas - Colores que Dan Vida{% endblock %}
+{% extends 'layout_landings.html' %}
+
+
+{% block extra_css %}
+    {#Para el carrusel#}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/home.css') }}">
+{% endblock %}
 
 {% block content %}
+<style>
+    main{
+        padding: 0px;
+        margin-top: 10px;
+    }
+</style>
 
 <article id="hero">
     <section class="hero-section">
+        
+        <div class="hero-splash-bg">
+
+            <!--DESKTOP: diagonal con waves sutiles (~50% coverage) -->
+            <svg class="splash-svg splash-svg--desktop"
+                viewBox="0 0 1440 900" preserveAspectRatio="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#E50914"/>
+                        <stop offset="100%" stop-color="#B00710"/>
+                    </linearGradient>
+                </defs>
+
+                <!-- Diagonal con ondulaciones sutiles (control points oscilan ±20px) -->
+                <path d="
+                    M 720 0
+                    C 735 55, 700 120, 690 185
+                    C 678 255, 700 315, 680 385
+                    C 655 455, 638 515, 618 580
+                    C 595 645, 615 705, 580 770
+                    C 548 830, 510 868, 460 900
+                    L 1440 900 L 1440 0 Z
+                " fill="url(#redGrad)"/>
+
+                <!-- Dots de salpicadura -->
+                <circle class="splash-dot" cx="695" cy="55"  r="8"  fill="url(#redGrad)"/>
+                <circle class="splash-dot" cx="670" cy="115" r="4"  fill="url(#redGrad)"/>
+                <circle class="splash-dot" cx="660" cy="260" r="9"  fill="url(#redGrad)"/>
+                <circle class="splash-dot" cx="635" cy="320" r="4"  fill="url(#redGrad)"/>
+                <circle class="splash-dot" cx="600" cy="465" r="10" fill="url(#redGrad)"/>
+                <circle class="splash-dot" cx="575" cy="520" r="4"  fill="url(#redGrad)"/>
+                <circle class="splash-dot" cx="555" cy="650" r="7"  fill="url(#redGrad)"/>
+                <circle class="splash-dot" cx="528" cy="710" r="3"  fill="url(#redGrad)"/>
+                <circle class="splash-dot" cx="435" cy="835" r="8"  fill="url(#redGrad)"/>
+                <circle class="splash-dot" cx="410" cy="875" r="4"  fill="url(#redGrad)"/>
+            </svg>
+
+            <!-- MOBILE: diagonal horizontal con waves sutiles -->
+            <svg class="splash-svg splash-svg--mobile"
+                viewBox="0 0 1440 900" preserveAspectRatio="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="redGradM" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#E50914"/>
+                        <stop offset="100%" stop-color="#B00710"/>
+                    </linearGradient>
+                </defs>
+
+                <path d="
+                    M 0 350
+                    C 85 325, 170 305, 270 278
+                    C 390 248, 470 260, 570 228
+                    C 690 192, 780 178, 895 148
+                    C 1010 118, 1090 130, 1195 92
+                    C 1290 58, 1370 28, 1440 0
+                    L 1440 900 L 0 900 Z
+                " fill="url(#redGradM)"/>
+
+
+            </svg>
+
+        </div>
         <div class="hero-contenedor">
         
             <div class="hero-content hero-content-inicial">
@@ -13,9 +88,9 @@
                     <div class="Titulo Principal">
                         <h1 class="posicionamiento">Corimon <span> Pinturas </span></h1>
                         <h1 class="hero-titulo">
-                            <span class="hero-titulo-linea">Transformando tus</span>
-                            <span class="hero-titulo-linea hero-titulo-destacado">Espacios</span>
-                            <span class="hero-titulo-linea">con Color</span>
+                            <span class="hero-titulo-linea hero-titulo-destacado">Pintando </span>
+                            <span class="hero-titulo-linea"> los sueños de Millones de Venezolanos</span>
+                            <!--<span class="hero-titulo-linea"></span>-->
                         </h1>
                     </div>
 
@@ -27,8 +102,8 @@
                     </p>
 
                     <!-- CTAs -->
-                    <div class="hero-ctas">
-                        <a href="#productos" class="btn btn-primary btn-hero">
+                    <div class="hero-ctas" style="cursor: pointer;">
+                        <a href="{{ url_for('.products')}}" class="btn btn-primary btn-hero">
                             Ver Productos
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -38,59 +113,346 @@
                             Contactar Ahora
                         </a>
                     </div>
+                    
                 </div>
 
-                <div class="hero-imagen">
-                    <img src="{{ url_for('static', filename='static_landing/img/heroPinturas.avif') }}" alt="Productos Corimon Pinturas">
+                <div class="hero-visual">
+                    <div class="hero-image-wrapper">
+                        <img src="{{ url_for('static', filename='img/bannerMontana.avif') }}"
+                                alt="Productos Montana - Dekoral, AV2000, Pinco 69"
+                                class="hero-image">
+
+                        <div class="flotando flotando--left">
+                            <div class="product-tag">
+                                <div class="tag-color" style="background: #3B6FB5;"></div>
+                                <div class="tag-info">
+                                    <span class="tag-name">AV-2000 Interior</span>
+                                    <span class="tag-type">Emulsionada Mate</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flotando flotando--right"> 
+                            <div class="product-tag">
+                                <div class="tag-color" style="background: #C9A84C;"></div>
+                                <div class="tag-info">
+                                    <span class="tag-name">AV-2000 Brillo de Seda</span>
+                                    <span class="tag-type">Emulsionada Satinada</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flotando flotando--bottom"> 
+                            <div class="product-tag ">
+                                <div class="tag-color" style="background: #B58D5B;"></div>
+                                <div class="tag-info">
+                                    <span class="tag-name">AV-2000 Exterior</span>
+                                    <span class="tag-type">Emulsionada Mate</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- ============================================
                 CONTENIDO NUEVO (aparece al hacer scroll)
             ============================================ -->
-            <div class="hero-content hero-content-nuevo">
+            <div class="hero-content hero-content-nuevo" style="position: relative;">
 
-                <div class="hero-imagen">
-                    <img src="{{ url_for('static', filename='static_landing/img/pintandoImagen.avif') }}" alt="Calidad Corimon">
-                </div>
-                <div class="hero-texto">
-                    <!-- Título nuevo -->
+                <!-- Overlay decorativo: gradiente + noise para romper el rojo plano -->
+                <div class="nuevo-overlay"></div>
+
+                <div class="hero-texto nuevo-productos-header">
                     <div class="Titulo Principal apareciendo-texto">
-                        <h1 class="posicionamiento sobreRojo">Calidad <span> Profesional </span></h1>
+                        <div class="contenedor-posicionamiento">
+                            <h1 class="posicionamiento sobreRojo">Nuestros <span>Productos</span></h1>
+                        </div>
                         <h1 class="hero-titulo apareciendo-texto">
-                            <span class="hero-titulo-linea">Más de</span>
-                            <span class="hero-titulo-linea hero-titulo-destacado" >75 Años</span>
-                            <span class="hero-titulo-linea">de Experiencia</span>
+                            <span class="hero-titulo-linea">Soluciones para</span>
+                            <span class="hero-titulo-linea hero-titulo-destacado">Cada Necesidad</span>
                         </h1>
                     </div>
 
-                    <!-- Subtítulo nuevo -->
                     <p class="hero-subtitulo">
-                        Respaldados por una larga y reconocida trayectoria, somos líderes en la industria venezolana. Combinamos tecnología de punta con un servicio excepcional para ofrecerte soluciones de alta calidad en áreas arquitectónicas, madera, tráfico y mantenimiento industria
+                        Líneas especializadas de pintura profesional, respaldadas por más de 75 años de innovación y calidad en la industria venezolana.
                     </p>
-
-                    <!-- CTAs nuevos (opcional) -->
-                    <div class="hero-ctas">
-                        <a href="#historia" class="btn btn-primary btn-hero" style="background-color: #Fefefe !important; color: #E50914 !important; border-color: #Fefefe !important;">
-                            Nuestra Historia
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </a>
-                    </div>
                 </div>
 
+                
+                <!-- Carrusel de categorías — mantiene .hero-ctas para GSAP stagger -->
+                <div class="hero-ctas productos-carrusel">
+                    <div class="swiper productos-swiper">
+                        <div class="swiper-wrapper">
+
+                            <div class="swiper-slide">
+                                <a href="{{ url_for('.products')}}" class="card-container">
+                                    <div class="image-container">
+                                        <img alt="Pinturas Arquitectónicas" class="card-image" 
+                                            src="{{ url_for('static', filename='static_landing/img/arquitectonico.avif') }}"/>
+                                        <div class="gradient-overlay"></div>
+                                        <div class="content-container">
+                                            <div class="texto-tarjeta">
+                                                <h2 class="card-title">Arquitectónicos</h2>
+                                                <div class="card-info">
+                                                    <p class="card-description">Descubre la excelencia en pintura con nuestra línea de productos Arquitectónicos.</p>
+                                                </div>
+                                            </div>
+                                            <span class="button-mas-info">
+                                                Más información
+                                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z" clip-rule="evenodd"/></svg>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            
+                            <div class="swiper-slide">
+                                <a href="{{ url_for('.products')}}" class="card-container">
+                                    <div class="image-container">
+                                        <img alt="Pinturas Marinas" class="card-image" 
+                                            src="{{ url_for('static', filename='static_landing/img/industriall.avif') }}"/>
+                                        <div class="gradient-overlay"></div>
+                                        <div class="content-container">
+                                            <div class="texto-tarjeta">
+                                                <h2 class="card-title">Mantenimiento Industrial</h2>
+                                                <div class="card-info">
+                                                    <p class="card-description">ofrecemos una amplia línea de productos de alta gama para el mantenimiento industrial liviano y pesado</p>
+                                                </div>
+                                            </div>
+                                            <span class="button-mas-info">
+                                                Más información
+                                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z" clip-rule="evenodd"/></svg>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+
+                            <div class="swiper-slide">
+                                <a href="{{ url_for('.products')}}" class="card-container">
+                                    <div class="image-container">
+                                        <img alt="Pinturas de Tráfico" class="card-image" 
+                                            src="{{ url_for('static', filename='static_landing/img/trafico.avif') }}"/>
+                                        <div class="gradient-overlay"></div>
+                                        <div class="content-container">
+                                            <div class="texto-tarjeta">
+                                                <h2 class="card-title">Tráfico</h2>
+                                                <div class="card-info">
+                                                    <p class="card-description">Pinturas para demarcación vial y señalización de alta durabilidad.</p>
+                                                </div>
+                                            </div>
+                                            <span class="button-mas-info">
+                                                Más información
+                                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z" clip-rule="evenodd"/></svg>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="swiper-slide">
+                                <a href="{{ url_for('.products')}}" class="card-container">
+                                    <div class="image-container">
+                                        <img alt="Mantenimiento Industrial" class="card-image" 
+                                            src="{{ url_for('static', filename='img/Automotriz.avif') }}"/>
+                                        <div class="gradient-overlay"></div>
+                                        <div class="content-container">
+                                            <div class="texto-tarjeta">
+                                                <h2 class="card-title">Automotriz</h2>
+                                                <div class="card-info">
+                                                    <p class="card-description">Recubrimientos anticorrosivos, epóxicos y lacas de alta calidad.</p>
+                                                </div>
+                                            </div>
+                                            <span class="button-mas-info">
+                                                Más información
+                                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z" clip-rule="evenodd"/></svg>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="swiper-slide">
+                                <a href="{{ url_for('.products')}}" class="card-container">
+                                    <div class="image-container">
+                                        <img alt="Pinturas para Madera" class="card-image" 
+                                            src="{{ url_for('static', filename='static_landing/img/madera.avif') }}"/>
+                                        <div class="gradient-overlay"></div>
+                                        <div class="content-container">
+                                            <div class="texto-tarjeta">
+                                                <h2 class="card-title">Madera</h2>
+                                                <div class="card-info">
+                                                    <p class="card-description">Contamos con una excelente línea de productos dirigidos al mercado del tratamiento de maderas.</p>
+                                                </div>
+                                            </div>
+                                            <span class="button-mas-info">
+                                                Más información
+                                                <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z" clip-rule="evenodd"/></svg>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+
+                        </div>
+
+                        <!-- Navegación -->
+                        <div class="swiper-nav-container">
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-pagination"></div>
+                            <div class="swiper-button-next"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+</article>
+
+<article>
+    <section class="seccion-post-hero">
+        <div class="grid-seccion-post-hero">
+
+            <div class="post-hero-texto">
+                <h1 class="posicionamiento">Nosotros:<span>Corimon Pinturas </span></h1>
+
+
+                <h2 class="anim-titulo">
+                    Más de 75 años liderando la <span class="destacado">fabricación de pinturas</span> en Venezuela
+                </h2>
+
+                <p class="anim-texto-fade">
+                    Corimon Pinturas C.A. es una empresa del Grupo CORIMON que se dedica a la producción de pinturas. Actualmente produce para las marcas más prestigiosas del país, como Pinturas Montana y Pinturas Pinco. Además, cuenta con una larga y reconocida trayectoria en la fabricación de pinturas para áreas arquitectónicas, madera, tráfico, mantenimiento industrial, marinas y reacabado automotriz.
+                </p>
+
+                
+                <div class="post-hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-numero" data-end="75" data-suffix="+">0</span>
+                        <span class="stat-label">Años de experiencia</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-numero" data-end="2000" data-suffix="+"></span>
+                        <span class="stat-label">Productos lideres </span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-numero" data-end="100" data-suffix="+">0</span>
+                        <span class="stat-label">Lineas de productos</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="post-hero-imagen">
+                <img src="{{ url_for('static', filename='img/imagenPlanta.avif') }}" 
+                        alt="Planta de fabricación Corimon Pinturas en Venezuela"
+                        loading="lazy">
+                <div class="imagen-acento"></div>
+            </div>
+
+        </div>
+    </section>
+</article>
+
+
+
+<article>
+    <section class="marcas-section">
+        <div class="marcas-container">
+
+            <div class="marcas-header">
+                <h2 class="anim-titulo">Nuestras <span class="destacado">Marcas</span></h2>
+                <img src="{{ url_for('static', filename='static_landing/img/brush-stroke-banner-6.svg') }}" 
+                    alt="" class="brochazo-underline" aria-hidden="true">
+                <p class="anim-texto-fade">Producimos las marcas más reconocidas y prestigiosas de la industria venezolana.</p>
+            </div>
+
+            <div class="marcas-grid">
+
+                <!-- Montana -->
+                <a href="/nosotros#PM" class="marca-card">
+                    <div class="marca-card-logo">
+                        <img src="{{ url_for('static', filename='img/marcas/Montana.svg') }}" alt="Pinturas Montana">
+                    </div>
+                    <div class="marca-card-info">
+                        <h3>Pinturas Montana</h3>
+                        <p>Marca líder en el mercado venezolano con la más amplia gama de productos para todo tipo de superficies.</p>
+                    </div>
+                    <div class="cta">
+                        <p>Más información</p>
+                        <span class="marca-card-arrow">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Pinco -->
+                <a href="/nosotros#PINCO" class="marca-card">
+                    <div class="marca-card-logo">
+                        <img src="{{ url_for('static', filename='img/marcas/Pinco.svg') }}" alt="Pinco">
+                    </div>
+                    <div class="marca-card-info">
+                        <h3>Pinco</h3>
+                        <p>Es la marca de pintura venezolana que, por muchos años, ha permitido llenar de color y alegría espacios a un precio justo.</p>
+                    </div>
+                    <div class="cta">
+                        <p>Más información</p>
+                        <span class="marca-card-arrow">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Sherwin-Williams -->
+                <a href="/nosotros#PPV" class="marca-card">
+                    <div class="marca-card-logo">
+                        <img src="{{ url_for('static', filename='img/marcas/SW.svg') }}" alt="Sherwin-Williams">
+                    </div>
+                    <div class="marca-card-info">
+                        <h3>Sherwin-Williams</h3>
+                        <p>Maquilamos Sherwin-Williams, con un equipo multidisciplinario que ha generado empleo en todo el territorio nacional.</p>
+                    </div>
+
+                    <div class="cta">
+                        <p>Más información</p>
+                        <span class="marca-card-arrow">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </span>
+                    </div>
+
+                </a>
 
             </div>
 
         </div>
     </section>
 </article>
+
+
+
+
+ 
+
 {% endblock %}
 
 {% block extra_js %}
+    <!-- GSAP Core -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <!-- ScrollTrigger Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    
 
-    <script src="{{ url_for('static', filename='static_landing/js/cursor.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='static_landing/js/animation.js') }}"></script>
+    <script src="{{ url_for('static', filename='static_landing/js/text-animations.js') }}"></script>
+
+
 {% endblock %}
-
-

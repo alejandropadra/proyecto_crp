@@ -1,0 +1,50 @@
+{% extends 'layout_landings.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='static_landing/css/coming_soon.css') }}">
+<style>
+    main { padding: 0; margin-top: 0; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="cs-seccion">
+
+    <!-- Texto -->
+    <div class="cs-texto">
+        <h1 class="posicionamiento">Corimon <span> Pinturas </span></h1>
+
+        <h1 class="cs-titulo">
+            Esta Pagina estará disponible  <span class="cs-destacado">muy pronto</span>
+        </h1>
+
+        <p class="cs-subtitulo">
+            Esta sección está en desarrollo. Pronto estará disponible.
+        </p>
+
+        <div class="cs-ctas">
+            <a href="{{ url_for('page.index') }}" class="btn btn-primary cs-btn-back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Volver al inicio
+            </a>
+            <a href="{{ url_for('page.contacto') }}" class="btn btn-secondary">
+                Contactar
+            </a>
+        </div>
+
+        <p class="cs-footer">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            Próximamente
+        </p>
+    </div>
+
+    <!-- Imagen -->
+    <div class="cs-imagen">
+        <img src="{{ url_for('static', filename='img/coming_soon.avif') }}" 
+            alt="Próximamente - Corimon Pinturas">
+    </div>
+
+</section>
+
+{% endblock %}

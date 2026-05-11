@@ -304,6 +304,11 @@
                   <p>Gestión de usuario</p>
                   <span>></span>
               </a>
+              <a href="{{ url_for('.logs_actividad')}}" class="sub-menu-link">
+                  <i class="bi bi-activity"></i>
+                  <p>Logs de Actividad</p>
+                  <span>></span>
+              </a>
               {% endif %}
               {% if current_user.nivel == "administrador" or current_user.nivel == "corimon"%}
               <a href="{{ url_for('.panel')}}" class="sub-menu-link">

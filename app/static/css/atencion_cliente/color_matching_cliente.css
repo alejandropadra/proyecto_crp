@@ -1,0 +1,546 @@
+
+.encabezado-pagina {
+    margin-bottom: 24px;
+}
+
+
+
+/* ── 6. BANNER DE CONTEXTO ────────────────────[REUTILIZABLE]─ */
+/* Contexto de "quién está viendo / actuando". Útil también en
+   detalle de ticket: "Asignado a SDINM · Recibido el 24/04"     */
+
+.banner-solicitante {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 18px;
+    background: var(--color-blanco);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--border-radius-default);
+    margin-bottom: 20px;
+}
+
+
+.banner-solicitante-icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: #dbeafe;
+    color: #1d4ed8; 
+    border-radius: var(--radius-md);
+    flex-shrink: 0;
+}
+
+
+/* El .detalle pasa de usar separadores · a flex con gap */
+.banner-solicitante-detalle {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.bann-nombre {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--color-texto);
+}
+
+/* Chip reutilizable para email, ubicación, etc. */
+.bann-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    background: var(--color-fondo);
+    border: 1px solid var(--color-borde-suave);
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    color: var(--color-texto-suave);
+}
+
+.bann-chip svg { opacity: 0.6; }
+
+
+/* ── 7. FORMULARIOS ───────────────────────────[REUTILIZABLE]─ */
+/* Útil en formularios de respuesta, edición de ticket, etc.     */
+
+.grilla-formulario {
+    display: grid;
+    gap: 16px;
+}
+
+.grilla-formulario.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.grilla-formulario.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grilla-formulario.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.campo label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-texto-suave);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.campo label .requerido,
+.campo .requerido {
+    color: var(--color-primario);
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+    border: 1.5px solid var(--color-borde);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 13.5px;
+    color: var(--color-texto);
+    background: var(--color-blanco);
+    transition: border var(--transicion-rapida), box-shadow var(--transicion-rapida);
+    outline: none;
+    width: 100%;
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+    border-color: var(--color-primario);
+    background: var(--color-blanco);
+    box-shadow: 0 0 0 3px var(--color-primario-suave);
+}
+
+.campo input::placeholder,
+.campo textarea::placeholder {
+    color: var(--color-texto-suave);
+}
+
+.campo.error input,
+.campo.error select,
+.campo.error textarea {
+    border-color: var(--color-primario);
+    background: #fff5f5;
+}
+
+.campo-error-mensaje {
+    font-size: 11px;
+    color: var(--color-primario);
+    margin-top: 2px;
+    display: none;
+}
+
+.campo.error .campo-error-mensaje {
+    display: block;
+}
+
+.campo-ayuda {
+    font-size: 11px;
+    color: var(--color-texto-tenue);
+    margin-top: 3px;
+}
+
+.campo select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23bbb'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 30px;
+}
+
+.campo textarea {
+    resize: vertical;
+    min-height: 96px;
+    line-height: 1.5;
+}
+
+
+/* Color matching — input rellenado manualmente */
+.campo input:not(:placeholder-shown),
+.campo textarea:not(:placeholder-shown) {
+    background: var(--color-blue-soft);          
+    border-color: var(--color-success);  
+}
+
+/* ── 8. BOTONES ───────────────────────────────[REUTILIZABLE]─ */
+
+.btn-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, var(--color-red-500) 0%, var(--color-red-700) 100%);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--radius-lg);
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.25);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+}
+
+.btn-primary::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--color-gray-900);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    z-index: -1;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.btn-primary:hover::before { left: 100%; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26, 26, 26, 0.2); }
+.btn-primary:hover::after { opacity: 1; }
+.btn-primary svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+
+/* ── 9. ACCIONES DE ENVÍO ─────────────────────────────────── */
+/* Contenedor del botón de envío al final del formulario        */
+
+.acciones-envio {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-top: 8px;
+}
+
+@media (max-width: 640px) {
+    .acciones-envio .btn-primary {
+        width: 100%;
+    }
+}
+
+
+/* ── 10. ALERTAS ──────────────────────────────[REUTILIZABLE]─ */
+
+.alerta {
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    line-height: 1.5;
+}
+
+.alerta-info {
+    background: #FFF7F7;
+    border: 1px solid #ffcccc;
+    color: #8a0000;
+}
+
+.alerta svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+
+/* ── 11. PANTALLA DE ÉXITO ────────────────────[REUTILIZABLE]─ */
+/* Confirmación post-creación de ticket. La pildora-codigo
+   sirve también para mostrar el ID del ticket creado.            */
+
+.exito-contenedor {
+    padding: 56px 20px;
+    text-align: center;
+}
+
+.exito-anillo {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radio-completo);
+    background: var(--color-exito);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    animation: aparecer-escala 0.5s ease-out forwards;
+}
+
+@keyframes aparecer-escala {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.exito-titulo {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.exito-descripcion {
+    color: #777;
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.pildora-codigo {
+    display: inline-block;
+    padding: 7px 20px;
+    background: #f5f5f5;
+    border: 1.5px dashed #ccc;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--color-texto-suave);
+    margin-bottom: 24px;
+}
+
+
+/* ── 12. TOM SELECT ───────────────────────────────────────── */
+
+.ts-wrapper { width: 100%; }
+
+.ts-wrapper .ts-control {
+    border: 1px solid #e5e7eb;
+    border-radius: var(--radius-md);
+    padding: 9px 14px;
+    min-height: 42px;
+    background: #fff;
+    box-shadow: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    font-size: 14px;
+    color: #111827;
+}
+
+
+
+.ts-wrapper .ts-control:hover { border-color: #d1d5db; }
+
+.ts-wrapper.focus .ts-control {
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 3px var(--color-primario-suave);
+}
+
+.ts-wrapper .ts-control input::placeholder {
+    color: #9ca3af;
+    opacity: 1;
+}
+
+.ts-wrapper.single .ts-control {
+    padding-right: 40px;
+    position: relative;
+}
+
+.ts-wrapper.single .ts-control::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    width: 16px;
+    height: 16px;
+    transform: translateY(-50%);
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    pointer-events: none;
+    transition: transform 0.2s ease;
+}
+
+.ts-wrapper.single.dropdown-active .ts-control::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.ts-dropdown {
+    border: 1px solid #e5e7eb;
+    border-radius: var(--radio-medio);
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+    margin-top: 6px;
+    overflow: hidden;
+    padding: 0;
+    background: #fff;
+}
+
+.ts-dropdown .ts-dropdown-content {
+    padding: 6px;
+    max-height: 280px;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.ts-dropdown .ts-dropdown-content::-webkit-scrollbar { width: 8px; }
+.ts-dropdown .ts-dropdown-content::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+.ts-dropdown .ts-dropdown-content::-webkit-scrollbar-track { background: transparent; }
+
+.ts-dropdown .option {
+    padding: 9px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+    transition: background-color 0.1s ease, color 0.1s ease;
+}
+
+.ts-dropdown .option:hover,
+.ts-dropdown .option.active {
+    background: var(--color-primario-suave);
+    color: var(--color-primario);
+}
+
+.ts-dropdown .option.selected {
+    background: #fee2e2;
+    color: var(--color-primario);
+    font-weight: 500;
+}
+
+.ts-dropdown .no-results {
+    padding: 14px 12px;
+    color: #6b7280;
+    font-size: 13px;
+    text-align: center;
+}
+
+.ts-no-results {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.ts-no-results svg { color: #9ca3af; }
+
+.campo.error .ts-control {
+    border-color: var(--color-primario);
+}
+
+.campo.error .ts-wrapper.focus .ts-control {
+    box-shadow: 0 0 0 3px var(--color-primario-suave);
+}
+
+/* Single select: input absoluto sobre el item */
+.ts-wrapper.single .ts-control > input {
+    position: absolute !important;
+    left: 14px !important;
+    top: 0 !important;
+    right: 40px !important;
+    width: auto !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    font-size: 14px !important;
+    color: #111827 !important;
+    outline: none !important;
+    box-sizing: border-box;
+}
+
+.ts-wrapper.single.dropdown-active .ts-control .item {
+    visibility: hidden;
+}
+
+.ts-wrapper.single:not(.dropdown-active) .ts-control > input {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ts-wrapper.single .ts-control .item {
+    color: #111827;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.ts-option-marca,
+.ts-item-marca {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ts-option-marca-img,
+.ts-item-marca-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    flex-shrink: 0;
+}
+
+
+.ts-item-marca-img {
+    width: 24px;
+    height: 24px;
+}
+
+.ts-option-marca-img.placeholder {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+}
+
+
+.ts-wrapper.single .ts-control .item {
+    display: flex;
+    align-items: center;
+}
+
+
+.ts-wrapper.focus .ts-control {
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 3px var(--color-primario-suave);
+}
+
+/* ← AGREGA AQUÍ */
+.ts-wrapper.single:has(.item) .ts-control {
+    background: var(--color-blue-soft);
+    border-color: var(--color-success);
+}
+
+/* ── 13. RESPONSIVE ───────────────────────────────────────── */
+@media (max-width: 800px) {
+    .grilla-formulario.cols-2,
+    .grilla-formulario.cols-3,
+    .grilla-formulario.cols-4 {
+        grid-template-columns: 1fr;
+    }
+    .contenedor-principal { padding: 16px; }
+    .tarjeta-encabezado { padding: 14px 16px; }
+    .tarjeta-cuerpo,
+    .tarjeta-padding { padding: 16px 18px; }
+}
+
+@media (max-width: 640px) {
+    .banner-solicitante-detalle .separador { display: none; }
+    .banner-solicitante-detalle {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+}
