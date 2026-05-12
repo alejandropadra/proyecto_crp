@@ -14,6 +14,9 @@
     padding-top: 70px;
 }
 
+.principal{
+    font-size: 2rem !important;
+}
 .hero-splash-bg {
     position: absolute;
     top: 0;
@@ -87,7 +90,7 @@
     width: 100%;
     height: calc(140vh - 100px);
     display: grid;
-    padding: var(--spacing-md) var(--spacing-xl);
+    padding: var(--spacing-xl) var(--spacing-xl);
     grid-template-columns: 39rem auto;
     gap: var(--spacing-4xl);
 }
@@ -106,7 +109,8 @@
     grid-template-columns: none;
     align-items: center;
     gap: var(--spacing-lg);
-    justify-content: center; 
+    justify-content: flex-start;   
+    padding-top: 4rem;  
 
     
 }
@@ -194,6 +198,16 @@
     margin-bottom: var(--spacing-sm);
 }
 
+.hero-titulo-linea {
+    display: block;
+    width: 100%;
+}
+
+.hero-titulo .hero-titulo-linea.hero-titulo-destacado {
+    display: block;
+    width: fit-content;
+}
+
 .hero-subtitulo {
     font-family: var(--font-body);
     font-size: var(--font-size-xl);
@@ -208,6 +222,8 @@
     position: relative;
     display: inline-block;
 }
+
+
 
 .hero-titulo-destacado::after {
     content: '';
@@ -820,6 +836,12 @@
         position: relative;
     }
 
+    .hero-titulo .hero-titulo-linea.hero-titulo-destacado {
+        display: block;
+        width: 100%;
+    }
+
+
     .hero-content {
         display: flex;
         flex-direction: column;
@@ -862,7 +884,7 @@
     .posicionamiento { font-size: 1rem; margin-bottom: 0.5rem; letter-spacing: 0.15em; }
     .posicionamiento span { display: inline; }
     .hero-titulo { font-size: 2.25rem; line-height: 1.1; margin-bottom: 1rem; }
-    .hero-titulo-linea { display: block; }
+
     .hero-titulo-destacado { font-size: 2.75rem; margin: 0.25rem 0; }
     .hero-subtitulo { font-size: 1rem; line-height: 1.6; max-width: 100%; }
 
@@ -883,7 +905,7 @@
         width: 100%;
         max-width: 340px;
         margin: 0 auto;
-        padding-top: 0;  /* Fix: quitar el padding-top: 50px de desktop */
+        padding-top: 0;  
     }
 
     .hero-image { max-width: 100%; }
@@ -892,8 +914,8 @@
     .flotando--right  { left: auto; right: -10px; top: 15%; }
     .flotando--bottom { right: 5%; bottom: 2%; }
     .product-tag { padding: 7px 12px; border-radius: 10px; gap: 8px; }
-    .tag-name { font-size: 11px; }
-    .tag-type { font-size: 9px; }
+    .tag-name { font-size: 6px; }
+    .tag-type { font-size: 4px; }
     .tag-color { width: 11px; height: 11px; }
 
     /* --- Fondo rojo --- */
@@ -967,7 +989,7 @@
     }
 
     .productos-swiper .swiper-slide .image-container {
-        height: clamp(150px, 28vh, 250px);
+        height: clamp(220px, 42vh, 400px); 
         border-radius: 0.5rem;
     }
 
@@ -1032,9 +1054,9 @@
     .hero-titulo-destacado { font-size: 2.25rem; }
     .hero-subtitulo { font-size: 0.9375rem; line-height: 1.5; }
     .posicionamiento { font-size: 0.875rem; }
-    .hero-imagen { max-width: 280px; }
-    .hero-imagen img { max-height: 240px; }
-    .hero-visual { max-width: 280px; }
+    .hero-imagen { max-width: 400px; }
+    .hero-imagen img { max-height: 380px; }
+    .hero-visual { max-width: 400px; }
     .btn-hero, .btn-hero-secondary { padding: 0.875rem 1.25rem; font-size: 0.9375rem; }
     header { padding: 0.75rem 1rem; }
     .navbar-brand img { height: 35px; }
@@ -1067,7 +1089,7 @@
     .productos-grid .button-mas-info { font-size: 0.55rem; padding: 0.25rem 0.6rem; }
     */
 
-    .productos-swiper .swiper-slide .image-container { height: clamp(130px, 25vh, 300px); }
+    .productos-swiper .swiper-slide .image-container { height: clamp(180px, 38vh, 320px); }
     .productos-swiper .swiper-slide .card-title { font-size: 0.75rem !important; }
     .seccion-post-hero {
         border-radius: 18px 18px 0 0;
@@ -1120,6 +1142,10 @@
         align-items: center;
         justify-content: center;
         margin-top: -150px;
+    }
+
+    .Titulo.Principall{
+        margin-left: -260px;
     }
 
     .hero-content-nuevo {
