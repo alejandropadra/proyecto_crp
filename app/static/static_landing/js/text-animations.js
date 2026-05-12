@@ -121,18 +121,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(() => {
-            initAnimTitulo();
-            initAnimTextoFade();
-            initAnimTextoWords();
-        });
-    } else {
-        // Fallback si document.fonts no existe
-        setTimeout(() => {
-            initAnimTitulo();
-            initAnimTextoFade();
-            initAnimTextoWords();
-        }, 300);
-    }
+    const fontTimeout = new Promise(resolve => setTimeout(resolve, 150));
+    const fontReady   = document.fonts?.ready ?? Promise.resolve();
+
+    Promise.race([fontReady, fontTimeout]).then(() => {
+        initAnimTitulo();
+        initAnimTextoFade();
+        initAnimTextoWords();
+    });
 });

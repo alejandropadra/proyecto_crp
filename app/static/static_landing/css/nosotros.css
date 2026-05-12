@@ -4,6 +4,11 @@
     opacity: 0;
 }
 
+.anim-titulo,
+.anim-texto-fade,
+.anim-texto-words {
+    visibility: hidden;
+}
 
 /* ========================================
     2. BADGE REUTILIZABLE

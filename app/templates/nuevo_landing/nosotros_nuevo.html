@@ -170,7 +170,9 @@
                     </div>
                     <div class="marca-slide-imagen ">
                         <img src="{{ url_for('static', filename='img/bannerMontana.avif') }}" id="PM"
-                            alt="Productos Pinturas Montana">
+                            alt="Productos Pinturas Montana"
+                            loading="lazy"
+                            decoding="async">
                     </div>
                 </div>
             </div>
@@ -184,7 +186,9 @@
                 <div class="marca-slide-grid marca-slide-grid--invertido">
                     <div class="marca-slide-imagen">
                         <img src="{{ url_for('static', filename='img/bannerPinco.avif') }}"  
-                            alt="Productos Pinco">
+                            alt="Productos Pinco"
+                            loading="lazy"
+                            decoding="async">
                     </div>
                     <div class="marca-slide-texto">
                         <img src="{{ url_for('static', filename='img/marcas/Pinco.svg') }}" alt="Pinco"
@@ -226,7 +230,9 @@
                     </div>
                     <div class="marca-slide-imagen">
                         <img src="{{ url_for('static', filename='img/bannerSW.avif') }}" 
-                            alt="Sherwin-Williams productos ">
+                            alt="Sherwin-Williams productos "
+                            loading="lazy"
+                            decoding="async">
                     </div>
                 </div>
             </div>
@@ -242,10 +248,11 @@
 
 {% block extra_js %}
 <!-- GSAP -->
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/ScrollTrigger.min.js" defer></script>
+{#}
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/SplitText.min.js"></script>
-
+#}
 
 <script src="{{ url_for('static', filename='static_landing/js/animation_nosotros.js') }}"></script>
 <!-- Animaciones -->
