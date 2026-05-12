@@ -476,21 +476,25 @@ main {
 }
 
 
-/* ── Responsive ── */
+/* ── Responsividad ── */
 @media (max-width: 30rem) {
     .flash-stack {
         top: 16px;
         right: 16px;
         left: 16px;
         width: auto;
+        transform: none; 
     }
 
-    .flash { width: 100%; }
+    .flash {
+        width: 100%;
+        min-width: 0; /
+    }
 }
 
 
 /* ========================================
-   6. SISTEMA DE CONTENEDORES
+    6. SISTEMA DE CONTENEDORES
    ======================================== */
 
 .container {
