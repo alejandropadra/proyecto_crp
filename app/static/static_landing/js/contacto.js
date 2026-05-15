@@ -1,3 +1,4 @@
+// === MAPA (IIFE - scope aislado) ===
 (function() {
     var LAT = 10.1599255;
     var LNG = -67.9568912;
@@ -74,7 +75,6 @@
             isVisible = true;
             if (tilesLoaded) startFly();
 
-
             setTimeout(function() { startFly(); }, 3000);
         }
     }, { threshold: 0.3 });
@@ -89,4 +89,64 @@
     });
 
     setTimeout(function() { map.invalidateSize(); }, 500);
+})();
+
+
+// === TURNSTILE (funciones globales necesarias para Cloudflare) ===
+window.onTurnstileSuccess = function(token) {
+    var btn = document.getElementById('submit-btn');
+    var msg = document.getElementById('turnstile-message');
+
+    if (btn) btn.disabled = false;
+    if (msg) {
+        msg.textContent = '';
+        msg.className = 'turnstile-message';
+    }
+};
+
+window.onTurnstileError = function() {
+    var btn = document.getElementById('submit-btn');
+    var msg = document.getElementById('turnstile-message');
+
+    if (btn) btn.disabled = true;
+    if (msg) {
+        msg.textContent = 'Error de verificación. Recarga la página e intenta de nuevo.';
+        msg.className = 'turnstile-message error';
+    }
+};
+
+window.onTurnstileExpired = function() {
+    var btn = document.getElementById('submit-btn');
+    var msg = document.getElementById('turnstile-message');
+
+    if (btn) btn.disabled = true;
+    if (msg) {
+        msg.textContent = 'La verificación expiró. Por favor, complétala nuevamente.';
+        msg.className = 'turnstile-message warning';
+    }
+
+    if (window.turnstile) {
+        window.turnstile.reset();
+    }
+};
+
+
+// === INIT FORM (IIFE - scope aislado) ===
+(function() {
+    function handleFormSubmit(e) {
+        var btn = document.getElementById('submit-btn');
+        if (!btn) return;
+
+        var btnText = btn.querySelector('.btn-text');
+
+        btn.disabled = true;
+        if (btnText) btnText.textContent = 'Enviando...';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var form = document.getElementById('contact-form');
+        if (form) {
+            form.addEventListener('submit', handleFormSubmit);
+        }
+    });
 })();

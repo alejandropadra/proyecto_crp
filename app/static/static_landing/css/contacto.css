@@ -489,3 +489,26 @@
         align-items: center;
     }
 }
+
+.turnstile-wrapper {
+    margin: 1rem 0;
+}
+
+.turnstile-message {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    min-height: 1.25rem; /* evita layout shift */
+}
+
+.turnstile-message.error {
+    color: #dc2626;
+}
+
+.turnstile-message.warning {
+    color: #d97706;
+}
+
+#submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

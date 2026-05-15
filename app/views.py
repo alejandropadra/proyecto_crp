@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 from flask import jsonify
 from flask_login import login_user,logout_user,login_required, current_user
 from .forms import LoginForm, RegisterForm, RegistroPagoForm,EditForm,PerfilForm,ContactForm, Retenciones, SolicitudColorForm
-from .models import User, Cobranza, Producto, Presentacion, DetalleTecnico , Formula, LogsActividad
+from .models import User, Cobranza, Producto, Presentacion, DetalleTecnico , Formula, LogsActividad, Ticket, ColorMatching, TicketHistorial
 from . import login_manager
 from .consts import *
 from .email import contacto_email, welcome_mail, pago_crm_mail, pago_mail, comprobante_mail, comprobante_crm_mail, pago_iva_mail,pago_iva_crm_mail, prepago_crm_mail, prepago_mail, letra_cambio_mail
@@ -21,7 +21,7 @@ import collections
 import random
 import traceback
 from sqlalchemy.exc import IntegrityError
-
+from flask import current_app
 import requests
 from bs4 import BeautifulSoup
 
@@ -395,52 +395,6 @@ def logs_actividad():
     return render_template("auth/logs_actividad.html", titulo="Logs de Actividad", xocas=xocas)
 
 
-
-
-
-@page.route("/atencion_cliente/color_matching", methods=["GET"])
-@login_required
-def crear_color_matching():
-    """Renderiza base de atencion_cliente"""
-    form = SolicitudColorForm()
-    
-    form.tienda.data = current_user.username
-    form.email.data = current_user.email
-    form.location.data = current_user.zona
-    
-    return render_template(
-        "atencion_cliente/color_matching_cliente.html",
-        modulo="Atencion al cliente",
-        titulo="Color Matching",
-        form=form,
-    )
-
-@page.route("/api/color_matching", methods=["POST"])
-@login_required
-def api_crear_color_matching():
-    """Crea una solicitud de color matching desde el formulario"""
-    form = SolicitudColorForm(request.form)
-    
-    if not form.validate():
-        return jsonify({
-            'success': False,
-            'errors': form.errors
-        }), 400
-    
-    
-    
-    print(f"[API] Recibida solicitud de color matching: tienda={form.tienda.data}, email={form.email.data}, location={form.location.data}")
-    solicitud_creada = {
-        'email': form.email.data,
-        'codigo_caso': 'TIN-2026-XXX'
-    }
-
-    flash('Solicitud creada correctamente', 'success')
-    return jsonify({
-        'success': True,
-        'data': solicitud_creada,
-        'url': url_for('.crear_color_matching')  
-    }), 201
 
 
 
@@ -1907,16 +1861,21 @@ def nosotros():
 
     return render_template("/nuevo_landing/nosotros_nuevo.html",titulo = "Nosotros")
 
-
 @page.route("/contacto", methods=['GET', 'POST'])
 def contacto():
     contact_form = ContactForm(request.form)
 
     if request.method == 'POST':
-        if contact_form.validate(): 
+        if contact_form.validate():
             # Honeypot check
             if contact_form.website.data:
                 flash("¡Mensaje enviado exitosamente!", "success")
+                return redirect(url_for('page.contacto'))
+
+            # Validación Turnstile
+            token = request.form.get('cf-turnstile-response')
+            if not verify_turnstile(token, request.remote_addr):
+                flash("Verificación de seguridad fallida. Intente nuevamente.", "error")
                 return redirect(url_for('page.contacto'))
 
             datos = {
@@ -1939,9 +1898,35 @@ def contacto():
         else:
             flash("Para enviar el mensaje, por favor corrige los errores en el formulario.", "error")
 
+    return render_template(
+        "landing/contacto.html",
+        titulo="Contacto",
+        form=contact_form,
+        turnstile_site_key=current_app.config['TURNSTILE_SITE_KEY']
+    )
 
-    return render_template("landing/contacto.html", titulo="Contacto", form=contact_form)
 
+def verify_turnstile(token, remote_ip=None):
+    """Valida el token contra la API de Cloudflare."""
+    if not token:
+        return False
+    
+    data = {
+        'secret': current_app.config['TURNSTILE_SECRET_KEY'],
+        'response': token
+    }
+    if remote_ip:
+        data['remoteip'] = remote_ip
+    
+    try:
+        r = requests.post(
+            'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+            data=data,
+            timeout=5
+        )
+        return r.json().get('success', False)
+    except requests.RequestException:
+        return False
 
 local_consultoria = 'app\\static\\consultoria_tecnica\\{}'
 server_consultoria = 'app/static/consultoria_tecnica/{}'

@@ -71,6 +71,18 @@
                     {% endif %}
                 </div>
 
+                <div class="turnstile-wrapper">
+                    <div class="cf-turnstile"
+                        data-sitekey="{{ turnstile_site_key }}"
+                        data-callback="onTurnstileSuccess"
+                        data-error-callback="onTurnstileError"
+                        data-expired-callback="onTurnstileExpired"
+                        data-theme="light"
+                        data-language="es">
+                    </div>
+                    <p id="turnstile-message" class="turnstile-message"></p>
+                </div>
+    
                 <button type="submit" class="btn btn-primary contacto-submit" id="submitBtn">
                     Enviar Mensaje
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
@@ -91,6 +103,7 @@
 
 
 {% block extra_js %}
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9/dist/leaflet.min.js"></script>
     <script src="{{ url_for('static', filename='static_landing/js/contacto.js') }}"></script>
 {% endblock %}
