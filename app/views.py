@@ -29,7 +29,7 @@ import re
 import os
 local_adj = 'app\\static\\adj\\{}'
 server_adj = 'app/static/adj/{}'
-APP_VERSION = "11052026"
+APP_VERSION = "18052026"
 user_fuente = U_FUENTE
 contra_fuente = C_FUENTE
 ip_fuente = URL_FUENTE
