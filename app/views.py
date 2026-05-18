@@ -24,6 +24,7 @@ from sqlalchemy.exc import IntegrityError
 from flask import current_app
 import requests
 from bs4 import BeautifulSoup
+import re
 
 import os
 local_adj = 'app\\static\\adj\\{}'
@@ -397,6 +398,109 @@ def logs_actividad():
 
 
 
+''' 
+@page.route("/atencion_cliente/color_matching", methods=["GET"])
+@login_required
+def crear_color_matching():
+    """Renderiza base de atencion_cliente"""
+    form = SolicitudColorForm()
+    
+    form.tienda.data = current_user.username
+    form.email.data = current_user.email
+    form.location.data = current_user.zona
+    
+    return render_template(
+        "atencion_cliente/color_matching_cliente.html",
+        modulo="Atencion al cliente",
+        titulo="Color Matching",
+        form=form,
+    )
+    
+@page.route("/atencion_cliente/lista_solicitudes", methods=["GET"])
+@login_required
+def lista_solicitudes():
+    """Vista principal — render del template + KPIs server-side"""
+    kpis = Ticket.get_kpis_dashboard()
+
+    return render_template(
+        "atencion_cliente/lista_solicitudes.html",
+        titulo="Lista de solicitudes",
+        modulo="Atencion al cliente",
+        kpis=kpis,
+    )
+    
+@page.route("/api/atencion_cliente/tickets", methods=["GET"])
+@login_required
+def api_tickets():
+    """Endpoint JSON paginado para la tabla. Toda la lógica vive en el modelo."""
+    # Parámetros de la query string — parecido a lo que se hace en formulacion
+    page          = request.args.get('page', 1, type=int)
+    per_page      = min(request.args.get('per_page', 25, type=int), 100)
+    sort_by       = request.args.get('sort_by', 'fecha_ultima_accion')
+    sort_dir      = request.args.get('sort_dir', 'desc')
+    search        = request.args.get('search', '').strip() or None
+    estado_global = request.args.get('estado_global', '').strip() or None
+    tipo_proceso  = request.args.get('tipo_proceso', '').strip() or None
+
+    items, total = Ticket.get_paginado(
+        page=page,
+        per_page=per_page,
+        sort_by=sort_by,
+        sort_dir=sort_dir,
+        search=search,
+        estado_global=estado_global,
+        tipo_proceso=tipo_proceso,
+    )
+    
+    print(f"Total: {total}")
+
+    return jsonify({
+        'items':    items,
+        'total':    total,
+        'page':     page,
+        'per_page': per_page,
+    })
+    
+
+@page.route("/api/atencion_cliente/color_matching", methods=["POST"])
+@login_required
+def api_crear_color_matching():
+    """Crea un ticket completo de color matching:
+    Ticket + ColorMatching + primer paso del historial en una sola transacción."""
+
+    form = SolicitudColorForm(request.form)
+
+    if not form.validate():
+        return jsonify({
+            'success': False,
+            'errors': form.errors
+        }), 400
+
+    ticket, error = Ticket.crear_color_matching(form, current_user)
+    flash("Solicitud de color creada exitosamente. Nuestro equipo se pondrá en contacto contigo pronto.", "success")
+    if error:
+        flash("Error al crear la solicitud. Intente nuevamente.", "error")
+        return jsonify({
+            'success': False,
+            'message': 'Error interno al crear la solicitud. Intente nuevamente.',
+            'data': {
+                'url': redirect(url_for('.crear_color_matching')),
+            }
+        }), 500
+        
+    
+
+    return jsonify({
+        'success': True,
+        'data': {
+            'codigo_caso': ticket.numero_ticket,
+            'email': ticket.email_cliente,
+            'ticket_id': ticket.id,
+            'url': url_for('.lista_solicitudes')
+        }
+    }), 201
+
+'''
 
 
 
@@ -1861,22 +1965,162 @@ def nosotros():
 
     return render_template("/nuevo_landing/nosotros_nuevo.html",titulo = "Nosotros")
 
+
+
+
+
+
+
+
+
+URL_PATTERN = re.compile(
+    r'(https?://|www\.|<a\s+href|\bhref\s*=)',
+    re.IGNORECASE
+)
+
+SPAM_KEYWORDS = re.compile(
+    r'\b(porn|sex|viagra|cialis|casino|crypto|bitcoin|loan|escort|wallet|free\s+money|work\s+from\s+home|click\s+here|subscribe\s+now|buy\s+now|limited\s+offer|winner|congratulations|urgent|act\s+now|risk[-\s]?free|guarantee|no\s+credit\s+check|debt\s+relief|replica|fake)\b|'
+    r'\bcp\s+(link|trader|collection|folder|channel)\b',
+    re.IGNORECASE
+)
+
+MAGIC_BYTES = {
+    'pdf': [b'%PDF-'],
+    'jpg': [b'\xff\xd8\xff'],
+    'jpeg': [b'\xff\xd8\xff'],
+    'png': [b'\x89PNG\r\n\x1a\n'],
+    'doc': [b'\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1'], 
+    'docx': [b'PK\x03\x04'],  
+}
+
+ALLOWED_MIMETYPES = {
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'image/jpeg',
+    'image/png',
+}
+
+
+def contiene_spam(*textos):
+    """
+    Analiza uno o más textos en busca de patrones de spam.
+    
+    Retorna:
+        dict con keys:
+        - 'es_spam' (bool): True si se detectó algo sospechoso
+        - 'razon' (str | None): 'url' | 'keyword' | None
+        - 'match' (str | None): el fragmento que disparó la detección
+    """
+    for texto in textos:
+        if not texto:
+            continue
+        
+        url_match = URL_PATTERN.search(texto)
+        if url_match:
+            return {'es_spam': True, 'razon': 'url', 'match': url_match.group(0)}
+        
+        kw_match = SPAM_KEYWORDS.search(texto)
+        if kw_match:
+            return {'es_spam': True, 'razon': 'keyword', 'match': kw_match.group(0)}
+    
+    return {'es_spam': False, 'razon': None, 'match': None}
+
+
+def validar_archivo_adjunto(file_storage):
+
+    if not file_storage or not file_storage.filename:
+        return True, None, None  # No hay archivo = ok (es opcional)
+    
+    config = current_app.config
+    
+    # 1. Sanitizar nombre (previene path traversal)
+    safe_name = secure_filename(file_storage.filename)
+    if not safe_name or '.' not in safe_name:
+        return False, 'Nombre de archivo inválido.', None
+    
+    extension = safe_name.rsplit('.', 1)[1].lower()
+    
+    # 2. Whitelist de extensión
+    if extension not in config['UPLOAD_ALLOWED_EXTENSIONS']:
+        return False, f'Extensión .{extension} no permitida.', None
+    
+    # 3. Leer contenido (con límite de tamaño)
+    file_storage.seek(0, os.SEEK_END)
+    size = file_storage.tell()
+    file_storage.seek(0)
+    
+    if size == 0:
+        return False, 'El archivo está vacío.', None
+    
+    if size > current_app.config['UPLOAD_MAX_SIZE']:
+        return False, f'El archivo supera el límite de {current_app.config["UPLOAD_MAX_SIZE"] // (1024*1024)} MB.', None
+    
+    contenido = file_storage.read()
+    file_storage.seek(0)
+    
+    # 4. Validar magic bytes (firma binaria real)
+    firmas_esperadas = MAGIC_BYTES.get(extension, [])
+    if not any(contenido.startswith(firma) for firma in firmas_esperadas):
+        return False, 'El contenido del archivo no coincide con su extensión.', None
+    
+    # 5. Validar MIME type reportado por el browser
+    mimetype = file_storage.mimetype
+    if mimetype not in ALLOWED_MIMETYPES:
+        return False, 'Tipo de archivo no permitido.', None
+    
+    return True, None, {
+        'filename': safe_name,
+        'content': contenido,
+        'mimetype': mimetype
+    }
+
 @page.route("/contacto", methods=['GET', 'POST'])
 def contacto():
     contact_form = ContactForm(request.form)
 
     if request.method == 'POST':
         if contact_form.validate():
-            # Honeypot check
+            # 1. Honeypot check
             if contact_form.website.data:
+                current_app.logger.warning(
+                    f"Honeypot disparado | IP: {request.remote_addr}"
+                )
                 flash("¡Mensaje enviado exitosamente!", "success")
                 return redirect(url_for('page.contacto'))
 
-            # Validación Turnstile
+            # 2. Validación Turnstile
             token = request.form.get('cf-turnstile-response')
             if not verify_turnstile(token, request.remote_addr):
                 flash("Verificación de seguridad fallida. Intente nuevamente.", "error")
                 return redirect(url_for('page.contacto'))
+
+            # 3. Análisis de contenido (anti-spam)
+            spam_check = contiene_spam(
+                contact_form.nombre.data,
+                contact_form.mensaje.data
+            )
+            if spam_check['es_spam']:
+                current_app.logger.warning(
+                    f"Spam detectado | IP: {request.remote_addr} | "
+                    f"Razón: {spam_check['razon']} | Match: {spam_check['match']} | "
+                    f"Email: {contact_form.email.data}"
+                )
+                # Respuesta silenciosa (igual que el honeypot)
+                flash("¡Mensaje enviado exitosamente!", "success")
+                return redirect(url_for('page.contacto'))
+            
+            archivo_data = None
+            archivo_subido = request.files.get('archivo')
+            if archivo_subido and archivo_subido.filename:
+                es_valido, error, archivo_limpio = validar_archivo_adjunto(archivo_subido)
+                if not es_valido:
+                    current_app.logger.warning(
+                        f"Archivo rechazado | IP: {request.remote_addr} | Razón: {error}"
+                    )
+                    flash(f"Archivo no válido: {error}", "error")
+                    return redirect(url_for('page.contacto'))
+                archivo_data = archivo_limpio
 
             datos = {
                 'nombre': contact_form.nombre.data.strip(),
@@ -1888,10 +2132,10 @@ def contacto():
             }
 
             try:
-                contacto_email(datos)
+                contacto_email(datos, archivo=archivo_data)
                 flash("¡Mensaje enviado exitosamente! Nos pondremos en contacto pronto.", "success")
             except Exception as e:
-                print(f"Error enviando email de contacto: {e}")
+                current_app.logger.error(f"Error enviando email de contacto: {e}", exc_info=True)
                 flash("Hubo un error al enviar el mensaje. Intente nuevamente.", "error")
 
             return redirect(url_for('page.contacto'))
@@ -2383,7 +2627,12 @@ def retenciones():
     control_form = Retenciones(request.form)
     if request.method == "POST":
         n_retencion= control_form.n_comprobante.data
-        archivo= control_form.comprobante.data
+        imagen = request.files.get('archivo')
+        
+        if not imagen or imagen.filename == '':
+            flash("Debe cargar el comprobante de retención.", 'error')
+            return render_template("/collections/registrar_retenciones.html", pagina="registrar_retenciones", titulo="Registrar Comprobante de Retención", form=control_form)
+        
         if  request.files['archivo']:
             imagen = request.files['archivo']
             nombre_imagen = secure_filename(current_user.username + '_'+ 'RET' + '_' + str(n_retencion)+'_'+imagen.filename)

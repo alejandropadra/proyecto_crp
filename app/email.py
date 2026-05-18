@@ -147,7 +147,8 @@ def pago_iva_crm_mail(user, pago, post_imagen, nombre_imagen, pagos):
     thread.start()
     
     
-def contacto_email(datos):
+def contacto_email(datos, archivo=None):
+    """Envía el correo de contacto, opcionalmente con un adjunto."""
 
     # Destinatarios según motivo
     destinatarios_por_motivo = {
@@ -165,6 +166,15 @@ def contacto_email(datos):
         recipients=recipients,
         reply_to=datos['email']
     )
-    message.html = render_template('email/contacto.html', datos=datos)
+    message.html = render_template('email/contacto.html', datos=datos, tiene_adjunto=bool(archivo))
+
+    # Adjuntar archivo si existe
+    if archivo:
+        message.attach(
+            filename=archivo['filename'],
+            content_type=archivo['mimetype'],
+            data=archivo['content']
+        )
+
     thread = Thread(target=send_async_mail, args=[message])
     thread.start()

@@ -2,7 +2,7 @@ import datetime
 from collections import defaultdict
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash,check_password_hash
-from sqlalchemy import func, distinct, UniqueConstraint
+from sqlalchemy import func, distinct, UniqueConstraint, or_, desc, asc
 from . import db
 from sqlalchemy import Index
 
@@ -17,6 +17,7 @@ class User(db.Model, UserMixin):
     pago = db.relationship('Cobranza', backref ='user')
     zona = db.Column(db.String(30),nullable = False)#zona
     nivel = db.Column(db.String(30))#niveles.. clientes... corimon.. administrador.
+    #modulos_acceso = db.Column(db.Text, default=None)#modulos a los que tiene acceso el usuario
     codigo = db.Column(db.String(20))
     seller = db.Column(db.String(300))
     tipo = db.Column(db.String(15))
@@ -919,13 +920,15 @@ class LogsActividad(db.Model):
                 cls.created_at.desc()
             ).first()
             
-            # Lista de usuarios distintos que han usado ese device
             usuarios = db.session.query(
-                distinct(cls.username)
+                cls.username,
+                User.seller
+            ).join(
+                User, cls.rif == User.rif
             ).filter(
                 cls.device_id == r.device_id,
                 cls.username.isnot(None)
-            ).all()
+            ).distinct(cls.username).all()
             
             datos.append({
                 'device_id': r.device_id,
@@ -933,7 +936,10 @@ class LogsActividad(db.Model):
                 'device_name': info.device_name if info else 'Desconocido',
                 'ip': info.ip if info else '-',
                 'usuarios_distintos': r.usuarios_distintos,
-                'lista_usuarios': [u[0] for u in usuarios if u[0]]
+                'lista_usuarios': [
+                    f"{u.username} ( Seller: {u.seller})" if u.seller else u.username
+                    for u in usuarios
+                ]
             })
         
         return datos
@@ -1056,6 +1062,165 @@ class Ticket(db.Model):
     
     def __repr__(self):
         return f'<Ticket {self.numero_ticket} ({self.estado_global})>'
+    
+    SORT_COLUMNS = {
+        'numero_ticket':       'numero_ticket',
+        'fecha_creacion':      'fecha_creacion',
+        'fecha_ultima_accion': 'fecha_ultima_accion',
+        'estado_global':       'estado_global',
+    }
+
+    @classmethod
+    def get_paginado(cls, page=1, per_page=25,
+                    sort_by='fecha_ultima_accion', sort_dir='desc',
+                    search=None, estado_global=None, tipo_proceso=None):
+        """
+        Obtiene tickets paginados con filtros, búsqueda y ordenamiento.
+        Args:
+            page (int): Número de página (empieza en 1)
+            per_page (int): Tickets por página (máx 100 — validar en la ruta)
+            sort_by (str): Columna por la cual ordenar. Solo acepta valores de cls.SORT_COLUMNS, default 'fecha_ultima_accion'
+            sort_dir (str): 'asc' o 'desc', default 'desc'
+            search (str): Texto a buscar en numero_ticket, rif_cliente, email_cliente y asignado_a
+            estado_global (str): Filtrar por estado_global exacto
+            tipo_proceso (str): Filtrar por tipo_proceso exacto
+        Returns:
+            tuple: (items_dict_list, total)
+        """
+        query = cls.query
+
+        # Filtros simples sobre columnas indexadas
+        if estado_global:
+            query = query.filter(cls.estado_global == estado_global)
+        if tipo_proceso:
+            query = query.filter(cls.tipo_proceso == tipo_proceso)
+
+        # Búsqueda libre en campos clave del ticket
+        if search:
+            like = f'%{search}%'
+            query = query.filter(or_(
+                cls.numero_ticket.ilike(like),
+                cls.rif_cliente.ilike(like),
+                cls.email_cliente.ilike(like),
+                cls.asignado_a.ilike(like),
+            ))
+
+        sort_attr = cls.SORT_COLUMNS.get(sort_by, 'fecha_ultima_accion')
+        col = getattr(cls, sort_attr)
+        query = query.order_by(desc(col) if sort_dir == 'desc' else asc(col))
+
+        # Paginación
+        pag = query.paginate(page=page, per_page=per_page, error_out=False)
+
+        items = [t.to_dict() for t in pag.items]
+        return items, pag.total
+
+    @classmethod
+    def get_count(cls):
+        """Obtiene el número total de tickets"""
+        return cls.query.count()
+
+    @classmethod
+    def count_by_estado(cls, estado):
+        """Cuenta los tickets con un estado_global específico"""
+        return cls.query.filter(cls.estado_global == estado).count()
+
+    @classmethod
+    def count_by_tipo(cls, tipo):
+        """Cuenta los tickets con un tipo_proceso específico"""
+        return cls.query.filter(cls.tipo_proceso == tipo).count()
+
+    @classmethod
+    def count_cerrados_mes(cls):
+        """
+        Cuenta los tickets cerrados desde el primer día del mes actual.
+        Usa el índice de estado_global; fecha_cierre filtra el subset.
+        """
+        inicio_mes = datetime.datetime.utcnow().replace(
+            day=1, hour=0, minute=0, second=0, microsecond=0
+        )
+        return cls.query.filter(
+            cls.estado_global == cls.EstadoGlobal.CERRADO,
+            cls.fecha_cierre >= inicio_mes
+        ).count()
+
+    @classmethod
+    def get_kpis_dashboard(cls):
+        """
+        Retorna los KPIs para la vista de lista de solicitudes en un dict.
+        Centraliza las consultas para que la vista quede limpia.
+        """
+        return {
+            'abiertos':       cls.count_by_estado(cls.EstadoGlobal.ABIERTO),
+            'en_proceso':     cls.count_by_estado(cls.EstadoGlobal.EN_PROCESO),
+            'cerrados_mes':   cls.count_cerrados_mes(),
+            'color_matching': cls.count_by_tipo(cls.TipoProceso.COLOR_MATCHING),
+        }
+        
+    
+    """AQQUI SE AGREGAN FUNCIONES SEGUN EL MODULO DE ATENCION AL CLIENTE, POR EJEMPLO AQUI DIRECTAMNETE SE INSERTA EL COLOR MATCHING PARA EL FLUJO COMPLETO"""
+    
+    @classmethod
+    def crear_color_matching(cls, form, user):
+        """
+        Crea un ticket de color matching completo en una sola transacción.
+        Retorna (ticket, None) si todo va bien, o (None, mensaje_error) si falla.
+        """
+        try:
+            # 1. Ticket base
+            ticket = cls(
+                numero_ticket='TEMP',
+                tipo_proceso=cls.TipoProceso.COLOR_MATCHING,
+                rif_cliente=getattr(user, 'rif', user.username),
+                email_cliente=user.email,
+                estado_global=cls.EstadoGlobal.ABIERTO,
+                estado_actual='recibido',
+                asignado_a=None
+            )
+            db.session.add(ticket)
+            db.session.flush()  # genera ticket.id sin commit
+
+            # 2. Numero de ticket con el ID ya disponible
+            año = datetime.datetime.utcnow().year
+            ticket.numero_ticket = f"TIN-{año}-{ticket.id:04d}"
+
+            # 3. Color matching ligado al ticket
+            color_matching = ColorMatching(
+                ticket_id=ticket.id,
+                color_nombre=form.color.data,
+                cod_std=form.cod_std.data or None,
+                marca=form.marca.data or None,
+                linea=form.linea.data or None,
+                udv=form.udv.data,
+                unidad_cantidad='cc',
+                observaciones=form.observaciones.data or None,
+                base=None,
+                primer=None,
+            )
+            db.session.add(color_matching)
+
+            # 4. Primer paso del historial
+            ticket.registrar_paso(
+                paso='creacion',
+                ejecutado_por=user.email,
+                comentario=f"Solicitud creada por {form.tienda.data}",
+                payload={
+                    'tienda': form.tienda.data,
+                    'location': form.location.data,
+                    'color_nombre': form.color.data,
+                    'cod_std': form.cod_std.data,
+                    'marca': form.marca.data,
+                    'udv': form.udv.data,
+                }
+            )
+
+            db.session.commit()
+            return ticket, None
+
+        except Exception as e:
+            db.session.rollback()
+            print(f"[ERROR] Ticket.crear_color_matching: {e}")
+            return None, str(e)
     
 
 class TicketHistorial(db.Model):

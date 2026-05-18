@@ -202,7 +202,7 @@
 
 /* Botón submit */
 .contacto-submit {
-    align-self: flex-start;
+    align-self: flex-end;
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -483,8 +483,7 @@
 }
 
 @media (width >= 96rem) {
-     main{
-        margin: 0px;
+    main{
         display: flex;
         align-items: center;
     }
@@ -511,4 +510,226 @@
 #submit-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+
+[hidden] {
+    display: none !important;
+}
+.form-group-upload {
+    margin-top: 1rem;
+}
+
+.form-optional {
+    color: #9ca3af;
+    font-weight: 400;
+    font-size: 0.875rem;
+}
+
+.upload-zone {
+    position: relative;
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    background: #fafafa;
+    padding: 2rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-zone:hover {
+    border-color: #E50914;
+    background: #fff5f5;
+}
+
+.upload-zone:focus-visible {
+    outline: none;
+    border-color: #E50914;
+    box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.15);
+}
+
+/* Estado: arrastrando archivo encima */
+.upload-zone.is-dragging {
+    border-color: #E50914;
+    background: #fff1f0;
+    border-style: solid;
+    transform: scale(1.01);
+}
+
+/* Estado: con archivo cargado */
+.upload-zone.has-file {
+    border-style: solid;
+    border-color: #d1d5db;
+    background: #fff;
+    cursor: default;
+    padding: 1rem;
+}
+
+.upload-zone.has-file:hover {
+    border-color: #d1d5db;
+    background: #fff;
+}
+
+/* Estado: error */
+.upload-zone.has-error {
+    border-color: #dc2626;
+    background: #fef2f2;
+}
+
+/* Input file oculto (pero accesible) */
+.upload-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Estados (uno visible a la vez) */
+.upload-state {
+    width: 100%;
+    text-align: center;
+}
+
+.upload-state[hidden] {
+    display: none;
+}
+
+/* --- Estado idle --- */
+.upload-icon {
+    color: #9ca3af;
+    margin-bottom: 0.75rem;
+    display: flex;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.upload-zone:hover .upload-icon,
+.upload-zone.is-dragging .upload-icon {
+    color: #E50914;
+}
+
+.upload-title {
+    font-size: 0.9375rem;
+    color: #374151;
+    margin: 0 0 0.25rem 0;
+    font-weight: 500;
+}
+
+.upload-link {
+    color: #E50914;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.upload-hint {
+    font-size: 0.8125rem;
+    color: #9ca3af;
+    margin: 0;
+}
+
+/* --- Estado loading --- */
+.upload-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #fee2e2;
+    border-top-color: #E50914;
+    border-radius: 50%;
+    margin: 0 auto 0.75rem;
+    animation: upload-spin 0.7s linear infinite;
+}
+
+@keyframes upload-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* --- Estado file (archivo cargado) --- */
+.upload-file-card {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.upload-file-icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: #fff1f0;
+    color: #E50914;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-file-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.upload-file-name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 0.125rem 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.upload-file-size {
+    font-size: 0.8125rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+.upload-file-remove {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: #f3f4f6;
+    color: #6b7280;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.upload-file-remove:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* Responsive mobile */
+@media (max-width: 640px) {
+    .upload-zone {
+        padding: 1.5rem 1rem;
+        min-height: 140px;
+    }
+    
+    .upload-icon svg {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .upload-title {
+        font-size: 0.875rem;
+    }
+    
+    .upload-file-name {
+        font-size: 0.875rem;
+    }
 }

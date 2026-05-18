@@ -3,6 +3,7 @@ from wtforms import validators, ValidationError
 from wtforms import StringField,PasswordField, SelectField, HiddenField,BooleanField, EmailField
 from wtforms import DateField,FileField,IntegerField,RadioField,FloatField,TextAreaField
 from wtforms.validators import DataRequired, Email, Length, Optional
+from flask_wtf.file import FileField, FileAllowed, FileSize
 
 from .models import User
 
@@ -50,6 +51,20 @@ class ContactForm(Form):
         validators.Length(max=2000, message="Máximo 2000 caracteres.")
     ])
     website = HiddenField("", [ length_honeypot])
+    
+    archivo = FileField(
+        'Adjuntar archivo (opcional)',
+        validators=[
+            FileAllowed(
+                ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'],
+                'Solo se permiten archivos PDF, Word o imágenes.'
+            ),
+            FileSize(
+                max_size=5 * 1024 * 1024,
+                message='El archivo no puede superar 5 MB.'
+            )
+        ]
+    )
 
 class RegisterForm(Form):
     rif = SelectField("", choices=[("",""),("J","J"),("G","G"),("V","V")])

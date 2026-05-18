@@ -94,7 +94,7 @@
 
 // === TURNSTILE (funciones globales necesarias para Cloudflare) ===
 window.onTurnstileSuccess = function(token) {
-    var btn = document.getElementById('submit-btn');
+    var btn = document.getElementById('submitBtn'); 
     var msg = document.getElementById('turnstile-message');
 
     if (btn) btn.disabled = false;
@@ -105,7 +105,7 @@ window.onTurnstileSuccess = function(token) {
 };
 
 window.onTurnstileError = function() {
-    var btn = document.getElementById('submit-btn');
+    var btn = document.getElementById('submitBtn');  
     var msg = document.getElementById('turnstile-message');
 
     if (btn) btn.disabled = true;
@@ -116,7 +116,7 @@ window.onTurnstileError = function() {
 };
 
 window.onTurnstileExpired = function() {
-    var btn = document.getElementById('submit-btn');
+    var btn = document.getElementById('submitBtn');  
     var msg = document.getElementById('turnstile-message');
 
     if (btn) btn.disabled = true;
@@ -131,22 +131,180 @@ window.onTurnstileExpired = function() {
 };
 
 
-// === INIT FORM (IIFE - scope aislado) ===
 (function() {
+    var MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+    var ALLOWED = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'];
+
+    // Iconos SVG según tipo de archivo
+    var FILE_ICONS = {
+        pdf: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15h6M9 11h6"/></svg>',
+        doc: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+        img: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'
+    };
+
+    function getFileIcon(extension) {
+        if (extension === 'pdf') return FILE_ICONS.pdf;
+        if (extension === 'doc' || extension === 'docx') return FILE_ICONS.doc;
+        if (['jpg', 'jpeg', 'png'].indexOf(extension) !== -1) return FILE_ICONS.img;
+        return FILE_ICONS.doc;
+    }
+
+    function formatSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    function setState(zone, state) {
+        var states = zone.querySelectorAll('.upload-state');
+        for (var i = 0; i < states.length; i++) {
+            states[i].hidden = states[i].dataset.state !== state;
+        }
+    }
+
+    function showError(zone, errorEl, message) {
+        zone.classList.add('has-error');
+        errorEl.textContent = message;
+        errorEl.hidden = false;
+    }
+
+    function clearError(zone, errorEl) {
+        zone.classList.remove('has-error');
+        errorEl.textContent = '';
+        errorEl.hidden = true;
+    }
+
+    function validateFile(file) {
+        var ext = file.name.split('.').pop().toLowerCase();
+        if (ALLOWED.indexOf(ext) === -1) {
+            return 'Formato no permitido. Usa PDF, Word o imagen.';
+        }
+        if (file.size > MAX_SIZE) {
+            return 'El archivo supera 5 MB.';
+        }
+        if (file.size === 0) {
+            return 'El archivo está vacío.';
+        }
+        return null;
+    }
+
+    function handleFile(file, input, zone, errorEl) {
+        clearError(zone, errorEl);
+
+        var error = validateFile(file);
+        if (error) {
+            input.value = '';
+            showError(zone, errorEl, error);
+            setState(zone, 'idle');
+            zone.classList.remove('has-file');
+            return;
+        }
+
+        // Mostrar loading brevemente para feedback visual
+        setState(zone, 'loading');
+
+        setTimeout(function() {
+            var ext = file.name.split('.').pop().toLowerCase();
+            
+            document.getElementById('uploadFileIcon').innerHTML = getFileIcon(ext);
+            document.getElementById('uploadFileName').textContent = file.name;
+            document.getElementById('uploadFileSize').textContent = formatSize(file.size);
+
+            zone.classList.add('has-file');
+            setState(zone, 'file');
+        }, 300);
+    }
+
+    function resetFile(input, zone, errorEl) {
+        input.value = '';
+        zone.classList.remove('has-file');
+        clearError(zone, errorEl);
+        setState(zone, 'idle');
+    }
+
     function handleFormSubmit(e) {
-        var btn = document.getElementById('submit-btn');
+        var btn = document.getElementById('submitBtn');
         if (!btn) return;
-
-        var btnText = btn.querySelector('.btn-text');
-
         btn.disabled = true;
-        if (btnText) btnText.textContent = 'Enviando...';
+        btn.textContent = 'Enviando...';
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        var form = document.getElementById('contact-form');
-        if (form) {
-            form.addEventListener('submit', handleFormSubmit);
+        var form = document.getElementById('contactForm');
+        var zone = document.getElementById('uploadZone');
+        var input = document.getElementById('archivo');
+        var removeBtn = document.getElementById('uploadFileRemove');
+        var errorEl = document.getElementById('uploadError');
+
+        if (form) form.addEventListener('submit', handleFormSubmit);
+        if (!zone || !input) return;
+
+        // Click en la zona abre el selector (excepto en el botón remover)
+        zone.addEventListener('click', function(e) {
+            if (e.target.closest('.upload-file-remove')) return;
+            if (zone.classList.contains('has-file')) return;
+            input.click();
+        });
+
+        // Keyboard: Enter o Espacio activan el selector
+        zone.addEventListener('keydown', function(e) {
+            if ((e.key === 'Enter' || e.key === ' ') && !zone.classList.contains('has-file')) {
+                e.preventDefault();
+                input.click();
+            }
+        });
+
+        // Selección manual de archivo
+        input.addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                handleFile(e.target.files[0], input, zone, errorEl);
+            }
+        });
+
+        // Drag & drop
+        ['dragenter', 'dragover'].forEach(function(evt) {
+            zone.addEventListener(evt, function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (!zone.classList.contains('has-file')) {
+                    zone.classList.add('is-dragging');
+                }
+            });
+        });
+
+        ['dragleave', 'drop'].forEach(function(evt) {
+            zone.addEventListener(evt, function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                zone.classList.remove('is-dragging');
+            });
+        });
+
+        zone.addEventListener('drop', function(e) {
+            if (zone.classList.contains('has-file')) return;
+            var files = e.dataTransfer.files;
+            if (files && files[0]) {
+                // Asignar al input para que viaje con el form
+                input.files = files;
+                handleFile(files[0], input, zone, errorEl);
+            }
+        });
+
+        // Prevenir que el browser abra el archivo si se suelta fuera de la zona
+        ['dragover', 'drop'].forEach(function(evt) {
+            document.addEventListener(evt, function(e) {
+                if (!zone.contains(e.target)) {
+                    e.preventDefault();
+                }
+            });
+        });
+
+        // Botón remover archivo
+        if (removeBtn) {
+            removeBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                resetFile(input, zone, errorEl);
+            });
         }
     });
 })();

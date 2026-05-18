@@ -20,7 +20,7 @@
             <h1 class="contacto-titulo">Contactános</h1>
             <p class="contacto-subtitulo">Completa el formulario y nos pondremos en contacto contigo.</p>
 
-            <form method="POST" action="{{ url_for('page.contacto') }}" class="contacto-form" id="contactForm" novalidate>
+            <form method="POST" action="{{ url_for('page.contacto') }}" class="contacto-form" id="contactForm" enctype="multipart/form-data"  novalidate>
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
                 <!-- Honeypot o como se escriba -->
@@ -69,6 +69,64 @@
                     {% if form.mensaje.errors %}
                         <span class="form-error">{{ form.mensaje.errors[0] }}</span>
                     {% endif %}
+                </div>
+
+                <div class="form-group form-group-upload {% if form.archivo.errors %}has-error{% endif %}">
+                    <label class="form-label">
+                        Adjuntar archivo (Ejemplo: Curriculum, Carta de presentación, etc)  <span class="form-optional">*opcional*</span>
+                    </label>
+
+                    <div class="upload-zone" id="uploadZone" tabindex="0" role="button" 
+                        aria-label="Zona para arrastrar o seleccionar archivo">
+                        
+                        {{ form.archivo(id="archivo", class="upload-input", accept=".pdf,.doc,.docx,.jpg,.jpeg,.png") }}
+                        
+                        <!-- Estado: vacío (default) -->
+                        <div class="upload-state upload-state-idle" data-state="idle">
+                            <div class="upload-icon">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                            </div>
+                            <p class="upload-title">
+                                <span class="upload-link">Haz clic para subir</span> o arrastra aquí
+                            </p>
+                            <p class="upload-hint">PDF, Word o imagen · Máx 5 MB</p>
+                        </div>
+
+                        <!-- Estado: cargando (visual mientras se lee) -->
+                        <div class="upload-state upload-state-loading" data-state="loading" hidden>
+                            <div class="upload-spinner"></div>
+                            <p class="upload-title">Preparando archivo...</p>
+                        </div>
+
+                        <!-- Estado: archivo seleccionado -->
+                        <div class="upload-state upload-state-file" data-state="file" hidden>
+                            <div class="upload-file-card">
+                                <div class="upload-file-icon" id="uploadFileIcon">
+                                    <!-- Icono dinámico inyectado por JS -->
+                                </div>
+                                <div class="upload-file-info">
+                                    <p class="upload-file-name" id="uploadFileName">archivo.pdf</p>
+                                    <p class="upload-file-size" id="uploadFileSize">0 KB</p>
+                                </div>
+                                <button type="button" class="upload-file-remove" id="uploadFileRemove" aria-label="Quitar archivo">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {% if form.archivo.errors %}
+                        <span class="form-error">{{ form.archivo.errors[0] }}</span>
+                    {% endif %}
+                    <span class="form-error" id="uploadError" hidden></span>
                 </div>
 
                 <div class="turnstile-wrapper">
